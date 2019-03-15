@@ -245,7 +245,7 @@ calculateImportances <- function(data.paths, results.folder = "MVResults", data.
       write_csv(imps, path = paste0(d, "/", results.folder, "/RFimportances_", target, "_", l, "_intra.txt"))
       imps <- data.frame(target = rownames(importance(model.juxta)), imp = importance(model.juxta, type=2))
       write_csv(imps, path = paste0(d, "/", results.folder, "/RFimportances_", target, "_", l, "_juxta.txt"))
-      imps <- data.frame(target = rownames(importance(model.para)), imp = importance(model.para))
+      imps <- data.frame(target = rownames(importance(model.para)), imp = importance(model.para, type=2))
       write_csv(imps, path = paste0(d, "/", results.folder, "/RFimportances_", target, "_", l, "_para.txt"))
       
       write(paste(target, paste(coeff,collapse = " ")), file = paste0(d, "/", results.folder, "/coefficients_", l, ".txt"), append=TRUE)
