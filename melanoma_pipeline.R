@@ -31,7 +31,37 @@ t1 <- Sys.time()
 print(t1-t0)
 
 colnames(para.view) <- paste0("p",colnames(para.view))
-write_rds(para.view, paste0("para.view.",l,".rds"))
+write_rds(para.view, paste0("data/melanoma/33466/MVResults/para.view.",l,".rds"))
+
+
+t0 <- Sys.time()
+delaunay <- deldir(as.data.frame(positions[,-1]))
+t1 <- Sys.time()
+
+print(t1-t0)
+
+#generate juxta by delaunay traingulation
+
+neighbor.thr <- 35
+
+t0 <- Sys.time()
+juxta.view.del <- seq(nrow(expr)) %>% future_map_dfr(function(cid){
+  alln <- getneighbors(delaunay,cid)
+  #first quartile
+  actualn <- alln[which(dists[alln,cid] <= neighbor.thr)]
+  
+  data.frame(t(colSums(expr[actualn,])))
+}, .progress = T)
+
+t1 <- Sys.time()
+
+print(t1-t0)
+
+juxta.view.del[is.na(juxta.view.del)] <- 0
+
+colnames(juxta.view.del) <- paste0("j",colnames(juxta.view.del))
+
+write_rds(juxta.view.del, paste0("juxta.view.del.rds"))
 
 
 #generate juxta from neighborhood information
