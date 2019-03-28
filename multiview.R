@@ -3,6 +3,7 @@ library(purrr)
 library(furrr)
 library(readr)
 library(stringr)
+library(tibble)
 library(caret)
 library(randomForest)
 library(deldir)
@@ -52,7 +53,9 @@ add_views <- function(current.views, new.views) {
     msg = "Intracellular view is missing."
   )
 
-  assert_that(is.list(new.views), msg = "The new views are not in a list.")
+  assert_that(is.list(new.views),
+    msg = "The new views are not in a list or vector."
+  )
 
   assert_that(length(new.views %>% unlist(recursive = F)) %% 2 == 0,
     msg = "The new view is malformed. Consider using create_view()."
@@ -209,13 +212,6 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
 
   if (!dir.exists(cache.location)) {
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
-  } else {
-    if (cached) {
-      cat(paste0(
-        "Trying to retreive models from cache for target ",
-        target, "\n"
-      ))
-    }
   }
 
   expr <- views[["intracellular"]][["data"]]
@@ -223,27 +219,9 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
   # use the non formula signature of randomForest for memory efficiency
   target.vector <- expr %>% pull(target)
 
-  model.intra.cache.file <-
-    paste0(cache.location, .Platform$file.sep, "model.intra.", target, ".rds")
-
-
-  # migrate to package ranger, see Janitza et al. 2016 and Altmann et al. 2010
-  # on pvalues for feature importances
-  if (file.exists(model.intra.cache.file) & cached) {
-    model.intra <- read_rds(model.intra.cache.file)
-  } else {
-    model.intra <- randomForest(
-      x = expr %>% select(-target),
-      y = target.vector, ntree = 100
-    )
-    if (cached) {
-      write_rds(model.intra, model.intra.cache.file)
-    }
-  }
-
   # returns a list of models
   model.views <- views %>%
-    list.remove(c("misty.uniqueid", "intracellular")) %>%
+    list.remove(c("misty.uniqueid")) %>%
     map(function(view) {
       model.view.cache.file <-
         paste0(
@@ -252,10 +230,11 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
         )
 
       if (file.exists(model.view.cache.file) & cached) {
-        model.view <- read_rds(model.intra.cache.file)
+        model.view <- read_rds(model.view.cache.file)
       } else {
+        target.index <- match(target, colnames(view[["data"]]))
         model.view <- randomForest(
-          x = view[["data"]] %>% select(-target),
+          x = view[["data"]] %>% select(-target.index),
           y = target.vector, ntree = 100
         )
 
@@ -272,7 +251,6 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
     map(~ predict(.x)) %>%
     list.cbind() %>%
     as_tibble() %>%
-    add_column(intracellular = predict(model.intra), .before = 1) %>%
     add_column(!!target := target.vector)
 
   # train lm on above
@@ -281,7 +259,7 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
   # make final.model an object from class misty.model?
   final.model <- list(
     meta.model = combined.views,
-    model.views = append(list(intracellular = model.intra), model.views)
+    model.views = model.views
   )
 
   return(final.model)
@@ -290,7 +268,7 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
 
 # improvement estimation
 estimate_improvement <- function(views, results.folder = "MVResults",
-                                 seed = 42, folds = 10) {
+                                 seed = 42, folds = 10, target.subset = NULL) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
   expr <- views[["intracellular"]][["data"]]
@@ -302,12 +280,20 @@ estimate_improvement <- function(views, results.folder = "MVResults",
     "performance.txt"
   ))
 
-  colnames(expr) %>% future_map_chr(function(target) {
+
+  targets <- switch(class(target.subset),
+    "numeric" = colnames(expr)[target.subset],
+    "character" = target.subset,
+    "NULL" = colnames(expr),
+    NULL
+  )
+
+  targets %>% future_map_chr(function(target) {
     target.vector <- expr %>% pull(target)
 
     test.folds <- createFolds(seq(nrow(expr)), k = folds)
 
-    performance.metrics <- test.folds %>% map_dfr(function(fold) {
+    performance.metrics <- test.folds %>% future_map_dfr(function(fold) {
       # remove test from views
       train.views <- views %>%
         list.remove(c("misty.uniqueid")) %>%
@@ -328,8 +314,9 @@ estimate_improvement <- function(views, results.folder = "MVResults",
 
       all.predictions <- model.trained[["model.views"]] %>%
         map2(test.views, function(model, view) {
+          target.index <- match(target, colnames(view[["data"]]))
           predict(model, view[["data"]] %>%
-            select(-target) %>%
+            select(-target.index) %>%
             mutate(!!target := target.vector[fold]))
         })
 
@@ -365,14 +352,14 @@ estimate_improvement <- function(views, results.folder = "MVResults",
     )
 
     return(target)
-  })
+  }, .progress = TRUE)
 }
 
 
 # intracellular should always exist and come first,
 # that is why we treat it separately from the other views
 estimate_importances <- function(views, results.folder = "MVResults",
-                                 seed = 42) {
+                                 seed = 42, target.subset = NULL) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
   view.abbrev <- views %>%
@@ -380,7 +367,7 @@ estimate_importances <- function(views, results.folder = "MVResults",
     map_chr(~ .x[["abbrev"]])
 
 
-  header <- str_glue("target intercept intra {views} p.intercept p.intra {p.views}",
+  header <- str_glue("target intercept {views} p.intercept {p.views}",
     views = paste0(view.abbrev, collapse = " "),
     p.views = paste0("p.", view.abbrev, collapse = " "),
     .sep = " "
@@ -393,7 +380,14 @@ estimate_importances <- function(views, results.folder = "MVResults",
     "coefficients.txt"
   ))
 
-  colnames(expr) %>% future_map_chr(function(target) {
+  targets <- switch(class(target.subset),
+    "numeric" = colnames(expr)[target.subset],
+    "character" = target.subset,
+    "NULL" = colnames(expr),
+    NULL
+  )
+
+  targets %>% future_map_chr(function(target) {
     target.model <- build_model(views, target, seed)
 
     combined.views <- target.model[["meta.model"]]
@@ -429,7 +423,7 @@ estimate_importances <- function(views, results.folder = "MVResults",
     )
 
     return(target)
-  })
+  }, .progress = TRUE)
 }
 
 
