@@ -269,6 +269,7 @@ build_model <- function(views, target, seed = 42, cached = TRUE) {
 # improvement estimation
 estimate_improvement <- function(views, results.folder = "MVResults",
                                  seed = 42, folds = 10, target.subset = NULL) {
+  
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
   expr <- views[["intracellular"]][["data"]]
@@ -283,12 +284,20 @@ estimate_improvement <- function(views, results.folder = "MVResults",
 
   targets <- switch(class(target.subset),
     "numeric" = colnames(expr)[target.subset],
+    "integer" = colnames(expr)[target.subset],
     "character" = target.subset,
     "NULL" = colnames(expr),
     NULL
   )
 
+
+  # nested futures! a proper topology should be defined using plan()
+  # e.g. plan(list(tweak(multiprocess, workers = 2),
+  #               tweak(multiprocess, workers = 4)))
+  # for handling 2 targets times 4 folds in parralel
   targets %>% future_map_chr(function(target) {
+    set.seed(seed)
+    
     target.vector <- expr %>% pull(target)
 
     test.folds <- createFolds(seq(nrow(expr)), k = folds)
@@ -382,6 +391,7 @@ estimate_importances <- function(views, results.folder = "MVResults",
 
   targets <- switch(class(target.subset),
     "numeric" = colnames(expr)[target.subset],
+    "integer" = colnames(expr)[target.subset],
     "character" = target.subset,
     "NULL" = colnames(expr),
     NULL
