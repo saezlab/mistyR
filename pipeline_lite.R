@@ -26,7 +26,7 @@ melanoma.views <- create_initial_view(table = intensities[, -1], unique.id = "33
   add_views(create_view("juxtacrine", "juxta", juxta.view)) %>%
   add_paracrine_view(positions[, -1], l)
 
-estimate_importances(melanoma.views, "melanoma/misty.results/",
+estimate_importances(melanoma.views, paste0("melanoma/misty.results.", l),
                      42, target.subset = seq(from, to))
 
 #alternatively run
