@@ -153,7 +153,7 @@ add_paracrine_view <- function(current.views, positions, l) {
   }
   
   return(current.views %>% add_views(create_view(
-    "paracrine",
+    paste0("paracrine,", l),
     paste0("para.", l),
     para.view
   )))
