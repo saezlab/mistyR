@@ -1,4 +1,4 @@
-# elipsis passed to randomForest
+# elipsis passed to ranger or randomForest
 build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
   set.seed(seed)
 
@@ -15,12 +15,18 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
 
   target.vector <- expr %>% pull(target)
 
-  # merge ellipsis with default ranger arguments
-  ranger.arguments <- list.merge(list(
-    num.trees = 100, importance = "impurity",
-    verbose = FALSE, num.threads = 1, seed = seed,
-    dependent.variable.name = target
-  ), list(...))
+  ranger.available <- "ranger" %in% rownames(installed.packages())
+
+  # merge ellipsis with default algorithm arguments
+  if (ranger.available) {
+    algo.arguments <- list.merge(list(
+      num.trees = 100, importance = "impurity",
+      verbose = FALSE, num.threads = 1, seed = seed,
+      dependent.variable.name = target
+    ), list(...))
+  } else {
+    algo.arguments <- list.merge(list(ntree = 100), list(...))
+  }
 
   # returns a list of models
   model.views <- views %>%
@@ -35,10 +41,22 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
       if (file.exists(model.view.cache.file) & cached) {
         model.view <- read_rds(model.view.cache.file)
       } else {
-        model.view <- do.call(ranger,
-          c(list(data = (view[["data"]] %>% mutate(!!target := target.vector))),
-          ranger.arguments)
-        )
+        if (ranger.available) {
+          model.view <- do.call(
+            ranger,
+            c(
+              list(data = (view[["data"]] %>%
+                mutate(!!target := target.vector))),
+              algo.arguments
+            )
+          )
+        } else {
+          target.index <- match(target, colnames(view[["data"]]))
+          model.view <- randomForest(
+            x = view[["data"]] %>% select(-target.index),
+            y = target.vector, algo.arguments
+          )
+        }
         if (cached) {
           write_rds(model.view, model.view.cache.file)
         }
@@ -49,7 +67,7 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    map(~ .x$predictions) %>%
+    map(~ ifelse(ranger.available, .x$predictions, predict(.x))) %>%
     list.cbind() %>%
     as_tibble() %>%
     add_column(!!target := target.vector)

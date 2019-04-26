@@ -22,6 +22,7 @@ estimate_improvement <- function(views, results.folder = "MVResults",
     NULL
   )
 
+  ranger.available <- "ranger" %in% rownames(installed.packages())
 
   # nested futures! a proper topology should be defined using plan()
   # e.g. plan(list(tweak(multiprocess, workers = 2),
@@ -55,8 +56,13 @@ estimate_improvement <- function(views, results.folder = "MVResults",
 
       all.predictions <- model.trained[["model.views"]] %>%
         map2(test.views, function(model, view) {
-          predict(model, view[["data"]] %>%
-            mutate(!!target := target.vector[fold]), seed = seed)$predictions
+          if (ranger.available) {
+            predict(model, view[["data"]] %>%
+              mutate(!!target := target.vector[fold]), seed = seed)$predictions
+          } else {
+            predict(model, view[["data"]] %>%
+              mutate(!!target := target.vector[fold]))
+          }
         })
 
 
@@ -126,6 +132,8 @@ estimate_importances <- function(views, results.folder = "MVResults",
     NULL
   )
 
+  ranger.available <- "ranger" %in% rownames(installed.packages())
+
   targets %>% future_map_chr(function(target) {
     target.model <- build_model(views, target, seed, ...)
 
@@ -148,11 +156,19 @@ estimate_importances <- function(views, results.folder = "MVResults",
     target.model[["model.views"]] %>% walk2(
       view.abbrev,
       function(model.view, abbrev) {
-        model.view.imps <- model.view$variable.importance
+        if (ranger.available) {
+          model.view.imps <- model.view$variable.importance
+          targets <- names(model.view.imps)
+        } else {
+          model.view.imps <- importance(model.view, type = 2)
+          targets <- rownames(model.view.imps)
+        }
+
         imps <- tibble(
-          target = names(model.view.imps),
+          target = targets,
           imp = model.view.imps
         )
+
         write_csv(imps,
           path = paste0(
             results.folder, .Platform$file.sep,
