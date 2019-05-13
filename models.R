@@ -52,9 +52,14 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
           )
         } else {
           target.index <- match(target, colnames(view[["data"]]))
-          model.view <- randomForest(
-            x = view[["data"]] %>% select(-target.index),
-            y = target.vector, algo.arguments
+          model.view <- do.call(
+            randomForest,
+            c(
+              list(
+                x = view[["data"]] %>% select(-target.index),
+                y = target.vector
+              ), algo.arguments
+            )
           )
         }
         if (cached) {
