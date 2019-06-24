@@ -1,3 +1,4 @@
+library(MASS)
 library(dplyr)
 library(purrr)
 library(furrr)
@@ -12,6 +13,7 @@ library(distances)
 library(digest)
 library(rlist)
 library(assertthat)
+
 
 plan(multiprocess)
 

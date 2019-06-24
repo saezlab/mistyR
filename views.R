@@ -127,7 +127,27 @@ add_juxtacrine_view <- function(current.views, positions, neighbor.thr = 15) {
 }
 
 
-add_paracrine_view <- function(current.views, positions, l) {
+#ncells has priority over nystrom
+add_paracrine_view <- function(current.views, positions, l, approx = 1, ncells = NULL) {
+  # K.approx is a list containing C, W.plus and s (indexes of sampled columns)
+  sample_nystrom_row <- function(K.approx, k) {
+    
+    # transform k into the row index of reordered K.approx
+    k.ind <- which(K.approx$s == k)
+    if (is_empty(k.ind)) {
+      k.ind <- length(K.approx$s) + k
+    }
+    
+    cw <- seq(ncol(K.approx$W.plus)) %>%
+      map_dbl(~ K.approx$C[k.ind, ] %*% K.approx$W.plus[, .x])
+    cwct <- seq(ncol(t(K.approx$C))) %>% map_dbl(~ cw %*% t(K.approx$C)[, .x])
+    
+    # reorder the columns of cwct so that they correspond to the original order
+    cwct[c(K.approx$s, seq_along(cwct)[-s])]
+  }
+  
+  
+  
   dists <- distances(as.data.frame(positions))
   expr <- current.views[["intracellular"]][["data"]]
   
@@ -146,9 +166,35 @@ add_paracrine_view <- function(current.views, positions, l) {
     para.view <- read_rds(para.cache.file)
   }
   else {
-    para.view <- seq(nrow(expr)) %>%
-      future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
-                                              exp(-(dists[, .x][-.x]^2) / l)))))
+    
+    if(is.null(ncells)){
+      if(approx == 1){
+        para.view <- seq(nrow(expr)) %>%
+          future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
+                                                  exp(-(dists[, .x][-.x]^2) / l)))))
+      }
+      else {
+        if(approx<1) approx <- round(approx*ncol(dists))
+        
+        # single Nystrom approximation expert, given RBF with paramter l
+        s <- sort(sample.int(n = ncol(dists), size = approx))
+        C <- exp(-(dists[, s]^2)/l)
+        
+        # pseudo inverse of W
+        W.plus <- ginv(C[s, ])
+        # return Nystrom list
+        K.approx <- list(s = s, C = C, W.plus = W.plus)
+        
+        para.view <- seq(nrow(expr)) %>%
+          future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx,.x)[-.x]))))
+      }
+    } else {
+      para.view <- seq(nrow(expr)) %>%
+        future_map_dfr(function(rowid){
+          knn <- nearest_neighbor_search(dists, ncells+1, query_indices = rowid)[-1,1]
+          data.frame(t(colSums(expr[knn,] * exp(-(dists[knn,rowid]^2)/l))))
+        })
+    }
     write_rds(para.view, para.cache.file)
   }
   
