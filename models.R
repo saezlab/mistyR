@@ -16,17 +16,21 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
   target.vector <- expr %>% pull(target)
 
   ranger.available <- "ranger" %in% rownames(installed.packages())
+  ranger.available <- FALSE
 
   # merge ellipsis with default algorithm arguments
   if (ranger.available) {
-    algo.arguments <- list.merge(list(
+    algo.arguments <- list(
       num.trees = 100, importance = "impurity",
       verbose = FALSE, num.threads = 1, seed = seed,
       dependent.variable.name = target
-    ), list(...))
+    )
   } else {
-    algo.arguments <- list.merge(list(ntree = 100), list(...))
+    algo.arguments <- list(ntree = 100)
   }
+  
+  if(!length(list(...))==0)
+    algo.arguments <- list.merge(algo.arguments, list(...))
 
   # returns a list of models
   model.views <- views %>%
