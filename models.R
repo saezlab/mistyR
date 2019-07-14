@@ -16,7 +16,6 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
   target.vector <- expr %>% pull(target)
 
   ranger.available <- "ranger" %in% rownames(installed.packages())
-  ranger.available <- FALSE
 
   # merge ellipsis with default algorithm arguments
   if (ranger.available) {
@@ -76,11 +75,10 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    map(~ ifelse(ranger.available, .x$predictions, predict(.x))) %>%
+    map(~if(ranger.available){ .x$predictions } else { predict(.x) }) %>%
     list.cbind() %>%
     as_tibble() %>%
-    add_column(!!target := target.vector)
-
+    mutate(!!target := target.vector)
   # train lm on above
   combined.views <- lm(as.formula(paste0(target, "~.-1")), oob.predictions)
 
