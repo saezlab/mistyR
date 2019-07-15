@@ -1,5 +1,5 @@
 # elipsis passed to ranger or randomForest
-build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
+build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, ...) {
   set.seed(seed)
 
   cache.location <- paste0(
@@ -27,9 +27,10 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
   } else {
     algo.arguments <- list(ntree = 100)
   }
-  
-  if(!length(list(...))==0)
+
+  if (!length(list(...)) == 0) {
     algo.arguments <- list.merge(algo.arguments, list(...))
+  }
 
   # returns a list of models
   model.views <- views %>%
@@ -75,18 +76,67 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    map(~if(ranger.available){ .x$predictions } else { predict(.x) }) %>%
+    map(~ if (ranger.available) {
+      .x$predictions
+    } else {
+      predict(.x)
+    }) %>%
     list.cbind() %>%
     as_tibble() %>%
     mutate(!!target := target.vector)
+
   # train lm on above
-  #combined.views <- lm(as.formula(paste0(target, "~.-1")), oob.predictions)
   combined.views <- lm(as.formula(paste0(target, "~.")), oob.predictions)
+
+
+
+  # cv performance estimate
+  test.folds <- createFolds(target.vector, k = cv.folds)
+
+  intra.view.only <- (if (ranger.available) {
+    model.views[["intracellular"]]$predictions
+  }
+  else {
+    predict(model.views[["intracellular"]])
+  }) %>%
+    enframe(name = NULL) %>%
+    mutate(!!target := target.vector)
+
+  performance.estimate <- test.folds %>% map_dfr(function(test.fold) {
+    meta.intra <- lm(
+      as.formula(paste0(target, "~.")),
+      intra.view.only %>% slice(-test.fold)
+    )
+    meta.multi <- lm(
+      as.formula(paste0(target, "~.")),
+      oob.predictions %>% slice(-test.fold)
+    )
+
+    intra.prediction <- predict(meta.intra, intra.view.only %>% slice(test.fold))
+    multi.view.prediction <- predict(meta.multi, oob.predictions %>% slice(test.fold))
+
+    intra.RMSE <- RMSE(intra.prediction, target.vector[test.fold])
+    intra.R2 <- R2(intra.prediction, target.vector[test.fold],
+      formula = "traditional"
+    )
+
+    multi.RMSE <- RMSE(multi.view.prediction, target.vector[test.fold])
+    multi.R2 <- R2(multi.view.prediction, target.vector[test.fold],
+      formula = "traditional"
+    )
+
+    tibble(
+      intra.RMSE = intra.RMSE, intra.R2 = intra.R2,
+      multi.RMSE = multi.RMSE, multi.R2 = multi.R2
+    )
+  })
+
 
   # make final.model an object from class misty.model?
   final.model <- list(
     meta.model = combined.views,
-    model.views = model.views
+    model.views = model.views,
+    performance.estimate = performance.estimate
   )
 
   return(final.model)

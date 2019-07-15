@@ -121,16 +121,31 @@ estimate_importances <- function(views, results.folder = "MVResults",
 
 
 
-  if(!file.exists(paste0(
+  if (!file.exists(paste0(
     results.folder, .Platform$file.sep,
     "coefficients.txt"
-  )) {
+  ))) {
     write(header, file = paste0(
       results.folder, .Platform$file.sep,
       "coefficients.txt"
     ))
   } else {
     print("Coefficients file already exists. Appending!\n")
+  }
+  
+  
+  header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2"
+  
+  if(!file.exists(paste0(
+    results.folder, .Platform$file.sep,
+    "performance.txt"
+  ))) {
+    write(header, file = paste0(
+      results.folder, .Platform$file.sep,
+      "performance.txt"
+    ))
+  } else{
+    print("Performance file already exists. Appending!\n")
   }
 
   targets <- switch(class(target.subset),
@@ -185,6 +200,15 @@ estimate_importances <- function(views, results.folder = "MVResults",
           )
         )
       }
+    )
+    
+    #performance
+    
+    performance.summary <- target.model[["performance.estimate"]] %>% colMeans()
+    
+    write(paste(target, paste(performance.summary, collapse = " ")),
+          file = paste0(results.folder, .Platform$file.sep, "performance.txt"),
+          append = TRUE
     )
 
     return(target)
