@@ -111,7 +111,7 @@ estimate_importances <- function(views, results.folder = "MVResults",
     map_chr(~ .x[["abbrev"]])
 
 
-  header <- str_glue("target {views} {p.views}",
+  header <- str_glue("target intercept {views} p.intercept {p.views}",
     views = paste0(view.abbrev, collapse = " "),
     p.views = paste0("p.", view.abbrev, collapse = " "),
     .sep = " "
@@ -119,10 +119,19 @@ estimate_importances <- function(views, results.folder = "MVResults",
 
   expr <- views[["intracellular"]][["data"]]
 
-  write(header, file = paste0(
+
+
+  if(!file.exists(paste0(
     results.folder, .Platform$file.sep,
     "coefficients.txt"
-  ))
+  )) {
+    write(header, file = paste0(
+      results.folder, .Platform$file.sep,
+      "coefficients.txt"
+    ))
+  } else {
+    print("Coefficients file already exists. Appending!\n")
+  }
 
   targets <- switch(class(target.subset),
     "numeric" = colnames(expr)[target.subset],

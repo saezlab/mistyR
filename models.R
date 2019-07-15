@@ -80,7 +80,8 @@ build_model <- function(views, target, seed = 42, cached = TRUE, ...) {
     as_tibble() %>%
     mutate(!!target := target.vector)
   # train lm on above
-  combined.views <- lm(as.formula(paste0(target, "~.-1")), oob.predictions)
+  #combined.views <- lm(as.formula(paste0(target, "~.-1")), oob.predictions)
+  combined.views <- lm(as.formula(paste0(target, "~.")), oob.predictions)
 
   # make final.model an object from class misty.model?
   final.model <- list(

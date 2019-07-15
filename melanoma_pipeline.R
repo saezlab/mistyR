@@ -16,16 +16,14 @@ intensities <- as.data.frame(apply(intensities, 2, function(i) i <- pmax(0, i)))
 
 positions <- m1 %>% select(CellId, contains("position"))
 
-# Remove Hoechst and some As
-
 neighborhood <- m1 %>%
   select(CellId, Percent_Touching, contains("neighbo", ignore.case = T))
 stats <- m1 %>% select(CellId, 43:51)
 
 rm(m1)
 
-#futures cannot export more than 500MB. Change to 2 GB
-options(future.globals.maxSize=1000*(2048^2))
+#futures cannot export more than 500MB. Change to 2000 MB.
+options(future.globals.maxSize=2000*(1024^2))
 
 # Start parallel processing
 plan(multiprocess, workers = (to - from + 1))
@@ -61,13 +59,13 @@ if (file.exists(paste0("melanoma/", data, ".juxta.view.rds"))) {
 
 melanoma.views <- create_initial_view(table = intensities[, -1], unique.id = data) %>%
   add_views(create_view("juxtacrine", "juxta", juxta.view)) %>%
-  add_paracrine_view(positions[, -1], 200^2) %>%
-  add_paracrine_view(positions[, -1], 400^2) %>%
-  add_paracrine_view(positions[, -1], 800^2) %>%
-  add_paracrine_view(positions[, -1], 1600^2)
+  add_paracrine_view(positions[, -1], l=400^2, ncells=1000) %>%
+  add_paracrine_view(positions[, -1], l=800^2, ncells=1000)
 
-# estimate_importances(melanoma.views, paste0("melanoma/misty.results.", l),
-#                     42, target.subset = seq(from, to))
+ estimate_importances(melanoma.views, paste0("melanoma/triplet_results/",data),
+                     42, target.subset = seq(from, to), 
+                    replace = FALSE, sampsize = min(ceiling(.632*nrow(intensities)), 100000), 
+                    mtry = max(5, floor(sqrt(ncol(intensities) - 1))))
 
 # alternatively run
 
