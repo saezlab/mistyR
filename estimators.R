@@ -134,7 +134,7 @@ estimate_importances <- function(views, results.folder = "MVResults",
   }
   
   
-  header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2"
+  header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2 p.RMSE p.R2"
   
   if(!file.exists(paste0(
     results.folder, .Platform$file.sep,
@@ -204,7 +204,14 @@ estimate_importances <- function(views, results.folder = "MVResults",
     
     #performance
     
-    performance.summary <- target.model[["performance.estimate"]] %>% colMeans()
+    performance.estimate <- target.model[["performance.estimate"]]
+    performance.summary <- c(performance.estimate %>% colMeans(), 
+                              t.test(performance.estimate %>% pull(intra.RMSE),
+                                     performance.estimate %>% pull(multi.RMSE),
+                                     alternative = "greater")$p.value,
+                             t.test(performance.estimate %>% pull(intra.R2),
+                                    performance.estimate %>% pull(multi.R2),
+                                    alternative = "less")$p.value)
     
     write(paste(target, paste(performance.summary, collapse = " ")),
           file = paste0(results.folder, .Platform$file.sep, "performance.txt"),
