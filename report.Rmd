@@ -4,16 +4,12 @@ output:
   html_document: 
     fig_height: 9
     fig_width: 12
-  html_notebook:
-    fig_height: 9
-    fig_width: 12
 editor_options:
   chunk_output_type: inline
 ---
 
 
-Load libraries
-```{r message=FALSE}
+```{r message=FALSE, include=FALSE}
 library(tidyverse)
 library(cowplot)
 library(scales)
@@ -23,7 +19,7 @@ library(scales)
 Select an image folder to generate results from and p-value cutoff.
 
 ```{r}
-image <- "melanoma_results/33466POST"
+image <- "kidney_results/image3"
 
 # global p-value significance cutoff
 p.cutoff <- 0.05
@@ -36,7 +32,7 @@ p.cutoff <- 0.05
 Red denotes the performance of a model learned only from the intracellular view, 
 green denotes the performance of a multiview model, 
 "+" denotes statistically significant improvement (FDR adjusted), "-" sign otherwise.
-```{r}
+```{r echo=FALSE}
 performance <- read_delim(paste0(image, .Platform$file.sep, "performance.txt"),
   delim = " ", col_types = cols()
 )
@@ -81,7 +77,7 @@ plot_grid(gg.RMSE, gg.R2, labels = "AUTO")
 The barplot shows the contributions of each view to hte meta-model. 
 The heights of the bars corresponds to the value of the coefficients in front of the respective views.
 
-```{r}
+```{r echo=FALSE}
 coefficients <- read_delim(paste0(image, .Platform$file.sep, "coefficients.txt"),
   delim = " ", col_types = cols()
 )
@@ -93,7 +89,7 @@ importances <- bind_cols(
     ((coefficients %>% select(starts_with("p.")) < p.cutoff) %>% as.numeric())
 ) %>% gather(key = "view", value = "coefficient", -target)
 
-ggplot(importances, aes(x = target, y = abs(coefficient))) +
+ggplot(importances %>% filter(view != "intercept"), aes(x = target, y = abs(coefficient))) +
   geom_bar(aes(fill = view, group = view), stat = "identity") +
   scale_fill_brewer(palette = "Set1") +
   xlab("Target") + ylab("Coefficient") + 
@@ -103,7 +99,7 @@ ggplot(importances, aes(x = target, y = abs(coefficient))) +
 # Predictor importances
 
 Feature importances for each target and each view. The importances are scaled by row.
-```{r}
+```{r echo=FALSE}
 targets <- unique(importances$target)
 views <- unique(importances %>% filter(view != "intercept") %>% pull(view))
 
