@@ -1,3 +1,4 @@
+#Explicit attachment of libraries will be removed in future versions
 library(MASS)
 library(dplyr)
 library(purrr)
@@ -15,7 +16,16 @@ library(rlist)
 library(assertthat)
 
 
-plan(multiprocess)
+# setup default parallel processing
+# the future package is required by furrr
+future::plan(future::multiprocess)
+
+# import operators
+# magrittr and rlang are imported by dplyr
+`%>%` <- magrittr::`%>%`
+`!!` <- rlang::`!!`
+`:=` <- rlang::`:=`
+
 
 source("views.R")
 source("utils.R")

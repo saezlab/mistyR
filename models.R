@@ -13,9 +13,9 @@ build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, 
 
   expr <- views[["intracellular"]][["data"]]
 
-  target.vector <- expr %>% pull(target)
+  target.vector <- expr %>% dplyr::pull(target)
 
-  ranger.available <- "ranger" %in% rownames(installed.packages())
+  ranger.available <- require("ranger", quietly = TRUE, pos = "package:base")
 
   # merge ellipsis with default algorithm arguments
   if (ranger.available) {
@@ -29,13 +29,13 @@ build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, 
   }
 
   if (!length(list(...)) == 0) {
-    algo.arguments <- list.merge(algo.arguments, list(...))
+    algo.arguments <- rlist::list.merge(algo.arguments, list(...))
   }
 
   # returns a list of models
   model.views <- views %>%
-    list.remove(c("misty.uniqueid")) %>%
-    map(function(view) {
+    rlist::list.remove(c("misty.uniqueid")) %>%
+    purrr::map(function(view) {
       model.view.cache.file <-
         paste0(
           cache.location, .Platform$file.sep,
@@ -43,31 +43,31 @@ build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, 
         )
 
       if (file.exists(model.view.cache.file) & cached) {
-        model.view <- read_rds(model.view.cache.file)
+        model.view <- readr::read_rds(model.view.cache.file)
       } else {
         if (ranger.available) {
           model.view <- do.call(
-            ranger,
+            ranger::ranger,
             c(
               list(data = (view[["data"]] %>%
-                mutate(!!target := target.vector))),
+                dplyr::mutate(!!target := target.vector))),
               algo.arguments
             )
           )
         } else {
           target.index <- match(target, colnames(view[["data"]]))
           model.view <- do.call(
-            randomForest,
+            randomForest::randomForest,
             c(
               list(
-                x = view[["data"]] %>% select(-target.index),
+                x = view[["data"]] %>% dplyr::select(-target.index),
                 y = target.vector
               ), algo.arguments
             )
           )
         }
         if (cached) {
-          write_rds(model.view, model.view.cache.file)
+          readr::write_rds(model.view, model.view.cache.file)
         }
       }
 
@@ -76,56 +76,56 @@ build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, 
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    map(~ if (ranger.available) {
+    purrr::map(~ if (ranger.available) {
       .x$predictions
     } else {
-      predict(.x)
+      .x$predicted
     }) %>%
-    list.cbind() %>%
-    as_tibble() %>%
-    mutate(!!target := target.vector)
+    rlist::list.cbind() %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(!!target := target.vector)
 
   # train lm on above
   combined.views <- lm(as.formula(paste0(target, "~.")), oob.predictions)
 
-
-
   # cv performance estimate
-  test.folds <- createFolds(target.vector, k = cv.folds)
+  test.folds <- caret::createFolds(target.vector, k = cv.folds)
 
   intra.view.only <- (if (ranger.available) {
     model.views[["intracellular"]]$predictions
   }
   else {
-    predict(model.views[["intracellular"]])
+    model.views[["intracellular"]]$predicted
   }) %>%
-    enframe(name = NULL) %>%
-    mutate(!!target := target.vector)
+    tibble::enframe(name = NULL) %>%
+    dplyr::mutate(!!target := target.vector)
 
-  performance.estimate <- test.folds %>% map_dfr(function(test.fold) {
+  performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- lm(
       as.formula(paste0(target, "~.")),
-      intra.view.only %>% slice(-test.fold)
+      intra.view.only %>% dplyr::slice(-test.fold)
     )
     meta.multi <- lm(
       as.formula(paste0(target, "~.")),
-      oob.predictions %>% slice(-test.fold)
+      oob.predictions %>% dplyr::slice(-test.fold)
     )
 
-    intra.prediction <- predict(meta.intra, intra.view.only %>% slice(test.fold))
-    multi.view.prediction <- predict(meta.multi, oob.predictions %>% slice(test.fold))
+    intra.prediction <- predict(meta.intra, intra.view.only %>%
+      dplyr::slice(test.fold))
+    multi.view.prediction <- predict(meta.multi, oob.predictions %>%
+      dplyr::slice(test.fold))
 
-    intra.RMSE <- RMSE(intra.prediction, target.vector[test.fold])
-    intra.R2 <- R2(intra.prediction, target.vector[test.fold],
+    intra.RMSE <- caret::RMSE(intra.prediction, target.vector[test.fold])
+    intra.R2 <- caret::R2(intra.prediction, target.vector[test.fold],
       formula = "traditional"
     )
 
-    multi.RMSE <- RMSE(multi.view.prediction, target.vector[test.fold])
-    multi.R2 <- R2(multi.view.prediction, target.vector[test.fold],
+    multi.RMSE <- caret::RMSE(multi.view.prediction, target.vector[test.fold])
+    multi.R2 <- caret::R2(multi.view.prediction, target.vector[test.fold],
       formula = "traditional"
     )
 
-    tibble(
+    tibble::tibble(
       intra.RMSE = intra.RMSE, intra.R2 = intra.R2,
       multi.RMSE = multi.RMSE, multi.R2 = multi.R2
     )
