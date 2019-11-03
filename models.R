@@ -15,7 +15,7 @@ build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, 
 
   target.vector <- expr %>% dplyr::pull(target)
 
-  ranger.available <- require("ranger", quietly = TRUE, pos = "package:base")
+  ranger.available <- require("ranger", quietly = TRUE)
 
   # merge ellipsis with default algorithm arguments
   if (ranger.available) {

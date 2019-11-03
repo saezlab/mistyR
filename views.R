@@ -110,13 +110,13 @@ add_juxtacrine_view <- function(current.views, positions, neighbor.thr = 15) {
   }
   else {
     delaunay <- deldir::deldir(as.data.frame(positions))
-    dists <- distances::distances(as.data.frame(positions))
-
+    
     juxta.view <- seq(nrow(expr)) %>% furrr::future_map_dfr(function(cid) {
       alln <- get_neighbors(delaunay, cid)
-      # first quartile
+      # suboptimal placement of dists, but makes conflict if out of scope
+      # probably due to azy evaluations
+      dists <- distances::distances(as.data.frame(positions))
       actualn <- alln[which(dists[alln, cid] <= neighbor.thr)]
-
       data.frame(t(colSums(expr[actualn, ])))
     })
 
@@ -125,8 +125,8 @@ add_juxtacrine_view <- function(current.views, positions, neighbor.thr = 15) {
 
   return(current.views %>% add_views(create_view(
     "juxtacrine",
-    paste0("juxta.", neighbor.thr),
-    juxta.view
+    juxta.view,
+    paste0("juxta.", neighbor.thr)
   )))
 }
 
@@ -203,8 +203,8 @@ add_paracrine_view <- function(current.views, positions, l, approx = 1, ncells =
 
   return(current.views %>% add_views(create_view(
     paste0("paracrine,", l),
-    paste0("para.", l),
-    para.view
+    para.view,
+    paste0("para.", l)
   )))
 }
 

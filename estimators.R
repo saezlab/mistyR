@@ -53,7 +53,7 @@ estimate_importances <- function(views, results.folder = "MVResults",
     NULL
   )
 
-  ranger.available <- require("ranger", quietly = TRUE, pos = "package:base")
+  ranger.available <- require("ranger", quietly = TRUE)
 
   targets %>% furrr::future_map_chr(function(target) {
     target.model <- build_model(views, target, seed, ...)
