@@ -100,18 +100,22 @@ estimate_importances <- function(views, results.folder = "MVResults",
     )
 
     # performance
-
-    performance.estimate <- target.model[["performance.estimate"]]
+    if(sum(target.model[["performance.estimate"]] < 0) > 0){
+      warning(paste("Negative performance detected and replaced with 0 for target", target))
+    }
+    
+    performance.estimate <- target.model[["performance.estimate"]] %>%
+      mutate_if(~sum(. < 0) > 0, ~pmax(., 0))
     performance.summary <- c(
       performance.estimate %>% colMeans(),
-      t.test(performance.estimate %>% dplyr::pull(intra.RMSE),
+      tryCatch(t.test(performance.estimate %>% dplyr::pull(intra.RMSE),
         performance.estimate %>% dplyr::pull(multi.RMSE),
         alternative = "greater"
-      )$p.value,
-      t.test(performance.estimate %>% dplyr::pull(intra.R2),
+      )$p.value, error = function(e){1}),
+      tryCatch(t.test(performance.estimate %>% dplyr::pull(intra.R2),
         performance.estimate %>% dplyr::pull(multi.R2),
         alternative = "less"
-      )$p.value
+      )$p.value, error = function(e){1})
     )
 
     write(paste(target, paste(performance.summary, collapse = " ")),
