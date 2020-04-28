@@ -13,9 +13,11 @@
 
 # Output files from R CMD check
 /*.Rcheck/
+.Rbuildignore
 
 # RStudio files
 .Rproj.user/
+*.Rproj
 
 # produced vignettes
 vignettes/*.html
@@ -27,6 +29,7 @@ vignettes/*.pdf
 # knitr and R markdown default cache directories
 /*_cache/
 /cache/
+README.html
 
 # Temporary files created by R markdown
 *.utf8.md
