@@ -1,0 +1,10 @@
+citEntry(
+    entry="article",
+    author = c(person("Jovan", "Tanevski"),
+               person("Julio", "Saez-Rodriguez")),
+    title = "Title",
+    journal = "Journal",
+    year = 2020,
+    
+    textVersion = "Jovan Tanevski, ..., Julio Saez-Rodriguez. 'Title.' Journal. 2020."
+)
