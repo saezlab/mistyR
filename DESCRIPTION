@@ -4,7 +4,7 @@ Title: MISTy
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Jovan",
-           family = "Tavevski",
+           family = "Tanevski",
            role = c("cre", "aut"),
            email = "jovan.tanevski@bioquant.uni-heidelberg.de",
            comment = c(ORCID = "0000-0001-7177-1003")))

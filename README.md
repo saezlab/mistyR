@@ -1,4 +1,4 @@
-# MISTy <img src="man/figures/logo.png" align="right" height="139">
+# MISTy - **M**ultiview **I**ntercellular **S**pa**T**ial modeling framework <img src="man/figures/logo.png" align="right" height="139">
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -12,4 +12,4 @@ The advancement of technologies for measurement of highly multiplexed spatial da
 ## Citation
 If you use MISTy for your research please cite the [original publication](): 
 
-> Jovan Tanevski, ..., Julio Saez-Rodriguez. Title. Journal. (2020).
+> Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. In preparation. (2020).
