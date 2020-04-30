@@ -1,10 +1,13 @@
 citEntry(
     entry="article",
     author = c(person("Jovan", "Tanevski"),
+    		   person("Attila", "Gabor"),
+    		   person("Ricardo Omar", "Ramirez Flores"),
+    		   person("Denis", "Schapiro"),
                person("Julio", "Saez-Rodriguez")),
-    title = "Title",
-    journal = "Journal",
+    title = "Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data.",
+    journal = "In preparation",
     year = 2020,
     
-    textVersion = "Jovan Tanevski, ..., Julio Saez-Rodriguez. 'Title.' Journal. 2020."
+    textVersion = "Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. In preparation. (2020)."
 )

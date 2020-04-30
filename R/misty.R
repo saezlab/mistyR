@@ -1,5 +1,24 @@
+#' @importFrom magrittr %>% 
+#' @importFrom rlang !! :=
+.onLoad <- function(libname, pkgname){
+  suppressWarnings(future::plan(future::multiprocess))
+}
+
+
 # pass ellipsis to build_model
-estimate_importances <- function(views, results.folder = "MVResults",
+#' Title
+#'
+#' @param views 
+#' @param results.folder 
+#' @param seed 
+#' @param target.subset 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+run_misty <- function(views, results.folder = "MVResults",
                                  seed = 42, target.subset = NULL, ...) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
@@ -119,115 +138,6 @@ estimate_importances <- function(views, results.folder = "MVResults",
     )
 
     write(paste(target, paste(performance.summary, collapse = " ")),
-      file = paste0(results.folder, .Platform$file.sep, "performance.txt"),
-      append = TRUE
-    )
-
-    return(target)
-  }, .progress = TRUE)
-}
-
-
-
-# DEPRECATED
-# improvement estimation
-# pass ellipsis to build_model
-estimate_improvement <- function(views, results.folder = "MVResults",
-                                 seed = 42, folds = 10, target.subset = NULL, ...) {
-  .Deprecated("estimate_importances",
-    msg = "the improvements are now estimated at the level of the meta-model"
-  )
-
-  if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
-
-  expr <- views[["intracellular"]][["data"]]
-
-  header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2"
-
-  write(header, file = paste0(
-    results.folder, .Platform$file.sep,
-    "performance.txt"
-  ))
-
-
-  targets <- switch(class(target.subset),
-    "numeric" = colnames(expr)[target.subset],
-    "integer" = colnames(expr)[target.subset],
-    "character" = target.subset,
-    "NULL" = colnames(expr),
-    NULL
-  )
-
-  ranger.available <- "ranger" %in% rownames(installed.packages())
-
-  # nested futures! a proper topology should be defined using plan()
-  # e.g. plan(list(tweak(multiprocess, workers = 2),
-  #               tweak(multiprocess, workers = 4)))
-  # for handling 2 targets times 4 folds in parralel
-  targets %>% future_map_chr(function(target) {
-    set.seed(seed)
-
-    target.vector <- expr %>% pull(target)
-
-    test.folds <- createFolds(seq(nrow(expr)), k = folds)
-
-    performance.metrics <- test.folds %>% future_map_dfr(function(fold) {
-      # remove test from views
-      train.views <- views %>%
-        list.remove(c("misty.uniqueid")) %>%
-        map(function(view) {
-          list(abbrev = view[["abbrev"]], data = view[["data"]] %>%
-            slice(-fold))
-        }) %>%
-        append(list(misty.uniqueid = views[["misty.uniqueid"]]))
-
-      test.views <- views %>%
-        list.remove(c("misty.uniqueid")) %>%
-        map(function(view) {
-          list(abbrev = view[["abbrev"]], data = view[["data"]] %>% slice(fold))
-        })
-
-      model.trained <- build_model(train.views, target, seed, FALSE, ...)
-
-
-      all.predictions <- model.trained[["model.views"]] %>%
-        map2(test.views, function(model, view) {
-          if (ranger.available) {
-            predict(model, view[["data"]] %>%
-              mutate(!!target := target.vector[fold]), seed = seed)$predictions
-          } else {
-            predict(model, view[["data"]] %>%
-              mutate(!!target := target.vector[fold]))
-          }
-        })
-
-
-      intra.prediction <- all.predictions$intracellular
-      multi.view.prediction <- predict(
-        model.trained[["meta.model"]],
-        as_tibble(all.predictions) %>% mutate(!!target := target.vector[fold])
-      )
-
-
-      intra.RMSE <- RMSE(intra.prediction, target.vector[fold])
-      intra.R2 <- R2(intra.prediction, target.vector[fold],
-        formula = "traditional"
-      )
-
-      multi.RMSE <- RMSE(multi.view.prediction, target.vector[fold])
-      multi.R2 <- R2(multi.view.prediction, target.vector[fold],
-        formula = "traditional"
-      )
-
-      tibble(
-        intra.RMSE = intra.RMSE, intra.R2 = intra.R2,
-        multi.RMSE = multi.RMSE, multi.R2 = multi.R2
-      )
-    })
-
-    performance.metrics.summary <- performance.metrics %>% colMeans()
-
-    write(paste(target, paste(performance.metrics.summary, collapse = " ")),
       file = paste0(results.folder, .Platform$file.sep, "performance.txt"),
       append = TRUE
     )

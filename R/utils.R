@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param singleid 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 clear_cache <- function(singleid = NULL) {
   if (is.null(singleid)) {
     if (unlink(".misty.temp", recursive = TRUE) == 0) {

@@ -1,6 +1,15 @@
 ## View manipulation functions
 
 # first function to be called
+#' Title
+#'
+#' @param table 
+#' @param unique.id 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 create_initial_view <- function(table, unique.id = NULL) {
   init.list <- list(intracellular = list(abbrev = "intra", data = table))
 
@@ -25,6 +34,16 @@ create_initial_view <- function(table, unique.id = NULL) {
 }
 
 # make a misty.view class?
+#' Title
+#'
+#' @param name 
+#' @param data 
+#' @param abbrev 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 create_view <- function(name, data, abbrev = name) {
   new.list <- list(list(abbrev = abbrev, data = data))
   names(new.list)[1] <- name
@@ -33,6 +52,15 @@ create_view <- function(name, data, abbrev = name) {
 
 
 
+#' Title
+#'
+#' @param current.views 
+#' @param new.views 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
     !is.null(current.views[["intracellular"]]),
@@ -83,6 +111,16 @@ add_views <- function(current.views, new.views) {
   return(append(current.views, new.views))
 }
 
+#' Title
+#'
+#' @param current.views 
+#' @param positions 
+#' @param neighbor.thr 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 add_juxtacrine_view <- function(current.views, positions, neighbor.thr = 15) {
   # from a deldir object
   get_neighbors <- function(ddobj, id) {
@@ -132,6 +170,18 @@ add_juxtacrine_view <- function(current.views, positions, neighbor.thr = 15) {
 
 
 # ncells has priority over nystrom
+#' Title
+#'
+#' @param current.views 
+#' @param positions 
+#' @param l 
+#' @param approx 
+#' @param ncells 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 add_paracrine_view <- function(current.views, positions, l, approx = 1, ncells = NULL) {
   # K.approx is a list containing C, W.plus and s (indexes of sampled columns)
   sample_nystrom_row <- function(K.approx, k) {
@@ -209,6 +259,15 @@ add_paracrine_view <- function(current.views, positions, l, approx = 1, ncells =
 }
 
 
+#' Title
+#'
+#' @param current.views 
+#' @param view.names 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 remove_views <- function(current.views, view.names) {
   to.match <- !(view.names %in% c("intracellular", "misty.uniqueid"))
   view.indexes <- match(view.names[to.match], names(current.views))
