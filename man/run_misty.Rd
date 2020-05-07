@@ -2,7 +2,7 @@
 % Please edit documentation in R/misty.R
 \name{run_misty}
 \alias{run_misty}
-\title{Title}
+\title{Run MISTy}
 \usage{
 run_misty(
   views,
@@ -27,5 +27,8 @@ run_misty(
 
 }
 \description{
-Title
+Run MISTy
+}
+\examples{
+#TBD
 }

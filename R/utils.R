@@ -1,11 +1,11 @@
-#' Title
+#' Clear cached models
 #'
 #' @param singleid 
 #'
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples #TBD
 clear_cache <- function(singleid = NULL) {
   if (is.null(singleid)) {
     if (unlink(".misty.temp", recursive = TRUE) == 0) {

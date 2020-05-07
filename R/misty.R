@@ -6,7 +6,7 @@
 
 
 # pass ellipsis to build_model
-#' Title
+#' Run MISTy
 #'
 #' @param views 
 #' @param results.folder 
@@ -17,7 +17,7 @@
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples #TBD
 run_misty <- function(views, results.folder = "MVResults",
                                  seed = 42, target.subset = NULL, ...) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)

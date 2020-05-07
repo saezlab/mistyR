@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{clear_cache}
 \alias{clear_cache}
-\title{Title}
+\title{Clear cached models}
 \usage{
 clear_cache(singleid = NULL)
 }
@@ -13,5 +13,8 @@ clear_cache(singleid = NULL)
 
 }
 \description{
-Title
+Clear cached models
+}
+\examples{
+#TBD
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{remove_views}
 \alias{remove_views}
-\title{Title}
+\title{Remove views from the pipeline}
 \usage{
 remove_views(current.views, view.names)
 }
@@ -15,5 +15,8 @@ remove_views(current.views, view.names)
 
 }
 \description{
-Title
+Remove views from the pipeline
+}
+\examples{
+#TBD
 }

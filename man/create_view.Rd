@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{create_view}
 \alias{create_view}
-\title{Title}
+\title{Create a view from a data frame}
 \usage{
 create_view(name, data, abbrev = name)
 }
@@ -17,5 +17,8 @@ create_view(name, data, abbrev = name)
 
 }
 \description{
-Title
+Create a view from a data frame
+}
+\examples{
+#TBD
 }

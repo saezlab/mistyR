@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{create_initial_view}
 \alias{create_initial_view}
-\title{Title}
+\title{Create the basic intrinsic view for MISTy}
 \usage{
 create_initial_view(table, unique.id = NULL)
 }
@@ -15,5 +15,8 @@ create_initial_view(table, unique.id = NULL)
 
 }
 \description{
-Title
+Create the basic intrinsic view for MISTy
+}
+\examples{
+#TBD
 }

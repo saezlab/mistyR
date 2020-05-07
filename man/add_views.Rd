@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{add_views}
 \alias{add_views}
-\title{Title}
+\title{Add custom views to the current pipeline}
 \usage{
 add_views(current.views, new.views)
 }
@@ -15,5 +15,8 @@ add_views(current.views, new.views)
 
 }
 \description{
-Title
+Add custom views to the current pipeline
+}
+\examples{
+#TBD
 }
