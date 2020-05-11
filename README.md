@@ -27,6 +27,6 @@ devtools::install_github("saezlab/misty")
 Example pipelines and synthetic data for running MISTy are available from [this repository](https://github.com/saezlab/misty_pipelines/).
 
 ## Citation
-If you use MISTy for your research please cite the [following publication](): 
+If you use MISTy for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 
 
-> Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. In preparation. (2020).
+> Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. bioRxiv 2020.05.08.084145 doi: [10.1101/2020.05.08.084145](https://doi.org/10.1101/2020.05.08.084145) (2020).
