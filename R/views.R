@@ -162,7 +162,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15) {
   }
 
   return(current.views %>% add_views(create_view(
-    paste0("paraview.", neighbor.thr),
+    paste0("juxtaview.", neighbor.thr),
     juxta.view,
     paste0("juxta.", neighbor.thr)
   )))

@@ -74,7 +74,7 @@ run_misty <- function(views, results.folder = "results",
 
   ranger.available <- require("ranger", quietly = TRUE)
 
-  targets %>% furrr::future_map_chr(function(target) {
+  targets %>% furrr::future_map_chr(function(target, ...) {
     target.model <- build_model(views, target, seed, ...)
 
     combined.views <- target.model[["meta.model"]]
