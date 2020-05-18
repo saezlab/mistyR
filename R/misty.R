@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples #TBD
-run_misty <- function(views, results.folder = "MVResults",
+run_misty <- function(views, results.folder = "results",
                                  seed = 42, target.subset = NULL, ...) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
@@ -124,7 +124,7 @@ run_misty <- function(views, results.folder = "MVResults",
     }
     
     performance.estimate <- target.model[["performance.estimate"]] %>%
-      mutate_if(~sum(. < 0) > 0, ~pmax(., 0))
+      dplyr::mutate_if(~sum(. < 0) > 0, ~pmax(., 0))
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(t.test(performance.estimate %>% dplyr::pull(intra.RMSE),

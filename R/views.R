@@ -90,7 +90,7 @@ add_views <- function(current.views, new.views) {
     msg = "The list of new views contains a duplicate abbreviation."
   )
 
-  new.views %>% walk(function(new.view) {
+  new.views %>% purrr::walk(function(new.view) {
     # check for naming of each element, abbreviation and existance of a table
     assertthat::assert_that(is.list(new.view),
       !is.null(new.view[["abbrev"]]),
@@ -162,7 +162,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15) {
   }
 
   return(current.views %>% add_views(create_view(
-    "juxtacrine",
+    paste0("paraview.", neighbor.thr),
     juxta.view,
     paste0("juxta.", neighbor.thr)
   )))
@@ -252,7 +252,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL)
   }
 
   return(current.views %>% add_views(create_view(
-    paste0("paracrine,", l),
+    paste0("paraview.", l),
     para.view,
     paste0("para.", l)
   )))
