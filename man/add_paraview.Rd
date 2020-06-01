@@ -4,7 +4,15 @@
 \alias{add_paraview}
 \title{Add paraview to the pipeline}
 \usage{
-add_paraview(current.views, positions, l, approx = 1, ncells = NULL)
+add_paraview(
+  current.views,
+  positions,
+  l,
+  approx = 1,
+  ncells = NULL,
+  cached = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{current.views}{}
@@ -16,6 +24,10 @@ add_paraview(current.views, positions, l, approx = 1, ncells = NULL)
 \item{approx}{}
 
 \item{ncells}{}
+
+\item{cached}{}
+
+\item{verbose}{}
 }
 \value{
 
@@ -24,5 +36,5 @@ add_paraview(current.views, positions, l, approx = 1, ncells = NULL)
 Add paraview to the pipeline
 }
 \examples{
-#TBD
+# TBD
 }

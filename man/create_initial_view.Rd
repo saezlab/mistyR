@@ -7,8 +7,6 @@
 create_initial_view(table, unique.id = NULL)
 }
 \arguments{
-\item{table}{}
-
 \item{unique.id}{}
 }
 \value{
@@ -18,5 +16,5 @@ create_initial_view(table, unique.id = NULL)
 Create the basic intrinsic view for MISTy
 }
 \examples{
-#TBD
+# TBD
 }

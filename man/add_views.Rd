@@ -7,8 +7,6 @@
 add_views(current.views, new.views)
 }
 \arguments{
-\item{current.views}{}
-
 \item{new.views}{}
 }
 \value{
@@ -18,5 +16,5 @@ add_views(current.views, new.views)
 Add custom views to the current pipeline
 }
 \examples{
-#TBD
+# TBD
 }

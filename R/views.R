@@ -3,13 +3,14 @@
 # first function to be called
 #' Create the basic intrinsic view for MISTy
 #'
-#' @param table 
-#' @param unique.id 
+#' @param table
+#' @param unique.id
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
+#' @examples
+#' # TBD
 create_initial_view <- function(table, unique.id = NULL) {
   init.list <- list(intracellular = list(abbrev = "intra", data = table))
 
@@ -36,14 +37,15 @@ create_initial_view <- function(table, unique.id = NULL) {
 # make a misty.view class?
 #' Create a view from a data frame
 #'
-#' @param name 
-#' @param data 
-#' @param abbrev 
+#' @param name
+#' @param data
+#' @param abbrev
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
+#' @examples
+#' # TBD
 create_view <- function(name, data, abbrev = name) {
   new.list <- list(list(abbrev = abbrev, data = data))
   names(new.list)[1] <- name
@@ -54,13 +56,14 @@ create_view <- function(name, data, abbrev = name) {
 
 #' Add custom views to the current pipeline
 #'
-#' @param current.views 
-#' @param new.views 
+#' @param current.views
+#' @param new.views
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
+#' @examples
+#' # TBD
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
     !is.null(current.views[["intracellular"]]),
@@ -111,17 +114,23 @@ add_views <- function(current.views, new.views) {
   return(append(current.views, new.views))
 }
 
+# # TBD
+# 
+
 #' Add juxtaview to the pipeline
 #'
 #' @param current.views 
 #' @param positions 
 #' @param neighbor.thr 
+#' @param cached 
+#' @param verbose 
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
-add_juxtaview <- function(current.views, positions, neighbor.thr = 15) {
+#' @examples
+#' # TBD
+add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = TRUE, verbose = TRUE) {
   # from a deldir object
   get_neighbors <- function(ddobj, id) {
     dplyr::union(
@@ -142,13 +151,15 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15) {
     "juxta.view.", neighbor.thr, ".rds"
   )
 
-  if (file.exists(juxta.cache.file)) {
-    cat("Juxtacrine view retrieved from cache\n")
+  if (cached & file.exists(juxta.cache.file)) {
+    message("Juxtacrine view retrieved from cache\n")
     juxta.view <- readr::read_rds(juxta.cache.file)
   }
   else {
+    if (verbose) message("Computing triangulation")
     delaunay <- deldir::deldir(as.data.frame(positions))
-    
+
+    if (verbose) message("Generating juxtaview")
     juxta.view <- seq(nrow(expr)) %>% furrr::future_map_dfr(function(cid) {
       alln <- get_neighbors(delaunay, cid)
       # suboptimal placement of dists, but makes conflict if out of scope
@@ -156,9 +167,9 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15) {
       dists <- distances::distances(as.data.frame(positions))
       actualn <- alln[which(dists[alln, cid] <= neighbor.thr)]
       data.frame(t(colSums(expr[actualn, ])))
-    })
+    }, .progress = verbose)
 
-    readr::write_rds(juxta.view, juxta.cache.file)
+    if(cached) readr::write_rds(juxta.view, juxta.cache.file)
   }
 
   return(current.views %>% add_views(create_view(
@@ -177,12 +188,15 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15) {
 #' @param l 
 #' @param approx 
 #' @param ncells 
+#' @param cached 
+#' @param verbose 
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
-add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL) {
+#' @examples
+#' # TBD
+add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL, cached = TRUE, verbose = TRUE) {
   # K.approx is a list containing C, W.plus and s (indexes of sampled columns)
   sample_nystrom_row <- function(K.approx, k) {
 
@@ -215,13 +229,14 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL)
     "para.view.", l, ".rds"
   )
 
-  if (file.exists(para.cache.file)) {
-    cat("Paracrine view retrieved from cache\n")
+  if (cached & file.exists(para.cache.file)) {
+    message("Paracrine view retrieved from cache\n")
     para.view <- readr::read_rds(para.cache.file)
   }
   else {
     if (is.null(ncells)) {
       if (approx == 1) {
+        if (verbose) message("Generating paraview")
         para.view <- seq(nrow(expr)) %>%
           furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
             exp(-(dists[, .x][-.x]^2) / l)))))
@@ -229,6 +244,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL)
       else {
         if (approx < 1) approx <- base::round(approx * ncol(dists))
 
+        if (verbose) message("Approximating RBF matrix using the Nystrom method")
         # single Nystrom approximation expert, given RBF with paramter l
         s <- sort(sample.int(n = ncol(dists), size = approx))
         C <- exp(-(dists[, s]^2) / l)
@@ -238,17 +254,19 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL)
         # return Nystrom list
         K.approx <- list(s = s, C = C, W.plus = W.plus)
 
+        if (verbose) message("Generating paraview")
         para.view <- seq(nrow(expr)) %>%
           furrr:future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
       }
     } else {
+      message("Generating paraview using ", ncells, " nearest neighbors per unit")
       para.view <- seq(nrow(expr)) %>%
         furrr::future_map_dfr(function(rowid) {
           knn <- distances::nearest_neighbor_search(dists, ncells + 1, query_indices = rowid)[-1, 1]
           data.frame(t(colSums(expr[knn, ] * exp(-(dists[knn, rowid]^2) / l))))
         })
     }
-    readr::write_rds(para.view, para.cache.file)
+    if(cached) readr::write_rds(para.view, para.cache.file)
   }
 
   return(current.views %>% add_views(create_view(
@@ -261,13 +279,14 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL)
 
 #' Remove views from the pipeline
 #'
-#' @param current.views 
-#' @param view.names 
+#' @param current.views
+#' @param view.names
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
+#' @examples
+#' # TBD
 remove_views <- function(current.views, view.names) {
   to.match <- !(view.names %in% c("intracellular", "misty.uniqueid"))
   view.indexes <- match(view.names[to.match], names(current.views))

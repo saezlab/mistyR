@@ -4,7 +4,13 @@
 \alias{add_juxtaview}
 \title{Add juxtaview to the pipeline}
 \usage{
-add_juxtaview(current.views, positions, neighbor.thr = 15)
+add_juxtaview(
+  current.views,
+  positions,
+  neighbor.thr = 15,
+  cached = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{current.views}{}
@@ -12,6 +18,10 @@ add_juxtaview(current.views, positions, neighbor.thr = 15)
 \item{positions}{}
 
 \item{neighbor.thr}{}
+
+\item{cached}{}
+
+\item{verbose}{}
 }
 \value{
 
@@ -20,5 +30,5 @@ add_juxtaview(current.views, positions, neighbor.thr = 15)
 Add juxtaview to the pipeline
 }
 \examples{
-#TBD
+# TBD
 }

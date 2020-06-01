@@ -7,8 +7,6 @@
 remove_views(current.views, view.names)
 }
 \arguments{
-\item{current.views}{}
-
 \item{view.names}{}
 }
 \value{
@@ -18,5 +16,5 @@ remove_views(current.views, view.names)
 Remove views from the pipeline
 }
 \examples{
-#TBD
+# TBD
 }

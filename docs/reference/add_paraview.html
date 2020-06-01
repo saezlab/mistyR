@@ -140,7 +140,15 @@
     <p>Add paraview to the pipeline</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_paraview</span>(<span class='no'>current.views</span>, <span class='no'>positions</span>, <span class='no'>l</span>, <span class='kw'>approx</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>ncells</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>add_paraview</span>(
+  <span class='no'>current.views</span>,
+  <span class='no'>positions</span>,
+  <span class='no'>l</span>,
+  <span class='kw'>approx</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>ncells</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cached</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,6 +173,14 @@
       <th>ncells</th>
       <td></td>
     </tr>
+    <tr>
+      <th>cached</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -174,7 +190,7 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>#TBD
+    <pre class="examples"><div class='input'># TBD
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

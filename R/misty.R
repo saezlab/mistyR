@@ -6,20 +6,24 @@
 
 
 # pass ellipsis to build_model
+
 #' Run MISTy
 #'
 #' @param views 
 #' @param results.folder 
 #' @param seed 
 #' @param target.subset 
+#' @param cv.folds 
+#' @param cached 
 #' @param ... 
 #'
 #' @return
 #' @export
 #'
-#' @examples #TBD
+#' @examples
+#' # TBD
 run_misty <- function(views, results.folder = "results",
-                                 seed = 42, target.subset = NULL, ...) {
+                                 seed = 42, target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
   view.abbrev <- views %>%
@@ -46,7 +50,7 @@ run_misty <- function(views, results.folder = "results",
       "coefficients.txt"
     ))
   } else {
-    cat("Coefficients file already exists. Appending!\n")
+    message("Coefficients file already exists. Appending!\n")
   }
 
 
@@ -61,7 +65,7 @@ run_misty <- function(views, results.folder = "results",
       "performance.txt"
     ))
   } else {
-    cat("Performance file already exists. Appending!\n")
+    message("Performance file already exists. Appending!\n")
   }
 
   targets <- switch(class(target.subset),
@@ -74,8 +78,9 @@ run_misty <- function(views, results.folder = "results",
 
   ranger.available <- require("ranger", quietly = TRUE)
 
+  message("Training models")
   targets %>% furrr::future_map_chr(function(target, ...) {
-    target.model <- build_model(views, target, seed, ...)
+    target.model <- build_model(views, target, seed, cv.folds, cached, ...)
 
     combined.views <- target.model[["meta.model"]]
 

@@ -6,9 +6,11 @@
 \usage{
 run_misty(
   views,
-  results.folder = "MVResults",
+  results.folder = "results",
   seed = 42,
   target.subset = NULL,
+  cv.folds = 10,
+  cached = TRUE,
   ...
 )
 }
@@ -21,6 +23,10 @@ run_misty(
 
 \item{target.subset}{}
 
+\item{cv.folds}{}
+
+\item{cached}{}
+
 \item{...}{}
 }
 \value{
@@ -30,5 +36,5 @@ run_misty(
 Run MISTy
 }
 \examples{
-#TBD
+# TBD
 }

@@ -1,5 +1,5 @@
 # elipsis passed to ranger or randomForest
-build_model <- function(views, target, seed = 42, cached = TRUE, cv.folds = 10, ...) {
+build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, ...) {
   set.seed(seed)
 
   cache.location <- paste0(

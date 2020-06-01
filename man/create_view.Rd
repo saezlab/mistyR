@@ -7,10 +7,6 @@
 create_view(name, data, abbrev = name)
 }
 \arguments{
-\item{name}{}
-
-\item{data}{}
-
 \item{abbrev}{}
 }
 \value{
@@ -20,5 +16,5 @@ create_view(name, data, abbrev = name)
 Create a view from a data frame
 }
 \examples{
-#TBD
+# TBD
 }

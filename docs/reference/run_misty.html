@@ -142,9 +142,11 @@
 
     <pre class="usage"><span class='fu'>run_misty</span>(
   <span class='no'>views</span>,
-  <span class='kw'>results.folder</span> <span class='kw'>=</span> <span class='st'>"MVResults"</span>,
+  <span class='kw'>results.folder</span> <span class='kw'>=</span> <span class='st'>"results"</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>42</span>,
   <span class='kw'>target.subset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cv.folds</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>cached</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -168,6 +170,14 @@
       <td></td>
     </tr>
     <tr>
+      <th>cv.folds</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>cached</th>
+      <td></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td></td>
     </tr>
@@ -180,7 +190,7 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>#TBD
+    <pre class="examples"><div class='input'># TBD
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
