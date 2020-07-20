@@ -25,7 +25,7 @@ Install from GitHub using devtools:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("saezlab/misty")
+devtools::install_github("saezlab/MISTy")
 
 ```
 
