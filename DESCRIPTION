@@ -32,7 +32,8 @@ Imports:
     rlist (>= 0.4.6.1),
     assertthat (>= 0.2.1),
     magrittr (>= 1.5),
-    rlang (>= 0.4.5)
+    rlang (>= 0.4.5),
+    ggplot2 (>= 3.3.2)
 Suggests: 
     ranger (>= 0.12.1),
     knitr (>= 1.28)
