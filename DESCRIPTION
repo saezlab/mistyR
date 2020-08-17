@@ -36,4 +36,4 @@ Imports:
 Suggests: 
     ranger (>= 0.12.1),
     knitr (>= 1.28)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
