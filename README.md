@@ -1,6 +1,8 @@
 # MISTy - **M**ultiview **I**ntercellular **S**pa**T**ial modeling framework <img src="man/figures/logo.png" align="right" height="139">
 
 <!-- badges: start -->
+- master [![Build Status](https://travis-ci.org/saezlab/misty.svg?branch=master)](https://travis-ci.org/saezlab/misty)
+- devel [![Build Status](https://travis-ci.org/saezlab/misty.svg?branch=devel)](https://travis-ci.org/saezlab/misty)
 <!-- badges: end -->
 
 ## Overview
