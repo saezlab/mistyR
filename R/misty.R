@@ -146,7 +146,7 @@ run_misty <- function(views, results.folder = "results",
       file = paste0(results.folder, .Platform$file.sep, "performance.txt"),
       append = TRUE
     )
-
-    return(target)
   }, .progress = TRUE)
+  
+  return(results.folder)
 }
