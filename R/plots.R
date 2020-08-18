@@ -22,11 +22,124 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
     msg = "The selected measure cannot be found in the results table."
   )
 
+  set2.orange <- "#FC8D62"
+
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = reorder(target, -mean), y = mean)) +
     ggplot2::geom_pointrange(ggplot2::aes(ymin = mean - sd, ymax = mean + sd)) +
+    ggplot2::geom_point(color = set2.orange) +
     ggplot2::theme_classic() +
     ggplot2::ylab(measure) +
     ggplot2::xlab("Target") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+
+  print(results.plot)
+
+  invisible(misty.results)
+}
+
+#' Title
+#'
+#' @param misty.results
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_view_contributions <- function(misty.results) {
+  assertthat::assert_that(("contributions.stats" %in% names(misty.results)),
+    msg = "The provided result list is malformed. Consider using collect_results()."
+  )
+
+  plot.data <- misty.results$contributions.stats
+
+
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = target, y = fraction)) +
+    ggplot2::geom_col(ggplot2::aes(group = view, fill = view)) +
+    ggplot2::scale_fill_brewer(palette = "Set2") +
+    ggplot2::ylab("Contribution") +
+    ggplot2::xlab("Target") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+
+  print(results.plot)
+
+  invisible(misty.results)
+}
+
+#' Title
+#'
+#' @param misty.results
+#' @param view
+#' @param cutoff
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
+  assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
+    msg = "The provided result list is malformed. Consider using collect_results()."
+  )
+
+  assertthat::assert_that((view %in% names(misty.results$importances.aggregated)),
+    msg = "The selected view cannot be found in the results table."
+  )
+
+  plot.data <- misty.results$importances.aggregated[[view]] %>%
+    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
+
+  set2.blue <- "#8DA0CB"
+
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
+    ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+
+  print(results.plot)
+
+  invisible(misty.results)
+}
+
+#' Title
+#'
+#' @param misty.results
+#' @param from.view
+#' @param to.view
+#' @param cutoff
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1) {
+  assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
+    msg = "The provided result list is malformed. Consider using collect_results()."
+  )
+
+  assertthat::assert_that((from.view %in% names(misty.results$importances.aggregated)),
+    msg = "The selected from.view cannot be found in the results table."
+  )
+
+  assertthat::assert_that((to.view %in% names(misty.results$importances.aggregated)),
+    msg = "The selected to.view cannot be found in the results table."
+  )
+
+  mask <- ((misty.results$importances.aggregated[[from.view]] %>% dplyr::select(-Predictor)) < cutoff) &
+    ((misty.results$importances.aggregated[[to.view]] %>% dplyr::select(-Predictor)) >= cutoff)
+  
+  masked <- ((misty.results$importances.aggregated[[to.view]] %>% 
+                tibble::column_to_rownames("Predictor")) * mask) 
+  
+  plot.data <- masked %>%
+    dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
+    dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
+    tibble::rownames_to_column("Predictor") %>%
+    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
+  
+  set2.blue <- "#8DA0CB"
+  
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
+    ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
   
   print(results.plot)
