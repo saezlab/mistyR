@@ -264,7 +264,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
       para.view <- seq(nrow(expr)) %>%
         furrr::future_map_dfr(function(rowid) {
           knn <- distances::nearest_neighbor_search(dists, ncells + 1, query_indices = rowid)[-1, 1]
-          data.frame(t(colSums(expr[knn, ] * exp(-(dists[knn, rowid]^2) / l))),)
+          data.frame(t(colSums(expr[knn, ] * exp(-(dists[knn, rowid]^2) / l))))
         }, .options = furrr::future_options(packages = "distances"))
     }
     if(cached) readr::write_rds(para.view, para.cache.file)
