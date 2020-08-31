@@ -48,7 +48,10 @@ digest (>= 0.6.25),
 rlist (>= 0.4.6.1),
 assertthat (>= 0.2.1),
 magrittr (>= 1.5),
-rlang (>= 0.4.5)
+rlang (>= 0.4.5),
+ggplot2 (>= 3.3.2),
+tidyr (>= 1.1.1),
+filelock (>= 1.0.2)
 
 and suggests ranger (>= 0.12.1) and knitr (>= 1.28)
 

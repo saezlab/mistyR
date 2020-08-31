@@ -1,6 +1,6 @@
-#' @importFrom magrittr %>% 
+#' @importFrom magrittr %>%
 #' @importFrom rlang !! :=
-.onLoad <- function(libname, pkgname){
+.onLoad <- function(libname, pkgname) {
   suppressWarnings(future::plan(future::multiprocess))
 }
 
@@ -9,13 +9,13 @@
 
 #' Run MISTy
 #'
-#' @param views 
-#' @param results.folder 
-#' @param seed 
-#' @param target.subset 
-#' @param cv.folds 
-#' @param cached 
-#' @param ... 
+#' @param views
+#' @param results.folder
+#' @param seed
+#' @param target.subset
+#' @param cv.folds
+#' @param cached
+#' @param ...
 #'
 #' @return
 #' @export
@@ -23,7 +23,7 @@
 #' @examples
 #' # TBD
 run_misty <- function(views, results.folder = "results",
-                                 seed = 42, target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
+                      seed = 42, target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
 
   view.abbrev <- views %>%
@@ -41,14 +41,11 @@ run_misty <- function(views, results.folder = "results",
 
 
 
-  if (!file.exists(paste0(
-    results.folder, .Platform$file.sep,
-    "coefficients.txt"
-  ))) {
-    write(header, file = paste0(
-      results.folder, .Platform$file.sep,
-      "coefficients.txt"
-    ))
+  coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
+  if (!file.exists(coef.file)) {
+    filelock::lock(coef.file)
+    write(header, file = coef.file)
+    filelock::unlock(coef.file)
   } else {
     message("Coefficients file already exists. Appending!\n")
   }
@@ -56,14 +53,11 @@ run_misty <- function(views, results.folder = "results",
 
   header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2 p.RMSE p.R2"
 
-  if (!file.exists(paste0(
-    results.folder, .Platform$file.sep,
-    "performance.txt"
-  ))) {
-    write(header, file = paste0(
-      results.folder, .Platform$file.sep,
-      "performance.txt"
-    ))
+  perf.file <- paste0(results.folder, .Platform$file.sep, "performance.txt")
+  if (!file.exists(perf.file)) {
+    filelock::lock(perf.file)
+    write(header, file = perf.file)
+    filelock::unlock(perf.file)
   } else {
     message("Performance file already exists. Appending!\n")
   }
@@ -90,12 +84,11 @@ run_misty <- function(views, results.folder = "results",
     # WARNING: hardcoded column index
     coeff <- c(model.summary$coefficients[, 1], model.summary$coefficients[, 4])
 
+    filelock::lock(coef.file)
     write(paste(target, paste(coeff, collapse = " ")),
-      file = paste0(
-        results.folder, .Platform$file.sep,
-        "coefficients.txt"
-      ), append = TRUE
+      file = coef.file, append = TRUE
     )
+    filelock::unlock(coef.file)
 
     # raw importances
     target.model[["model.views"]] %>% purrr::walk2(
@@ -124,31 +117,36 @@ run_misty <- function(views, results.folder = "results",
     )
 
     # performance
-    if(sum(target.model[["performance.estimate"]] < 0) > 0){
+    if (sum(target.model[["performance.estimate"]] < 0) > 0) {
       warning(paste("Negative performance detected and replaced with 0 for target", target))
     }
-    
+
     performance.estimate <- target.model[["performance.estimate"]] %>%
-      dplyr::mutate_if(~sum(. < 0) > 0, ~pmax(., 0))
+      dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0))
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(t.test(performance.estimate %>% dplyr::pull(intra.RMSE),
         performance.estimate %>% dplyr::pull(multi.RMSE),
         alternative = "greater"
-      )$p.value, error = function(e){1}),
+      )$p.value, error = function(e) {
+        1
+      }),
       tryCatch(t.test(performance.estimate %>% dplyr::pull(intra.R2),
         performance.estimate %>% dplyr::pull(multi.R2),
         alternative = "less"
-      )$p.value, error = function(e){1})
-    )
-
-    write(paste(target, paste(performance.summary, collapse = " ")),
-      file = paste0(results.folder, .Platform$file.sep, "performance.txt"),
-      append = TRUE
+      )$p.value, error = function(e) {
+        1
+      })
     )
     
+    filelock::lock(perf.file)
+    write(paste(target, paste(performance.summary, collapse = " ")),
+      file = perf.file, append = TRUE
+    )
+    filelock::unlock(perf.file)
+
     return(target)
   }, .progress = TRUE)
-  
+
   return(results.folder)
 }

@@ -34,7 +34,8 @@ Imports:
     magrittr (>= 1.5),
     rlang (>= 0.4.5),
     ggplot2 (>= 3.3.2),
-    tidyr (>= 1.1.1)
+    tidyr (>= 1.1.1),
+    filelock (>= 1.0.2)
 Suggests: 
     ranger (>= 0.12.1),
     knitr (>= 1.28)
