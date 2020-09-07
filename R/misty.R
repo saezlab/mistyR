@@ -45,15 +45,13 @@ run_misty <- function(views, results.folder = "results",
     coefficient.data <- paste(target, paste(coeff, collapse = " "))
     write_results_to_file(coefficient.file, coefficient.data)
     
-    # raw importances
     target.model[["model.views"]] %>% purrr::walk2(
-      view.abbrev,
-      calculate_raw_importances(model.view, view.abbrev, target, results.folder)
+      .y=view.abbrev,
+      .f=~calculate_raw_importances(., .y, target, results.folder, ranger.available)
     )
 
-    # performance
-    performance.estimate <- estimate_performance(target.model[["performance.estimate"]], target)
-    performance.data <- paste(target, paste(performance.estimate, collapse = " "))
+    performance.summary <- estimate_performance(target.model[["performance.estimate"]], target)
+    performance.data <- paste(target, paste(performance.summary, collapse = " "))
     write_results_to_file(performance.file, performance.data)
 
     return(target)
@@ -68,13 +66,12 @@ initiate_coefficient_file <- function(view.abbrev, results.folder) {
   header <- stringr::str_glue("target intercept {views} p.intercept {p.views}",
                               views = paste0(view.abbrev, collapse = " "),
                               p.views = paste0("p.", view.abbrev, collapse = " "),
-                              .sep = " "
-  )
+                              .sep = " ")
   
   coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
   
   if (!file.exists(coef.file)) {
-    write_results_to_file(file, header)
+    write_results_to_file(coef.file, header)
   } else {
     message("Coefficients file already exists. Appending!\n")
   }
@@ -90,7 +87,7 @@ initiate_performance_file <- function(results.folder) {
   perf.file <- paste0(results.folder, .Platform$file.sep, "performance.txt")
   
   if (!file.exists(perf.file)) {
-    write_results_to_file(file, header)
+    write_results_to_file(perf.file, header)
   } else {
     message("Performance file already exists. Appending!\n")
   }
@@ -100,8 +97,7 @@ initiate_performance_file <- function(results.folder) {
 
 write_results_to_file <- function(file, data) {
   current.lock <- filelock::lock(file)
-  write(data, file = file, append = TRUE
-  )
+  write(data, file = file, append = TRUE)
   filelock::unlock(current.lock)
 
 }
@@ -120,7 +116,7 @@ get_targets_names <- function(views, target.subset = NULL) {
   return(target.names)
 }
 
-calculate_raw_importances <- function(model.view, abbrev, target, results.folder) {
+calculate_raw_importances <- function(model.view, abbrev, target, results.folder, ranger.available=FALSE) {
   if (ranger.available) {
     model.view.imps <- model.view$variable.importance
     targets <- names(model.view.imps)
@@ -164,5 +160,5 @@ estimate_performance <- function(performance.estimate, target) {
       1
     })
   )
-  return(performance.estimate)
+  return(performance.summary)
 }
