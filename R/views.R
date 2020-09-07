@@ -4,37 +4,20 @@
 #' Create the basic intrinsic view for MISTy
 #'
 #' @param table
-#' @param unique.id
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#' # TBD
-create_initial_view <- function(table, unique.id = NULL) {
-  init.list <- list(intracellular = list(abbrev = "intra", data = table))
-
-  misty.uniqueid <- ifelse(is.null(unique.id),
-    digest::digest(table, "md5"),
-    unique.id
-  )
-
-  view <- append(init.list, list(misty.uniqueid = misty.uniqueid))
-
-  # create cache
-  cache.location <- paste0(
-    ".misty.temp", .Platform$file.sep,
-    view[["misty.uniqueid"]]
-  )
-
-  if (!dir.exists(cache.location)) {
-    dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
-  }
-
-  return(view)
+create_intracellular_view <- function(table) {
+  intracellular.view <- list(intracellular = list(abbrev = "intra", data = table))
+  return(intracellular.view)
 }
 
-# make a misty.view class?
+get_expression_data <- function(views) {
+  return(views[["intracellular"]][["data"]])
+}
+
 #' Create a view from a data frame
 #'
 #' @param name
@@ -45,14 +28,11 @@ create_initial_view <- function(table, unique.id = NULL) {
 #' @export
 #'
 #' @examples
-#' # TBD
 create_view <- function(name, data, abbrev = name) {
   new.list <- list(list(abbrev = abbrev, data = data))
   names(new.list)[1] <- name
   return(new.list)
 }
-
-
 
 #' Add custom views to the current pipeline
 #'
@@ -63,11 +43,9 @@ create_view <- function(name, data, abbrev = name) {
 #' @export
 #'
 #' @examples
-#' # TBD
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
     !is.null(current.views[["intracellular"]]),
-    !is.null(current.views[["misty.uniqueid"]]),
     msg = "Intracellular view is missing."
   )
 
@@ -83,10 +61,7 @@ add_views <- function(current.views, new.views) {
     msg = "The list of new views contains a duplicate view name."
   )
 
-  view.abbrev <- current.views %>%
-    rlist::list.remove(c("misty.uniqueid")) %>%
-    purrr::map_chr(~ .x[["abbrev"]])
-
+  view.abbrev <- current.views %>% purrr::map_chr(~ .x[["abbrev"]])
   new.view.abbrev <- new.views %>% purrr::map_chr(~ .x[["abbrev"]])
 
   assertthat::assert_that(!any(new.view.abbrev %in% view.abbrev),
@@ -114,9 +89,6 @@ add_views <- function(current.views, new.views) {
   return(append(current.views, new.views))
 }
 
-# # TBD
-# 
-
 #' Add juxtaview to the pipeline
 #'
 #' @param current.views 
@@ -129,47 +101,25 @@ add_views <- function(current.views, new.views) {
 #' @export
 #'
 #' @examples
-#' # TBD
-add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = TRUE, verbose = TRUE) {
-  # from a deldir object
-  get_neighbors <- function(ddobj, id) {
-    dplyr::union(
-      ddobj$delsgs$ind1[which(ddobj$delsgs$ind2 == id)],
-      ddobj$delsgs$ind2[which(ddobj$delsgs$ind1 == id)]
-    )
+add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cache=NULL, 
+                          verbose = TRUE) {
+ 
+  juxta.view.info <- c("juxta.view.", neighbor.thr)
+  if(!is.null(cache)) {
+    juxta.view <- read_cache_view(cache, juxta.view.info)
   }
-
-  expr <- current.views[["intracellular"]][["data"]]
-
-  cache.location <- paste0(
-    ".misty.temp", .Platform$file.sep,
-    current.views[["misty.uniqueid"]]
-  )
-
-  juxta.cache.file <- paste0(
-    cache.location, .Platform$file.sep,
-    "juxta.view.", neighbor.thr, ".rds"
-  )
-
-  if (cached & file.exists(juxta.cache.file)) {
-    message("Juxtacrine view retrieved from cache\n")
-    juxta.view <- readr::read_rds(juxta.cache.file)
-  }
-  else {
+  
+  if(is.null(cache) || is.null(juxta.view)) {
     if (verbose) message("Computing triangulation")
     delaunay <- deldir::deldir(as.data.frame(positions))
-
+  
     if (verbose) message("Generating juxtaview")
-    juxta.view <- seq(nrow(expr)) %>% furrr::future_map_dfr(function(cid) {
-      alln <- get_neighbors(delaunay, cid)
-      # suboptimal placement of dists, but makes conflict if out of scope
-      # probably due to azy evaluations
-      dists <- distances::distances(as.data.frame(positions))
-      actualn <- alln[which(dists[alln, cid] <= neighbor.thr)]
-      data.frame(t(colSums(expr[actualn, ])))
-    }, .progress = verbose)
-
-    if(cached) readr::write_rds(juxta.view, juxta.cache.file)
+    expression <- get_expression_data(current.views)
+    juxta.view <- calculate_juxtaview(expression, positions, delaunay, neighbor.thr, verbose=TRUE)
+    
+    if(!is.null(cache)) { 
+      write_cache_view(cache, juxta.view, juxta.view.info) 
+    }
   }
 
   return(current.views %>% add_views(create_view(
@@ -179,8 +129,31 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = 
   )))
 }
 
+calculate_juxtaview <- function(expression, positions, delaunay, neighbor.thr, verbose=TRUE) {
+  
+  #ddobj is the result of delaunay triangulation
+  get_neighbors <- function(ddobj, id) {
+    dplyr::union(
+      ddobj$delsgs$ind1[which(ddobj$delsgs$ind2 == id)],
+      ddobj$delsgs$ind2[which(ddobj$delsgs$ind1 == id)]
+    )
+  }
+  
+  juxta.view <- seq(nrow(expression)) %>% furrr::future_map_dfr(function(cid) {
+    alln <- get_neighbors(delaunay, cid)
+    # suboptimal placement of dists, but makes conflict if out of scope
+    # probably due to lazy evaluations
+    dists <- distances::distances(as.data.frame(positions))
+    actualn <- alln[which(dists[alln, cid] <= neighbor.thr)]
+    data.frame(t(colSums(expression[actualn, ])))
+  }, .progress = verbose)
+  
+  return(juxta.view)
+}
 
-# ncells has priority over nystrom
+# There are two possible approximation methods for paraview: ncells and nystrom. 
+# Currently, ncells has priority over nystrom. 
+#
 #' Add paraview to the pipeline
 #'
 #' @param current.views 
@@ -195,8 +168,8 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = 
 #' @export
 #'
 #' @examples
-#' # TBD
-add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL, cached = TRUE, verbose = TRUE) {
+add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL, cache = NULL, 
+                         verbose = TRUE) {
   # K.approx is a list containing C, W.plus and s (indexes of sampled columns)
   sample_nystrom_row <- function(K.approx, k) {
 
@@ -217,28 +190,19 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
   }
 
   dists <- distances::distances(as.data.frame(positions))
-  expr <- current.views[["intracellular"]][["data"]]
-
-  cache.location <- paste0(
-    ".misty.temp", .Platform$file.sep,
-    current.views[["misty.uniqueid"]]
-  )
-
-  para.cache.file <- paste0(
-    cache.location, .Platform$file.sep,
-    "para.view.", l, ".rds"
-  )
-
-  if (cached & file.exists(para.cache.file)) {
-    message("Paracrine view retrieved from cache\n")
-    para.view <- readr::read_rds(para.cache.file)
+  expression <- get_expression_data(current.views)
+  paraview.info <- c("para.view.", l)
+  
+  if(!is.null(cache)) {
+    para.view <- read_cache_view(cache, paraview.info)
   }
-  else {
+
+  if(is.null(cache) || is.null(para.view)) {
     if (is.null(ncells)) {
       if (approx == 1) {
         if (verbose) message("Generating paraview")
-        para.view <- seq(nrow(expr)) %>%
-          furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
+        para.view <- seq(nrow(expression)) %>%
+          furrr::future_map_dfr(~ data.frame(t(colSums(expression[-.x, ] *
             exp(-(dists[, .x][-.x]^2) / l)))), 
             .options = furrr::future_options(packages = "distances"))
       }
@@ -256,18 +220,21 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
         K.approx <- list(s = s, C = C, W.plus = W.plus)
 
         if (verbose) message("Generating paraview")
-        para.view <- seq(nrow(expr)) %>%
-          furrr:future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
+        para.view <- seq(nrow(expression)) %>%
+          furrr:future_map_dfr(~ data.frame(t(colSums(expression[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
       }
     } else {
       message("Generating paraview using ", ncells, " nearest neighbors per unit")
-      para.view <- seq(nrow(expr)) %>%
+      para.view <- seq(nrow(expression)) %>%
         furrr::future_map_dfr(function(rowid) {
           knn <- distances::nearest_neighbor_search(dists, ncells + 1, query_indices = rowid)[-1, 1]
-          data.frame(t(colSums(expr[knn, ] * exp(-(dists[knn, rowid]^2) / l))))
+          data.frame(t(colSums(expression[knn, ] * exp(-(dists[knn, rowid]^2) / l))))
         }, .options = furrr::future_options(packages = "distances"))
     }
-    if(cached) readr::write_rds(para.view, para.cache.file)
+    
+    if (!is.null(cache)) { 
+      write_cache_view(cache, para.view, paraview.info) 
+    }
   }
 
   return(current.views %>% add_views(create_view(
@@ -287,9 +254,8 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
 #' @export
 #'
 #' @examples
-#' # TBD
 remove_views <- function(current.views, view.names) {
-  to.match <- !(view.names %in% c("intracellular", "misty.uniqueid"))
+  to.match <- !(view.names %in% c("intracellular"))
   view.indexes <- match(view.names[to.match], names(current.views))
   current.views %>% rlist::list.remove(view.indexes)
 }
