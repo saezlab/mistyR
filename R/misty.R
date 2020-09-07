@@ -43,9 +43,9 @@ run_misty <- function(views, results.folder = "results",
 
   coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
   if (!file.exists(coef.file)) {
-    filelock::lock(coef.file)
+    current.lock <- filelock::lock(coef.file)
     write(header, file = coef.file)
-    filelock::unlock(coef.file)
+    filelock::unlock(current.lock)
   } else {
     message("Coefficients file already exists. Appending!\n")
   }
@@ -55,9 +55,9 @@ run_misty <- function(views, results.folder = "results",
 
   perf.file <- paste0(results.folder, .Platform$file.sep, "performance.txt")
   if (!file.exists(perf.file)) {
-    filelock::lock(perf.file)
+    current.lock <- filelock::lock(perf.file)
     write(header, file = perf.file)
-    filelock::unlock(perf.file)
+    filelock::unlock(current.lock)
   } else {
     message("Performance file already exists. Appending!\n")
   }
@@ -84,11 +84,11 @@ run_misty <- function(views, results.folder = "results",
     # WARNING: hardcoded column index
     coeff <- c(model.summary$coefficients[, 1], model.summary$coefficients[, 4])
 
-    filelock::lock(coef.file)
+    current.lock <- filelock::lock(coef.file)
     write(paste(target, paste(coeff, collapse = " ")),
       file = coef.file, append = TRUE
     )
-    filelock::unlock(coef.file)
+    filelock::unlock(current.lock)
 
     # raw importances
     target.model[["model.views"]] %>% purrr::walk2(
@@ -139,11 +139,11 @@ run_misty <- function(views, results.folder = "results",
       })
     )
     
-    filelock::lock(perf.file)
+    current.lock <- filelock::lock(perf.file)
     write(paste(target, paste(performance.summary, collapse = " ")),
       file = perf.file, append = TRUE
     )
-    filelock::unlock(perf.file)
+    filelock::unlock(current.lock)
 
     return(target)
   }, .progress = TRUE)
