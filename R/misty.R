@@ -4,7 +4,7 @@
   suppressWarnings(future::plan(future::multiprocess))
 }
 
-#' Run MISTy
+#' Run MISTy: 
 #'
 #' @param views
 #' @param results.folder
@@ -18,7 +18,6 @@
 #' @export
 #'
 #' @examples
-#' # TBD
 run_misty <- function(views, results.folder = "results",
                       seed = 42, target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
   ranger.available <- require("ranger", quietly = TRUE)
@@ -118,19 +117,19 @@ get_targets_names <- function(views, target.subset = NULL) {
 
 calculate_raw_importances <- function(model.view, abbrev, target, results.folder, ranger.available=FALSE) {
   if (ranger.available) {
-    model.view.imps <- model.view$variable.importance
-    targets <- names(model.view.imps)
+    model.view.importances <- model.view$variable.importance
+    targets <- names(model.view.importances)
   } else {
-    model.view.imps <- randomForest::importance(model.view, type = 2)
-    targets <- rownames(model.view.imps)
+    model.view.importances <- randomForest::importance(model.view, type = 2)
+    targets <- rownames(model.view.importances)
   }
   
-  imps <- tibble::tibble(
+  importances <- tibble::tibble(
     target = targets,
-    imp = model.view.imps
+    importances = model.view.importances
   )
   
-  readr::write_csv(imps,
+  readr::write_csv(importances,
                    path = paste0(
                      results.folder, .Platform$file.sep,
                      "importances_", target, "_", abbrev, ".txt"
