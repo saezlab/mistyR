@@ -42,8 +42,11 @@ run_misty <- function(views, results.folder = "results",
 
 
   coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
+  coef.lock <- paste0(results.folder, .Platform$file.sep, "coefficients.txt.lock")
+  on.exit(file.remove(coef.lock))
+  
   if (!file.exists(coef.file)) {
-    current.lock <- filelock::lock(coef.file)
+    current.lock <- filelock::lock(coef.lock)
     write(header, file = coef.file)
     filelock::unlock(current.lock)
   } else {
@@ -54,8 +57,11 @@ run_misty <- function(views, results.folder = "results",
   header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2 p.RMSE p.R2"
 
   perf.file <- paste0(results.folder, .Platform$file.sep, "performance.txt")
+  perf.lock <- paste0(results.folder, .Platform$file.sep, "performance.txt.lock")
+  on.exit(file.remove(perf.lock), add = TRUE)
+  
   if (!file.exists(perf.file)) {
-    current.lock <- filelock::lock(perf.file)
+    current.lock <- filelock::lock(perf.lock)
     write(header, file = perf.file)
     filelock::unlock(current.lock)
   } else {
@@ -84,7 +90,7 @@ run_misty <- function(views, results.folder = "results",
     # WARNING: hardcoded column index
     coeff <- c(model.summary$coefficients[, 1], model.summary$coefficients[, 4])
 
-    current.lock <- filelock::lock(coef.file)
+    current.lock <- filelock::lock(coef.lock)
     write(paste(target, paste(coeff, collapse = " ")),
       file = coef.file, append = TRUE
     )
@@ -139,7 +145,7 @@ run_misty <- function(views, results.folder = "results",
       })
     )
     
-    current.lock <- filelock::lock(perf.file)
+    current.lock <- filelock::lock(perf.lock)
     write(paste(target, paste(performance.summary, collapse = " ")),
       file = perf.file, append = TRUE
     )
@@ -147,6 +153,8 @@ run_misty <- function(views, results.folder = "results",
 
     return(target)
   }, .progress = TRUE)
+  
+  
 
   return(results.folder)
 }
