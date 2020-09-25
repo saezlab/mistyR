@@ -44,7 +44,7 @@ run_misty <- function(views, results.folder = "results",
   coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
   coef.lock <- paste0(results.folder, .Platform$file.sep, "coefficients.txt.lock")
   on.exit(file.remove(coef.lock))
-  
+
   if (!file.exists(coef.file)) {
     current.lock <- filelock::lock(coef.lock)
     write(header, file = coef.file)
@@ -59,7 +59,7 @@ run_misty <- function(views, results.folder = "results",
   perf.file <- paste0(results.folder, .Platform$file.sep, "performance.txt")
   perf.lock <- paste0(results.folder, .Platform$file.sep, "performance.txt.lock")
   on.exit(file.remove(perf.lock), add = TRUE)
-  
+
   if (!file.exists(perf.file)) {
     current.lock <- filelock::lock(perf.lock)
     write(header, file = perf.file)
@@ -144,7 +144,7 @@ run_misty <- function(views, results.folder = "results",
         1
       })
     )
-    
+
     current.lock <- filelock::lock(perf.lock)
     write(paste(target, paste(performance.summary, collapse = " ")),
       file = perf.file, append = TRUE
@@ -152,9 +152,9 @@ run_misty <- function(views, results.folder = "results",
     filelock::unlock(current.lock)
 
     return(target)
-  }, .progress = TRUE)
-  
-  
+  }, .progress = TRUE, .options = furrr::future_options(seed = TRUE))
+
+
 
   return(results.folder)
 }
