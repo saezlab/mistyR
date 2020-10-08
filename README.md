@@ -26,8 +26,8 @@ The package requires installed R version 3.6.2 or higher. This package has been 
 Install from GitHub using devtools:
 
 ```r
-# install.packages("devtools")
-devtools::install_github("saezlab/misty")
+# install.packages("remotes")
+remotes::install_github("saezlab/misty")
 
 ```
 
@@ -53,7 +53,7 @@ ggplot2 (>= 3.3.2),
 tidyr (>= 1.1.1),
 filelock (>= 1.0.2)
 
-and suggests ranger (>= 0.12.1) and knitr (>= 1.28)
+and suggests ranger (>= 0.12.1), knitr (>= 1.28) and igraph  (>= 1.2.6)
 
 The installation of MISTy without any additional dependencies should take only seconds.
 

@@ -1,7 +1,7 @@
 Package: MISTy
 Type: Package
 Title: MISTy
-Version: 0.0.0.9002
+Version: 0.0.1
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",
@@ -38,5 +38,6 @@ Imports:
     filelock (>= 1.0.2)
 Suggests: 
     ranger (>= 0.12.1),
-    knitr (>= 1.28)
+    knitr (>= 1.28),
+    igraph (>= 1.2.6)
 RoxygenNote: 7.1.1
