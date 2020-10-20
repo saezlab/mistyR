@@ -94,7 +94,8 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
     ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+    ggplot2::ggtitle(view)
 
   print(results.plot)
 
@@ -143,7 +144,8 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
     ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+    ggplot2::ggtitle(paste0(to.view, " - ", from.view))
 
   print(results.plot)
 
@@ -197,4 +199,80 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
 
   invisible(misty.results)
+}
+
+
+#' Title
+#'
+#' @param misty.results.from
+#' @param misty.results.to
+#' @param view
+#' @param cutoff.from
+#' @param cutoff.to
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' # TBD
+plot_contrast_results <- function(misty.results.from, misty.results.to, views = NULL, cutoff.from = 1, cutoff.to = 1) {
+  assertthat::assert_that(("importances.aggregated" %in% names(misty.results.from)),
+    msg = "The first provided result list is malformed. Consider using collect_results()."
+  )
+
+  assertthat::assert_that(("importances.aggregated" %in% names(misty.results.to)),
+    msg = "The second provided result list is malformed. Consider using collect_results()."
+  )
+
+  if (is.null(views)) {
+    assertthat::assert_that(rlang::is_empty(setdiff(names(misty.results.from), names(misty.results.to))),
+      msg = "The requested views do not exist in both result lists."
+    )
+    views <- names(misty.results.from$importances.aggregated)
+  } else {
+    assertthat::assert_that(all(views %in% names(misty.results.from)) &
+      all(views %in% names(misty.results.to)),
+    msg = "The requested views do not exist in both result lists."
+    )
+  }
+
+  assertthat::assert_that(
+    all(views %>% map_lgl(function(current.view) {
+      rlang::is_empty(setdiff(
+        misty.results.from$importances.aggregated[[current.view]] %>% colnames(),
+        misty.results.to$importances.aggregated[[current.view]] %>% colnames()
+      )) &
+        rlang::is_empty(setdiff(
+          misty.results.from$importances.aggregated[[current.view]] %>% pull("Predictor"),
+          misty.results.to$importances.aggregated[[current.view]] %>% pull("Predictor")
+        ))
+    })),
+    msg = "Incompatible predictors and targets."
+  )
+
+  views %>% walk(function(current.view) {
+    mask <- ((misty.results.from$importances.aggregated[[current.view]] %>% dplyr::select(-Predictor)) < cutoff.from) &
+      ((misty.results.to$importances.aggregated[[current.view]] %>% dplyr::select(-Predictor)) >= cutoff.to)
+
+    masked <- ((misty.results.to$importances.aggregated[[current.view]] %>%
+      tibble::column_to_rownames("Predictor")) * mask)
+
+    plot.data <- masked %>%
+      dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
+      dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
+      tibble::rownames_to_column("Predictor") %>%
+      tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
+
+    set2.blue <- "#8DA0CB"
+
+    results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
+      ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
+      ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff.to) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+      ggplot2::ggtitle(current.view)
+
+    print(results.plot)
+  })
+
+  invisible(misty.results.from)
 }

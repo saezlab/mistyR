@@ -10,17 +10,17 @@
 clear_cache <- function(singleid = NULL) {
   if (is.null(singleid)) {
     if (unlink(".misty.temp", recursive = TRUE) == 0) {
-      cat("Cache cleared\n")
+      message("Cache cleared")
     } else {
-      cat("Failed to clear cache\n")
+      message("Failed to clear cache")
     }
   } else {
     if (unlink(paste0(
       ".misty.temp", .Platform$file.sep, singleid
     ), recursive = TRUE) == 0) {
-      cat("Cache cleared\n")
+      message("Cache cleared\n")
     } else {
-      cat("Failed to clear cache\n")
+      message("Failed to clear cache\n")
     }
   }
 }
@@ -40,8 +40,9 @@ collect_results <- function(folders) {
 
   message(paste("Collecting results from", paste(images, collapse = " ")))
   
+  message("\nCollecting improvements")
   improvements <- images %>%
-    purrr::map_dfr(function(image) {
+    furrr::future_map_dfr(function(image) {
       performance <- readr::read_delim(paste0(image, .Platform$file.sep, "performance.txt"),
         delim = " ", col_types = readr::cols()
       ) %>% dplyr::distinct()
@@ -52,10 +53,12 @@ collect_results <- function(folders) {
           gain.RMSE = 100 * (intra.RMSE - multi.RMSE) / intra.RMSE,
           gain.R2 = 100 * (multi.R2 - intra.R2),
         )
-    }) %>%
+    }, .progress = TRUE) %>%
     tidyr::pivot_longer(-c(image, target), names_to = "measure")
 
-  contributions <- images %>% purrr::map_dfr(function(image) {
+  
+  message("\nCollecting contributions")
+  contributions <- images %>% furrr::future_map_dfr(function(image) {
     coefficients <- readr::read_delim(paste0(image, .Platform$file.sep, "coefficients.txt"),
       delim = " ", col_types = readr::cols()
     ) %>% dplyr::distinct()
@@ -63,7 +66,7 @@ collect_results <- function(folders) {
     coefficients %>%
       dplyr::mutate(image = image, .after = "target") %>%
       tidyr::pivot_longer(cols = -c(image, target), names_to = "view")
-  })
+  }, .progress = TRUE)
 
   improvements.stats <- improvements %>%
     dplyr::filter(!stringr::str_starts(measure, "p\\.")) %>%
@@ -88,8 +91,9 @@ collect_results <- function(folders) {
     by = c("target", "view")
   )
 
+  message("\nCollecting importances")
   importances <- images %>%
-    purrr::map(function(image) {
+    furrr::future_map(function(image) {
       targets <- contributions.stats %>%
         dplyr::pull(target) %>%
         unique() %>%
@@ -100,7 +104,7 @@ collect_results <- function(folders) {
 
       # one heatmap per view
       maps <- views %>%
-        purrr::map(function(view) {
+        furrr::future_map(function(view) {
           all.importances <- targets %>% purrr::map(~ readr::read_csv(paste0(
             image, .Platform$file.sep, "importances_", .x, "_", view, ".txt"
           ),
@@ -134,9 +138,10 @@ collect_results <- function(folders) {
             dplyr::mutate(Predictor = features)
         }) %>%
         `names<-`(views)
-    }) %>%
+    }, .progress = TRUE) %>%
     `names<-`(images)
 
+  message("\nAggregating")
   importances.aggregated <- importances %>%
     purrr::reduce(function(acc, l) {
       acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-Predictor)) + (.y %>% dplyr::select(-Predictor))) %>%
