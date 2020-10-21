@@ -39,7 +39,7 @@ collect_results <- function(folders) {
   images <- folders[dir.exists(folders)]
 
   message(paste("Collecting results from", paste(images, collapse = " ")))
-  
+
   message("\nCollecting improvements")
   improvements <- images %>%
     furrr::future_map_dfr(function(image) {
@@ -56,7 +56,7 @@ collect_results <- function(folders) {
     }, .progress = TRUE) %>%
     tidyr::pivot_longer(-c(image, target), names_to = "measure")
 
-  
+
   message("\nCollecting contributions")
   contributions <- images %>% furrr::future_map_dfr(function(image) {
     coefficients <- readr::read_delim(paste0(image, .Platform$file.sep, "coefficients.txt"),
@@ -157,4 +157,39 @@ collect_results <- function(folders) {
     importances = importances,
     importances.aggregated = importances.aggregated
   ))
+}
+
+
+#' Title
+#'
+#' @param misty.results
+#' @param folders
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' # TBD
+aggregate_results_subset <- function(misty.results, folders) {
+  assertthat::assert_that(("importances" %in% names(misty.results)),
+    msg = "The provided result list is malformed. Consider using collect_results()."
+  )
+
+  # check if folders are in names of misty.results
+  assertthat::assert_that(all(folders %in% names(misty.results$importances)),
+    msg = "The provided result list doesn't contain information about some of the requested result folders.
+    Consider using collect_results()."
+  )
+
+  message("Aggregating subset")
+  importances.aggregated.subset <- rlist::list.subset(misty.results$importances, folders) %>%
+    purrr::reduce(function(acc, l) {
+      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-Predictor)) + (.y %>% dplyr::select(-Predictor))) %>%
+        dplyr::mutate(Predictor = .x %>% dplyr::pull(Predictor))))
+    }) %>%
+    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(folders)))
+
+  misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
+
+  return(misty.results)
 }

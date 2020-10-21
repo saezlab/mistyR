@@ -3,6 +3,7 @@
 export(add_juxtaview)
 export(add_paraview)
 export(add_views)
+export(aggregate_results_subset)
 export(clear_cache)
 export(collect_results)
 export(create_initial_view)
