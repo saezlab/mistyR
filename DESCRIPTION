@@ -25,7 +25,6 @@ Imports:
     stringr (>= 1.4.0),
     tibble (>= 3.0.1),
     caret (>= 6.0.86),
-    randomForest (>= 4.6.14),
     deldir (>= 0.1.25),
     distances (>= 0.1.8),
     digest (>= 0.6.25),
@@ -35,9 +34,9 @@ Imports:
     rlang (>= 0.4.5),
     ggplot2 (>= 3.3.2),
     tidyr (>= 1.1.1),
-    filelock (>= 1.0.2)
+    filelock (>= 1.0.2),
+    ranger (>= 0.12.1)
 Suggests: 
-    ranger (>= 0.12.1),
     knitr (>= 1.28),
     igraph (>= 1.2.6)
 RoxygenNote: 7.1.1

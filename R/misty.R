@@ -76,8 +76,6 @@ run_misty <- function(views, results.folder = "results",
     NULL
   )
 
-  ranger.available <- require("ranger", quietly = TRUE)
-
   message("Training models")
   targets %>% furrr::future_map_chr(function(target, ...) {
     target.model <- build_model(views, target, seed, cv.folds, cached, ...)
@@ -100,13 +98,8 @@ run_misty <- function(views, results.folder = "results",
     target.model[["model.views"]] %>% purrr::walk2(
       view.abbrev,
       function(model.view, abbrev) {
-        if (ranger.available) {
-          model.view.imps <- model.view$variable.importance
-          targets <- names(model.view.imps)
-        } else {
-          model.view.imps <- randomForest::importance(model.view, type = 2)
-          targets <- rownames(model.view.imps)
-        }
+        model.view.imps <- model.view$variable.importance
+        targets <- names(model.view.imps)
 
         imps <- tibble::tibble(
           target = targets,

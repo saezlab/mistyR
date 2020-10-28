@@ -41,7 +41,7 @@ readr (>= 1.3.1),
 stringr (>= 1.4.0),
 tibble (>= 3.0.1),
 caret (>= 6.0.86),
-randomForest (>= 4.6.14),
+ranger (>= 0.12.1),
 deldir (>= 0.1.25),
 distances (>= 0.1.8),
 digest (>= 0.6.25),
@@ -53,7 +53,7 @@ ggplot2 (>= 3.3.2),
 tidyr (>= 1.1.1),
 filelock (>= 1.0.2)
 
-and suggests ranger (>= 0.12.1), knitr (>= 1.28) and igraph  (>= 1.2.6)
+and suggests  knitr (>= 1.28) and igraph  (>= 1.2.6)
 
 The installation of MISTy without any additional dependencies should take only seconds.
 

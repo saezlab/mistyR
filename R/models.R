@@ -1,4 +1,4 @@
-# elipsis passed to ranger or randomForest
+# elipsis passed to ranger
 build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, ...) {
   set.seed(seed)
 
@@ -15,18 +15,13 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
 
   target.vector <- expr %>% dplyr::pull(target)
 
-  ranger.available <- require("ranger", quietly = TRUE)
 
   # merge ellipsis with default algorithm arguments
-  if (ranger.available) {
-    algo.arguments <- list(
-      num.trees = 100, importance = "impurity",
-      verbose = FALSE, num.threads = 1, seed = seed,
-      dependent.variable.name = target
-    )
-  } else {
-    algo.arguments <- list(ntree = 100)
-  }
+  algo.arguments <- list(
+    num.trees = 100, importance = "impurity",
+    verbose = FALSE, num.threads = 1, seed = seed,
+    dependent.variable.name = target
+  )
 
   if (!length(list(...)) == 0) {
     algo.arguments <- rlist::list.merge(algo.arguments, list(...))
@@ -45,27 +40,14 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
       if (file.exists(model.view.cache.file) & cached) {
         model.view <- readr::read_rds(model.view.cache.file)
       } else {
-        if (ranger.available) {
-          model.view <- do.call(
-            ranger::ranger,
-            c(
-              list(data = (view[["data"]] %>%
-                dplyr::mutate(!!target := target.vector))),
-              algo.arguments
-            )
+        model.view <- do.call(
+          ranger::ranger,
+          c(
+            list(data = (view[["data"]] %>%
+              dplyr::mutate(!!target := target.vector))),
+            algo.arguments
           )
-        } else {
-          target.index <- match(target, colnames(view[["data"]]))
-          model.view <- do.call(
-            randomForest::randomForest,
-            c(
-              list(
-                x = view[["data"]] %>% dplyr::select(-target.index),
-                y = target.vector
-              ), algo.arguments
-            )
-          )
-        }
+        )
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
         }
@@ -76,11 +58,7 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    purrr::map(~ if (ranger.available) {
-      .x$predictions
-    } else {
-      .x$predicted
-    }) %>%
+    purrr::map(~ .x$predictions) %>%
     rlist::list.cbind() %>%
     tibble::as_tibble() %>%
     dplyr::mutate(!!target := target.vector)
@@ -91,12 +69,8 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
   # cv performance estimate
   test.folds <- caret::createFolds(target.vector, k = cv.folds)
 
-  intra.view.only <- (if (ranger.available) {
-    model.views[["intracellular"]]$predictions
-  }
-  else {
-    model.views[["intracellular"]]$predicted
-  }) %>%
+  intra.view.only <- 
+    model.views[["intracellular"]]$predictions %>%
     tibble::enframe(name = NULL) %>%
     dplyr::mutate(!!target := target.vector)
 
