@@ -225,13 +225,14 @@ plot_contrast_results <- function(misty.results.from, misty.results.to, views = 
   )
 
   if (is.null(views)) {
-    assertthat::assert_that(rlang::is_empty(setdiff(names(misty.results.from), names(misty.results.to))),
+    assertthat::assert_that(rlang::is_empty(setdiff(names(misty.results.from$importances.aggregated), 
+                                                    names(misty.results.to$importances.aggregated))),
       msg = "The requested views do not exist in both result lists."
     )
     views <- names(misty.results.from$importances.aggregated)
   } else {
-    assertthat::assert_that(all(views %in% names(misty.results.from)) &
-      all(views %in% names(misty.results.to)),
+    assertthat::assert_that(all(views %in% names(misty.results.from$importances.aggregated)) &
+      all(views %in% names(misty.results.to$importances.aggregated)),
     msg = "The requested views do not exist in both result lists."
     )
   }
