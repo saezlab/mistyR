@@ -33,27 +33,29 @@ remotes::install_github("saezlab/misty")
 
 MISTy is dependent on the following packages that are available from CRAN:
 
-MASS (>= 7.3.51.5),
-dplyr (>= 0.8.5),
-purrr (>= 0.3.4),
-furrr (>= 0.1.0),
-readr (>= 1.3.1),
-stringr (>= 1.4.0),
-tibble (>= 3.0.1),
-caret (>= 6.0.86),
-ranger (>= 0.12.1),
-deldir (>= 0.1.25),
-distances (>= 0.1.8),
-digest (>= 0.6.25),
-rlist (>= 0.4.6.1),
-assertthat (>= 0.2.1),
-magrittr (>= 1.5),
-rlang (>= 0.4.5),
-ggplot2 (>= 3.3.2),
-tidyr (>= 1.1.1),
-filelock (>= 1.0.2)
+assertthat,
+caret,
+deldir,
+digest,
+distances,
+dplyr,
+filelock,
+furrr,
+future,
+ggplot2,
+magrittr,
+MASS,
+purrr,
+ranger,
+readr,
+rlang,
+rlist,
+stats,
+stringr,
+tibble,
+tidyr
 
-and suggests  knitr (>= 1.28) and igraph  (>= 1.2.6)
+and suggests igraph and knitr.
 
 The installation of MISTy without any additional dependencies should take only seconds.
 
