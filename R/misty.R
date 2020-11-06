@@ -1,5 +1,5 @@
 #' @importFrom magrittr %>%
-#' @importFrom rlang !! :=
+#' @importFrom rlang !! := .data
 .onLoad <- function(libname, pkgname) {
   suppressWarnings(future::plan(future::multiprocess))
 }
@@ -124,14 +124,14 @@ run_misty <- function(views, results.folder = "results",
       dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0))
     performance.summary <- c(
       performance.estimate %>% colMeans(),
-      tryCatch(stats::t.test(performance.estimate %>% dplyr::pull(intra.RMSE),
-        performance.estimate %>% dplyr::pull(multi.RMSE),
+      tryCatch(stats::t.test(performance.estimate %>% dplyr::pull(.data$intra.RMSE),
+        performance.estimate %>% dplyr::pull(.data$multi.RMSE),
         alternative = "greater"
       )$p.value, error = function(e) {
         1
       }),
-      tryCatch(stats::t.test(performance.estimate %>% dplyr::pull(intra.R2),
-        performance.estimate %>% dplyr::pull(multi.R2),
+      tryCatch(stats::t.test(performance.estimate %>% dplyr::pull(.data$intra.R2),
+        performance.estimate %>% dplyr::pull(.data$multi.R2),
         alternative = "less"
       )$p.value, error = function(e) {
         1

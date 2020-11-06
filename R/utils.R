@@ -50,11 +50,11 @@ collect_results <- function(folders) {
       performance %>%
         dplyr::mutate(
           image = image,
-          gain.RMSE = 100 * (intra.RMSE - multi.RMSE) / intra.RMSE,
-          gain.R2 = 100 * (multi.R2 - intra.R2),
+          gain.RMSE = 100 * (.data$intra.RMSE - .data$multi.RMSE) / .data$intra.RMSE,
+          gain.R2 = 100 * (.data$multi.R2 - .data$intra.R2),
         )
     }, .progress = TRUE) %>%
-    tidyr::pivot_longer(-c(image, target), names_to = "measure")
+    tidyr::pivot_longer(-c(.data$image, .data$target), names_to = "measure")
 
 
   message("\nCollecting contributions")
@@ -65,29 +65,32 @@ collect_results <- function(folders) {
 
     coefficients %>%
       dplyr::mutate(image = image, .after = "target") %>%
-      tidyr::pivot_longer(cols = -c(image, target), names_to = "view")
+      tidyr::pivot_longer(cols = -c(.data$image, .data$target), names_to = "view")
   }, .progress = TRUE)
 
   improvements.stats <- improvements %>%
-    dplyr::filter(!stringr::str_starts(measure, "p\\.")) %>%
-    dplyr::group_by(target, measure) %>%
-    dplyr::summarise(mean = mean(value), sd = stats::sd(value), cv = sd / mean, .groups = "drop")
+    dplyr::filter(!stringr::str_starts(.data$measure, "p\\.")) %>%
+    dplyr::group_by(.data$target, .data$measure) %>%
+    dplyr::summarise(
+      mean = mean(.data$value), sd = stats::sd(.data$value),
+      cv = .data$sd / .data$mean, .groups = "drop"
+    )
 
 
   contributions.stats <- dplyr::inner_join(
     # mean coefficients
     (contributions %>%
-      dplyr::filter(!stringr::str_starts(view, "p\\.") & view != "intercept") %>%
-      dplyr::group_by(target, view) %>%
-      dplyr::summarise(mean = mean(value), .groups = "drop_last") %>%
-      dplyr::mutate(fraction = abs(mean) / sum(abs(mean))) %>%
+      dplyr::filter(!stringr::str_starts(.data$view, "p\\.") & .data$view != "intercept") %>%
+      dplyr::group_by(.data$target, .data$view) %>%
+      dplyr::summarise(mean = mean(.data$value), .groups = "drop_last") %>%
+      dplyr::mutate(fraction = abs(.data$mean) / sum(abs(.data$mean))) %>%
       dplyr::ungroup()),
     # p values
     (contributions %>%
-      dplyr::filter(stringr::str_starts(view, "p\\.") & !stringr::str_detect(view, "intercept")) %>%
-      dplyr::group_by(target, view) %>%
-      dplyr::mutate(view = stringr::str_remove(view, "^p\\.")) %>%
-      dplyr::summarise(p.mean = mean(value), p.sd = stats::sd(value), .groups = "drop")),
+      dplyr::filter(stringr::str_starts(.data$view, "p\\.") & !stringr::str_detect(.data$view, "intercept")) %>%
+      dplyr::group_by(.data$target, .data$view) %>%
+      dplyr::mutate(view = stringr::str_remove(.data$view, "^p\\.")) %>%
+      dplyr::summarise(p.mean = mean(.data$value), p.sd = stats::sd(.data$value), .groups = "drop")),
     by = c("target", "view")
   )
 
@@ -95,11 +98,11 @@ collect_results <- function(folders) {
   importances <- images %>%
     furrr::future_map(function(image) {
       targets <- contributions.stats %>%
-        dplyr::pull(target) %>%
+        dplyr::pull(.data$target) %>%
         unique() %>%
         sort()
       views <- contributions.stats %>%
-        dplyr::pull(view) %>%
+        dplyr::pull(.data$view) %>%
         unique()
 
       # one heatmap per view
@@ -121,18 +124,18 @@ collect_results <- function(folders) {
 
           pvalues <- contributions %>%
             dplyr::filter(image == !!image, view == paste0("p.", !!view)) %>%
-            dplyr::mutate(value = 1 - value)
+            dplyr::mutate(value = 1 - .data$value)
 
           # importances are standardized for each target an multiplied by 1-pval(view)
           all.importances %>%
             purrr::imap_dfc(~
             tibble::tibble(feature = features, zero.imp = 0) %>%
               dplyr::left_join(.x, by = "feature") %>%
-              dplyr::arrange(feature) %>%
-              dplyr::mutate(imp = scale(imp)[, 1], !!targets[.y] := zero.imp + (imp *
+              dplyr::arrange(.data$feature) %>%
+              dplyr::mutate(imp = scale(.data$imp)[, 1], !!targets[.y] := .data$zero.imp + (.data$imp *
                 (pvalues %>%
                   dplyr::filter(target == targets[.y]) %>%
-                  dplyr::pull(value))))
+                  dplyr::pull(.data$value))))
               %>%
               dplyr::select(targets[.y])) %>%
             dplyr::mutate(Predictor = features)
@@ -144,8 +147,9 @@ collect_results <- function(folders) {
   message("\nAggregating")
   importances.aggregated <- importances %>%
     purrr::reduce(function(acc, l) {
-      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-Predictor)) + (.y %>% dplyr::select(-Predictor))) %>%
-        dplyr::mutate(Predictor = .x %>% dplyr::pull(Predictor))))
+      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-.data$Predictor)) +
+        (.y %>% dplyr::select(-.data$Predictor))) %>%
+        dplyr::mutate(Predictor = .x %>% dplyr::pull(.data$Predictor))))
     }) %>%
     purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(images)))
 

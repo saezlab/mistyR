@@ -24,8 +24,17 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 
   set2.orange <- "#FC8D62"
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = stats::reorder(target, -mean), y = mean)) +
-    ggplot2::geom_pointrange(ggplot2::aes(ymin = mean - sd, ymax = mean + sd)) +
+  results.plot <- ggplot2::ggplot(
+    plot.data,
+    ggplot2::aes(
+      x = stats::reorder(.data$target, -.data$mean),
+      y = .data$mean
+    )
+  ) +
+    ggplot2::geom_pointrange(ggplot2::aes(
+      ymin = .data$mean - .data$sd,
+      ymax = .data$mean + .data$sd
+    )) +
     ggplot2::geom_point(color = set2.orange) +
     ggplot2::theme_classic() +
     ggplot2::ylab(measure) +
@@ -54,8 +63,8 @@ plot_view_contributions <- function(misty.results) {
   plot.data <- misty.results$contributions.stats
 
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = target, y = fraction)) +
-    ggplot2::geom_col(ggplot2::aes(group = view, fill = view)) +
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$target, y = .data$fraction)) +
+    ggplot2::geom_col(ggplot2::aes(group = .data$view, fill = .data$view)) +
     ggplot2::scale_fill_brewer(palette = "Set2") +
     ggplot2::ylab("Contribution") +
     ggplot2::xlab("Target") +
@@ -87,12 +96,12 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
   )
 
   plot.data <- misty.results$importances.aggregated[[view]] %>%
-    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
+    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
 
   set2.blue <- "#8DA0CB"
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::ggtitle(view)
@@ -127,8 +136,8 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
     msg = "The selected to.view cannot be found in the results table."
   )
 
-  mask <- ((misty.results$importances.aggregated[[from.view]] %>% dplyr::select(-Predictor)) < cutoff) &
-    ((misty.results$importances.aggregated[[to.view]] %>% dplyr::select(-Predictor)) >= cutoff)
+  mask <- ((misty.results$importances.aggregated[[from.view]] %>% dplyr::select(-.data$Predictor)) < cutoff) &
+    ((misty.results$importances.aggregated[[to.view]] %>% dplyr::select(-.data$Predictor)) >= cutoff)
 
   masked <- ((misty.results$importances.aggregated[[to.view]] %>%
     tibble::column_to_rownames("Predictor")) * mask)
@@ -137,12 +146,12 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
     dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
     dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
     tibble::rownames_to_column("Predictor") %>%
-    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
+    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
 
   set2.blue <- "#8DA0CB"
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::ggtitle(paste0(to.view, " - ", from.view))
@@ -173,8 +182,8 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
 
   assertthat::assert_that(
-    all(misty.results$importances.aggregated[[view]] %>% dplyr::select(-Predictor) %>% colnames() ==
-      misty.results$importances.aggregated[[view]] %>% dplyr::pull(Predictor)),
+    all(misty.results$importances.aggregated[[view]] %>% dplyr::select(-.data$Predictor) %>% colnames() ==
+      misty.results$importances.aggregated[[view]] %>% dplyr::pull(.data$Predictor)),
     msg = "The predictor and target markers in the view must match."
   )
 
@@ -183,9 +192,13 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
 
   A <- misty.results$importances.aggregated[[view]] %>%
-    dplyr::select(-Predictor) %>%
+    dplyr::select(-.data$Predictor) %>%
     as.matrix()
   A[A < cutoff | is.na(A)] <- 0
+
+  # Workaround: fix binding check for variable . in this function context.
+  # The reference to . below works just fine in its own scope
+  . <- NULL
 
   G <- igraph::graph.adjacency(A, mode = "plus", weighted = TRUE) %>%
     igraph::set.vertex.attribute("name", value = names(igraph::V(.)))
@@ -225,9 +238,11 @@ plot_contrast_results <- function(misty.results.from, misty.results.to, views = 
   )
 
   if (is.null(views)) {
-    assertthat::assert_that(rlang::is_empty(setdiff(names(misty.results.from$importances.aggregated), 
-                                                    names(misty.results.to$importances.aggregated))),
-      msg = "The requested views do not exist in both result lists."
+    assertthat::assert_that(rlang::is_empty(setdiff(
+      names(misty.results.from$importances.aggregated),
+      names(misty.results.to$importances.aggregated)
+    )),
+    msg = "The requested views do not exist in both result lists."
     )
     views <- names(misty.results.from$importances.aggregated)
   } else {
@@ -244,16 +259,16 @@ plot_contrast_results <- function(misty.results.from, misty.results.to, views = 
         misty.results.to$importances.aggregated[[current.view]] %>% colnames()
       )) &
         rlang::is_empty(setdiff(
-          misty.results.from$importances.aggregated[[current.view]] %>% dplyr::pull("Predictor"),
-          misty.results.to$importances.aggregated[[current.view]] %>% dplyr::pull("Predictor")
+          misty.results.from$importances.aggregated[[current.view]] %>% dplyr::pull(.data$Predictor),
+          misty.results.to$importances.aggregated[[current.view]] %>% dplyr::pull(.data$Predictor)
         ))
     })),
     msg = "Incompatible predictors and targets."
   )
 
-  views %>% walk(function(current.view) {
-    mask <- ((misty.results.from$importances.aggregated[[current.view]] %>% dplyr::select(-Predictor)) < cutoff.from) &
-      ((misty.results.to$importances.aggregated[[current.view]] %>% dplyr::select(-Predictor)) >= cutoff.to)
+  views %>% purrr::walk(function(current.view) {
+    mask <- ((misty.results.from$importances.aggregated[[current.view]] %>% dplyr::select(-.data$Predictor)) < cutoff.from) &
+      ((misty.results.to$importances.aggregated[[current.view]] %>% dplyr::select(-.data$Predictor)) >= cutoff.to)
 
     masked <- ((misty.results.to$importances.aggregated[[current.view]] %>%
       tibble::column_to_rownames("Predictor")) * mask)
@@ -262,12 +277,12 @@ plot_contrast_results <- function(misty.results.from, misty.results.to, views = 
       dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
       dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
       tibble::rownames_to_column("Predictor") %>%
-      tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
+      tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
 
     set2.blue <- "#8DA0CB"
 
-    results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
-      ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
+    results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
+      ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
       ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff.to) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
       ggplot2::ggtitle(current.view)
