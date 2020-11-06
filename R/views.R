@@ -257,7 +257,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
 
         if (verbose) message("Generating paraview")
         para.view <- seq(nrow(expr)) %>%
-          furrr:future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
+          furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
       }
     } else {
       message("Generating paraview using ", ncells, " nearest neighbors per unit")

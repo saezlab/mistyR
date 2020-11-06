@@ -8,7 +8,7 @@ Authors@R: c(
            role = c("cre", "aut"),
            email = "jovan.tanevski@bioquant.uni-heidelberg.de",
            comment = c(ORCID = "0000-0001-7177-1003")))
-Description: Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data
+Description: Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data.
 URL: https://github.com/saezlab/misty
 BugReports: https://github.com/saezlab/misty/issues
 Depends: R (>= 3.6)
@@ -35,7 +35,9 @@ Imports:
     ggplot2 (>= 3.3.2),
     tidyr (>= 1.1.1),
     filelock (>= 1.0.2),
-    ranger (>= 0.12.1)
+    ranger (>= 0.12.1),
+    stats (>= 3.6),
+    future (>= 1.20.1)
 Suggests: 
     knitr (>= 1.28),
     igraph (>= 1.2.6)

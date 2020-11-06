@@ -24,7 +24,7 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 
   set2.orange <- "#FC8D62"
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = reorder(target, -mean), y = mean)) +
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = stats::reorder(target, -mean), y = mean)) +
     ggplot2::geom_pointrange(ggplot2::aes(ymin = mean - sd, ymax = mean + sd)) +
     ggplot2::geom_point(color = set2.orange) +
     ggplot2::theme_classic() +
@@ -173,17 +173,17 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
 
   assertthat::assert_that(
-    all(misty.results$importances.aggregated[[view]] %>% select(-Predictor) %>% colnames() ==
-      misty.results$importances.aggregated[[view]] %>% pull(Predictor)),
+    all(misty.results$importances.aggregated[[view]] %>% dplyr::select(-Predictor) %>% colnames() ==
+      misty.results$importances.aggregated[[view]] %>% dplyr::pull(Predictor)),
     msg = "The predictor and target markers in the view must match."
   )
 
-  assertthat::assert_that(require(igraph, quietly = TRUE),
+  assertthat::assert_that(requireNamespace("igraph", quietly = TRUE),
     msg = "The package igraph is required to calculate the interaction communities."
   )
 
   A <- misty.results$importances.aggregated[[view]] %>%
-    select(-Predictor) %>%
+    dplyr::select(-Predictor) %>%
     as.matrix()
   A[A < cutoff | is.na(A)] <- 0
 
@@ -238,14 +238,14 @@ plot_contrast_results <- function(misty.results.from, misty.results.to, views = 
   }
 
   assertthat::assert_that(
-    all(views %>% map_lgl(function(current.view) {
+    all(views %>% purrr::map_lgl(function(current.view) {
       rlang::is_empty(setdiff(
         misty.results.from$importances.aggregated[[current.view]] %>% colnames(),
         misty.results.to$importances.aggregated[[current.view]] %>% colnames()
       )) &
         rlang::is_empty(setdiff(
-          misty.results.from$importances.aggregated[[current.view]] %>% pull("Predictor"),
-          misty.results.to$importances.aggregated[[current.view]] %>% pull("Predictor")
+          misty.results.from$importances.aggregated[[current.view]] %>% dplyr::pull("Predictor"),
+          misty.results.to$importances.aggregated[[current.view]] %>% dplyr::pull("Predictor")
         ))
     })),
     msg = "Incompatible predictors and targets."

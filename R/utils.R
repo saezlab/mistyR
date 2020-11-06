@@ -71,7 +71,7 @@ collect_results <- function(folders) {
   improvements.stats <- improvements %>%
     dplyr::filter(!stringr::str_starts(measure, "p\\.")) %>%
     dplyr::group_by(target, measure) %>%
-    dplyr::summarise(mean = mean(value), sd = sd(value), cv = sd / mean, .groups = "drop")
+    dplyr::summarise(mean = mean(value), sd = stats::sd(value), cv = sd / mean, .groups = "drop")
 
 
   contributions.stats <- dplyr::inner_join(
@@ -87,7 +87,7 @@ collect_results <- function(folders) {
       dplyr::filter(stringr::str_starts(view, "p\\.") & !stringr::str_detect(view, "intercept")) %>%
       dplyr::group_by(target, view) %>%
       dplyr::mutate(view = stringr::str_remove(view, "^p\\.")) %>%
-      dplyr::summarise(p.mean = mean(value), p.sd = sd(value), .groups = "drop")),
+      dplyr::summarise(p.mean = mean(value), p.sd = stats::sd(value), .groups = "drop")),
     by = c("target", "view")
   )
 

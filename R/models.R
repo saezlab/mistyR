@@ -64,7 +64,7 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
     dplyr::mutate(!!target := target.vector)
 
   # train lm on above
-  combined.views <- lm(as.formula(paste0(target, "~.")), oob.predictions)
+  combined.views <- stats::lm(stats::as.formula(paste0(target, "~.")), oob.predictions)
 
   # cv performance estimate
   test.folds <- caret::createFolds(target.vector, k = cv.folds)
@@ -75,18 +75,18 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
     dplyr::mutate(!!target := target.vector)
 
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
-    meta.intra <- lm(
-      as.formula(paste0(target, "~.")),
+    meta.intra <- stats::lm(
+      stats::as.formula(paste0(target, "~.")),
       intra.view.only %>% dplyr::slice(-test.fold)
     )
-    meta.multi <- lm(
-      as.formula(paste0(target, "~.")),
+    meta.multi <- stats::lm(
+      stats::as.formula(paste0(target, "~.")),
       oob.predictions %>% dplyr::slice(-test.fold)
     )
 
-    intra.prediction <- predict(meta.intra, intra.view.only %>%
+    intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
       dplyr::slice(test.fold))
-    multi.view.prediction <- predict(meta.multi, oob.predictions %>%
+    multi.view.prediction <- stats::predict(meta.multi, oob.predictions %>%
       dplyr::slice(test.fold))
 
     intra.RMSE <- caret::RMSE(intra.prediction, target.vector[test.fold])
