@@ -12,7 +12,7 @@
 #' @examples
 #' # TBD
 create_initial_view <- function(table, unique.id = NULL) {
-  init.list <- list(intracellular = list(abbrev = "intra", data = table))
+  init.list <- list(intraview = list(abbrev = "intra", data = table))
 
   misty.uniqueid <- ifelse(is.null(unique.id),
     digest::digest(table, "md5"),
@@ -66,9 +66,9 @@ create_view <- function(name, data, abbrev = name) {
 #' # TBD
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
-    !is.null(current.views[["intracellular"]]),
+    !is.null(current.views[["intraview"]]),
     !is.null(current.views[["misty.uniqueid"]]),
-    msg = "Intracellular view is missing."
+    msg = "Intraview is missing."
   )
 
   assertthat::assert_that(is.list(new.views),
@@ -104,9 +104,9 @@ add_views <- function(current.views, new.views) {
     )
 
     # check for row compatibility
-    assertthat::assert_that(nrow(current.views[["intracellular"]][["data"]]) ==
+    assertthat::assert_that(nrow(current.views[["intraview"]][["data"]]) ==
       nrow(new.view[["data"]]),
-    msg = "The new view should have the same number of rows as the intracellular view."
+    msg = "The new view should have the same number of rows as the intraview."
     )
   })
 
@@ -139,7 +139,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = 
     )
   }
 
-  expr <- current.views[["intracellular"]][["data"]]
+  expr <- current.views[["intraview"]][["data"]]
 
   cache.location <- paste0(
     ".misty.temp", .Platform$file.sep,
@@ -152,7 +152,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = 
   )
 
   if (cached & file.exists(juxta.cache.file)) {
-    message("Juxtacrine view retrieved from cache\n")
+    message("Juxtaview retrieved from cache\n")
     juxta.view <- readr::read_rds(juxta.cache.file)
   }
   else {
@@ -217,7 +217,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
   }
 
   dists <- distances::distances(as.data.frame(positions))
-  expr <- current.views[["intracellular"]][["data"]]
+  expr <- current.views[["intraview"]][["data"]]
 
   cache.location <- paste0(
     ".misty.temp", .Platform$file.sep,
@@ -230,7 +230,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
   )
 
   if (cached & file.exists(para.cache.file)) {
-    message("Paracrine view retrieved from cache\n")
+    message("Paraview retrieved from cache\n")
     para.view <- readr::read_rds(para.cache.file)
   }
   else {
@@ -289,7 +289,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
 #' @examples
 #' # TBD
 remove_views <- function(current.views, view.names) {
-  to.match <- !(view.names %in% c("intracellular", "misty.uniqueid"))
+  to.match <- !(view.names %in% c("intraview", "misty.uniqueid"))
   view.indexes <- match(view.names[to.match], names(current.views))
   current.views %>% rlist::list.remove(view.indexes)
 }

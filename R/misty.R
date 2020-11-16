@@ -37,7 +37,7 @@ run_misty <- function(views, results.folder = "results",
     .sep = " "
   )
 
-  expr <- views[["intracellular"]][["data"]]
+  expr <- views[["intraview"]][["data"]]
 
 
 

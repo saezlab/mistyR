@@ -11,7 +11,7 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
   }
 
-  expr <- views[["intracellular"]][["data"]]
+  expr <- views[["intraview"]][["data"]]
 
   target.vector <- expr %>% dplyr::pull(target)
 
@@ -70,7 +70,7 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
   test.folds <- caret::createFolds(target.vector, k = cv.folds)
 
   intra.view.only <- 
-    model.views[["intracellular"]]$predictions %>%
+    model.views[["intraview"]]$predictions %>%
     tibble::enframe(name = NULL) %>%
     dplyr::mutate(!!target := target.vector)
 
