@@ -39,6 +39,9 @@ run_misty <- function(views, results.folder = "results",
 
   expr <- views[["intraview"]][["data"]]
 
+  assertthat::assert_that(nrow(expr) >= cv.folds,
+    msg = "The data has less rows than the requested number of cv folds."
+  )
 
 
   coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
@@ -107,7 +110,7 @@ run_misty <- function(views, results.folder = "results",
         )
 
         readr::write_csv(imps,
-          path = paste0(
+          paste0(
             results.folder, .Platform$file.sep,
             "importances_", target, "_", abbrev, ".txt"
           )

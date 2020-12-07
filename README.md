@@ -18,7 +18,7 @@ MISTy facilitates an in-depth understanding of marker interactions by profiling 
 
 MISTy requires a standard configuration and enough RAM to store the analyzed dataset and to support in-memory operations.
 
-The package requires installed R version 3.6.2 or higher. This package has been tested on a macOS (10.15.4). The package should be compatible with Windows, Linux and maxOS operating systems.
+The package requires installed R version 4.0.3 (Bunny-Wunnies Freak Out) or higher. This package has been tested on a macOS (11.0.1). The package should be compatible with Windows, Linux and maxOS operating systems.
 
 
 ## Installation

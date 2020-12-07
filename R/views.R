@@ -240,7 +240,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
         para.view <- seq(nrow(expr)) %>%
           furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
             exp(-(dists[, .x][-.x]^2) / l)))), 
-            .options = furrr::future_options(packages = "distances"))
+            .options = furrr::furrr_options(packages = "distances"))
       }
       else {
         if (approx < 1) approx <- base::round(approx * ncol(dists))
@@ -265,7 +265,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
         furrr::future_map_dfr(function(rowid) {
           knn <- distances::nearest_neighbor_search(dists, ncells + 1, query_indices = rowid)[-1, 1]
           data.frame(t(colSums(expr[knn, ] * exp(-(dists[knn, rowid]^2) / l))))
-        }, .options = furrr::future_options(packages = "distances"))
+        }, .options = furrr::furrr_options(packages = "distances"))
     }
     if(cached) readr::write_rds(para.view, para.cache.file)
   }
