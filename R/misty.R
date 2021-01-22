@@ -1,7 +1,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang !! :=
 .onLoad <- function(libname, pkgname) {
-  suppressWarnings(future::plan(future::multiprocess))
+  suppressWarnings(future::plan(future::multisession))
 }
 
 
