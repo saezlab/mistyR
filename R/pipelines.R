@@ -27,7 +27,7 @@ run_misty_seurat <- function(visium.slide,
                          out.alias = "default"){
   
   # Geometry extraction --------------------------------  
-  geometry <- visium_slide@images$slice1@coordinates[,c(2,3)]
+  geometry <- visium.slide@images$slice1@coordinates[,c(2,3)]
   
   # Extracting data -------------------------------- 
   view.data <- map(view.assays, 
