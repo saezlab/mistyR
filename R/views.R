@@ -9,8 +9,6 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 create_initial_view <- function(table, unique.id = NULL) {
   init.list <- list(intraview = list(abbrev = "intra", data = table))
 
@@ -44,8 +42,6 @@ create_initial_view <- function(table, unique.id = NULL) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 create_view <- function(name, data, abbrev = name) {
   new.list <- list(list(abbrev = abbrev, data = data))
   names(new.list)[1] <- name
@@ -62,8 +58,6 @@ create_view <- function(name, data, abbrev = name) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
     !is.null(current.views[["intraview"]]),
@@ -128,8 +122,6 @@ add_views <- function(current.views, new.views) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = TRUE, verbose = TRUE) {
   # from a deldir object
   get_neighbors <- function(ddobj, id) {
@@ -194,8 +186,6 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15, cached = 
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL, cached = TRUE, verbose = TRUE) {
   # K.approx is a list containing C, W.plus and s (indexes of sampled columns)
   sample_nystrom_row <- function(K.approx, k) {
@@ -286,8 +276,6 @@ add_paraview <- function(current.views, positions, l, approx = 1, ncells = NULL,
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 remove_views <- function(current.views, view.names) {
   to.match <- !(view.names %in% c("intraview", "misty.uniqueid"))
   view.indexes <- match(view.names[to.match], names(current.views))

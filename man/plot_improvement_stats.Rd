@@ -15,6 +15,3 @@ plot_improvement_stats(misty.results, measure = "gain.R2")
 \description{
 Plot observed performance and improvement per target
 }
-\examples{
-# TBD
-}

@@ -35,6 +35,3 @@ add_paraview(
 \description{
 Add paraview to the pipeline
 }
-\examples{
-# TBD
-}

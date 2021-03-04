@@ -15,6 +15,3 @@ clear_cache(singleid = NULL)
 \description{
 Clear cached models
 }
-\examples{
-# TBD
-}

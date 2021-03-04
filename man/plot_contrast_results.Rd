@@ -21,6 +21,3 @@ plot_contrast_results(
 \description{
 Title
 }
-\examples{
-# TBD
-}

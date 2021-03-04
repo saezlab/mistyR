@@ -15,6 +15,3 @@ plot_contrast_heatmap(misty.results, from.view, to.view, cutoff = 1)
 \description{
 Title
 }
-\examples{
-# TBD
-}

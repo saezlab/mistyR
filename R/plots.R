@@ -8,8 +8,6 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
   assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -53,8 +51,6 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 plot_view_contributions <- function(misty.results) {
   assertthat::assert_that(("contributions.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -84,8 +80,6 @@ plot_view_contributions <- function(misty.results) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -121,8 +115,6 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -170,8 +162,6 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -226,8 +216,6 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 plot_contrast_results <- function(misty.results.from, misty.results.to, views = NULL, cutoff.from = 1, cutoff.to = 1) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results.from)),
     msg = "The first provided result list is malformed. Consider using collect_results()."

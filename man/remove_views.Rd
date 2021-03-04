@@ -15,6 +15,3 @@ remove_views(current.views, view.names)
 \description{
 Remove views from the pipeline
 }
-\examples{
-# TBD
-}

@@ -23,6 +23,3 @@ run_misty(
 \description{
 Run MISTy
 }
-\examples{
-# TBD
-}

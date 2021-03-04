@@ -15,6 +15,3 @@ collect_results(folders)
 \description{
 Collect and aggregate MISTy results
 }
-\examples{
-# TBD
-}

@@ -15,6 +15,3 @@ aggregate_results_subset(misty.results, folders)
 \description{
 Title
 }
-\examples{
-# TBD
-}

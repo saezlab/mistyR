@@ -15,6 +15,3 @@ create_initial_view(table, unique.id = NULL)
 \description{
 Create the basic intrinsic view for MISTy
 }
-\examples{
-# TBD
-}

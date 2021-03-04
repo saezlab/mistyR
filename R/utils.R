@@ -5,8 +5,6 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 clear_cache <- function(singleid = NULL) {
   if (is.null(singleid)) {
     if (unlink(".misty.temp", recursive = TRUE) == 0) {
@@ -33,8 +31,6 @@ clear_cache <- function(singleid = NULL) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 collect_results <- function(folders) {
   images <- folders[dir.exists(folders)]
 
@@ -172,8 +168,6 @@ collect_results <- function(folders) {
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."

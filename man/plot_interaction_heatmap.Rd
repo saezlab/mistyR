@@ -15,6 +15,3 @@ plot_interaction_heatmap(misty.results, view, cutoff = 1)
 \description{
 Title
 }
-\examples{
-# TBD
-}

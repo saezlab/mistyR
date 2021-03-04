@@ -15,6 +15,3 @@ create_view(name, data, abbrev = name)
 \description{
 Create a view from a data frame
 }
-\examples{
-# TBD
-}

@@ -20,8 +20,6 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' # TBD
 run_misty <- function(views, results.folder = "results",
                       seed = 42, target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
   if (!dir.exists(results.folder)) dir.create(results.folder, recursive = T)
@@ -148,7 +146,7 @@ run_misty <- function(views, results.folder = "results",
     filelock::unlock(current.lock)
 
     return(target)
-  }, .progress = TRUE, .options = furrr::future_options(seed = TRUE))
+  }, .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
 
 
 

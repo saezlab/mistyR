@@ -29,6 +29,3 @@ add_juxtaview(
 \description{
 Add juxtaview to the pipeline
 }
-\examples{
-# TBD
-}

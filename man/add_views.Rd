@@ -15,6 +15,3 @@ add_views(current.views, new.views)
 \description{
 Add custom views to the current pipeline
 }
-\examples{
-# TBD
-}
