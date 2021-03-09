@@ -79,7 +79,7 @@ build_misty_pipeline <- function(view.data,
                                    unique.id = "main")
   
   # Create other views -------------------------------------------
-  view.names = names(view.data.filt)
+  view.names <- names(view.data.filt)
   
   all.views <- pmap(list(view.data.filt[-1],
                          view.types[-1],
@@ -143,7 +143,7 @@ create_any_view <- function(data,
     view.data.tmp <- create_initial_view(data, unique.id = view.name)
     
     # Spot specific view comes from the view above
-    data.red <- view.data.tmp[["intracellular"]]$data
+    data.red <- view.data.tmp[["intraview"]]$data
     data.red <- data.red[spot.ids, ]
     
   } else if (view.type == "para") {
@@ -154,7 +154,7 @@ create_any_view <- function(data,
     # Spot specific view comes from the view above -----------------------
     data.ix <- paste0("paraview.", view.param^2)
     data.red <- view.data.tmp[[data.ix]]$data
-    rownames(data.red) <- rownames(view.data.tmp[["intracellular"]]$data)
+    rownames(data.red) <- rownames(view.data.tmp[["intraview"]]$data)
     data.red <- data.red[spot.ids, ]
     
   }else if(view.type == "juxta"){
@@ -165,7 +165,7 @@ create_any_view <- function(data,
     # Spot specific view comes from the view above ----------------------
     data.ix <- paste0("juxtaview.", view.param)
     data.red <- view.data.tmp[[data.ix]]$data
-    rownames(data.red) <- rownames(view.data.tmp[["intracellular"]]$data)
+    rownames(data.red) <- rownames(view.data.tmp[["intraview"]]$data)
     data.red <- data.red[spot.ids, ]
     
   }
