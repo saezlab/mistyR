@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • misty</title>
+<title>Train a multi-view model for a single target — build_model • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,11 @@
 
 
 
-<meta property="og:title" content="Articles" />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:title" content="Train a multi-view model for a single target — build_model" />
+<meta property="og:description" content="Trains individual Random Forest models for each view, a linear meta-model
+using the out-of-bag predictions of the view specific models and estimates
+the overall performance by cross-validation." />
+<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
 
@@ -62,11 +65,21 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-9');
+</script>
+
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -78,8 +91,8 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">misty</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9000</span>
+        <a class="navbar-link" href="../index.html">MISTy</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -87,7 +100,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -101,19 +114,19 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/misty/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/saezlab">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="http://www.saezlab.org">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -130,16 +143,66 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Train a multi-view model for a single target</h1>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/models.R'><code>R/models.R</code></a></small>
+    <div class="hidden name"><code>build_model.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-      </dl>
+    <div class="ref-description">
+    <p>Trains individual Random Forest models for each view, a linear meta-model
+using the out-of-bag predictions of the view specific models and estimates
+the overall performance by cross-validation.</p>
     </div>
+
+    <pre class="usage"><span class='fu'>build_model</span><span class='op'>(</span><span class='va'>views</span>, <span class='va'>target</span>, seed <span class='op'>=</span> <span class='fl'>42</span>, cv.folds <span class='op'>=</span> <span class='fl'>10</span>, cached <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>views</th>
+      <td><p>view composition.</p></td>
+    </tr>
+    <tr>
+      <th>target</th>
+      <td><p>name of the target marker to train models for.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>seed used for random sampling to ensure reproducibility.</p></td>
+    </tr>
+    <tr>
+      <th>cv.folds</th>
+      <td><p>number of cross-validation folds to consider for estimating
+the performance of the multi-view models.</p></td>
+    </tr>
+    <tr>
+      <th>cached</th>
+      <td><p>a <code>logical</code> indicating whether to cache the trained models
+and to reuse previously cached ones if they already exist for this sample.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>all additional parameters are passed to <code><a href='https://rdrr.io/pkg/ranger/man/ranger.html'>ranger</a></code> for training the
+view-specific models (see Details for defaults).</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list containing the trained meta-model, a list of trained
+view-specific models and performance estimates.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Default values passed to <code><a href='https://rdrr.io/pkg/ranger/man/ranger.html'>ranger</a></code> for training the view-specific
+models: <code>num.trees = 100</code>, <code>importance = "impurity"</code>, <code>num.threads = 1</code>,
+<code>seed = seed</code>.</p>
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -150,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

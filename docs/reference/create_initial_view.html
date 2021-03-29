@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the basic intrinsic view for MISTy — create_initial_view • MISTy</title>
+<title>Start here. Create a basic view composition with an intraview. — create_initial_view • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,11 @@
 
 
 
-<meta property="og:title" content="Create the basic intrinsic view for MISTy — create_initial_view" />
-<meta property="og:description" content="Create the basic intrinsic view for MISTy" />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:title" content="Start here. Create a basic view composition with an intraview. — create_initial_view" />
+<meta property="og:description" content="This function is the first one to be called when building a MISTy workflow,
+starting from view composition. The initial view describes the intraview of
+the sample." />
+<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
 
@@ -90,7 +92,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -141,31 +143,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the basic intrinsic view for MISTy</h1>
+    <h1><strong>Start here.</strong> Create a basic view composition with an intraview.</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/views.R'><code>R/views.R</code></a></small>
     <div class="hidden name"><code>create_initial_view.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create the basic intrinsic view for MISTy</p>
+    <p>This function is the first one to be called when building a MISTy workflow,
+starting from view composition. The initial view describes the intraview of
+the sample.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_initial_view</span><span class='op'>(</span><span class='va'>table</span>, unique.id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>create_initial_view</span><span class='op'>(</span><span class='va'>data</span>, unique.id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>data</th>
+      <td><p>A <code>data.frame</code> or a <code>tibble</code> containing expression
+information for all markers of interest (in named columns) for each
+spatial unit (in rows).</p></td>
+    </tr>
+    <tr>
       <th>unique.id</th>
-      <td></td>
+      <td><p>A <code>character</code> vector. Identifier of the current sample.
+If not provided (<code>unique.id = NULL</code>) then an id is automatically generated
+by calculating the md5 hash of <code>table</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>An initial MISTy view composition containing an <em>intraview</em> list item named described
+    with abbreviation "intra" and <em>data</em> as provided in <code>data</code> and a <em>misty.uniqueid</em>
+    list item containing the provided or automatically calculated <code>unique.id</code>.
+    A cache folder for the sample will be automatically created in the working directory
+    as a subfolder of <code class="file">.misty.temp/</code> with the same name as <code>unique.id</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-
+    <div class='dont-index'><p>Other view composition functions: 
+<code><a href='add_juxtaview.html'>add_juxtaview</a>()</code>,
+<code><a href='add_paraview.html'>add_paraview</a>()</code>,
+<code><a href='add_views.html'>add_views</a>()</code>,
+<code><a href='create_view.html'>create_view</a>()</code>,
+<code><a href='remove_views.html'>remove_views</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

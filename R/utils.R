@@ -159,15 +159,13 @@ collect_results <- function(folders) {
   ))
 }
 
-
+# Not exported
 #' Title
 #'
 #' @param misty.results
 #' @param folders
 #'
 #' @return
-#' @export
-#'
 aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."

@@ -2,16 +2,30 @@
 % Please edit documentation in R/views.R
 \name{remove_views}
 \alias{remove_views}
-\title{Remove views from the pipeline}
+\title{Remove views from the current view composition}
 \usage{
 remove_views(current.views, view.names)
 }
 \arguments{
-\item{view.names}{}
+\item{current.views}{the current view composition.}
+
+\item{view.names}{the names of one or more views to be removed.}
 }
 \value{
-
+A MISTy view composition with \code{view.names} views removed.
 }
 \description{
-Remove views from the pipeline
+Remove one or more views from the view composition.
 }
+\details{
+The intraview and the unique id cannot be removed with this function.
+}
+\seealso{
+Other view composition functions: 
+\code{\link{add_juxtaview}()},
+\code{\link{add_paraview}()},
+\code{\link{add_views}()},
+\code{\link{create_initial_view}()},
+\code{\link{create_view}()}
+}
+\concept{view composition functions}

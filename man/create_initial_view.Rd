@@ -2,16 +2,37 @@
 % Please edit documentation in R/views.R
 \name{create_initial_view}
 \alias{create_initial_view}
-\title{Create the basic intrinsic view for MISTy}
+\title{\strong{Start here.} Create a basic view composition with an intraview.}
 \usage{
-create_initial_view(table, unique.id = NULL)
+create_initial_view(data, unique.id = NULL)
 }
 \arguments{
-\item{unique.id}{}
+\item{data}{A \code{data.frame} or a \code{tibble} containing expression
+information for all markers of interest (in named columns) for each
+spatial unit (in rows).}
+
+\item{unique.id}{A \code{character} vector. Identifier of the current sample.
+If not provided (\code{unique.id = NULL}) then an id is automatically generated
+by calculating the md5 hash of \code{table}.}
 }
 \value{
-
+An initial MISTy view composition containing an \emph{intraview} list item named described
+    with abbreviation "intra" and \emph{data} as provided in \code{data} and a \emph{misty.uniqueid}
+    list item containing the provided or automatically calculated \code{unique.id}.
+    A cache folder for the sample will be automatically created in the working directory
+    as a subfolder of \file{.misty.temp/} with the same name as \code{unique.id}.
 }
 \description{
-Create the basic intrinsic view for MISTy
+This function is the first one to be called when building a MISTy workflow,
+starting from view composition. The initial view describes the intraview of
+the sample.
 }
+\seealso{
+Other view composition functions: 
+\code{\link{add_juxtaview}()},
+\code{\link{add_paraview}()},
+\code{\link{add_views}()},
+\code{\link{create_view}()},
+\code{\link{remove_views}()}
+}
+\concept{view composition functions}

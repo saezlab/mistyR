@@ -1,12 +1,12 @@
 Package: MISTy
 Type: Package
-Title: MISTy
-Version: 0.0.2
+Title: Multiview Intercellular SpaTial modeling framework
+Version: 0.1.0
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",
            role = c("cre", "aut"),
-           email = "jovan.tanevski@bioquant.uni-heidelberg.de",
+           email = "jovan.tanevski@uni-heidelberg.de",
            comment = c(ORCID = "0000-0001-7177-1003")))
 Description: Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data.
 URL: https://github.com/saezlab/misty
@@ -24,8 +24,8 @@ Imports:
     distances,
     dplyr,
     filelock,
-    furrr,
-    future,
+    furrr (>= 0.2.0),
+    future (>= 1.20.0),
     ggplot2,
     magrittr,
     MASS,

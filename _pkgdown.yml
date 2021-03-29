@@ -1,4 +1,7 @@
 destination: docs
+
+url: https://saezlab.github.io/misty/
+
 navbar:
   structure:
     left: [home, intro, reference, articles, tutorials, news]

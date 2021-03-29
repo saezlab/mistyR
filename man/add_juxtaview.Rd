@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{add_juxtaview}
 \alias{add_juxtaview}
-\title{Add juxtaview to the pipeline}
+\title{Generate and add a juxtaview to the current view composition}
 \usage{
 add_juxtaview(
   current.views,
@@ -13,19 +13,44 @@ add_juxtaview(
 )
 }
 \arguments{
-\item{current.views}{}
+\item{current.views}{the current view composition.}
 
-\item{positions}{}
+\item{positions}{a \code{data.frame}, \code{tibble} or a \code{matrix}
+with named coordinates in columns  and rows for each spatial unit ordered
+as in the intraview.}
 
-\item{neighbor.thr}{}
+\item{neighbor.thr}{a threshold value used to indicate the largest distance
+between two spatial units that can be considered as neighboring.}
 
-\item{cached}{}
+\item{cached}{a \code{logical} indicating whether to cache the calculated view
+after the first calculation and to reuse a previously cached view if it
+already exists for this sample.}
 
-\item{verbose}{}
+\item{verbose}{a \code{logical} controlling the verbosity of the output of the
+function during execution.}
 }
 \value{
-
+A \pkg{MISTy} view composition with added juxtaview.
 }
 \description{
-Add juxtaview to the pipeline
+The juxtaview captures the expression of all markers within the immediate
+neighborhood of a spatial unit.
 }
+\details{
+The neighborhood of each spatial unit is estimated by constructing a graph by
+2D Delaunay triangulation following by removal of edges with length larger than
+\code{neighbor.thr}. For each spatial unit the juxtaview contains the sum of
+expressions across its estimated neighbors for each marker.
+}
+\seealso{
+\code{\link{create_initial_view()}} for starting a view composition
+    with an intraview only.
+
+Other view composition functions: 
+\code{\link{add_paraview}()},
+\code{\link{add_views}()},
+\code{\link{create_initial_view}()},
+\code{\link{create_view}()},
+\code{\link{remove_views}()}
+}
+\concept{view composition functions}

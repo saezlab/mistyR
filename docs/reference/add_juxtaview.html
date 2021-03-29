@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add juxtaview to the pipeline — add_juxtaview • MISTy</title>
+<title>Generate and add a juxtaview to the current view composition — add_juxtaview • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,10 @@
 
 
 
-<meta property="og:title" content="Add juxtaview to the pipeline — add_juxtaview" />
-<meta property="og:description" content="Add juxtaview to the pipeline" />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:title" content="Generate and add a juxtaview to the current view composition — add_juxtaview" />
+<meta property="og:description" content="The juxtaview captures the expression of all markers within the immediate
+neighborhood of a spatial unit." />
+<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
 
@@ -90,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -141,13 +142,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add juxtaview to the pipeline</h1>
+    <h1>Generate and add a juxtaview to the current view composition</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/views.R'><code>R/views.R</code></a></small>
     <div class="hidden name"><code>add_juxtaview.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Add juxtaview to the pipeline</p>
+    <p>The juxtaview captures the expression of all markers within the immediate
+neighborhood of a spatial unit.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_juxtaview</span><span class='op'>(</span>
@@ -163,31 +165,51 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>current.views</th>
-      <td></td>
+      <td><p>the current view composition.</p></td>
     </tr>
     <tr>
       <th>positions</th>
-      <td></td>
+      <td><p>a <code>data.frame</code>, <code>tibble</code> or a <code>matrix</code>
+with named coordinates in columns  and rows for each spatial unit ordered
+as in the intraview.</p></td>
     </tr>
     <tr>
       <th>neighbor.thr</th>
-      <td></td>
+      <td><p>a threshold value used to indicate the largest distance
+between two spatial units that can be considered as neighboring.</p></td>
     </tr>
     <tr>
       <th>cached</th>
-      <td></td>
+      <td><p>a <code>logical</code> indicating whether to cache the calculated view
+after the first calculation and to reuse a previously cached view if it
+already exists for this sample.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td></td>
+      <td><p>a <code>logical</code> controlling the verbosity of the output of the
+function during execution.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>A <span class="pkg">MISTy</span> view composition with added juxtaview.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>The neighborhood of each spatial unit is estimated by constructing a graph by
+2D Delaunay triangulation following by removal of edges with length larger than
+<code>neighbor.thr</code>. For each spatial unit the juxtaview contains the sum of
+expressions across its estimated neighbors for each marker.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='create_initial_view.html'>create_initial_view()</a></code> for starting a view composition
+    with an intraview only.</p>
+<p>Other view composition functions: 
+<code><a href='add_paraview.html'>add_paraview</a>()</code>,
+<code><a href='add_views.html'>add_views</a>()</code>,
+<code><a href='create_initial_view.html'>create_initial_view</a>()</code>,
+<code><a href='create_view.html'>create_view</a>()</code>,
+<code><a href='remove_views.html'>remove_views</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

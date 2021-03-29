@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a view from a data frame — create_view • MISTy</title>
+<title>Create a custom view. — create_view • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Create a view from a data frame — create_view" />
-<meta property="og:description" content="Create a view from a data frame" />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:title" content="Create a custom view. — create_view" />
+<meta property="og:description" content="Create a custom view from a data.frame or a tibble." />
+<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
 
@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -141,13 +141,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a view from a data frame</h1>
+    <h1>Create a custom view.</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/views.R'><code>R/views.R</code></a></small>
     <div class="hidden name"><code>create_view.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a view from a data frame</p>
+    <p>Create a custom view from a <code>data.frame</code> or a <code>tibble</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>create_view</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>data</span>, abbrev <span class='op'>=</span> <span class='va'>name</span><span class='op'>)</span></pre>
@@ -156,16 +156,36 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>name</th>
+      <td><p>Name of the view. A character vector.</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>A <code>data.frame</code> or a <code>tibble</code> with named variables in columns
+and rows for each spatial unit ordered as in the intraview.</p></td>
+    </tr>
+    <tr>
       <th>abbrev</th>
-      <td></td>
+      <td><p>Abbreviated name. A character vector.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>A new MISTy view. A list with a single <code>name</code>d item described by the provided <code>abbrev</code>iation
+    and <em>data</em> containing the provided <code>data</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>Creating a custom view does not add it to the current view composition.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='add_views.html'>add_views()</a></code> for adding created views to a view composition.</p>
+<p>Other view composition functions: 
+<code><a href='add_juxtaview.html'>add_juxtaview</a>()</code>,
+<code><a href='add_paraview.html'>add_paraview</a>()</code>,
+<code><a href='add_views.html'>add_views</a>()</code>,
+<code><a href='create_initial_view.html'>create_initial_view</a>()</code>,
+<code><a href='remove_views.html'>remove_views</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

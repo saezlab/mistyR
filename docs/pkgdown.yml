@@ -2,5 +2,8 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2021-03-04T12:52Z
+last_built: 2021-03-29T12:09Z
+urls:
+  reference: https://saezlab.github.io/misty//reference
+  article: https://saezlab.github.io/misty//articles
 
