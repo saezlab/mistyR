@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{create_view}
 \alias{create_view}
-\title{Create a custom view.}
+\title{Create a custom view}
 \usage{
 create_view(name, data, abbrev = name)
 }

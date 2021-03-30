@@ -2,7 +2,7 @@
 % Please edit documentation in R/views.R
 \name{create_initial_view}
 \alias{create_initial_view}
-\title{\strong{Start here.} Create a basic view composition with an intraview.}
+\title{\strong{Start here:} create a basic view composition with an intraview}
 \usage{
 create_initial_view(data, unique.id = NULL)
 }

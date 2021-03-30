@@ -2,16 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{collect_results}
 \alias{collect_results}
-\title{Collect and aggregate MISTy results}
+\title{Collect and aggregate raw results}
 \usage{
 collect_results(folders)
 }
 \arguments{
-\item{folders}{}
+\item{folders}{Paths to folders containing the raw results from \code{\link{run_misty}}.}
 }
 \value{
-
+TODO: return value
 }
 \description{
-Collect and aggregate MISTy results
+Collect and aggregate raw results
+}
+\seealso{
+\code{\link{run_misty}} to train models and generate results.
 }

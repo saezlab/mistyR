@@ -1,7 +1,7 @@
 # MISTy view composition functions
 # Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
-#' \strong{Start here.} Create a basic view composition with an intraview.
+#' \strong{Start here:} create a basic view composition with an intraview
 #'
 #' This function is the first one to be called when building a MISTy workflow,
 #' starting from view composition. The initial view describes the intraview of
@@ -48,7 +48,7 @@ create_initial_view <- function(data, unique.id = NULL) {
 
 # make a misty.view class?
 
-#' Create a custom view.
+#' Create a custom view
 #'
 #' Create a custom view from a \code{data.frame} or a \code{tibble}.
 #'
@@ -164,7 +164,7 @@ add_views <- function(current.views, new.views) {
 #' @param verbose a \code{logical} controlling the verbosity of the output of the
 #'     function during execution.
 #'
-#' @return A \pkg{MISTy} view composition with added juxtaview.
+#' @return A MISTy view composition with added juxtaview.
 #'
 #' @seealso \code{\link{create_initial_view()}} for starting a view composition
 #'     with an intraview only.

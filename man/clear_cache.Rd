@@ -2,16 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{clear_cache}
 \alias{clear_cache}
-\title{Clear cached models}
+\title{Clear cached objects}
 \usage{
-clear_cache(singleid = NULL)
+clear_cache(id = NULL)
 }
 \arguments{
-\item{singleid}{}
-}
-\value{
-
+\item{id}{the unique id of the sample.}
 }
 \description{
-Clear cached models
+Purge the cache or clear the cached objects for a single sample.
+}
+\details{
+The cached objects are removed from disk and cannot be retrieved. Whenever
+possible pass an \code{id}. If \code{id = NULL} all contents of the folder
+\file{.misty.temp} will be removed.
 }

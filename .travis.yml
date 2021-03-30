@@ -1,5 +1,7 @@
 language: r
-cache: packages
+r: 
+  - release
+  - bioc-devel
 os:
   - linux
   - macos

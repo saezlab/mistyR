@@ -39,6 +39,7 @@ Imports:
     tibble,
     tidyr
 Suggests: 
+    rmarkdown,
     igraph,
     knitr
 RoxygenNote: 7.1.1

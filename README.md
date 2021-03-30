@@ -55,7 +55,7 @@ stringr,
 tibble,
 tidyr
 
-and suggests igraph and knitr.
+and suggests rmarkdown, igraph and knitr.
 
 The installation of MISTy without any additional dependencies should take only seconds.
 

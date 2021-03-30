@@ -1,0 +1,39 @@
+---
+title: "Introduction to MISTy"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MISTy}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The use of MISTy is conceptualized around building a workflow for analysis using four classes of functions:
+
+-   View composition
+
+-   Train models
+
+-   Result processing
+
+-   Plotting
+
+MISTy is designed with the use of pipe operators (for example the operator `%>%` from [magrittr](https://r4ds.had.co.nz/pipes.html)) to construct a workflow by chaining functions in mind.
+
+```{r setup}
+library(MISTy)
+```
+
+## View composition
+
+## Train models
+
+## Results processing
+
+## Plotting
