@@ -9,6 +9,9 @@ clear_cache(id = NULL)
 \arguments{
 \item{id}{the unique id of the sample.}
 }
+\value{
+None (\code{NULL})
+}
 \description{
 Purge the cache or clear the cached objects for a single sample.
 }

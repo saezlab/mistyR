@@ -42,7 +42,6 @@ rsconnect/
 .DS_Store
 
 #other folders
-data/
 inst/doc
 doc
 Meta

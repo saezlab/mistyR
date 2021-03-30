@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate and add a juxtaview to the current view composition — add_juxtaview • MISTy</title>
+<title>Synthetic benchmark data for MISTy — synthetic • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,18 @@
 
 
 
-<meta property="og:title" content="Generate and add a juxtaview to the current view composition — add_juxtaview" />
-<meta property="og:description" content="The juxtaview captures the expression of all markers within the immediate
-neighborhood of a spatial unit." />
+<meta property="og:title" content="Synthetic benchmark data for MISTy — synthetic" />
+<meta property="og:description" content="Data generated from 10 random layouts of four cell types and empty space on 
+100-by-100 gridby simulating a two-dimensional cellular automata model that 
+focuses on signaling events. Cell growth, division, motility and death are 
+neglected. The intracellular processes involve two layers, first the ligand 
+activation of signaling hubs and ligand production/secretion regulated by 
+proteins. The model simulates the production, diffusion, degradation and 
+interactions of 11 molecular species. Ligands are produced in each cell-type 
+based on the activity level of their production nodes and then freely diffuse, 
+degrade or interact with other cells on the grid. Other molecular species 
+involved in signaling are localised in the intracellular space and their 
+activity depends on ligand binding and intracellular wiring." />
 <meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
@@ -145,74 +154,44 @@ neighborhood of a spatial unit." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate and add a juxtaview to the current view composition</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/views.R'><code>R/views.R</code></a></small>
-    <div class="hidden name"><code>add_juxtaview.Rd</code></div>
+    <h1>Synthetic benchmark data for MISTy</h1>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>synthetic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The juxtaview captures the expression of all markers within the immediate
-neighborhood of a spatial unit.</p>
+    <p>Data generated from 10 random layouts of four cell types and empty space on 
+100-by-100 gridby simulating a two-dimensional cellular automata model that 
+focuses on signaling events. Cell growth, division, motility and death are 
+neglected. The intracellular processes involve two layers, first the ligand 
+activation of signaling hubs and ligand production/secretion regulated by 
+proteins. The model simulates the production, diffusion, degradation and 
+interactions of 11 molecular species. Ligands are produced in each cell-type 
+based on the activity level of their production nodes and then freely diffuse, 
+degrade or interact with other cells on the grid. Other molecular species 
+involved in signaling are localised in the intracellular space and their 
+activity depends on ligand binding and intracellular wiring.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_juxtaview</span><span class='op'>(</span>
-  <span class='va'>current.views</span>,
-  <span class='va'>positions</span>,
-  neighbor.thr <span class='op'>=</span> <span class='fl'>15</span>,
-  cached <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='va'>synthetic</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>current.views</th>
-      <td><p>the current view composition.</p></td>
-    </tr>
-    <tr>
-      <th>positions</th>
-      <td><p>a <code>data.frame</code>, <code>tibble</code> or a <code>matrix</code>
-with named coordinates in columns  and rows for each spatial unit ordered
-as in the intraview.</p></td>
-    </tr>
-    <tr>
-      <th>neighbor.thr</th>
-      <td><p>a threshold value used to indicate the largest distance
-between two spatial units that can be considered as neighboring.</p></td>
-    </tr>
-    <tr>
-      <th>cached</th>
-      <td><p>a <code>logical</code> indicating whether to cache the calculated view
-after the first calculation and to reuse a previously cached view if it
-already exists for this sample.</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>a <code>logical</code> controlling the verbosity of the output of the
-function during execution.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A MISTy view composition with added juxtaview.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>A named <code>list</code> of length 10. Each list item is a <code>tibble</code> that
+corresponds to a simulation of one random layout with information about each 
+cell in rows described by the following 14 variables:</p><dl>
+ <dt>row, col</dt><dd><p>location of the cell on the grid</p></dd>
+ <dt>ligA, ligB, ligC, ligD</dt><dd><p>expression of ligands</p></dd>
+ <dt>protE, protF</dt><dd><p>expression of intracellular proteins</p></dd>
+ <dt>prodA, prodB, prodC, prodD</dt><dd><p>expression of regulatory proteins</p></dd>
+ <dt>type</dt><dd><p>cell type id</p></dd>
 
-    <p>The neighborhood of each spatial unit is estimated by constructing a graph by
-2D Delaunay triangulation following by removal of edges with length larger than
-<code>neighbor.thr</code>. For each spatial unit the juxtaview contains the sum of
-expressions across its estimated neighbors for each marker.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+</dl>
 
-    <div class='dont-index'><p><code><a href='create_initial_view.html'>create_initial_view()</a></code> for starting a view composition
-    with an intraview only.</p>
-<p>Other view composition functions: 
-<code><a href='add_paraview.html'>add_paraview</a>()</code>,
-<code><a href='add_views.html'>add_views</a>()</code>,
-<code><a href='create_initial_view.html'>create_initial_view</a>()</code>,
-<code><a href='create_view.html'>create_view</a>()</code>,
-<code><a href='remove_views.html'>remove_views</a>()</code></p></div>
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p><a href='https://github.com/saezlab/misty_pipelines/'>https://github.com/saezlab/misty_pipelines/</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
