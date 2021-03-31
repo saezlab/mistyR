@@ -17,6 +17,6 @@ Purge the cache or clear the cached objects for a single sample.
 }
 \details{
 The cached objects are removed from disk and cannot be retrieved. Whenever
-possible pass an \code{id}. If \code{id = NULL} all contents of the folder
-\file{.misty.temp} will be removed.
+possible specifying an \code{id} is reccomended. If \code{id = NULL} all 
+contents of the folder \file{.misty.temp} will be removed.
 }

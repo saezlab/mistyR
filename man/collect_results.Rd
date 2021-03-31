@@ -2,19 +2,55 @@
 % Please edit documentation in R/utils.R
 \name{collect_results}
 \alias{collect_results}
-\title{Collect and aggregate raw results}
+\title{Collect and aggregate results}
 \usage{
 collect_results(folders)
 }
 \arguments{
-\item{folders}{Paths to folders containing the raw results from \code{\link{run_misty}}.}
+\item{folders}{Paths to folders containing the raw results from \code{\link{run_misty()}}.}
 }
 \value{
-TODO: return value
+List of collected performance, contributions and importances per sample,
+    performance and contribution statistics and aggregated importances.
+    \describe{
+        \item{\var{improvements}}{Long format \code{tibble} with measurements
+            of performance for each \var{target} and each \var{sample}. Available
+            performance measures are RMSE and variance explained (R2) for a
+            model containing only an intrinsic view (\var{intra.RMSE}, \var{intra.R2}),
+            model with all views (\var{multi.RMSE}, \var{multi.R2}), gain of RMSE and gain
+            of variance explained of multi-view model over the intrisic model
+            where \var{gain.RMSE} is the relative decrease of RMSE in percent,
+            while \var{gain.R2} is the absolute increase of variance explained
+            in percent. Each \var{value} represents the mean performance across
+            folds (k-fold cross-validation). The p values of a one sided t-test of
+            improvement of performance (\var{p.RMSE}, \var{p.R2}) are also 
+            available as a measure.}
+        \item{\var{improvements.stats}}{Long format \code{tibble} with summary
+            statistics (mean, standard deviation and coefficient of variation)
+            for all performance measures for each {target} over all samples.}
+        \item{\var{contributions}}{Long format \code{tibble} with the values
+            of the coefficients for each \var{view} in the meta-model, for each
+            \var{target} and each \var{sample}. The p values for the coefficient
+            for each view, under the null hypothesis of zero contribution to the
+            meta model are also available.}
+        \item{\var{contributions.stats}}{Long format \code{tibble} with summary
+            statistics for all views per target over all samples. Including
+            mean coffecient value, fraction of contribution, mean and standard 
+            deviation of p values.}
+        \item{\var{importances}}{List of view-specific predictor-target 
+        importance tables per sample. The importances in each table are 
+        standardized per target and weighted by the quantile of the coefficient 
+        for the target in that view. Columns other than \var{Predictor} 
+        represent target markers.}
+        \item{\var{importances.aggregated}}{A list of aggregated view-specific
+        predictor-target importance tables . Aggregation is
+        reducing by mean over all samples.}
+    }
 }
 \description{
-Collect and aggregate raw results
+Collect and aggregate performance, contribution and importance estimations
+of a set of raw results produced by \code{\link{run_misty()}}.
 }
 \seealso{
-\code{\link{run_misty}} to train models and generate results.
+\code{\link{run_misty()}} to train models and generate results.
 }

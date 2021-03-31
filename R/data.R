@@ -1,5 +1,5 @@
 # MISTy companion data
-# Copyright (c) 2020 Attila Gabor
+# Copyright (c) 2020 Jovan Tanevski, Attila Gabor <attila.gabor@uni-heidelberg.de>
 
 #' Synthetic benchmark data for MISTy
 #' 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect and aggregate raw results — collect_results • MISTy</title>
+<title>Collect and aggregate results — collect_results • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,9 @@
 
 
 
-<meta property="og:title" content="Collect and aggregate raw results — collect_results" />
-<meta property="og:description" content="Collect and aggregate raw results" />
+<meta property="og:title" content="Collect and aggregate results — collect_results" />
+<meta property="og:description" content="Collect and aggregate performance, contribution and importance estimations
+of a set of raw results produced by run_misty()." />
 <meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
@@ -144,13 +145,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect and aggregate raw results</h1>
+    <h1>Collect and aggregate results</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>collect_results.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Collect and aggregate raw results</p>
+    <p>Collect and aggregate performance, contribution and importance estimations
+of a set of raw results produced by <code><a href='run_misty.html'>run_misty()</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>collect_results</span><span class='op'>(</span><span class='va'>folders</span><span class='op'>)</span></pre>
@@ -160,16 +162,52 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>folders</th>
-      <td><p>Paths to folders containing the raw results from <code><a href='run_misty.html'>run_misty</a></code>.</p></td>
+      <td><p>Paths to folders containing the raw results from <code><a href='run_misty.html'>run_misty()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>TODO: return value</p>
+    <p>List of collected performance, contributions and importances per sample,
+    performance and contribution statistics and aggregated importances.</p><dl>
+        <dt><var>improvements</var></dt><dd><p>Long format <code>tibble</code> with measurements
+            of performance for each <var>target</var> and each <var>sample</var>. Available
+            performance measures are RMSE and variance explained (R2) for a
+            model containing only an intrinsic view (<var>intra.RMSE</var>, <var>intra.R2</var>),
+            model with all views (<var>multi.RMSE</var>, <var>multi.R2</var>), gain of RMSE and gain
+            of variance explained of multi-view model over the intrisic model
+            where <var>gain.RMSE</var> is the relative decrease of RMSE in percent,
+            while <var>gain.R2</var> is the absolute increase of variance explained
+            in percent. Each <var>value</var> represents the mean performance across
+            folds (k-fold cross-validation). The p values of a one sided t-test of
+            improvement of performance (<var>p.RMSE</var>, <var>p.R2</var>) are also 
+            available as a measure.</p></dd>
+        <dt><var>improvements.stats</var></dt><dd><p>Long format <code>tibble</code> with summary
+            statistics (mean, standard deviation and coefficient of variation)
+            for all performance measures for each target over all samples.</p></dd>
+        <dt><var>contributions</var></dt><dd><p>Long format <code>tibble</code> with the values
+            of the coefficients for each <var>view</var> in the meta-model, for each
+            <var>target</var> and each <var>sample</var>. The p values for the coefficient
+            for each view, under the null hypothesis of zero contribution to the
+            meta model are also available.</p></dd>
+        <dt><var>contributions.stats</var></dt><dd><p>Long format <code>tibble</code> with summary
+            statistics for all views per target over all samples. Including
+            mean coffecient value, fraction of contribution, mean and standard 
+            deviation of p values.</p></dd>
+        <dt><var>importances</var></dt><dd><p>List of view-specific predictor-target 
+        importance tables per sample. The importances in each table are 
+        standardized per target and weighted by the quantile of the coefficient 
+        for the target in that view. Columns other than <var>Predictor</var> 
+        represent target markers.</p></dd>
+        <dt><var>importances.aggregated</var></dt><dd><p>A list of aggregated view-specific
+        predictor-target importance tables . Aggregation is
+        reducing by mean over all samples.</p></dd>
+    
+</dl>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_misty.html'>run_misty</a></code> to train models and generate results.</p></div>
+    <div class='dont-index'><p><code><a href='run_misty.html'>run_misty()</a></code> to train models and generate results.</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
