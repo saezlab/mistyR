@@ -13,11 +13,31 @@ plot_contrast_results(
 )
 }
 \arguments{
-\item{cutoff.to}{}
+\item{misty.results.from}{Results from}
+
+\item{misty.results.to}{Results to}
+
+\item{views}{Views vector}
+
+\item{cutoff.from}{Cutoff from}
+
+\item{cutoff.to}{Cutoff to}
 }
 \value{
-
+The \code{misty.results} list (invisibly).
 }
 \description{
-Title
+Description
 }
+\seealso{
+\code{\link{collect_results()}} to generate a results list from raw 
+    results.
+
+Other plotting functions: 
+\code{\link{plot_contrast_heatmap}()},
+\code{\link{plot_improvement_stats}()},
+\code{\link{plot_interaction_communities}()},
+\code{\link{plot_interaction_heatmap}()},
+\code{\link{plot_view_contributions}()}
+}
+\concept{plotting functions}
