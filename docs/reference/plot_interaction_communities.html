@@ -47,9 +47,7 @@
 
 
 <meta property="og:title" content="Plot marker interaction communities — plot_interaction_communities" />
-<meta property="og:description" content="Identify and plot a graph of marker interaction communities. The communities
-are identified using the Louvain algorithm. Communities can be extracted only
-from views that have the same predictor and target markers." />
+<meta property="og:description" content="Identify and plot a graph of marker interaction communities." />
 <meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
@@ -152,9 +150,7 @@ from views that have the same predictor and target markers." />
     </div>
 
     <div class="ref-description">
-    <p>Identify and plot a graph of marker interaction communities. The communities
-are identified using the Louvain algorithm. Communities can be extracted only
-from views that have the same predictor and target markers.</p>
+    <p>Identify and plot a graph of marker interaction communities.</p>
     </div>
 
     <pre class="usage"><span class='fu'>plot_interaction_communities</span><span class='op'>(</span><span class='va'>misty.results</span>, <span class='va'>view</span>, cutoff <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
@@ -181,6 +177,10 @@ be colored white in the heatmap and considered as not relevant.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The <code>misty.results</code> list (invisibly).</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The communities are identified using the Louvain algorithm. Communities can 
+be extracted only from views that have the same predictor and target markers.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='collect_results.html'>collect_results()</a></code> to generate a

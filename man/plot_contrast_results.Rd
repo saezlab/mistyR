@@ -25,10 +25,13 @@ lists.}
 The \code{misty.results.from} list (invisibly).
 }
 \description{
-Plot interexperiment contrast of views. The heatmaps show the interactions
-that are present and have importance above a \code{cutoff.to} value in the
-\code{views} of \code{misty.results.to} but not present or have importance
-below \code{cutoff.from} in the \code{views} of \code{misty.results.from}.
+Plot interexperiment contrast of views.
+}
+\details{
+The heatmaps show the interactions that are present and have importance above 
+a \code{cutoff.to} value in the \code{views} of \code{misty.results.to} but 
+not present or have importance below \code{cutoff.from} in the \code{views} 
+of \code{misty.results.from}.
 }
 \seealso{
 \code{\link[MISTy:collect_results]{collect_results()}} to generate a

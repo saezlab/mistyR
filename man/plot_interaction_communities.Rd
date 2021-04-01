@@ -19,9 +19,11 @@ be colored white in the heatmap and considered as not relevant.}
 The \code{misty.results} list (invisibly).
 }
 \description{
-Identify and plot a graph of marker interaction communities. The communities
-are identified using the Louvain algorithm. Communities can be extracted only
-from views that have the same predictor and target markers.
+Identify and plot a graph of marker interaction communities.
+}
+\details{
+The communities are identified using the Louvain algorithm. Communities can 
+be extracted only from views that have the same predictor and target markers.
 }
 \seealso{
 \code{\link[MISTy:collect_results]{collect_results()}} to generate a
