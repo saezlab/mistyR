@@ -81,36 +81,36 @@ clear_cache <- function(id = NULL) {
 #' 
 #' @export
 collect_results <- function(folders) {
-  images <- folders[dir.exists(folders)]
+  samples <- folders[dir.exists(folders)]
 
-  message(paste("Collecting results from", paste(images, collapse = " ")))
+  message(paste("Collecting results from", paste(samples, collapse = " ")))
 
   message("\nCollecting improvements")
-  improvements <- images %>%
-    furrr::future_map_dfr(function(image) {
-      performance <- readr::read_delim(paste0(image, .Platform$file.sep, "performance.txt"),
+  improvements <- samples %>%
+    furrr::future_map_dfr(function(sample) {
+      performance <- readr::read_delim(paste0(sample, .Platform$file.sep, "performance.txt"),
         delim = " ", col_types = readr::cols()
       ) %>% dplyr::distinct()
 
       performance %>%
         dplyr::mutate(
-          image = image,
+          sample = sample,
           gain.RMSE = 100 * (.data$intra.RMSE - .data$multi.RMSE) / .data$intra.RMSE,
           gain.R2 = 100 * (.data$multi.R2 - .data$intra.R2),
         )
     }, .progress = TRUE) %>%
-    tidyr::pivot_longer(-c(.data$image, .data$target), names_to = "measure")
+    tidyr::pivot_longer(-c(.data$sample, .data$target), names_to = "measure")
 
 
   message("\nCollecting contributions")
-  contributions <- images %>% furrr::future_map_dfr(function(image) {
-    coefficients <- readr::read_delim(paste0(image, .Platform$file.sep, "coefficients.txt"),
+  contributions <- samples %>% furrr::future_map_dfr(function(sample) {
+    coefficients <- readr::read_delim(paste0(sample, .Platform$file.sep, "coefficients.txt"),
       delim = " ", col_types = readr::cols()
     ) %>% dplyr::distinct()
 
     coefficients %>%
-      dplyr::mutate(image = image, .after = "target") %>%
-      tidyr::pivot_longer(cols = -c(.data$image, .data$target), names_to = "view")
+      dplyr::mutate(sample = sample, .after = "target") %>%
+      tidyr::pivot_longer(cols = -c(.data$sample, .data$target), names_to = "view")
   }, .progress = TRUE)
 
   improvements.stats <- improvements %>%
@@ -140,8 +140,8 @@ collect_results <- function(folders) {
   )
 
   message("\nCollecting importances")
-  importances <- images %>%
-    furrr::future_map(function(image) {
+  importances <- samples %>%
+    furrr::future_map(function(sample) {
       targets <- contributions.stats %>%
         dplyr::pull(.data$target) %>%
         unique() %>%
@@ -154,7 +154,7 @@ collect_results <- function(folders) {
       maps <- views %>%
         furrr::future_map(function(view) {
           all.importances <- targets %>% purrr::map(~ readr::read_csv(paste0(
-            image, .Platform$file.sep, "importances_", .x, "_", view, ".txt"
+            sample, .Platform$file.sep, "importances_", .x, "_", view, ".txt"
           ),
           col_types = readr::cols()
           ) %>%
@@ -168,7 +168,7 @@ collect_results <- function(folders) {
             sort()
 
           pvalues <- contributions %>%
-            dplyr::filter(image == !!image, view == paste0("p.", !!view)) %>%
+            dplyr::filter(sample == !!sample, view == paste0("p.", !!view)) %>%
             dplyr::mutate(value = 1 - .data$value)
 
           # importances are standardized for each target an multiplied by 1-pval(view)
@@ -187,7 +187,7 @@ collect_results <- function(folders) {
         }) %>%
         `names<-`(views)
     }, .progress = TRUE) %>%
-    `names<-`(images)
+    `names<-`(samples)
 
   message("\nAggregating")
   importances.aggregated <- importances %>%
@@ -196,7 +196,7 @@ collect_results <- function(folders) {
         (.y %>% dplyr::select(-.data$Predictor))) %>%
         dplyr::mutate(Predictor = .x %>% dplyr::pull(.data$Predictor))))
     }) %>%
-    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(images)))
+    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(samples)))
 
   return(list(
     improvements = improvements,
