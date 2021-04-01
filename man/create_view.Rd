@@ -9,14 +9,15 @@ create_view(name, data, abbrev = name)
 \arguments{
 \item{name}{Name of the view. A character vector.}
 
-\item{data}{A \code{data.frame} or a \code{tibble} with named variables in columns
-and rows for each spatial unit ordered as in the intraview.}
+\item{data}{A \code{data.frame} or a \code{tibble} with named variables in
+columns and rows for each spatial unit ordered as in the intraview.}
 
 \item{abbrev}{Abbreviated name. A character vector.}
 }
 \value{
-A new MISTy view. A list with a single \code{name}d item described by the provided \code{abbrev}iation
-    and \emph{data} containing the provided \code{data}.
+A new MISTy view. A list with a single \code{name}d item described by
+    the provided \code{abbrev}iation and \emph{data} containing the provided
+    \code{data}.
 }
 \description{
 Create a custom view from a \code{data.frame} or a \code{tibble}.
@@ -25,7 +26,8 @@ Create a custom view from a \code{data.frame} or a \code{tibble}.
 Creating a custom view does not add it to the current view composition.
 }
 \seealso{
-\code{\link{add_views()}} for adding created views to a view composition.
+\code{\link[MISTy:add_views]{add_views()}} for adding created views
+    to a view composition.
 
 Other view composition functions: 
 \code{\link{add_juxtaview}()},

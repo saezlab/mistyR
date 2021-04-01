@@ -6,10 +6,10 @@
 #' Trains individual Random Forest models for each view, a linear meta-model
 #' using the out-of-bag predictions of the view specific models and estimates
 #' the overall performance by cross-validation.
-#' 
-#' Default values passed to \code{\link[ranger]{ranger}} for training the view-specific
-#' models: \code{num.trees = 100}, \code{importance = "impurity"}, \code{num.threads = 1},
-#' \code{seed = seed}.
+#'
+#' Default values passed to \code{\link[ranger:ranger]{ranger()}} for training the
+#' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+#' \code{num.threads = 1}, \code{seed = seed}.
 #'
 #' @inheritParams run_misty
 #'
@@ -17,7 +17,8 @@
 #'
 #' @return A list containing the trained meta-model, a list of trained
 #' view-specific models and performance estimates.
-build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, ...) {
+build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
+                        ...) {
   set.seed(seed)
 
   cache.location <- paste0(
@@ -82,7 +83,10 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
     dplyr::mutate(!!target := target.vector)
 
   # train lm on above
-  combined.views <- stats::lm(stats::as.formula(paste0(target, "~.")), oob.predictions)
+  combined.views <- stats::lm(
+    stats::as.formula(paste0(target, "~.")),
+    oob.predictions
+  )
 
   # cv performance estimate
   test.folds <- caret::createFolds(target.vector, k = cv.folds)

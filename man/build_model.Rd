@@ -19,8 +19,9 @@ the performance of the multi-view models.}
 \item{cached}{a \code{logical} indicating whether to cache the trained models
 and to reuse previously cached ones if they already exist for this sample.}
 
-\item{...}{all additional parameters are passed to \code{\link[ranger]{ranger}} for training the
-view-specific models (see Details for defaults).}
+\item{...}{all additional parameters are passed to
+\code{\link[ranger:ranger]{ranger()}} for training the view-specific models
+(see Details for defaults).}
 }
 \value{
 A list containing the trained meta-model, a list of trained
@@ -32,7 +33,7 @@ using the out-of-bag predictions of the view specific models and estimates
 the overall performance by cross-validation.
 }
 \details{
-Default values passed to \code{\link[ranger]{ranger}} for training the view-specific
-models: \code{num.trees = 100}, \code{importance = "impurity"}, \code{num.threads = 1},
-\code{seed = seed}.
+Default values passed to \code{\link[ranger:ranger]{ranger()}} for training the
+view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+\code{num.threads = 1}, \code{seed = seed}.
 }

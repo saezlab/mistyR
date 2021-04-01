@@ -2,17 +2,17 @@
 # Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Clear cached objects
-#' 
+#'
 #' Purge the cache or clear the cached objects for a single sample.
-#' 
+#'
 #' The cached objects are removed from disk and cannot be retrieved. Whenever
-#' possible specifying an \code{id} is reccomended. If \code{id = NULL} all 
+#' possible specifying an \code{id} is reccomended. If \code{id = NULL} all
 #' contents of the folder \file{.misty.temp} will be removed.
 #'
 #' @param id the unique id of the sample.
 #'
 #' @return None (\code{NULL})
-#' 
+#'
 #' @export
 clear_cache <- function(id = NULL) {
   if (is.null(id)) {
@@ -34,27 +34,29 @@ clear_cache <- function(id = NULL) {
 
 
 #' Collect and aggregate results
-#' 
-#' Collect and aggregate performance, contribution and importance estimations
-#' of a set of raw results produced by \code{\link{run_misty()}}.
 #'
-#' @param folders Paths to folders containing the raw results from \code{\link{run_misty()}}.
+#' Collect and aggregate performance, contribution and importance estimations
+#' of a set of raw results produced by \code{\link[MISTy:run_misty]{run_misty()}}.
+#'
+#' @param folders Paths to folders containing the raw results from
+#'     \code{\link[MISTy:run_misty]{run_misty()}}.
 #'
 #' @return List of collected performance, contributions and importances per sample,
 #'     performance and contribution statistics and aggregated importances.
 #'     \describe{
 #'         \item{\var{improvements}}{Long format \code{tibble} with measurements
-#'             of performance for each \var{target} and each \var{sample}. Available
-#'             performance measures are RMSE and variance explained (R2) for a
-#'             model containing only an intrinsic view (\var{intra.RMSE}, \var{intra.R2}),
-#'             model with all views (\var{multi.RMSE}, \var{multi.R2}), gain of RMSE and gain
-#'             of variance explained of multi-view model over the intrisic model
+#'             of performance for each \var{target} and each \var{sample}.
+#'             Available performance measures are RMSE and variance explained
+#'             (R2) for a model containing only an intrinsic view
+#'             (\var{intra.RMSE}, \var{intra.R2}), model with all views
+#'             (\var{multi.RMSE}, \var{multi.R2}), gain of RMSE and gain of
+#'             variance explained of multi-view model over the intrisic model
 #'             where \var{gain.RMSE} is the relative decrease of RMSE in percent,
 #'             while \var{gain.R2} is the absolute increase of variance explained
 #'             in percent. Each \var{value} represents the mean performance across
-#'             folds (k-fold cross-validation). The p values of a one sided t-test of
-#'             improvement of performance (\var{p.RMSE}, \var{p.R2}) are also 
-#'             available as a measure.}
+#'             folds (k-fold cross-validation). The p values of a one sided
+#'             t-test of improvement of performance (\var{p.RMSE}, \var{p.R2})
+#'             are also available as a measure.}
 #'         \item{\var{improvements.stats}}{Long format \code{tibble} with summary
 #'             statistics (mean, standard deviation and coefficient of variation)
 #'             for all performance measures for each {target} over all samples.}
@@ -65,20 +67,21 @@ clear_cache <- function(id = NULL) {
 #'             meta model are also available.}
 #'         \item{\var{contributions.stats}}{Long format \code{tibble} with summary
 #'             statistics for all views per target over all samples. Including
-#'             mean coffecient value, fraction of contribution, mean and standard 
+#'             mean coffecient value, fraction of contribution, mean and standard
 #'             deviation of p values.}
-#'         \item{\var{importances}}{List of view-specific predictor-target 
-#'         importance tables per sample. The importances in each table are 
-#'         standardized per target and weighted by the quantile of the coefficient 
-#'         for the target in that view. Columns other than \var{Predictor} 
+#'         \item{\var{importances}}{List of view-specific predictor-target
+#'         importance tables per sample. The importances in each table are
+#'         standardized per target and weighted by the quantile of the coefficient
+#'         for the target in that view. Columns other than \var{Predictor}
 #'         represent target markers.}
 #'         \item{\var{importances.aggregated}}{A list of aggregated view-specific
 #'         predictor-target importance tables . Aggregation is
 #'         reducing by mean over all samples.}
 #'     }
-#' 
-#' @seealso \code{\link{run_misty()}} to train models and generate results.
-#' 
+#'
+#' @seealso \code{\link[MISTy:run_misty]{run_misty()}} to train models and
+#'     generate results.
+#'
 #' @export
 collect_results <- function(folders) {
   samples <- folders[dir.exists(folders)]
@@ -211,15 +214,16 @@ collect_results <- function(folders) {
 #' Aggregate a subset of results
 #'
 #' @inheritParams collect_results
-#' 
-#' @param misty.results a results list generated by \code{\link{collect_results()}}.
 #'
-#' @return the \code{misty.results} list with an added list item 
+#' @param misty.results a results list generated by
+#'     \code{\link[MISTy:collect_results]{collect_results()}}.
+#'
+#' @return the \code{misty.results} list with an added list item
 #'     \code{importances.aggregated.subset} containing the aggregated importances
 #'     for the subset of \code{folders}.
-#'     
-#' @seealso \code{\link{collect_results()}} to generate a results list from raw 
-#'     results.     
+#'
+#' @seealso \code{\link[MISTy:collect_results]{collect_results()}} to generate a
+#'     results list from raw results.
 aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -227,8 +231,8 @@ aggregate_results_subset <- function(misty.results, folders) {
 
   # check if folders are in names of misty.results
   assertthat::assert_that(all(folders %in% names(misty.results$importances)),
-    msg = "The provided results list doesn't contain information about some of the requested result folders.
-    Consider using collect_results()."
+    msg = "The provided results list doesn't contain information about some of
+    the requested result folders. Consider using collect_results()."
   )
 
   message("Aggregating subset")

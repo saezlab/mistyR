@@ -67,8 +67,8 @@ has priority and an approximation based on fast nearest neighbor
 search will be used to generate the paraview.
 }
 \seealso{
-\code{\link{create_initial_view()}} for starting a view composition
-    with an intraview only.
+\code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+    starting a view composition with an intraview only.
 
 Other view composition functions: 
 \code{\link{add_juxtaview}()},
