@@ -19,7 +19,6 @@
 #' view-specific models and performance estimates.
 build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
                         ...) {
-  set.seed(seed)
 
   cache.location <- paste0(
     ".misty.temp", .Platform$file.sep,
@@ -89,7 +88,8 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
   )
 
   # cv performance estimate
-  test.folds <- caret::createFolds(target.vector, k = cv.folds)
+  test.folds <- withr::with_seed(seed, 
+                                 caret::createFolds(target.vector, k = cv.folds))
 
   intra.view.only <-
     model.views[["intraview"]]$predictions %>%

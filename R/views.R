@@ -107,7 +107,7 @@ add_views <- function(current.views, new.views) {
     msg = "The new views are not in a list or vector."
   )
 
-  assertthat::assert_that(length(new.views %>% unlist(recursive = F)) %% 2 == 0,
+  assertthat::assert_that(length(new.views %>% unlist(recursive = FALSE)) %% 2 == 0,
     msg = "The new view is malformed. Consider using create_view()."
   )
 

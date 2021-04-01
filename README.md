@@ -53,7 +53,8 @@ rlist,
 stats,
 stringr,
 tibble,
-tidyr
+tidyr,
+withr
 
 and suggests rmarkdown, igraph and knitr.
 
