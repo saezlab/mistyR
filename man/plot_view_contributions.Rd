@@ -2,10 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{plot_view_contributions}
 \alias{plot_view_contributions}
-\title{Plot view contributions per target
- 
-Generate a stacked barplot of the average view contribution fraction per target
-across all samples from the results.}
+\title{Plot view contributions per target}
 \usage{
 plot_view_contributions(misty.results)
 }
@@ -16,8 +13,6 @@ plot_view_contributions(misty.results)
 The \code{misty.results} list (invisibly).
 }
 \description{
-Plot view contributions per target
- 
 Generate a stacked barplot of the average view contribution fraction per target
 across all samples from the results.
 }

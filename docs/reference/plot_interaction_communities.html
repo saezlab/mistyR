@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Title — plot_interaction_communities • MISTy</title>
+<title>Plot marker interaction communities — plot_interaction_communities • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,10 @@
 
 
 
-<meta property="og:title" content="Title — plot_interaction_communities" />
-<meta property="og:description" content="Description" />
+<meta property="og:title" content="Plot marker interaction communities — plot_interaction_communities" />
+<meta property="og:description" content="Identify and plot a graph of marker interaction communities. The communities
+are identified using the Louvain algorithm. Communities can be extracted only
+from views that have the same predictor and target markers." />
 <meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
@@ -144,13 +146,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Title</h1>
+    <h1>Plot marker interaction communities</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/plots.R'><code>R/plots.R</code></a></small>
     <div class="hidden name"><code>plot_interaction_communities.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Description</p>
+    <p>Identify and plot a graph of marker interaction communities. The communities
+are identified using the Louvain algorithm. Communities can be extracted only
+from views that have the same predictor and target markers.</p>
     </div>
 
     <pre class="usage"><span class='fu'>plot_interaction_communities</span><span class='op'>(</span><span class='va'>misty.results</span>, <span class='va'>view</span>, cutoff <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
@@ -164,7 +168,7 @@
     </tr>
     <tr>
       <th>view</th>
-      <td><p>name of the view.</p></td>
+      <td><p>abbreviated name of the view.</p></td>
     </tr>
     <tr>
       <th>cutoff</th>

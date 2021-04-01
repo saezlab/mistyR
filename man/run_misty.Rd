@@ -2,7 +2,7 @@
 % Please edit documentation in R/misty.R
 \name{run_misty}
 \alias{run_misty}
-\title{Run MISTy}
+\title{Train MISTy models}
 \usage{
 run_misty(
   views,

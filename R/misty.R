@@ -8,7 +8,7 @@
   suppressWarnings(future::plan(future::multisession))
 }
 
-#' Run MISTy
+#' Train MISTy models
 #'
 #' Trains multi-view models for all target markers, estimates the performance,
 #' the contributions of the view specific models and the importance of predictor
