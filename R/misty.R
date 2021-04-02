@@ -14,7 +14,7 @@
 #' the contributions of the view specific models and the importance of predictor
 #' markers for each target marker.
 #'
-#' Default values passed to \code{\link[ranger:ranger]{ranger()}} for training the
+#' Default values passed to \code{\link[ranger]{ranger}()} for training the
 #' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
 #' \code{num.threads = 1}, \code{seed = seed}.
 #'
@@ -28,13 +28,13 @@
 #' @param cached a \code{logical} indicating whether to cache the trained models
 #'     and to reuse previously cached ones if they already exist for this sample.
 #' @param ... all additional parameters are passed to
-#'     \code{\link[ranger:ranger]{ranger()}} for training the view-specific models
+#'     \code{\link[ranger]{ranger}()} for training the view-specific models
 #'     (see Details for defaults).
 #'
 #' @return Path to the results folder that can be passed to
-#'     \code{\link[MISTy:collect_results]{collect_results()}}.
+#'     \code{\link{collect_results}()}.
 #'
-#' @seealso \code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+#' @seealso \code{\link{create_initial_view}()} for
 #'     starting a view composition.
 #'
 #' @export

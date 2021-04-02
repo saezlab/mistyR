@@ -43,7 +43,7 @@ The neighborhood of each spatial unit is estimated by constructing a graph by
 expressions across its estimated neighbors for each marker.
 }
 \seealso{
-\code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+\code{\link{create_initial_view}()} for
     starting a view composition with an intraview only.
 
 Other view composition functions: 

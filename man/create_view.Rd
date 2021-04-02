@@ -26,7 +26,7 @@ Create a custom view from a \code{data.frame} or a \code{tibble}.
 Creating a custom view does not add it to the current view composition.
 }
 \seealso{
-\code{\link[MISTy:add_views]{add_views()}} for adding created views
+\code{\link{add_views}()} for adding created views
     to a view composition.
 
 Other view composition functions: 

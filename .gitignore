@@ -13,7 +13,6 @@
 
 # Output files from R CMD check
 /*.Rcheck/
-.Rbuildignore
 
 # RStudio files
 .Rproj.user/

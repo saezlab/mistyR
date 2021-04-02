@@ -26,37 +26,16 @@ Description: Multiview Intercellular SpaTial modeling framework (MISTy) is an
     contribution.
 URL: https://github.com/saezlab/misty
 BugReports: https://github.com/saezlab/misty/issues
-biocViews: Software, BiomedicalInformatics, CellBiology, SystemsBiology, Regression, DecisionTree, SingleCell
+biocViews: Software, BiomedicalInformatics, CellBiology, SystemsBiology, 
+    Regression, DecisionTree, SingleCell
 Depends: R (>= 4.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-Imports: 
-    assertthat,
-    caret,
-    deldir,
-    digest,
-    distances,
-    dplyr,
-    filelock,
-    furrr (>= 0.2.0),
-    future (>= 1.20.0),
-    ggplot2,
-    magrittr,
-    MASS,
-    purrr,
-    ranger,
-    readr,
-    rlang,
-    rlist,
-    stats,
-    stringr,
-    tibble,
-    withr,
-    tidyr
+Imports:  assertthat, caret, deldir, digest, distances, dplyr, filelock, 
+    furrr (>= 0.2.0), future (>= 1.20.0), ggplot2, magrittr, MASS, purrr, 
+    ranger, readr, rlang, rlist, stats, stringr, tibble, tidyr, withr
 Suggests: 
-    rmarkdown,
-    igraph,
-    knitr
+    BiocStyle, igraph, knitr, rmarkdown
 RoxygenNote: 7.1.1

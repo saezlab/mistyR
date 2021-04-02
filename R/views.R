@@ -64,7 +64,7 @@ create_initial_view <- function(data, unique.id = NULL) {
 #'     the provided \code{abbrev}iation and \emph{data} containing the provided
 #'     \code{data}.
 #'
-#' @seealso \code{\link[MISTy:add_views]{add_views()}} for adding created views
+#' @seealso \code{\link{add_views}()} for adding created views
 #'     to a view composition.
 #'
 #' @family view composition functions
@@ -84,14 +84,14 @@ create_view <- function(name, data, abbrev = name) {
 #'
 #' @param current.views the current view composition.
 #' @param new.views a view or a list of views created with
-#'     \code{\link[MISTy:create_view]{create_view()}} or otherwise.
+#'     \code{\link{create_view}()} or otherwise.
 #'
 #' @return A MISTy view composition containing an union of views from
 #'     \code{current.views} and \code{new.views}.
 #'
-#' @seealso \code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+#' @seealso \code{\link{create_initial_view}()} for
 #'     starting a view composition, with an intraview,
-#'     \code{\link[MISTy:create_view]{create_view()}} for creating a custom view.
+#'     \code{\link{create_view}()} for creating a custom view.
 #'
 #' @family view composition functions
 #'
@@ -170,7 +170,7 @@ add_views <- function(current.views, new.views) {
 #'
 #' @return A MISTy view composition with added juxtaview.
 #'
-#' @seealso \code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+#' @seealso \code{\link{create_initial_view}()} for
 #'     starting a view composition with an intraview only.
 #'
 #' @family view composition functions
@@ -267,7 +267,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #'
 #' @return A MISty view composition with added paraview with parameter \code{l}.
 #'
-#' @seealso \code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+#' @seealso \code{\link{create_initial_view}()} for
 #'     starting a view composition with an intraview only.
 #'
 #' @family view composition functions

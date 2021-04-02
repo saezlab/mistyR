@@ -10,7 +10,7 @@ add_views(current.views, new.views)
 \item{current.views}{the current view composition.}
 
 \item{new.views}{a view or a list of views created with
-\code{\link[MISTy:create_view]{create_view()}} or otherwise.}
+\code{\link{create_view}()} or otherwise.}
 }
 \value{
 A MISTy view composition containing an union of views from
@@ -20,9 +20,9 @@ A MISTy view composition containing an union of views from
 Add one or more custom views to the current view composition.
 }
 \seealso{
-\code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+\code{\link{create_initial_view}()} for
     starting a view composition, with an intraview,
-    \code{\link[MISTy:create_view]{create_view()}} for creating a custom view.
+    \code{\link{create_view}()} for creating a custom view.
 
 Other view composition functions: 
 \code{\link{add_juxtaview}()},

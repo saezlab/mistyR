@@ -1,6 +1,15 @@
 ---
-title: "Introduction to MISTy"
-output: rmarkdown::html_vignette
+title: "Modeling spatially resolved omics with MISTy"
+author:
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  email: jovan.tanevski@uni-heidelberg.de
+date: "`r Sys.Date()`"
+package: MISTy
+output: 
+  BiocStyle::html_document:
+    toc_float: true
 vignette: >
   %\VignetteIndexEntry{MISTy}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +23,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Introduction
+
 The use of MISTy is conceptualized around building a workflow for analysis using four classes of functions:
 
 -   View composition
@@ -24,16 +35,29 @@ The use of MISTy is conceptualized around building a workflow for analysis using
 
 -   Plotting
 
-MISTy is designed with the use of pipe operators (for example the operator `%>%` from [magrittr](https://r4ds.had.co.nz/pipes.html)) to construct a workflow by chaining functions in mind.
-
 ```{r setup}
 library(MISTy)
+library(magrittr)
+library(future)
 ```
 
-## View composition
+MISTy is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
 
-## Train models
+When loaded MISTy configures a `future::multisession()` parallel execution plan and will use all available cpu cores for execution of computationally demanding functions. It is recommended that the user modifies the `future::plan()` according to their needs.
 
-## Results processing
+# View composition
 
-## Plotting
+# Train models
+
+# Results processing
+
+# Plotting
+
+# Session info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled:
+
+```{r info, echo=FALSE}
+sessionInfo()
+```
+

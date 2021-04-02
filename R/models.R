@@ -7,7 +7,7 @@
 #' using the out-of-bag predictions of the view specific models and estimates
 #' the overall performance by cross-validation.
 #'
-#' Default values passed to \code{\link[ranger:ranger]{ranger()}} for training the
+#' Default values passed to \code{\link[ranger]{ranger}()} for training the
 #' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
 #' \code{num.threads = 1}, \code{seed = seed}.
 #'
@@ -17,6 +17,8 @@
 #'
 #' @return A list containing the trained meta-model, a list of trained
 #' view-specific models and performance estimates.
+#' 
+#' @noRd
 build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
                         ...) {
 

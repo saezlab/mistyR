@@ -8,7 +8,7 @@ collect_results(folders)
 }
 \arguments{
 \item{folders}{Paths to folders containing the raw results from
-\code{\link[MISTy:run_misty]{run_misty()}}.}
+\code{\link{run_misty}()}.}
 }
 \value{
 List of collected performance, contributions and importances per sample,
@@ -51,9 +51,9 @@ List of collected performance, contributions and importances per sample,
 }
 \description{
 Collect and aggregate performance, contribution and importance estimations
-of a set of raw results produced by \code{\link[MISTy:run_misty]{run_misty()}}.
+of a set of raw results produced by \code{\link{run_misty}()}.
 }
 \seealso{
-\code{\link[MISTy:run_misty]{run_misty()}} to train models and
+\code{\link{run_misty}()} to train models and
     generate results.
 }

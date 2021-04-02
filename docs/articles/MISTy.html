@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduction to MISTy • MISTy</title>
+<title>Modeling spatially resolved omics with MISTy • MISTy</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to MISTy">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Modeling spatially resolved omics with MISTy">
 <meta property="og:description" content="MISTy">
 <meta property="og:image" content="https://saezlab.github.io/misty/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -98,8 +98,13 @@
       </header><script src="MISTy_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Introduction to MISTy</h1>
-            
+      <h1 data-toc-skip>Modeling spatially resolved omics with MISTy</h1>
+                        <h4 class="author">Jovan Tanevski</h4>
+            <address class="author_afil">
+      Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, Germany<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
+      </address>
+                  
+            <h4 class="date">2021-04-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/misty/blob/master/vignettes/MISTy.Rmd"><code>vignettes/MISTy.Rmd</code></a></small>
       <div class="hidden name"><code>MISTy.Rmd</code></div>
@@ -108,6 +113,9 @@
 
     
     
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>The use of MISTy is conceptualized around building a workflow for analysis using four classes of functions:</p>
 <ul>
 <li><p>View composition</p></li>
@@ -115,24 +123,63 @@
 <li><p>Result processing</p></li>
 <li><p>Plotting</p></li>
 </ul>
-<p>MISTy is designed with the use of pipe operators (for example the operator <code>%&gt;%</code> from <a href="https://r4ds.had.co.nz/pipes.html">magrittr</a>) to construct a workflow by chaining functions in mind.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/misty">MISTy</a></span><span class="op">)</span></code></pre></div>
-<div id="view-composition" class="section level2">
-<h2 class="hasAnchor">
-<a href="#view-composition" class="anchor"></a>View composition</h2>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/misty">MISTy</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span></code></pre></div>
+<p>MISTy is designed with the use of pipe operators (for example the operator <code><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></code> from <em><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></em>) to construct a workflow by chaining functions in mind.</p>
+<p>When loaded MISTy configures a <code><a href="https://rdrr.io/pkg/future/man/multisession.html">future::multisession()</a></code> parallel execution plan and will use all available cpu cores for execution of computationally demanding functions. It is recommended that the user modifies the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> according to their needs.</p>
 </div>
-<div id="train-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#train-models" class="anchor"></a>Train models</h2>
+<div id="view-composition" class="section level1">
+<h1 class="hasAnchor">
+<a href="#view-composition" class="anchor"></a>View composition</h1>
 </div>
-<div id="results-processing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#results-processing" class="anchor"></a>Results processing</h2>
+<div id="train-models" class="section level1">
+<h1 class="hasAnchor">
+<a href="#train-models" class="anchor"></a>Train models</h1>
 </div>
-<div id="plotting" class="section level2">
-<h2 class="hasAnchor">
-<a href="#plotting" class="anchor"></a>Plotting</h2>
+<div id="results-processing" class="section level1">
+<h1 class="hasAnchor">
+<a href="#results-processing" class="anchor"></a>Results processing</h1>
+</div>
+<div id="plotting" class="section level1">
+<h1 class="hasAnchor">
+<a href="#plotting" class="anchor"></a>Plotting</h1>
+</div>
+<div id="session-info" class="section level1">
+<h1 class="hasAnchor">
+<a href="#session-info" class="anchor"></a>Session info</h1>
+<p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code> at the point when this document was compiled:</p>
+<pre><code>#&gt; R version 4.0.4 (2021-02-15)
+#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)
+#&gt; Running under: macOS Big Sur 10.16
+#&gt; 
+#&gt; Matrix products: default
+#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+#&gt; 
+#&gt; locale:
+#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+#&gt; 
+#&gt; attached base packages:
+#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
+#&gt; 
+#&gt; other attached packages:
+#&gt; [1] future_1.21.0    magrittr_2.0.1   MISTy_0.1.0      BiocStyle_2.18.1
+#&gt; 
+#&gt; loaded via a namespace (and not attached):
+#&gt;  [1] parallelly_1.24.0   knitr_1.31          R6_2.5.0           
+#&gt;  [4] ragg_1.1.2          rlang_0.4.10        fastmap_1.1.0      
+#&gt;  [7] stringr_1.4.0       globals_0.14.0      tools_4.0.4        
+#&gt; [10] parallel_4.0.4      xfun_0.22           jquerylib_0.1.3    
+#&gt; [13] htmltools_0.5.1.1   systemfonts_1.0.1   yaml_2.2.1         
+#&gt; [16] digest_0.6.27       rprojroot_2.0.2     pkgdown_1.6.1      
+#&gt; [19] crayon_1.4.1        bookdown_0.21       textshaping_0.3.3  
+#&gt; [22] BiocManager_1.30.12 codetools_0.2-18    sass_0.3.1         
+#&gt; [25] fs_1.5.0            memoise_2.0.0       cachem_1.0.4       
+#&gt; [28] evaluate_0.14       rmarkdown_2.7       stringi_1.5.3      
+#&gt; [31] compiler_4.0.4      bslib_0.2.4         desc_1.3.0         
+#&gt; [34] jsonlite_1.7.2      listenv_0.8.0</code></pre>
 </div>
   </div>
 

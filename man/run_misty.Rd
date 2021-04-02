@@ -31,12 +31,12 @@ the performance of the multi-view models.}
 and to reuse previously cached ones if they already exist for this sample.}
 
 \item{...}{all additional parameters are passed to
-\code{\link[ranger:ranger]{ranger()}} for training the view-specific models
+\code{\link[ranger]{ranger}()} for training the view-specific models
 (see Details for defaults).}
 }
 \value{
 Path to the results folder that can be passed to
-    \code{\link[MISTy:collect_results]{collect_results()}}.
+    \code{\link{collect_results}()}.
 }
 \description{
 Trains multi-view models for all target markers, estimates the performance,
@@ -44,11 +44,11 @@ the contributions of the view specific models and the importance of predictor
 markers for each target marker.
 }
 \details{
-Default values passed to \code{\link[ranger:ranger]{ranger()}} for training the
+Default values passed to \code{\link[ranger]{ranger}()} for training the
 view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
 \code{num.threads = 1}, \code{seed = seed}.
 }
 \seealso{
-\code{\link[MISTy:create_initial_view]{create_initial_view()}} for
+\code{\link{create_initial_view}()} for
     starting a view composition.
 }
