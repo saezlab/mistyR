@@ -4,3 +4,4 @@
 ^man/figures$
 ^doc$
 ^Meta$
+^\.misty\.temp$

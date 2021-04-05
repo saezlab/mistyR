@@ -34,8 +34,8 @@ Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
 Imports:  assertthat, caret, deldir, digest, distances, dplyr, filelock, 
-    furrr (>= 0.2.0), future (>= 1.20.0), ggplot2, magrittr, MASS, purrr, 
-    ranger, readr, rlang, rlist, stats, stringr, tibble, tidyr, withr
+    furrr (>= 0.2.0), ggplot2, magrittr, MASS, purrr, ranger, readr, rlang, 
+    rlist, stats, stringr, tibble, tidyr, withr
 Suggests: 
     BiocStyle, igraph, knitr, rmarkdown
 RoxygenNote: 7.1.1

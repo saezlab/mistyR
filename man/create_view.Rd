@@ -25,6 +25,30 @@ Create a custom view from a \code{data.frame} or a \code{tibble}.
 \details{
 Creating a custom view does not add it to the current view composition.
 }
+\examples{
+# Create a view from the mean expression of the 10 nearest neighbors of
+# each cell.
+
+library(dplyr)
+library(purrr)
+library(distances)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+# get the coordinates for each cell
+pos <- synthetic[[1]] \%>\% select(row,col)
+
+# find the 10 nearest neighbors
+neighbors <- nearest_neighbor_search(distances(as.matrix(pos)), k = 11)[-1, ]
+
+# calculate the mean expression of the nearest neighbors for all markers
+# for each cell in expr
+nnexpr <- seq_len(nrow(expr)) \%>\% 
+  map_dfr(~ expr \%>\% slice(neighbors[, .x]) \%>\% colMeans())
+
+create_view("nearest", nnexpr, "nn")
+
+}
 \seealso{
 \code{\link{add_views}()} for adding created views
     to a view composition.

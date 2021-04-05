@@ -22,6 +22,16 @@
 #'     subfolder of \file{.misty.temp/} with the same name as \code{unique.id}.
 #'
 #' @family view composition functions
+#' 
+#' @examples 
+#' # Create an intrinsic view from the first sample in the dataset synthetic.
+#' 
+#' library(dplyr)
+#' 
+#' # get the expression data
+#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' 
+#' create_initial_view(expr)
 #'
 #' @export
 create_initial_view <- function(data, unique.id = NULL) {
@@ -68,15 +78,36 @@ create_initial_view <- function(data, unique.id = NULL) {
 #'     to a view composition.
 #'
 #' @family view composition functions
-#'
+#' 
+#' @examples
+#' # Create a view from the mean expression of the 10 nearest neighbors of
+#' # each cell.
+#' 
+#' library(dplyr)
+#' library(purrr)
+#' library(distances)
+#' 
+#' # get the expression data
+#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' # get the coordinates for each cell
+#' pos <- synthetic[[1]] %>% select(row,col)
+#' 
+#' # find the 10 nearest neighbors
+#' neighbors <- nearest_neighbor_search(distances(as.matrix(pos)), k = 11)[-1, ]
+#' 
+#' # calculate the mean expression of the nearest neighbors for all markers
+#' # for each cell in expr
+#' nnexpr <- seq_len(nrow(expr)) %>% 
+#'   map_dfr(~ expr %>% slice(neighbors[, .x]) %>% colMeans())
+#' 
+#' create_view("nearest", nnexpr, "nn")
+#' 
 #' @export
 create_view <- function(name, data, abbrev = name) {
   new.list <- list(list(abbrev = abbrev, data = data))
   names(new.list)[1] <- name
   return(new.list)
 }
-
-
 
 #' Add custom views to the current view composition
 #'
@@ -94,7 +125,24 @@ create_view <- function(name, data, abbrev = name) {
 #'     \code{\link{create_view}()} for creating a custom view.
 #'
 #' @family view composition functions
-#'
+#' 
+#' @examples
+#' # Add custom views created with create_view() to the view composition.
+#' 
+#' # Alternatives
+#' \dontrun{
+#' 
+#' new.view <- create_view("nearest", nnexpr, "")
+#' add_views(misty.views, new.view)
+#'   
+#' misty.views %>% add_views(create_view("nearest", nnexpr, ""))
+#' 
+#' misty.views %>% 
+#'   add_views(c(create_view("nearest", nnexpr, ""), view2, view3))
+#'   
+#' misty.views %>% add_views(list(new.view, another.view))
+#' }
+#' 
 #' @export
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
@@ -158,7 +206,7 @@ add_views <- function(current.views, new.views) {
 #'
 #' @param current.views the current view composition.
 #' @param positions a \code{data.frame}, \code{tibble} or a \code{matrix}
-#'     with named coordinates in columns  and rows for each spatial unit ordered
+#'     with named coordinates in columns and rows for each spatial unit ordered
 #'     as in the intraview.
 #' @param neighbor.thr a threshold value used to indicate the largest distance
 #'     between two spatial units that can be considered as neighboring.
@@ -175,6 +223,29 @@ add_views <- function(current.views, new.views) {
 #'
 #' @family view composition functions
 #'
+#' @examples
+#' # Create a view composition of an intraview and a juxtaview.
+#' 
+#' library(dplyr)
+#' 
+#' # get the expression data
+#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' # get the coordinates for each cell
+#' pos <- synthetic[[1]] %>% select(row,col)
+#' 
+#' # compose
+#' misty.views <- create_initial_view(expr) %>% add_juxtaview(pos, neighbor.thr = 1.5)
+#' 
+#' # preview
+#' str(misty.views[["juxtaview.1.5"]])
+#' 
+#' # Alternatives
+#' \dontrun{
+#' 
+#' initial.view <- create_initial_view(expr)
+#' misty.views <- add_juxtaview(initial.view, pos, neighbor.thr = 1.5)
+#' }
+#' 
 #' @export
 add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
                           cached = TRUE, verbose = TRUE) {
@@ -226,7 +297,6 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
   )))
 }
 
-
 # ncells has priority over nystrom
 
 #' Generate and add a paraview to the current view composition
@@ -258,19 +328,41 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #' search will be used to generate the paraview.
 #'
 #' @inheritParams add_juxtaview
-
 #' @param l effective radius of influence of expression in the broader tissue structure.
 #' @param approx rank of the Nyström approximation matrix. (see Details)
 #' @param nn the number of spatial units to be used for approximating the paraview
 #' using a fast nearest neighbor search. (see Details)
 #'
 #'
-#' @return A MISty view composition with added paraview with parameter \code{l}.
+#' @return A MISTy view composition with added paraview with parameter \code{l}.
 #'
 #' @seealso \code{\link{create_initial_view}()} for
 #'     starting a view composition with an intraview only.
 #'
 #' @family view composition functions
+#' 
+#' @examples
+#' # Create a view composition of an intraview and a paraview with radius 10.
+#' 
+#' library(dplyr)
+#' 
+#' # get the expression data
+#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' # get the coordinates for each cell
+#' pos <- synthetic[[1]] %>% select(row,col)
+#' 
+#' # compose
+#' misty.views <- create_initial_view(expr) %>% add_paraview(pos, l = 10)
+#' 
+#' # preview
+#' str(misty.views[["paraview.10"]])
+#' 
+#' # Alternatives
+#' \dontrun{
+#' 
+#' initial.view <- create_initial_view(expr)
+#' misty.views <- add_paraview(initial.view, pos, l = 10)
+#' }
 #'
 #' @export
 add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
@@ -369,6 +461,34 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 #' @return A MISTy view composition with \code{view.names} views removed.
 #'
 #' @family view composition functions
+#' 
+#' @examples
+#' library(dplyr)
+#' 
+#' # get the expression data
+#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' # get the coordinates for each cell
+#' pos <- synthetic[[1]] %>% select(row,col)
+#' 
+#' # compose
+#' misty.views <- create_initial_view(expr) %>% 
+#'                add_juxtaview(pos, neighbor.thr = 1.5) %>%
+#'                add_paraview(pos, l = 10)
+#' 
+#' # preview
+#' str(misty.views)
+#' 
+#' #remove juxtaview and preview
+#' misty.views %>% remove_views("juxtaview.1.5") %>% str()
+#' 
+#' #remove juxtaview and paraview and preview
+#' misty.views %>% remove_views(c("juxtaview.1.5", "paraview.10")) %>% str()
+#' 
+#' # Alternatives
+#' \dontrun{
+#' 
+#' reduced.views <- remove_views(misty.views, "paraview.10")
+#' }
 #'
 #' @export
 remove_views <- function(current.views, view.names) {

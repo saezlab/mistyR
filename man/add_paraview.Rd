@@ -18,7 +18,7 @@ add_paraview(
 \item{current.views}{the current view composition.}
 
 \item{positions}{a \code{data.frame}, \code{tibble} or a \code{matrix}
-with named coordinates in columns  and rows for each spatial unit ordered
+with named coordinates in columns and rows for each spatial unit ordered
 as in the intraview.}
 
 \item{l}{effective radius of influence of expression in the broader tissue structure.}
@@ -36,7 +36,7 @@ already exists for this sample.}
 function during execution.}
 }
 \value{
-A MISty view composition with added paraview with parameter \code{l}.
+A MISTy view composition with added paraview with parameter \code{l}.
 }
 \description{
 The paraview captures the expression of all markers in  the broader
@@ -65,6 +65,30 @@ nearest neighbor search.
 If both \code{approx} and \code{nn} have non-null values, \code{nn}
 has priority and an approximation based on fast nearest neighbor
 search will be used to generate the paraview.
+}
+\examples{
+# Create a view composition of an intraview and a paraview with radius 10.
+
+library(dplyr)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+# get the coordinates for each cell
+pos <- synthetic[[1]] \%>\% select(row,col)
+
+# compose
+misty.views <- create_initial_view(expr) \%>\% add_paraview(pos, l = 10)
+
+# preview
+str(misty.views[["paraview.10"]])
+
+# Alternatives
+\dontrun{
+
+initial.view <- create_initial_view(expr)
+misty.views <- add_paraview(initial.view, pos, l = 10)
+}
+
 }
 \seealso{
 \code{\link{create_initial_view}()} for

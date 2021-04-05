@@ -28,6 +28,17 @@ This function is the first one to be called when building a MISTy workflow,
 starting from view composition. The initial view describes the intraview of
 the sample.
 }
+\examples{
+# Create an intrinsic view from the first sample in the dataset synthetic.
+
+library(dplyr)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+
+create_initial_view(expr)
+
+}
 \seealso{
 Other view composition functions: 
 \code{\link{add_juxtaview}()},

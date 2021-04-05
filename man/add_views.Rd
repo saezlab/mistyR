@@ -19,6 +19,24 @@ A MISTy view composition containing an union of views from
 \description{
 Add one or more custom views to the current view composition.
 }
+\examples{
+# Add custom views created with create_view() to the view composition.
+
+# Alternatives
+\dontrun{
+
+new.view <- create_view("nearest", nnexpr, "")
+add_views(misty.views, new.view)
+  
+misty.views \%>\% add_views(create_view("nearest", nnexpr, ""))
+
+misty.views \%>\% 
+  add_views(c(create_view("nearest", nnexpr, ""), view2, view3))
+  
+misty.views \%>\% add_views(list(new.view, another.view))
+}
+
+}
 \seealso{
 \code{\link{create_initial_view}()} for
     starting a view composition, with an intraview,

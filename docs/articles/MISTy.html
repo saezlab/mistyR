@@ -104,7 +104,7 @@
       Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, Germany<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-02</h4>
+            <h4 class="date">2021-04-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/misty/blob/master/vignettes/MISTy.Rmd"><code>vignettes/MISTy.Rmd</code></a></small>
       <div class="hidden name"><code>MISTy.Rmd</code></div>
@@ -125,10 +125,13 @@
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/misty">MISTy</a></span><span class="op">)</span>
+<span class="co">#&gt; MISTy is able to run computationally intensive functions</span>
+<span class="co">#&gt;   in parallel. Please consider specifying a future::plan(). For example by running </span>
+<span class="co">#&gt;   future::plan(future::multisession) before calling MISTy functions.</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span></code></pre></div>
 <p>MISTy is designed with the use of pipe operators (for example the operator <code><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></code> from <em><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></em>) to construct a workflow by chaining functions in mind.</p>
-<p>When loaded MISTy configures a <code><a href="https://rdrr.io/pkg/future/man/multisession.html">future::multisession()</a></code> parallel execution plan and will use all available cpu cores for execution of computationally demanding functions. It is recommended that the user modifies the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> according to their needs.</p>
+<p>When loading MISTy please consider configuring a <code><a href="https://rdrr.io/pkg/future/man/multisession.html">future::multisession()</a></code> parallel execution plan. MISTy will then use all available cores for execution of computationally demanding functions. It is recommended that the user modifies the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> according to their needs.</p>
 </div>
 <div id="view-composition" class="section level1">
 <h1 class="hasAnchor">

@@ -43,7 +43,10 @@ library(future)
 
 MISTy is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
 
-When loaded MISTy configures a `future::multisession()` parallel execution plan and will use all available cpu cores for execution of computationally demanding functions. It is recommended that the user modifies the `future::plan()` according to their needs.
+When loading MISTy please consider configuring a `future::multisession()` parallel 
+execution plan. MISTy will then use all available cores for execution of 
+computationally demanding functions. It is recommended that the user modifies the 
+`future::plan()` according to their needs.
 
 # View composition
 

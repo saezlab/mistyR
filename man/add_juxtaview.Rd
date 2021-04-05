@@ -16,7 +16,7 @@ add_juxtaview(
 \item{current.views}{the current view composition.}
 
 \item{positions}{a \code{data.frame}, \code{tibble} or a \code{matrix}
-with named coordinates in columns  and rows for each spatial unit ordered
+with named coordinates in columns and rows for each spatial unit ordered
 as in the intraview.}
 
 \item{neighbor.thr}{a threshold value used to indicate the largest distance
@@ -41,6 +41,30 @@ The neighborhood of each spatial unit is estimated by constructing a graph by
 2D Delaunay triangulation following by removal of edges with length larger than
 \code{neighbor.thr}. For each spatial unit the juxtaview contains the sum of
 expressions across its estimated neighbors for each marker.
+}
+\examples{
+# Create a view composition of an intraview and a juxtaview.
+
+library(dplyr)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+# get the coordinates for each cell
+pos <- synthetic[[1]] \%>\% select(row,col)
+
+# compose
+misty.views <- create_initial_view(expr) \%>\% add_juxtaview(pos, neighbor.thr = 1.5)
+
+# preview
+str(misty.views[["juxtaview.1.5"]])
+
+# Alternatives
+\dontrun{
+
+initial.view <- create_initial_view(expr)
+misty.views <- add_juxtaview(initial.view, pos, neighbor.thr = 1.5)
+}
+
 }
 \seealso{
 \code{\link{create_initial_view}()} for
