@@ -48,6 +48,29 @@ Default values passed to \code{\link[ranger]{ranger}()} for training the
 view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
 \code{num.threads = 1}, \code{seed = seed}.
 }
+\examples{
+# Create a view composition of an intraview and a paraview with radius 10 then
+# run MISTy for a single sample.
+
+library(dplyr)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+# get the coordinates for each cell
+pos <- synthetic[[1]] \%>\% select(row,col)
+
+# compose
+misty.views <- create_initial_view(expr) \%>\% add_paraview(pos, l = 10)
+
+# run with default parameters
+run_misty(misty.views)
+
+# Alternatives
+\dontrun{
+
+ create_initial_view(expr) \%>\% add_paraview(pos, l = 10) \%>\% run_misty()
+}
+}
 \seealso{
 \code{\link{create_initial_view}()} for
     starting a view composition.

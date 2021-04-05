@@ -38,7 +38,6 @@ The use of MISTy is conceptualized around building a workflow for analysis using
 ```{r setup}
 library(MISTy)
 library(magrittr)
-library(future)
 ```
 
 MISTy is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.

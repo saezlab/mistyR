@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   MISTy: MISTy.html
-last_built: 2021-04-05T15:16Z
+last_built: 2021-04-05T16:15Z
 urls:
   reference: https://saezlab.github.io/misty/reference
   article: https://saezlab.github.io/misty/articles
