@@ -20,3 +20,9 @@ The cached objects are removed from disk and cannot be retrieved. Whenever
 possible specifying an \code{id} is reccomended. If \code{id = NULL} all
 contents of the folder \file{.misty.temp} will be removed.
 }
+\examples{
+clear_cache("b98ad35f4e671871cba35f2155228612")
+
+clear_cache()
+
+}

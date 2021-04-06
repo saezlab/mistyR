@@ -12,6 +12,11 @@
 #' @param id the unique id of the sample.
 #'
 #' @return None (\code{NULL})
+#' 
+#' @examples 
+#' clear_cache("b98ad35f4e671871cba35f2155228612")
+#' 
+#' clear_cache()
 #'
 #' @export
 clear_cache <- function(id = NULL) {
@@ -81,6 +86,29 @@ clear_cache <- function(id = NULL) {
 #'
 #' @seealso \code{\link{run_misty}()} to train models and
 #'     generate results.
+#'     
+#' @examples
+#' # Train and collect results for 3 samples in synthetic
+#' 
+#' library(dplyr)
+#' library(purrr)
+#' 
+#' misty.results <- synthetic[seq_len(3)] %>% 
+#'                    imap_chr(~ create_initial_view(.x %>% select(-c(row,col,type))) %>%
+#'                    add_paraview(.x %>% select(row,col), l = 10) %>% 
+#'                    run_misty(paste0("results/", .y))) %>%
+#'                    collect_results()
+#' str(misty.results)
+#' 
+#' # Alternatives
+#' \dontrun{
+#' 
+#'  run_misty(misty.views) %>% collect_results()
+#'  
+#'  collect_results(c("results/sample1", "results/sample2", "results/sample3"))
+#'  
+#'  collect_results("results/sample")
+#' }
 #'
 #' @export
 collect_results <- function(folders) {

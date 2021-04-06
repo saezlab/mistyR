@@ -14,7 +14,7 @@ output:
   BiocStyle::html_document:
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{SpatialExperimentObject}
+  %\VignetteIndexEntry{MISTy and SpatialExperiment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
