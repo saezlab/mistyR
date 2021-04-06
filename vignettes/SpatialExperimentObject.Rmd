@@ -1,0 +1,42 @@
+---
+title: "Running MISTy with a SpatialExperiment object"
+author:
+- name: Ricardo Omar Ramirez Flores
+  affiliation:
+  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  email: jovan.tanevski@uni-heidelberg.de  
+date: "`r Sys.Date()`"
+package: MISTy
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{SpatialExperimentObject}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+```{r setup}
+library(MISTy)
+```
+
+
+# Session info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled:
+
+```{r info, echo=FALSE}
+sessionInfo()
+```

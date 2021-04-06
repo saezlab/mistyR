@@ -54,4 +54,10 @@
   <url>
     <loc>https://saezlab.github.io/misty/articles/MISTy.html</loc>
   </url>
+  <url>
+    <loc>https://saezlab.github.io/misty/articles/SeuratObject.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/misty/articles/SpatialExperimentObject.html</loc>
+  </url>
 </urlset>
