@@ -1,12 +1,26 @@
-#' Clear cached models
+# MISTy utility functions
+# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+
+#' Clear cached objects
 #'
-#' @param singleid
+#' Purge the cache or clear the cached objects for a single sample.
 #'
-#' @return
+#' The cached objects are removed from disk and cannot be retrieved. Whenever
+#' possible specifying an \code{id} is reccomended. If \code{id = NULL} all
+#' contents of the folder \file{.misty.temp} will be removed.
+#'
+#' @param id the unique id of the sample.
+#'
+#' @return None (\code{NULL})
+#' 
+#' @examples 
+#' clear_cache("b98ad35f4e671871cba35f2155228612")
+#' 
+#' clear_cache()
+#'
 #' @export
-#'
-clear_cache <- function(singleid = NULL) {
-  if (is.null(singleid)) {
+clear_cache <- function(id = NULL) {
+  if (is.null(id)) {
     if (unlink(".misty.temp", recursive = TRUE) == 0) {
       message("Cache cleared")
     } else {
@@ -14,7 +28,7 @@ clear_cache <- function(singleid = NULL) {
     }
   } else {
     if (unlink(paste0(
-      ".misty.temp", .Platform$file.sep, singleid
+      ".misty.temp", .Platform$file.sep, id
     ), recursive = TRUE) == 0) {
       message("Cache cleared\n")
     } else {
@@ -24,44 +38,110 @@ clear_cache <- function(singleid = NULL) {
 }
 
 
-#' Collect and aggregate MISTy results
+#' Collect and aggregate results
 #'
-#' @param folders
+#' Collect and aggregate performance, contribution and importance estimations
+#' of a set of raw results produced by \code{\link{run_misty}()}.
 #'
-#' @return
+#' @param folders Paths to folders containing the raw results from
+#'     \code{\link{run_misty}()}.
+#'
+#' @return List of collected performance, contributions and importances per sample,
+#'     performance and contribution statistics and aggregated importances.
+#'     \describe{
+#'         \item{\var{improvements}}{Long format \code{tibble} with measurements
+#'             of performance for each \var{target} and each \var{sample}.
+#'             Available performance measures are RMSE and variance explained
+#'             (R2) for a model containing only an intrinsic view
+#'             (\var{intra.RMSE}, \var{intra.R2}), model with all views
+#'             (\var{multi.RMSE}, \var{multi.R2}), gain of RMSE and gain of
+#'             variance explained of multi-view model over the intrisic model
+#'             where \var{gain.RMSE} is the relative decrease of RMSE in percent,
+#'             while \var{gain.R2} is the absolute increase of variance explained
+#'             in percent. Each \var{value} represents the mean performance across
+#'             folds (k-fold cross-validation). The p values of a one sided
+#'             t-test of improvement of performance (\var{p.RMSE}, \var{p.R2})
+#'             are also available as a measure.}
+#'         \item{\var{improvements.stats}}{Long format \code{tibble} with summary
+#'             statistics (mean, standard deviation and coefficient of variation)
+#'             for all performance measures for each {target} over all samples.}
+#'         \item{\var{contributions}}{Long format \code{tibble} with the values
+#'             of the coefficients for each \var{view} in the meta-model, for each
+#'             \var{target} and each \var{sample}. The p values for the coefficient
+#'             for each view, under the null hypothesis of zero contribution to the
+#'             meta model are also available.}
+#'         \item{\var{contributions.stats}}{Long format \code{tibble} with summary
+#'             statistics for all views per target over all samples. Including
+#'             mean coffecient value, fraction of contribution, mean and standard
+#'             deviation of p values.}
+#'         \item{\var{importances}}{List of view-specific predictor-target
+#'         importance tables per sample. The importances in each table are
+#'         standardized per target and weighted by the quantile of the coefficient
+#'         for the target in that view. Columns other than \var{Predictor}
+#'         represent target markers.}
+#'         \item{\var{importances.aggregated}}{A list of aggregated view-specific
+#'         predictor-target importance tables . Aggregation is
+#'         reducing by mean over all samples.}
+#'     }
+#'
+#' @seealso \code{\link{run_misty}()} to train models and
+#'     generate results.
+#'     
+#' @examples
+#' # Train and collect results for 3 samples in synthetic
+#' 
+#' library(dplyr)
+#' library(purrr)
+#' 
+#' misty.results <- synthetic[seq_len(3)] %>% 
+#'                    imap_chr(~ create_initial_view(.x %>% select(-c(row,col,type))) %>%
+#'                    add_paraview(.x %>% select(row,col), l = 10) %>% 
+#'                    run_misty(paste0("results/", .y))) %>%
+#'                    collect_results()
+#' str(misty.results)
+#' 
+#' # Alternatives
+#' \dontrun{
+#' 
+#'  run_misty(misty.views) %>% collect_results()
+#'  
+#'  collect_results(c("results/sample1", "results/sample2", "results/sample3"))
+#'  
+#'  collect_results("results/sample")
+#' }
+#'
 #' @export
-#'
 collect_results <- function(folders) {
-  images <- folders[dir.exists(folders)]
+  samples <- folders[dir.exists(folders)]
 
-  message(paste("Collecting results from", paste(images, collapse = " ")))
+  message(paste("Collecting results from", paste(samples, collapse = " ")))
 
   message("\nCollecting improvements")
-  improvements <- images %>%
-    furrr::future_map_dfr(function(image) {
-      performance <- readr::read_delim(paste0(image, .Platform$file.sep, "performance.txt"),
+  improvements <- samples %>%
+    furrr::future_map_dfr(function(sample) {
+      performance <- readr::read_delim(paste0(sample, .Platform$file.sep, "performance.txt"),
         delim = " ", col_types = readr::cols()
       ) %>% dplyr::distinct()
 
       performance %>%
         dplyr::mutate(
-          image = image,
+          sample = sample,
           gain.RMSE = 100 * (.data$intra.RMSE - .data$multi.RMSE) / .data$intra.RMSE,
           gain.R2 = 100 * (.data$multi.R2 - .data$intra.R2),
         )
     }, .progress = TRUE) %>%
-    tidyr::pivot_longer(-c(.data$image, .data$target), names_to = "measure")
+    tidyr::pivot_longer(-c(.data$sample, .data$target), names_to = "measure")
 
 
   message("\nCollecting contributions")
-  contributions <- images %>% furrr::future_map_dfr(function(image) {
-    coefficients <- readr::read_delim(paste0(image, .Platform$file.sep, "coefficients.txt"),
+  contributions <- samples %>% furrr::future_map_dfr(function(sample) {
+    coefficients <- readr::read_delim(paste0(sample, .Platform$file.sep, "coefficients.txt"),
       delim = " ", col_types = readr::cols()
     ) %>% dplyr::distinct()
 
     coefficients %>%
-      dplyr::mutate(image = image, .after = "target") %>%
-      tidyr::pivot_longer(cols = -c(.data$image, .data$target), names_to = "view")
+      dplyr::mutate(sample = sample, .after = "target") %>%
+      tidyr::pivot_longer(cols = -c(.data$sample, .data$target), names_to = "view")
   }, .progress = TRUE)
 
   improvements.stats <- improvements %>%
@@ -91,8 +171,8 @@ collect_results <- function(folders) {
   )
 
   message("\nCollecting importances")
-  importances <- images %>%
-    furrr::future_map(function(image) {
+  importances <- samples %>%
+    furrr::future_map(function(sample) {
       targets <- contributions.stats %>%
         dplyr::pull(.data$target) %>%
         unique() %>%
@@ -105,7 +185,7 @@ collect_results <- function(folders) {
       maps <- views %>%
         furrr::future_map(function(view) {
           all.importances <- targets %>% purrr::map(~ readr::read_csv(paste0(
-            image, .Platform$file.sep, "importances_", .x, "_", view, ".txt"
+            sample, .Platform$file.sep, "importances_", .x, "_", view, ".txt"
           ),
           col_types = readr::cols()
           ) %>%
@@ -119,7 +199,7 @@ collect_results <- function(folders) {
             sort()
 
           pvalues <- contributions %>%
-            dplyr::filter(image == !!image, view == paste0("p.", !!view)) %>%
+            dplyr::filter(sample == !!sample, view == paste0("p.", !!view)) %>%
             dplyr::mutate(value = 1 - .data$value)
 
           # importances are standardized for each target an multiplied by 1-pval(view)
@@ -138,7 +218,7 @@ collect_results <- function(folders) {
         }) %>%
         `names<-`(views)
     }, .progress = TRUE) %>%
-    `names<-`(images)
+    `names<-`(samples)
 
   message("\nAggregating")
   importances.aggregated <- importances %>%
@@ -147,7 +227,7 @@ collect_results <- function(folders) {
         (.y %>% dplyr::select(-.data$Predictor))) %>%
         dplyr::mutate(Predictor = .x %>% dplyr::pull(.data$Predictor))))
     }) %>%
-    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(images)))
+    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(samples)))
 
   return(list(
     improvements = improvements,
@@ -159,15 +239,21 @@ collect_results <- function(folders) {
   ))
 }
 
-
-#' Title
+#' Aggregate a subset of results
 #'
-#' @param misty.results
-#' @param folders
+#' @inheritParams collect_results
 #'
-#' @return
-#' @export
+#' @param misty.results a results list generated by
+#'     \code{\link{collect_results}()}.
 #'
+#' @return the \code{misty.results} list with an added list item
+#'     \code{importances.aggregated.subset} containing the aggregated importances
+#'     for the subset of \code{folders}.
+#'
+#' @seealso \code{\link{collect_results}()} to generate a
+#'     results list from raw results.
+#'     
+#' @noRd
 aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
@@ -175,8 +261,8 @@ aggregate_results_subset <- function(misty.results, folders) {
 
   # check if folders are in names of misty.results
   assertthat::assert_that(all(folders %in% names(misty.results$importances)),
-    msg = "The provided result list doesn't contain information about some of the requested result folders.
-    Consider using collect_results()."
+    msg = "The provided results list doesn't contain information about some of
+    the requested result folders. Consider using collect_results()."
   )
 
   message("Aggregating subset")

@@ -1,0 +1,8 @@
+^\.travis\.yml$
+^docs$
+^pkgdown$
+^man/figures$
+^doc$
+^Meta$
+^\.misty\.temp$
+^results$

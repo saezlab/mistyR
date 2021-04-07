@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clear cached models — clear_cache • MISTy</title>
+<title>Clear cached objects — clear_cache • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Clear cached models — clear_cache" />
-<meta property="og:description" content="Clear cached models" />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:title" content="Clear cached objects — clear_cache" />
+<meta property="og:description" content="Purge the cache or clear the cached objects for a single sample." />
+<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
 
@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -103,7 +103,25 @@
   </a>
 </li>
 <li>
+  <a href="../articles/MISTy.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/SeuratObject.html">Running MISTy with a Seurat object</a>
+    </li>
+    <li>
+      <a href="../articles/SpatialExperimentObject.html">Running MISTy with a SpatialExperiment object</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -141,34 +159,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clear cached models</h1>
+    <h1>Clear cached objects</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>clear_cache.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Clear cached models</p>
+    <p>Purge the cache or clear the cached objects for a single sample.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>clear_cache</span><span class='op'>(</span>singleid <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>clear_cache</span><span class='op'>(</span>id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>singleid</th>
-      <td></td>
+      <th>id</th>
+      <td><p>the unique id of the sample.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>None (<code>NULL</code>)</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-
+    <p>The cached objects are removed from disk and cannot be retrieved. Whenever
+possible specifying an <code>id</code> is reccomended. If <code>id = NULL</code> all
+contents of the folder <code class="file">.misty.temp</code> will be removed.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># TBD</span>
+    <pre class="examples"><div class='input'><span class='fu'>clear_cache</span><span class='op'>(</span><span class='st'>"b98ad35f4e671871cba35f2155228612"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Cache cleared</span></div><div class='input'>
+<span class='fu'>clear_cache</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Cache cleared</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

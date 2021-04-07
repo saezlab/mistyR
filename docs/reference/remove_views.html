@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Remove views from the pipeline — remove_views • MISTy</title>
+<title>Remove views from the current view composition — remove_views • MISTy</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Remove views from the pipeline — remove_views" />
-<meta property="og:description" content="Remove views from the pipeline" />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:title" content="Remove views from the current view composition — remove_views" />
+<meta property="og:description" content="Remove one or more views from the view composition." />
+<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
 
 
 
@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -103,7 +103,25 @@
   </a>
 </li>
 <li>
+  <a href="../articles/MISTy.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/SeuratObject.html">Running MISTy with a Seurat object</a>
+    </li>
+    <li>
+      <a href="../articles/SpatialExperimentObject.html">Running MISTy with a SpatialExperiment object</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -141,13 +159,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Remove views from the pipeline</h1>
+    <h1>Remove views from the current view composition</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/views.R'><code>R/views.R</code></a></small>
     <div class="hidden name"><code>remove_views.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Remove views from the pipeline</p>
+    <p>Remove one or more views from the view composition.</p>
     </div>
 
     <pre class="usage"><span class='fu'>remove_views</span><span class='op'>(</span><span class='va'>current.views</span>, <span class='va'>view.names</span><span class='op'>)</span></pre>
@@ -156,17 +174,146 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>current.views</th>
+      <td><p>the current view composition.</p></td>
+    </tr>
+    <tr>
       <th>view.names</th>
-      <td></td>
+      <td><p>the names of one or more views to be removed.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>A MISTy view composition with <code>view.names</code> views removed.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>The intraview and the unique id cannot be removed with this function.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p>Other view composition functions: 
+<code><a href='add_juxtaview.html'>add_juxtaview</a>()</code>,
+<code><a href='add_paraview.html'>add_paraview</a>()</code>,
+<code><a href='add_views.html'>add_views</a>()</code>,
+<code><a href='create_initial_view.html'>create_initial_view</a>()</code>,
+<code><a href='create_view.html'>create_view</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+
+<span class='co'># get the expression data</span>
+<span class='va'>expr</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>row</span>,<span class='va'>col</span>,<span class='va'>type</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># get the coordinates for each cell</span>
+<span class='va'>pos</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>row</span>,<span class='va'>col</span><span class='op'>)</span>
+
+<span class='co'># compose</span>
+<span class='va'>misty.views</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_initial_view.html'>create_initial_view</a></span><span class='op'>(</span><span class='va'>expr</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+               <span class='fu'><a href='add_juxtaview.html'>add_juxtaview</a></span><span class='op'>(</span><span class='va'>pos</span>, neighbor.thr <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+               <span class='fu'><a href='add_paraview.html'>add_paraview</a></span><span class='op'>(</span><span class='va'>pos</span>, l <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Computing triangulation</span></div><div class='output co'>#&gt; <span class='message'>Generating juxtaview</span></div><div class='output co'>#&gt; <span class='message'>Paraview retrieved from cache</span></div><div class='input'>
+<span class='co'># preview</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>misty.views</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 4
+#&gt;  $ intraview     :List of 2
+#&gt;   ..$ abbrev: chr "intra"
+#&gt;   ..$ data  : tibble[,11] [4,205 × 11] (S3: tbl_df/tbl/data.frame)
+#&gt;   .. ..$ ECM  : num [1:4205] 0.0385 0.0327 0.1444 0.387 0.1635 ...
+#&gt;   .. ..$ ligA : num [1:4205] 0.834 0.119 0.525 0.269 0.195 ...
+#&gt;   .. ..$ ligB : num [1:4205] 0.0157 0.0104 0.014 0.0367 0.1176 ...
+#&gt;   .. ..$ ligC : num [1:4205] 0.236 0.804 0.334 0.502 0.232 ...
+#&gt;   .. ..$ ligD : num [1:4205] 1.183 0.101 0.434 0.241 0.203 ...
+#&gt;   .. ..$ protE: num [1:4205] 1.18 0 1.67 0 0 ...
+#&gt;   .. ..$ protF: num [1:4205] 2.547 0.386 1.614 0.913 0.162 ...
+#&gt;   .. ..$ prodA: num [1:4205] 0.382 0 0.472 0 0 ...
+#&gt;   .. ..$ prodB: num [1:4205] 0 0 0 0 0.16 ...
+#&gt;   .. ..$ prodC: num [1:4205] 0 0.536 0 0.418 0 ...
+#&gt;   .. ..$ prodD: num [1:4205] 0.588 0 0.379 0 0 ...
+#&gt;  $ misty.uniqueid: chr "b98ad35f4e671871cba35f2155228612"
+#&gt;  $ juxtaview.1.5 :List of 2
+#&gt;   ..$ abbrev: chr "juxta.1.5"
+#&gt;   ..$ data  :'data.frame':	4205 obs. of  11 variables:
+#&gt;   .. ..$ ECM  : num [1:4205] 0.116 0.105 1.395 1.315 1.395 ...
+#&gt;   .. ..$ ligA : num [1:4205] 1.3988 0.0653 0.5141 0.965 0.5141 ...
+#&gt;   .. ..$ ligB : num [1:4205] 0.0394 0.0188 0.0629 0.1578 0.0629 ...
+#&gt;   .. ..$ ligC : num [1:4205] 0.53 0.856 0.825 0.89 0.825 ...
+#&gt;   .. ..$ ligD : num [1:4205] 1.9261 0.0577 0.4646 0.8604 0.4646 ...
+#&gt;   .. ..$ protE: num [1:4205] 0.779 0 1.617 3.286 1.617 ...
+#&gt;   .. ..$ protF: num [1:4205] 4.31 0.25 0.988 1.851 0.988 ...
+#&gt;   .. ..$ prodA: num [1:4205] 0.455 0 0 0.472 0 ...
+#&gt;   .. ..$ prodB: num [1:4205] 0 0 0 0.16 0 ...
+#&gt;   .. ..$ prodC: num [1:4205] 0.433 0.548 0.418 0 0.418 ...
+#&gt;   .. ..$ prodD: num [1:4205] 0.536 0 0 0.379 0 ...
+#&gt;  $ paraview.10   :List of 2
+#&gt;   ..$ abbrev: chr "para.10"
+#&gt;   ..$ data  :'data.frame':	4205 obs. of  11 variables:
+#&gt;   .. ..$ ECM  : num [1:4205] 6.98 15.05 17.37 18.4 19.93 ...
+#&gt;   .. ..$ ligA : num [1:4205] 13.2 12.9 13.6 14.3 14.7 ...
+#&gt;   .. ..$ ligB : num [1:4205] 1.29 2.31 2.78 3 3.16 ...
+#&gt;   .. ..$ ligC : num [1:4205] 9.56 18.52 20.42 20.97 21.99 ...
+#&gt;   .. ..$ ligD : num [1:4205] 17 15.1 16.1 16.9 17.5 ...
+#&gt;   .. ..$ protE: num [1:4205] 14 26.6 28.1 31.5 33.2 ...
+#&gt;   .. ..$ protF: num [1:4205] 28.1 27.7 29 30.9 32.7 ...
+#&gt;   .. ..$ prodA: num [1:4205] 4.37 5.24 5.04 5.61 5.69 ...
+#&gt;   .. ..$ prodB: num [1:4205] 0.816 1.659 1.948 2.093 2.076 ...
+#&gt;   .. ..$ prodC: num [1:4205] 3.87 7.29 8.23 8 8.61 ...
+#&gt;   .. ..$ prodD: num [1:4205] 5.64 6.01 5.98 6.51 6.64 ...</div><div class='input'>
+<span class='co'>#remove juxtaview and preview</span>
+<span class='va'>misty.views</span> <span class='op'>%&gt;%</span> <span class='fu'>remove_views</span><span class='op'>(</span><span class='st'>"juxtaview.1.5"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 3
+#&gt;  $ intraview     :List of 2
+#&gt;   ..$ abbrev: chr "intra"
+#&gt;   ..$ data  : tibble[,11] [4,205 × 11] (S3: tbl_df/tbl/data.frame)
+#&gt;   .. ..$ ECM  : num [1:4205] 0.0385 0.0327 0.1444 0.387 0.1635 ...
+#&gt;   .. ..$ ligA : num [1:4205] 0.834 0.119 0.525 0.269 0.195 ...
+#&gt;   .. ..$ ligB : num [1:4205] 0.0157 0.0104 0.014 0.0367 0.1176 ...
+#&gt;   .. ..$ ligC : num [1:4205] 0.236 0.804 0.334 0.502 0.232 ...
+#&gt;   .. ..$ ligD : num [1:4205] 1.183 0.101 0.434 0.241 0.203 ...
+#&gt;   .. ..$ protE: num [1:4205] 1.18 0 1.67 0 0 ...
+#&gt;   .. ..$ protF: num [1:4205] 2.547 0.386 1.614 0.913 0.162 ...
+#&gt;   .. ..$ prodA: num [1:4205] 0.382 0 0.472 0 0 ...
+#&gt;   .. ..$ prodB: num [1:4205] 0 0 0 0 0.16 ...
+#&gt;   .. ..$ prodC: num [1:4205] 0 0.536 0 0.418 0 ...
+#&gt;   .. ..$ prodD: num [1:4205] 0.588 0 0.379 0 0 ...
+#&gt;  $ misty.uniqueid: chr "b98ad35f4e671871cba35f2155228612"
+#&gt;  $ paraview.10   :List of 2
+#&gt;   ..$ abbrev: chr "para.10"
+#&gt;   ..$ data  :'data.frame':	4205 obs. of  11 variables:
+#&gt;   .. ..$ ECM  : num [1:4205] 6.98 15.05 17.37 18.4 19.93 ...
+#&gt;   .. ..$ ligA : num [1:4205] 13.2 12.9 13.6 14.3 14.7 ...
+#&gt;   .. ..$ ligB : num [1:4205] 1.29 2.31 2.78 3 3.16 ...
+#&gt;   .. ..$ ligC : num [1:4205] 9.56 18.52 20.42 20.97 21.99 ...
+#&gt;   .. ..$ ligD : num [1:4205] 17 15.1 16.1 16.9 17.5 ...
+#&gt;   .. ..$ protE: num [1:4205] 14 26.6 28.1 31.5 33.2 ...
+#&gt;   .. ..$ protF: num [1:4205] 28.1 27.7 29 30.9 32.7 ...
+#&gt;   .. ..$ prodA: num [1:4205] 4.37 5.24 5.04 5.61 5.69 ...
+#&gt;   .. ..$ prodB: num [1:4205] 0.816 1.659 1.948 2.093 2.076 ...
+#&gt;   .. ..$ prodC: num [1:4205] 3.87 7.29 8.23 8 8.61 ...
+#&gt;   .. ..$ prodD: num [1:4205] 5.64 6.01 5.98 6.51 6.64 ...</div><div class='input'>
+<span class='co'>#remove juxtaview and paraview and preview</span>
+<span class='va'>misty.views</span> <span class='op'>%&gt;%</span> <span class='fu'>remove_views</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"juxtaview.1.5"</span>, <span class='st'>"paraview.10"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ intraview     :List of 2
+#&gt;   ..$ abbrev: chr "intra"
+#&gt;   ..$ data  : tibble[,11] [4,205 × 11] (S3: tbl_df/tbl/data.frame)
+#&gt;   .. ..$ ECM  : num [1:4205] 0.0385 0.0327 0.1444 0.387 0.1635 ...
+#&gt;   .. ..$ ligA : num [1:4205] 0.834 0.119 0.525 0.269 0.195 ...
+#&gt;   .. ..$ ligB : num [1:4205] 0.0157 0.0104 0.014 0.0367 0.1176 ...
+#&gt;   .. ..$ ligC : num [1:4205] 0.236 0.804 0.334 0.502 0.232 ...
+#&gt;   .. ..$ ligD : num [1:4205] 1.183 0.101 0.434 0.241 0.203 ...
+#&gt;   .. ..$ protE: num [1:4205] 1.18 0 1.67 0 0 ...
+#&gt;   .. ..$ protF: num [1:4205] 2.547 0.386 1.614 0.913 0.162 ...
+#&gt;   .. ..$ prodA: num [1:4205] 0.382 0 0.472 0 0 ...
+#&gt;   .. ..$ prodB: num [1:4205] 0 0 0 0 0.16 ...
+#&gt;   .. ..$ prodC: num [1:4205] 0 0.536 0 0.418 0 ...
+#&gt;   .. ..$ prodD: num [1:4205] 0.588 0 0.379 0 0 ...
+#&gt;  $ misty.uniqueid: chr "b98ad35f4e671871cba35f2155228612"</div><div class='input'>
+<span class='co'># Alternatives</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='va'>reduced.views</span> <span class='op'>&lt;-</span> <span class='fu'>remove_views</span><span class='op'>(</span><span class='va'>misty.views</span>, <span class='st'>"paraview.10"</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

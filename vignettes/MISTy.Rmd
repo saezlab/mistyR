@@ -1,0 +1,65 @@
+---
+title: "Modeling spatially resolved omics with MISTy"
+author:
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  email: jovan.tanevski@uni-heidelberg.de
+date: "`r Sys.Date()`"
+package: MISTy
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+The use of MISTy is conceptualized around building a workflow for analysis using four classes of functions:
+
+-   View composition
+
+-   Train models
+
+-   Result processing
+
+-   Plotting
+
+```{r setup}
+library(MISTy)
+library(magrittr)
+```
+
+MISTy is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
+
+When loading MISTy please consider configuring a `future::multisession()` parallel 
+execution plan. MISTy will then use all available cores for execution of 
+computationally demanding functions. It is recommended that the user modifies the 
+`future::plan()` according to their needs.
+
+# View composition
+
+# Train models
+
+# Results processing
+
+# Plotting
+
+# Session info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled:
+
+```{r info, echo=FALSE}
+sessionInfo()
+```
+

@@ -2,16 +2,62 @@
 % Please edit documentation in R/views.R
 \name{create_view}
 \alias{create_view}
-\title{Create a view from a data frame}
+\title{Create a custom view}
 \usage{
 create_view(name, data, abbrev = name)
 }
 \arguments{
-\item{abbrev}{}
+\item{name}{Name of the view. A character vector.}
+
+\item{data}{A \code{data.frame} or a \code{tibble} with named variables in
+columns and rows for each spatial unit ordered as in the intraview.}
+
+\item{abbrev}{Abbreviated name. A character vector.}
 }
 \value{
-
+A new MISTy view. A list with a single \code{name}d item described by
+    the provided \code{abbrev}iation and \emph{data} containing the provided
+    \code{data}.
 }
 \description{
-Create a view from a data frame
+Create a custom view from a \code{data.frame} or a \code{tibble}.
 }
+\details{
+Creating a custom view does not add it to the current view composition.
+}
+\examples{
+# Create a view from the mean expression of the 10 nearest neighbors of
+# each cell.
+
+library(dplyr)
+library(purrr)
+library(distances)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+# get the coordinates for each cell
+pos <- synthetic[[1]] \%>\% select(row,col)
+
+# find the 10 nearest neighbors
+neighbors <- nearest_neighbor_search(distances(as.matrix(pos)), k = 11)[-1, ]
+
+# calculate the mean expression of the nearest neighbors for all markers
+# for each cell in expr
+nnexpr <- seq_len(nrow(expr)) \%>\% 
+  map_dfr(~ expr \%>\% slice(neighbors[, .x]) \%>\% colMeans())
+
+create_view("nearest", nnexpr, "nn")
+
+}
+\seealso{
+\code{\link{add_views}()} for adding created views
+    to a view composition.
+
+Other view composition functions: 
+\code{\link{add_juxtaview}()},
+\code{\link{add_paraview}()},
+\code{\link{add_views}()},
+\code{\link{create_initial_view}()},
+\code{\link{remove_views}()}
+}
+\concept{view composition functions}

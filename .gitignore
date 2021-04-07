@@ -13,7 +13,6 @@
 
 # Output files from R CMD check
 /*.Rcheck/
-.Rbuildignore
 
 # RStudio files
 .Rproj.user/
@@ -42,4 +41,8 @@ rsconnect/
 .DS_Store
 
 #other folders
-data/
+inst/doc
+doc
+Meta
+.misty.temp
+results

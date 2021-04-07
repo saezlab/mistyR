@@ -2,7 +2,7 @@
 % Please edit documentation in R/misty.R
 \name{run_misty}
 \alias{run_misty}
-\title{Run MISTy}
+\title{Train MISTy models}
 \usage{
 run_misty(
   views,
@@ -15,11 +15,63 @@ run_misty(
 )
 }
 \arguments{
-\item{...}{}
+\item{views}{view composition.}
+
+\item{results.folder}{path to the top level folder to store raw results.}
+
+\item{seed}{seed used for random sampling to ensure reproducibility.}
+
+\item{target.subset}{subset of targets to train models for. If \code{NULL},
+models will be trained for markers in the intraview.}
+
+\item{cv.folds}{number of cross-validation folds to consider for estimating
+the performance of the multi-view models.}
+
+\item{cached}{a \code{logical} indicating whether to cache the trained models
+and to reuse previously cached ones if they already exist for this sample.}
+
+\item{...}{all additional parameters are passed to
+\code{\link[ranger]{ranger}()} for training the view-specific models
+(see Details for defaults).}
 }
 \value{
-
+Path to the results folder that can be passed to
+    \code{\link{collect_results}()}.
 }
 \description{
-Run MISTy
+Trains multi-view models for all target markers, estimates the performance,
+the contributions of the view specific models and the importance of predictor
+markers for each target marker.
+}
+\details{
+Default values passed to \code{\link[ranger]{ranger}()} for training the
+view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+\code{num.threads = 1}, \code{seed = seed}.
+}
+\examples{
+# Create a view composition of an intraview and a paraview with radius 10 then
+# run MISTy for a single sample.
+
+library(dplyr)
+
+# get the expression data
+expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+# get the coordinates for each cell
+pos <- synthetic[[1]] \%>\% select(row,col)
+
+# compose
+misty.views <- create_initial_view(expr) \%>\% add_paraview(pos, l = 10)
+
+# run with default parameters
+run_misty(misty.views)
+
+# Alternatives
+\dontrun{
+
+ create_initial_view(expr) \%>\% add_paraview(pos, l = 10) \%>\% run_misty()
+}
+}
+\seealso{
+\code{\link{create_initial_view}()} for
+    starting a view composition.
 }

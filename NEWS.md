@@ -1,2 +1,4 @@
-# misty (0.0.0.9000)
-* Release of github page
+# MISTy 0.1.0
+
+* Initial beta release of MISTy with function documentation.
+

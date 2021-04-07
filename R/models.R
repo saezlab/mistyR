@@ -1,6 +1,26 @@
-# elipsis passed to ranger
-build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, ...) {
-  set.seed(seed)
+# MISTy model training functions
+# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+
+#' Train a multi-view model for a single target
+#'
+#' Trains individual Random Forest models for each view, a linear meta-model
+#' using the out-of-bag predictions of the view specific models and estimates
+#' the overall performance by cross-validation.
+#'
+#' Default values passed to \code{\link[ranger]{ranger}()} for training the
+#' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+#' \code{num.threads = 1}, \code{seed = seed}.
+#'
+#' @inheritParams run_misty
+#'
+#' @param target name of the target marker to train models for.
+#'
+#' @return A list containing the trained meta-model, a list of trained
+#' view-specific models and performance estimates.
+#' 
+#' @noRd
+build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
+                        ...) {
 
   cache.location <- paste0(
     ".misty.temp", .Platform$file.sep,
@@ -64,12 +84,16 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE, 
     dplyr::mutate(!!target := target.vector)
 
   # train lm on above
-  combined.views <- stats::lm(stats::as.formula(paste0(target, "~.")), oob.predictions)
+  combined.views <- stats::lm(
+    stats::as.formula(paste0(target, "~.")),
+    oob.predictions
+  )
 
   # cv performance estimate
-  test.folds <- caret::createFolds(target.vector, k = cv.folds)
+  test.folds <- withr::with_seed(seed, 
+                                 caret::createFolds(target.vector, k = cv.folds))
 
-  intra.view.only <- 
+  intra.view.only <-
     model.views[["intraview"]]$predictions %>%
     tibble::enframe(name = NULL) %>%
     dplyr::mutate(!!target := target.vector)

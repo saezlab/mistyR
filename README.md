@@ -41,7 +41,6 @@ distances,
 dplyr,
 filelock,
 furrr,
-future,
 ggplot2,
 magrittr,
 MASS,
@@ -53,15 +52,16 @@ rlist,
 stats,
 stringr,
 tibble,
-tidyr
+tidyr,
+withr
 
-and suggests igraph and knitr.
+and suggests BiocStyle, igraph, knitr and rmarkdown.
 
 The installation of MISTy without any additional dependencies should take only seconds.
 
 ## Usage
 
-Example pipelines and synthetic data for running MISTy are available from [this repository](https://github.com/saezlab/misty_pipelines/). To run MISTy on the provided synthetic data run the script synthetic_pipeline.R.
+Example pipelines and synthetic data for running MISTy are also available from [this repository](https://github.com/saezlab/misty_pipelines/). To run MISTy on the provided synthetic data run the script synthetic_pipeline.R.
 
 ## Citation
 If you use MISTy for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 
