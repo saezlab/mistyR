@@ -1,8 +1,7 @@
 language: r
-r: 
-  - release
-  - bioc-devel
+r: bioc-release
+cache: packages
+bioc_check: true
 os:
   - linux
-  - macos
-warnings_are_errors: false
+

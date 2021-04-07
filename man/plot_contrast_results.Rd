@@ -33,6 +33,24 @@ a \code{cutoff.to} value in the \code{views} of \code{misty.results.to} but
 not present or have importance below \code{cutoff.from} in the \code{views} 
 of \code{misty.results.from}.
 }
+\examples{
+\dontrun{
+
+# the available samples come from different grades of tumors
+grade1.results <- collect_results(grade1.folders)
+grade3.results <- collect_results(grade3.folders)
+
+# highlight interactions present in grade 1 tumors but not in grade 3 tumors
+# in the paraview
+
+grade3.results \%>\% plot_contrast_results(grade1.results, views = "para.100")
+
+# see the loss of interactions in all views with lower sensitivity
+
+plot_contrast_results(grade3.results, grade1.results, cutoff.from = 0.75, cutoff.to = 0.5)
+}
+
+}
 \seealso{
 \code{\link{collect_results}()} to generate a
     results list from raw results.

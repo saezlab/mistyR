@@ -25,6 +25,20 @@ Identify and plot a graph of marker interaction communities.
 The communities are identified using the Louvain algorithm. Communities can 
 be extracted only from views that have the same predictor and target markers.
 }
+\examples{
+library(magrittr) 
+all.samples <- list.dirs("results", recursive = FALSE)
+
+misty.results <- collect_results(all.samples)
+
+misty.results \%>\% 
+  plot_interaction_communities("intra") \%>\% 
+  plot_interaction_communities("para.10")
+
+misty.results \%>\%
+  plot_interaction_communities("para.10", cutoff = 0.5)
+
+}
 \seealso{
 \code{\link{collect_results}()} to generate a
     results list from raw results.

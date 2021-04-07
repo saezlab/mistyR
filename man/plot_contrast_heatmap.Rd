@@ -22,6 +22,19 @@ The \code{misty.results} list (invisibly).
 The heatmap shows the interactions that are present and have importance above
 a \code{cutoff} value in the \code{to.view} but but not in the \code{from.view}.
 }
+\examples{
+library(magrittr) 
+all.samples <- list.dirs("results", recursive = FALSE)
+
+misty.results <- collect_results(all.samples)
+
+misty.results \%>\% 
+  plot_contrast_heatmap("intra", "para.10")
+  
+misty.results \%>\% 
+  plot_contrast_heatmap("intra", "para.10", cutoff = 0.5)
+
+}
 \seealso{
 \code{\link{collect_results}()} to generate a
     results list from raw results.

@@ -17,6 +17,17 @@
 #'     results list from raw results.
 #'
 #' @family plotting functions
+#' 
+#' @examples
+#' library(magrittr)
+#'  
+#' all.samples <- list.dirs("results", recursive = FALSE)
+#' 
+#' collect_results(all.samples) %>% plot_improvement_stats()
+#' 
+#' misty.results <- collect_results(all.samples)
+#' misty.results %>% plot_improvement_stats(measure="gain.RMSE")
+#' misty.results %>% plot_improvement_stats(measure="intra.R2")
 #'
 #' @export
 plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
@@ -68,6 +79,12 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 #'     results list from raw results.
 #'
 #' @family plotting functions
+#' 
+#' @examples
+#' library(magrittr) 
+#' all.samples <- list.dirs("results", recursive = FALSE)
+#' 
+#' collect_results(all.samples) %>% plot_view_contributions()
 #'
 #' @export
 plot_view_contributions <- function(misty.results) {
@@ -106,6 +123,14 @@ plot_view_contributions <- function(misty.results) {
 #'     a results list from raw results.
 #'
 #' @family plotting functions
+#' 
+#' @examples
+#' library(magrittr) 
+#' all.samples <- list.dirs("results", recursive = FALSE)
+#' 
+#' collect_results(all.samples) %>% 
+#'   plot_interaction_heatmap("intra") %>% 
+#'   plot_interaction_heatmap("para.10", cutoff = 0.5)
 #'
 #' @export
 plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
@@ -148,6 +173,18 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
 #'     results list from raw results.
 #'
 #' @family plotting functions
+#' 
+#' @examples
+#' library(magrittr) 
+#' all.samples <- list.dirs("results", recursive = FALSE)
+#' 
+#' misty.results <- collect_results(all.samples)
+#' 
+#' misty.results %>% 
+#'   plot_contrast_heatmap("intra", "para.10")
+#'   
+#' misty.results %>% 
+#'   plot_contrast_heatmap("intra", "para.10", cutoff = 0.5)
 #'
 #' @export
 plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1) {
@@ -203,6 +240,19 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
 #'     results list from raw results.
 #'
 #' @family plotting functions
+#' 
+#' @examples
+#' library(magrittr) 
+#' all.samples <- list.dirs("results", recursive = FALSE)
+#' 
+#' misty.results <- collect_results(all.samples)
+#' 
+#' misty.results %>% 
+#'   plot_interaction_communities("intra") %>% 
+#'   plot_interaction_communities("para.10")
+#' 
+#' misty.results %>%
+#'   plot_interaction_communities("para.10", cutoff = 0.5)
 #'
 #' @export
 plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
@@ -269,6 +319,23 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 #'     results list from raw results.
 #'
 #' @family plotting functions
+#' 
+#' @examples
+#' \dontrun{
+#' 
+#' # the available samples come from different grades of tumors
+#' grade1.results <- collect_results(grade1.folders)
+#' grade3.results <- collect_results(grade3.folders)
+#' 
+#' # highlight interactions present in grade 1 tumors but not in grade 3 tumors
+#' # in the paraview
+#' 
+#' grade3.results %>% plot_contrast_results(grade1.results, views = "para.100")
+#' 
+#' # see the loss of interactions in all views with lower sensitivity
+#' 
+#' plot_contrast_results(grade3.results, grade1.results, cutoff.from = 0.75, cutoff.to = 0.5)
+#' }
 #'
 #' @export
 plot_contrast_results <- function(misty.results.from, misty.results.to, views = NULL, cutoff.from = 1, cutoff.to = 1) {

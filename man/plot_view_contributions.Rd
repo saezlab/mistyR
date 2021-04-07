@@ -17,6 +17,13 @@ The \code{misty.results} list (invisibly).
 Generate a stacked barplot of the average view contribution fraction per target
 across all samples from the results.
 }
+\examples{
+library(magrittr) 
+all.samples <- list.dirs("results", recursive = FALSE)
+
+collect_results(all.samples) \%>\% plot_view_contributions()
+
+}
 \seealso{
 \code{\link{collect_results}()} to generate a
     results list from raw results.

@@ -20,6 +20,18 @@ The \code{misty.results} list (invisibly).
 Generates a plot of the mean (+- standard deviation) of the performance value
 per target across all samples from the results.
 }
+\examples{
+library(magrittr)
+ 
+all.samples <- list.dirs("results", recursive = FALSE)
+
+collect_results(all.samples) \%>\% plot_improvement_stats()
+
+misty.results <- collect_results(all.samples)
+misty.results \%>\% plot_improvement_stats(measure="gain.RMSE")
+misty.results \%>\% plot_improvement_stats(measure="intra.R2")
+
+}
 \seealso{
 \code{\link{collect_results}()} to generate a 
     results list from raw results.

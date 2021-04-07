@@ -21,6 +21,15 @@ The \code{misty.results} list (invisibly).
 \description{
 Generate a heatmap with importances of predictor-target interaction.
 }
+\examples{
+library(magrittr) 
+all.samples <- list.dirs("results", recursive = FALSE)
+
+collect_results(all.samples) \%>\% 
+  plot_interaction_heatmap("intra") \%>\% 
+  plot_interaction_heatmap("para.10", cutoff = 0.5)
+
+}
 \seealso{
 \code{\link{collect_results}()} to generate 
     a results list from raw results.
