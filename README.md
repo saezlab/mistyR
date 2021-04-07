@@ -1,8 +1,12 @@
 # MISTy - **M**ultiview **I**ntercellular **S**pa**T**ial modeling framework <img src="man/figures/logo.png" align="right" height="139">
 
 <!-- badges: start -->
-- master [![Build Status](https://travis-ci.org/saezlab/misty.svg?branch=master)](https://travis-ci.org/saezlab/misty)
-- devel [![Build Status](https://travis-ci.org/saezlab/misty.svg?branch=devel)](https://travis-ci.org/saezlab/misty)
+
+| branch | status                                                       |
+| :----- | :----------------------------------------------------------- |
+| master | [![Build Status](https://travis-ci.org/saezlab/misty.svg?branch=master)](https://travis-ci.org/saezlab/misty) |
+| devel  | [![Build Status](https://travis-ci.org/saezlab/misty.svg?branch=devel)](https://travis-ci.org/saezlab/misty) |
+
 <!-- badges: end -->
 
 ## Overview
@@ -60,6 +64,8 @@ and suggests BiocStyle, igraph, knitr and rmarkdown.
 The installation of MISTy without any additional dependencies should take only seconds.
 
 ## Usage
+
+Start by reading `vignette("MISTy")` to learn how to run MISTy. To use MISTy with commonly used objects for spatial omics data see `vignette("SeuratObject")` and `vignette("SpatialExperimentObject")`.
 
 Example pipelines and synthetic data for running MISTy are also available from [this repository](https://github.com/saezlab/misty_pipelines/). To run MISTy on the provided synthetic data run the script synthetic_pipeline.R.
 
