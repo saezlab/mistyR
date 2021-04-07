@@ -61,8 +61,6 @@ The installation of MISTy without any additional dependencies should take only s
 
 ## Usage
 
-Start by reading `vignette("MISTy")` to learn how to run MISTy. To use MISTy with commonly used objects for spatial omics data see `vignette("SeuratObject")` and `vignette("SpatialExperimentObject")`.
-
 Example pipelines and synthetic data for running MISTy are also available from [this repository](https://github.com/saezlab/misty_pipelines/). To run MISTy on the provided synthetic data run the script synthetic_pipeline.R.
 
 ## Citation
