@@ -149,7 +149,7 @@ create_any_view <- function(data,
   } else if (view.type == "para") {
     
     view.data.tmp <- create_initial_view(data, unique.id = view.name) %>% 
-      add_paraview(geometry,l = view.param^2)
+      add_paraview(geometry,l = view.param)
     
     # Spot specific view comes from the view above -----------------------
     data.ix <- paste0("paraview.", view.param^2)
