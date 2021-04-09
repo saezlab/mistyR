@@ -1,7 +1,7 @@
-# MISTy companion data
+# mistyR companion data
 # Copyright (c) 2020 Jovan Tanevski, Attila Gabor <attila.gabor@uni-heidelberg.de>
 
-#' Synthetic benchmark data for MISTy
+#' Synthetic benchmark data for mistyR
 #'
 #' Data generated from 10 random layouts of four cell types and empty space on
 #' 100-by-100 gridby simulating a two-dimensional cellular automata model that

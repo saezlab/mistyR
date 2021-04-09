@@ -15,7 +15,7 @@ columns and rows for each spatial unit ordered as in the intraview.}
 \item{abbrev}{Abbreviated name. A character vector.}
 }
 \value{
-A new MISTy view. A list with a single \code{name}d item described by
+A new mistyR view. A list with a single \code{name}d item described by
     the provided \code{abbrev}iation and \emph{data} containing the provided
     \code{data}.
 }

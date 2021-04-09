@@ -3,7 +3,7 @@
 \docType{data}
 \name{synthetic}
 \alias{synthetic}
-\title{Synthetic benchmark data for MISTy}
+\title{Synthetic benchmark data for mistyR}
 \format{
 A named \code{list} of length 10. Each list item is a \code{tibble} that
 corresponds to a simulation of one random layout with information about each

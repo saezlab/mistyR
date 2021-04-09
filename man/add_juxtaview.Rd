@@ -30,7 +30,7 @@ already exists for this sample.}
 function during execution.}
 }
 \value{
-A MISTy view composition with added juxtaview.
+A mistyR view composition with added juxtaview.
 }
 \description{
 The juxtaview captures the expression of all markers within the immediate

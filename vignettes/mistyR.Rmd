@@ -1,12 +1,12 @@
 ---
-title: "Modeling spatially resolved omics with MISTy"
+title: "Modeling spatially resolved omics with mistyR"
 author:
 - name: Jovan Tanevski
   affiliation: 
   - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
-package: MISTy
+package: mistyR
 output: 
   BiocStyle::html_document:
     toc_float: true
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The use of MISTy is conceptualized around building a workflow for analysis using four classes of functions:
+The use of mistyR is conceptualized around building a workflow for analysis using four classes of functions:
 
 -   View composition
 
@@ -36,14 +36,14 @@ The use of MISTy is conceptualized around building a workflow for analysis using
 -   Plotting
 
 ```{r setup}
-library(MISTy)
+library(mistyR)
 library(magrittr)
 ```
 
-MISTy is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
+mistyR is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
 
-When loading MISTy please consider configuring a `future::multisession()` parallel 
-execution plan. MISTy will then use all available cores for execution of 
+When loading mistyR please consider configuring a `future::multisession()` parallel 
+execution plan. mistyR will then use all available cores for execution of 
 computationally demanding functions. It is recommended that the user modifies the 
 `future::plan()` according to their needs.
 

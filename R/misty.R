@@ -5,9 +5,9 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang !! := .data
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("MISTy is able to run computationally intensive functions
+  packageStartupMessage("mistyR is able to run computationally intensive functions
   in parallel. Please consider specifying a future::plan(). For example by running 
-  future::plan(future::multisession) before calling MISTy functions.")
+  future::plan(future::multisession) before calling mistyR functions.")
 }
 
 #' Train MISTy models

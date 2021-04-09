@@ -1,4 +1,4 @@
-Package: MISTy
+Package: mistyR
 Type: Package
 Title: Multiview Intercellular SpaTial modeling framework
 Version: 0.99.0
@@ -8,8 +8,8 @@ Authors@R: c(
            role = c("cre", "aut"),
            email = "jovan.tanevski@uni-heidelberg.de",
            comment = c(ORCID = "0000-0001-7177-1003")))
-Description: Multiview Intercellular SpaTial modeling framework (MISTy) is an 
-    explainable machine learning framework for knowledge extraction and 
+Description: mistyR is an impolementation of the Multiview Intercellular SpaTial modeling framework (MISTy).
+    MISTy is an explainable machine learning framework for knowledge extraction and 
     analysis of single-cell, highly multiplexed, spatially resolved data. 
     MISTy facilitates an in-depth understanding of marker interactions by 
     profiling the intra- and intercellular relationships. MISTy is a flexible 
@@ -24,8 +24,8 @@ Description: Multiview Intercellular SpaTial modeling framework (MISTy) is an
     contribution to the total expression of each marker and is explained in 
     terms of the interactions with other measurements that led to the observed 
     contribution.
-URL: https://github.com/saezlab/misty
-BugReports: https://github.com/saezlab/misty/issues
+URL: https://github.com/saezlab/mistyR
+BugReports: https://github.com/saezlab/mistyR/issues
 biocViews: Software, BiomedicalInformatics, CellBiology, SystemsBiology, 
     Regression, DecisionTree, SingleCell
 Depends: R (>= 4.0)

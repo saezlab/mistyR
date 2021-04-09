@@ -1,5 +1,5 @@
 ---
-title: "Running MISTy with a Seurat object"
+title: "Running mistyR with a Seurat object"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
@@ -9,12 +9,12 @@ author:
   - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
-package: MISTy
+package: mistyR
 output: 
   BiocStyle::html_document:
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{MISTy and Seurat}
+  %\VignetteIndexEntry{mistyR and Seurat}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 # Introduction
 
 ```{r setup}
-library(MISTy)
+library(mistyR)
 ```
 
 # Session info

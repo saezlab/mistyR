@@ -2,11 +2,11 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  MISTy: MISTy.html
   SeuratObject: SeuratObject.html
   SpatialExperimentObject: SpatialExperimentObject.html
-last_built: 2021-04-07T13:29Z
+  mistyR: mistyR.html
+last_built: 2021-04-12T09:06Z
 urls:
-  reference: https://saezlab.github.io/misty/reference
-  article: https://saezlab.github.io/misty/articles
+  reference: https://saezlab.github.io/mistyR/reference
+  article: https://saezlab.github.io/mistyR/articles
 

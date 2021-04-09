@@ -12,7 +12,7 @@ remove_views(current.views, view.names)
 \item{view.names}{the names of one or more views to be removed.}
 }
 \value{
-A MISTy view composition with \code{view.names} views removed.
+A mistyR view composition with \code{view.names} views removed.
 }
 \description{
 Remove one or more views from the view composition.

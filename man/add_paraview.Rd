@@ -36,7 +36,7 @@ already exists for this sample.}
 function during execution.}
 }
 \value{
-A MISTy view composition with added paraview with parameter \code{l}.
+A mistyR view composition with added paraview with parameter \code{l}.
 }
 \description{
 The paraview captures the expression of all markers in  the broader
