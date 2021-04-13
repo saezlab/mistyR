@@ -41,5 +41,5 @@ Imports:  assertthat, caret, deldir, digest, distances, dplyr, filelock,
     furrr (>= 0.2.0), ggplot2, magrittr, MASS, purrr, ranger, readr, rlang, 
     rlist, stats, stringr, tibble, tidyr, withr
 Suggests: BiocStyle, future, hdf5r, igraph, knitr, Matrix, progeny, rmarkdown, 
-    Seurat, SpatialExperiment (>= 1.1.42)
+    Seurat (>= 3.2), SpatialExperiment (>= 1.1.42)
 RoxygenNote: 7.1.1
