@@ -1,5 +1,5 @@
 ---
-title: "Running mistyR with a SpatialExperiment object"
+title: "mistyR and SpatialExperiment"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
@@ -30,6 +30,9 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(mistyR)
+library(future)
+
+library(SpatialExperiment)
 ```
 
 

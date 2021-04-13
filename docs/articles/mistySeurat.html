@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Running mistyR with a Seurat object • mistyR</title>
+<title>mistyR and Seurat • mistyR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Running mistyR with a Seurat object">
+<script src="../pkgdown.js"></script><meta property="og:title" content="mistyR and Seurat">
 <meta property="og:description" content="mistyR">
 <meta property="og:image" content="https://saezlab.github.io/mistyR/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -70,10 +70,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/SeuratObject.html">Running mistyR with a Seurat object</a>
+      <a href="../articles/mistySeurat.html">mistyR and Seurat</a>
     </li>
     <li>
-      <a href="../articles/SpatialExperimentObject.html">Running mistyR with a SpatialExperiment object</a>
+      <a href="../articles/mistySpatialExperiment.html">mistyR and SpatialExperiment</a>
     </li>
   </ul>
 </li>
@@ -110,10 +110,10 @@
 
       
 
-      </header><script src="SeuratObject_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="mistySeurat_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Running mistyR with a Seurat object</h1>
+      <h1 data-toc-skip>mistyR and Seurat</h1>
                         <h4 class="author">Ricardo Omar Ramirez Flores</h4>
             <address class="author_afil">
       Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, Germany<br><h4 class="author">Jovan Tanevski</h4>
@@ -121,10 +121,10 @@
       Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, Germany<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-12</h4>
+            <h4 class="date">2021-04-13</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/SeuratObject.Rmd"><code>vignettes/SeuratObject.Rmd</code></a></small>
-      <div class="hidden name"><code>SeuratObject.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySeurat.Rmd"><code>vignettes/mistySeurat.Rmd</code></a></small>
+      <div class="hidden name"><code>mistySeurat.Rmd</code></div>
 
     </address>
 </div>
@@ -134,8 +134,8 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p><code>mistyR</code> can be used to analyze spatial transcriptomics data sets stored in <code>Seurat</code> objects with just a couple of functions. In this vignette we will show how to build user friendly workflows to analyze the spatial interactions between markers stored in alternative assays and specific locations.</p>
-<p>The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from <code>mistyR</code> and object manipulation from <code>Seurat</code>.</p>
+<p><em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> can be used to analyze spatial transcriptomics data sets stored in <em><a href="https://CRAN.R-project.org/package=SeuratObject">SeuratObject</a></em> with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em>, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.</p>
+<p>In principle <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> can be used with data extracted from a <em><a href="https://CRAN.R-project.org/package=SeuratObject">SeuratObject</a></em> only. For the sake of completeness of the process of modeling with <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> we demonstrate a complete workflow, including data preprocessing with <em><a href="https://CRAN.R-project.org/package=Seurat">Seurat</a></em>. The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> and object manipulation from <em><a href="https://CRAN.R-project.org/package=Seurat">Seurat</a></em>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># MISTy</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/mistyR">mistyR</a></span><span class="op">)</span>
@@ -149,7 +149,6 @@
 
 <span class="co"># Seurat</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://hhoeflin.github.io/hdf5r/">hdf5r</a></span><span class="op">)</span>
 
 <span class="co"># resource</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/progeny">progeny</a></span><span class="op">)</span>
@@ -159,8 +158,8 @@
 <span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
 <div id="the-skeleton-of-mistyr-pipelines" class="section level2">
 <h2 class="hasAnchor">
-<a href="#the-skeleton-of-mistyr-pipelines" class="anchor"></a>The skeleton of <code>mistyR</code> pipelines</h2>
-<p>For user convenience and to facilitate the use of <code>mistyR</code> and <code>Seurat</code> <code>run_misty_seurat</code> is a function decribing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a Seurat object. The function allows for</p>
+<a href="#the-skeleton-of-mistyr-pipelines" class="anchor"></a>The skeleton of mistyR pipelines</h2>
+<p>For user convenience and to facilitate the use of <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> and <em><a href="https://CRAN.R-project.org/package=Seurat">Seurat</a></em>, <code>run_misty_seurat()</code> is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a Seurat object. The function allows for:</p>
 <ol style="list-style-type: decimal">
 <li>Defining a number of assays/views to be used in the model.</li>
 <li>Defining the type of spatial context for each view and their parameters.</li>
@@ -209,7 +208,7 @@
 <div id="extracting-specific-information-from-seurat-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extracting-specific-information-from-seurat-objects" class="anchor"></a>Extracting specific information from Seurat objects</h2>
-<p>These are helper functions that allow to extract from <code>Seurat</code> objects specific assays and transform them into <code>data.frame</code> which is the standard format in <code>mistyR</code></p>
+<p>These are helper functions that allow to extract from <em><a href="https://CRAN.R-project.org/package=Seurat">Seurat</a></em> objects specific assays and transform them into <code>tibble</code> which a preferred format for <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Extracts data from an specific assay from a Seurat object</span>
 <span class="co"># and aligns the IDs to the geometry</span>
@@ -236,7 +235,7 @@
 <div id="view-creation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#view-creation" class="anchor"></a>View creation</h2>
-<p>This helper function wraps the three available options for view creation in <code>mistyR</code> with additional features that allow you to create views for specific spots.</p>
+<p>This helper function wraps the three available options for view creation in <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> with additional features that allow for creating views for specific spots.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Builds views depending on the paramaters defined</span>
 <span class="va">create_any_view</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>,
@@ -298,8 +297,8 @@
 </div>
 <div id="building-a-mistyr-pipeline-and-running-the-model" class="section level2">
 <h2 class="hasAnchor">
-<a href="#building-a-mistyr-pipeline-and-running-the-model" class="anchor"></a>Building a <code>mistyR</code> pipeline and running the model</h2>
-<p>Finally, we show a wrapper function <code>build_misty_pipeline</code> that allows you to build automatically a mistyR workflow from a list of data frames, with specified spatial context, parameters, features and locations.</p>
+<a href="#building-a-mistyr-pipeline-and-running-the-model" class="anchor"></a>Building a mistyR pipeline and running the model</h2>
+<p>Finally, we show a wrapper function <code>build_misty_pipeline()</code> that allows you to build automatically a <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> workflow from a list of data frames, with specified spatial context, parameters, features and locations.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Builds automatic MISTy workflow and runs it</span>
 <span class="va">build_misty_pipeline</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">view.data</span>,
@@ -349,11 +348,11 @@
 <span class="op">}</span></code></pre></div>
 </div>
 </div>
-<div id="use-case-example" class="section level1">
+<div id="use-case" class="section level1">
 <h1 class="hasAnchor">
-<a href="#use-case-example" class="anchor"></a>Use case example</h1>
+<a href="#use-case" class="anchor"></a>Use case</h1>
 <p>As an example, we will analyze a 10X Visium spatial gene expression dataset of one breast cancer section (Block A Section 1) available here [<a href="https://support.10xgenomics.com/spatial-gene-expression/datasets" class="uri">https://support.10xgenomics.com/spatial-gene-expression/datasets</a>]. We assume that the required files <u>Feature/cell matrix HDF5 (filtered)</u> and the <u>Spatial imaging data</u> (extracted) are in a folder named ‘breast_A_1’ in the current working directory.</p>
-<p>We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package <code>progeny</code> and the functions defined above.</p>
+<p>We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package <em><a href="https://bioconductor.org/packages/3.12/progeny">progeny</a></em> and the previously described functions.</p>
 <div id="loading-and-normalizing-the-data-sets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#loading-and-normalizing-the-data-sets" class="anchor"></a>Loading and normalizing the data sets</h2>
@@ -368,9 +367,9 @@
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://satijalab.org/seurat/reference/SCTransform.html">SCTransform</a></span><span class="op">(</span>assay <span class="op">=</span> <span class="st">"Spatial"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="filtering-genes-that-are-expressed-in-at-least-5-of-the-spots" class="section level2">
+<div id="filtering-genes-that-are-expressed-in-at-least-5-of-spots" class="section level2">
 <h2 class="hasAnchor">
-<a href="#filtering-genes-that-are-expressed-in-at-least-5-of-the-spots" class="anchor"></a>Filtering genes that are expressed in at least 5% of the spots</h2>
+<a href="#filtering-genes-that-are-expressed-in-at-least-5-of-spots" class="anchor"></a>Filtering genes that are expressed in at least 5% of spots</h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gene.expression</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/AssayData.html">GetAssayData</a></span><span class="op">(</span><span class="va">seurat.vs</span>, assay <span class="op">=</span> <span class="st">"SCT"</span><span class="op">)</span>
 <span class="va">coverage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">gene.expression</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">gene.expression</span><span class="op">)</span>
@@ -379,7 +378,7 @@
 <div id="defining-hypoxia-and-estrogen-responsive-genes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#defining-hypoxia-and-estrogen-responsive-genes" class="anchor"></a>Defining Hypoxia and Estrogen responsive genes</h2>
-<p>For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package <code>progeny</code>.</p>
+<p>For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package <em><a href="https://bioconductor.org/packages/3.12/progeny">progeny</a></em>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">estrogen.footprints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/progeny/man/getModel.html">getModel</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"gene"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -396,10 +395,9 @@
 <a href="#defining-the-parameters-of-the-workflow" class="anchor"></a>Defining the parameters of the workflow</h2>
 <p>In this example we will explain the expression of hypoxia responsive genes in terms of three different views:</p>
 <ol style="list-style-type: decimal">
-<li>Main (intrinsic) view (containing genes to be predicted): intrinsic expression of <code>hypoxia.footprints</code>
-</li>
-<li>Paraview - hypoxia genes: expression of hypoxia markers in a significance radius of 10 spots</li>
-<li>Paraview - estrogen genes: expression of estrogen markers in a significance radius of 10 spots</li>
+<li>Main (intrinsic) view (containing genes to be predicted): intrinsic expression of <code>hypoxia.footprints</code>.</li>
+<li>Paraview - hypoxia genes: expression of hypoxia markers (<code>hypoxia.footprints</code>) in a significance radius of 10 spots.</li>
+<li>Paraview - estrogen genes: expression of estrogen markers (<code>estrogen.footprints</code>) in a significance radius of 10 spots.</li>
 </ol>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Define assay for each view</span>
@@ -435,7 +433,7 @@
 <div id="run-misty-pipeline-and-collect-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#run-misty-pipeline-and-collect-results" class="anchor"></a>Run MISTy pipeline and collect results</h2>
-<p>Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a mistyR workflow.</p>
+<p>Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> workflow.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">&lt;-</span> <span class="fu">run_misty_seurat</span><span class="op">(</span>
   visium.slide <span class="op">=</span> <span class="va">seurat.vs</span>,
@@ -472,7 +470,7 @@
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.RMSE"</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-11-1.png" width="700"><img src="SeuratObject_files/figure-html/unnamed-chunk-11-2.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-11-1.png" width="700"><img src="mistySeurat_files/figure-html/unnamed-chunk-11-2.png" width="700"></p>
 <p>In this example, PGK1 is a marker whose expression can be explained better by modeling the broader spatial context around each spot.</p>
 <p>We can further inspect the significance of the gain in variance explained, by the assigned p-value of improvement based on cross-validation.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -505,7 +503,7 @@
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_view_contributions.html">plot_view_contributions</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">misty.results</span><span class="op">$</span><span class="va">contributions.stats</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">target</span> <span class="op">==</span> <span class="st">"PGK1"</span><span class="op">)</span>
@@ -521,7 +519,7 @@
 <p>First, the intrinsic importances of the hypoxia markers.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"intra"</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>These importances are associated to the relationship between markers in the same spot. Let’s pick the best predictor of PGK1 to confirm this:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">importances.aggregated</span><span class="op">[[</span><span class="st">"intra"</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span>
@@ -547,23 +545,23 @@
 <span class="co">#&gt; 15 PGK1      NA</span>
 
 <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat.vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PGK1"</span>, <span class="st">"NDRG1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>Second, the paraview importances of the hypoxia markers.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.hypoxia_10"</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <p>These importances are associated to the relationship between markers in the spot and markers in the neighborhood (controlled by our parameter l).</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat.vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PGK1"</span>, <span class="st">"PFKFB4"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>As expected, the expression of PFKFB4 (the best predictor from this view) in the neighborhood of each spot allows to explain the expression of PGK1.</p>
 <p>Finally, the paraview importances of the estrogen markers. We will inspect the best predictor in this view.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.estrogen_10"</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat.vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PGK1"</span>, <span class="st">"TPD52L1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="SeuratObject_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p><img src="mistySeurat_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>It is visible that in some areas the local expression of TPD52L1 overlaps with the areas with the highest expression of PGK1.</p>
 </div>
 <div id="important-notes" class="section level2">
@@ -584,7 +582,7 @@
 <li><p>Spatial interactions between cell-state lineage markers and putative ligands, as shown <a href="https://doi.org/10.1101/2020.12.08.411686">here</a>.</p></li>
 <li><p>Spatial interactions between cell-type abundances leveraging deconvolution methods and creating descriptions of cell colocalization and tissue architecture.</p></li>
 </ul>
-<p>Additionally, <code>mistyR</code> through the function <code><a href="../reference/collect_results.html">collect_results()</a></code> allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.</p>
+<p>Additionally, <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> through the function <code><a href="../reference/collect_results.html">collect_results()</a></code> allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.</p>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
@@ -605,9 +603,9 @@
 #&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt;  [1] progeny_1.12.0     hdf5r_1.3.3        SeuratObject_4.0.0 Seurat_4.0.1      
-#&gt;  [5] purrr_0.3.4        dplyr_1.0.5        tibble_3.1.0       Matrix_1.3-2      
-#&gt;  [9] future_1.21.0      mistyR_0.99.0      BiocStyle_2.18.1  
+#&gt;  [1] progeny_1.12.0     SeuratObject_4.0.0 Seurat_4.0.1       purrr_0.3.4       
+#&gt;  [5] dplyr_1.0.5        tibble_3.1.0       Matrix_1.3-2       future_1.21.0     
+#&gt;  [9] mistyR_0.99.0      BiocStyle_2.18.1  
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
 #&gt;   [1] systemfonts_1.0.1     plyr_1.8.6            igraph_1.2.6         
@@ -637,22 +635,22 @@
 #&gt;  [73] goftest_1.2-2         knitr_1.31            bit64_4.0.5          
 #&gt;  [76] fs_1.5.0              fitdistrplus_1.1-3    RANN_2.6.1           
 #&gt;  [79] pbapply_1.4-3         nlme_3.1-152          mime_0.10            
-#&gt;  [82] rstudioapi_0.13       compiler_4.0.5        plotly_4.9.3         
-#&gt;  [85] filelock_1.0.2        png_0.1-7             spatstat.utils_2.1-0 
-#&gt;  [88] bslib_0.2.4           stringi_1.5.3         highr_0.8            
-#&gt;  [91] desc_1.3.0            lattice_0.20-41       vctrs_0.3.7          
-#&gt;  [94] pillar_1.5.1          lifecycle_1.0.0       furrr_0.2.2          
-#&gt;  [97] BiocManager_1.30.12   spatstat.geom_2.0-1   lmtest_0.9-38        
-#&gt; [100] jquerylib_0.1.3       RcppAnnoy_0.0.18      data.table_1.14.0    
-#&gt; [103] cowplot_1.1.1         irlba_2.3.3           httpuv_1.5.5         
-#&gt; [106] patchwork_1.1.1       R6_2.5.0              bookdown_0.21        
-#&gt; [109] promises_1.2.0.1      KernSmooth_2.23-18    gridExtra_2.3        
-#&gt; [112] parallelly_1.24.0     codetools_0.2-18      MASS_7.3-53.1        
-#&gt; [115] assertthat_0.2.1      rprojroot_2.0.2       sctransform_0.3.2    
-#&gt; [118] rlist_0.4.6.1         mgcv_1.8-34           parallel_4.0.5       
-#&gt; [121] hms_1.0.0             grid_4.0.5            rpart_4.1-15         
-#&gt; [124] tidyr_1.1.3           rmarkdown_2.7         distances_0.1.8      
-#&gt; [127] Rtsne_0.15            shiny_1.6.0</code></pre>
+#&gt;  [82] rstudioapi_0.13       hdf5r_1.3.3           compiler_4.0.5       
+#&gt;  [85] plotly_4.9.3          filelock_1.0.2        png_0.1-7            
+#&gt;  [88] spatstat.utils_2.1-0  bslib_0.2.4           stringi_1.5.3        
+#&gt;  [91] highr_0.8             desc_1.3.0            lattice_0.20-41      
+#&gt;  [94] vctrs_0.3.7           pillar_1.5.1          lifecycle_1.0.0      
+#&gt;  [97] furrr_0.2.2           BiocManager_1.30.12   spatstat.geom_2.0-1  
+#&gt; [100] lmtest_0.9-38         jquerylib_0.1.3       RcppAnnoy_0.0.18     
+#&gt; [103] data.table_1.14.0     cowplot_1.1.1         irlba_2.3.3          
+#&gt; [106] httpuv_1.5.5          patchwork_1.1.1       R6_2.5.0             
+#&gt; [109] bookdown_0.21         promises_1.2.0.1      KernSmooth_2.23-18   
+#&gt; [112] gridExtra_2.3         parallelly_1.24.0     codetools_0.2-18     
+#&gt; [115] MASS_7.3-53.1         assertthat_0.2.1      rprojroot_2.0.2      
+#&gt; [118] sctransform_0.3.2     rlist_0.4.6.1         mgcv_1.8-34          
+#&gt; [121] parallel_4.0.5        hms_1.0.0             grid_4.0.5           
+#&gt; [124] rpart_4.1-15          tidyr_1.1.3           rmarkdown_2.7        
+#&gt; [127] distances_0.1.8       Rtsne_0.15            shiny_1.6.0</code></pre>
 </div>
   </div>
 

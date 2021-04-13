@@ -29,7 +29,7 @@ The package requires installed R version 4.0 or higher. This package has been te
 
 ## Installation
 
-Install from GitHub using devtools:
+Install from GitHub using remotes:
 
 ```r
 # install.packages("remotes")
@@ -37,7 +37,7 @@ remotes::install_github("saezlab/mistyR")
 
 ```
 
-mistyR is dependent on the following packages that are available from CRAN or Bioconductor:
+mistyR is dependent on the following packages that are available from CRAN:
 
 assertthat,
 caret,
@@ -61,13 +61,13 @@ tibble,
 tidyr,
 withr
 
-and suggests BiocStyle, igraph, knitr and rmarkdown.
+and mainly for the purpose of building the vignettes suggests BiocStyle, future, hdf5r, igraph, knitr, Matrix, progeny, rmarkdown, Seurat and SpatialExperiment from CRAN or Bioconductor.
 
-The installation of MISTy without any additional dependencies should take only seconds.
+The installation of MISTy without any additional dependencies and building vignettes should take only seconds.
 
 ## Usage
 
-Start by reading `vignette("mistyR")` to learn how to run mistyR. To use mistyR with commonly used objects for spatial omics data see `vignette("SeuratObject")` and `vignette("SpatialExperimentObject")`.
+Start by reading `vignette("mistyR")` to learn how to run mistyR. To use mistyR with commonly used objects for spatial omics data see `vignette("mistySeurat")` and `vignette("mistySpatialExperiment")`.
 
 Example pipelines and synthetic data for running mistyR are also available from [this repository](https://github.com/saezlab/misty_pipelines/). To run mistyR on the provided synthetic data run the script synthetic_pipeline.R.
 

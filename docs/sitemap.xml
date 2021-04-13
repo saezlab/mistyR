@@ -52,12 +52,12 @@
     <loc>https://saezlab.github.io/mistyR/reference/synthetic.html</loc>
   </url>
   <url>
-    <loc>https://saezlab.github.io/mistyR/articles/SeuratObject.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/articles/SpatialExperimentObject.html</loc>
-  </url>
-  <url>
     <loc>https://saezlab.github.io/mistyR/articles/mistyR.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/articles/mistySeurat.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/articles/mistySpatialExperiment.html</loc>
   </url>
 </urlset>

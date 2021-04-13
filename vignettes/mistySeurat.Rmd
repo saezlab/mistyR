@@ -1,5 +1,5 @@
 ---
-title: "Running mistyR with a Seurat object"
+title: "mistyR and Seurat"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
@@ -30,9 +30,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-`mistyR` can be used to analyze spatial transcriptomics data sets stored in `Seurat` objects with just a couple of functions. In this vignette we will show how to build user friendly workflows to analyze the spatial interactions between markers stored in alternative assays and specific locations.
+`r Githubpkg("saezlab/mistyR")` can be used to analyze spatial transcriptomics data sets stored in `r CRANpkg("SeuratObject")` with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running `r Githubpkg("saezlab/mistyR")`, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.
 
-The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from `mistyR` and object manipulation from `Seurat`.
+In principle `r Githubpkg("saezlab/mistyR")` can be used with data extracted from a `r CRANpkg("SeuratObject")` only. For the sake of completeness of the process of modeling with `r Githubpkg("saezlab/mistyR")` we demonstrate a complete workflow, including data preprocessing with `r CRANpkg("Seurat")`. The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from `r Githubpkg("saezlab/mistyR")` and object manipulation from `r CRANpkg("Seurat")`.
 
 ```{r setup, warning=FALSE, message=FALSE}
 # MISTy
@@ -47,7 +47,6 @@ library(purrr)
 
 # Seurat
 library(Seurat)
-library(hdf5r)
 
 # resource
 library(progeny)
@@ -57,9 +56,9 @@ options(future.globals.maxSize = 1024^3)
 plan(multisession)
 ```
 
-## The skeleton of `mistyR` pipelines
+## The skeleton of mistyR pipelines
 
-For user convenience and to facilitate the use of `mistyR` and `Seurat` `run_misty_seurat` is a function decribing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a Seurat object. The function allows for
+For user convenience and to facilitate the use of `r Githubpkg("saezlab/mistyR")` and `r CRANpkg("Seurat")`, `run_misty_seurat()` is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a Seurat object. The function allows for:
 
 1)  Defining a number of assays/views to be used in the model.
 2)  Defining the type of spatial context for each view and their parameters.
@@ -108,7 +107,7 @@ run_misty_seurat <- function(visium.slide,
 
 ## Extracting specific information from Seurat objects
 
-These are helper functions that allow to extract from `Seurat` objects specific assays and transform them into `data.frame` which is the standard format in `mistyR`
+These are helper functions that allow to extract from `r CRANpkg("Seurat")` objects specific assays and transform them into `tibble` which a preferred format for `r Githubpkg("saezlab/mistyR")`.
 
 ```{r}
 # Extracts data from an specific assay from a Seurat object
@@ -136,7 +135,7 @@ filter_data_features <- function(data,
 
 ## View creation
 
-This helper function wraps the three available options for view creation in `mistyR` with additional features that allow you to create views for specific spots.
+This helper function wraps the three available options for view creation in `r Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
 
 ```{r}
 # Builds views depending on the paramaters defined
@@ -198,9 +197,9 @@ create_any_view <- function(data,
 }
 ```
 
-## Building a `mistyR` pipeline and running the model
+## Building a mistyR pipeline and running the model
 
-Finally, we show a wrapper function `build_misty_pipeline` that allows you to build automatically a mistyR workflow from a list of data frames, with specified spatial context, parameters, features and locations.
+Finally, we show a wrapper function `build_misty_pipeline()` that allows you to build automatically a `r Githubpkg("saezlab/mistyR")` workflow from a list of data frames, with specified spatial context, parameters, features and locations.
 
 ```{r}
 # Builds automatic MISTy workflow and runs it
@@ -251,11 +250,21 @@ build_misty_pipeline <- function(view.data,
 }
 ```
 
-# Use case example
+# Use case
 
 As an example, we will analyze a 10X Visium spatial gene expression dataset of one breast cancer section (Block A Section 1) available here [<https://support.10xgenomics.com/spatial-gene-expression/datasets>]. We assume that the required files [Feature/cell matrix HDF5 (filtered)]{.ul} and the [Spatial imaging data]{.ul} (extracted) are in a folder named 'breast_A\_1' in the current working directory.
 
-We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `progeny` and the functions defined above.
+```{r get_data, include=FALSE}
+cleanup <- FALSE
+if(!dir.exists("breast_A_1")){
+  download.file("https://www.dropbox.com/s/igby4csbt9u4uuf/breast_A_1.tgz?dl=1",
+                destfile = "breast_A_1.tgz", quiet = TRUE)
+  untar("breast_A_1.tgz", tar = "internal")
+  cleanup <- TRUE
+}
+```
+
+We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r Biocpkg("progeny")` and the previously described functions.
 
 ## Loading and normalizing the data sets
 
@@ -271,7 +280,7 @@ seurat.vs <-
   SCTransform(assay = "Spatial", verbose = FALSE)
 ```
 
-## Filtering genes that are expressed in at least 5% of the spots
+## Filtering genes that are expressed in at least 5% of spots
 
 ```{r}
 gene.expression <- GetAssayData(seurat.vs, assay = "SCT")
@@ -281,7 +290,7 @@ slide.markers <- names(which(coverage >= 0.05))
 
 ## Defining Hypoxia and Estrogen responsive genes
 
-For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package `progeny`.
+For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package `r Biocpkg("progeny")`.
 
 ```{r}
 estrogen.footprints <- getModel(top = 15) %>%
@@ -299,9 +308,9 @@ hypoxia.footprints <- getModel(top = 15) %>%
 
 In this example we will explain the expression of hypoxia responsive genes in terms of three different views:
 
-1)  Main (intrinsic) view (containing genes to be predicted): intrinsic expression of `hypoxia.footprints`
-2)  Paraview - hypoxia genes: expression of hypoxia markers in a significance radius of 10 spots
-3)  Paraview - estrogen genes: expression of estrogen markers in a significance radius of 10 spots
+1)  Main (intrinsic) view (containing genes to be predicted): intrinsic expression of `hypoxia.footprints`.
+2)  Paraview - hypoxia genes: expression of hypoxia markers (`hypoxia.footprints`) in a significance radius of 10 spots.
+3)  Paraview - estrogen genes: expression of estrogen markers (`estrogen.footprints`) in a significance radius of 10 spots.
 
 ```{r}
 # Define assay for each view
@@ -337,7 +346,7 @@ misty.out <- "vignette_model_seurat"
 
 ## Run MISTy pipeline and collect results
 
-Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a mistyR workflow.
+Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a `r Githubpkg("saezlab/mistyR")` workflow.
 
 ```{r, warning=FALSE}
 misty.results <- run_misty_seurat(
@@ -452,7 +461,7 @@ The shown example is not the only way to use mistyR to analyze spatial transcrip
 
 -   Spatial interactions between cell-type abundances leveraging deconvolution methods and creating descriptions of cell colocalization and tissue architecture.
 
-Additionally, `mistyR` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
+Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
 
 # Session info
 
@@ -460,4 +469,13 @@ Here is the output of `sessionInfo()` at the point when this document was compil
 
 ```{r info, echo=FALSE}
 sessionInfo()
+```
+
+```{r cleanup, include=FALSE}
+if(cleanup){
+  unlink(c("breast_A_1.tgz", "breast_A_1/"), 
+         recursive = TRUE)
+}
+unlink("vignette_model_seurat", recursive = TRUE)
+clear_cache()
 ```
