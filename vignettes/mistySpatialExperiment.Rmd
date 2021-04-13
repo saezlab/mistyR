@@ -3,16 +3,16 @@ title: "mistyR and SpatialExperiment"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
-  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  - &hd Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
 - name: Jovan Tanevski
-  affiliation: 
-  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  affiliation: *hd
   email: jovan.tanevski@uni-heidelberg.de  
 date: "`r Sys.Date()`"
 package: mistyR
 output: 
   BiocStyle::html_document:
     toc_float: true
+    dev: jpeg
 vignette: >
   %\VignetteIndexEntry{mistyR and SpatialExperiment}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,13 +28,12 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-```{r setup}
+```{r setup, message = FALSE}
 library(mistyR)
 library(future)
 
 library(SpatialExperiment)
 ```
-
 
 # Session info
 

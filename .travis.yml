@@ -4,7 +4,6 @@ cache: packages
 bioc_check: true
 os:
   - linux
-
 before_install:
  - sudo apt-get update
  - sudo apt-get -y install libhdf5-dev

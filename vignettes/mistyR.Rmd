@@ -7,9 +7,10 @@ author:
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
 package: mistyR
-output: 
+output:
   BiocStyle::html_document:
     toc_float: true
+    dev: jpeg
 vignette: >
   %\VignetteIndexEntry{Getting started}
   %\VignetteEngine{knitr::rmarkdown}

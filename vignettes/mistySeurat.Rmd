@@ -3,22 +3,20 @@ title: "mistyR and Seurat"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
-  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  - &hd Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
 - name: Jovan Tanevski
-  affiliation: 
-  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  affiliation: *hd
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
 package: mistyR
 output: 
   BiocStyle::html_document:
     toc_float: true
+    dev: jpeg
 vignette: >
   %\VignetteIndexEntry{mistyR and Seurat}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -47,6 +45,7 @@ library(purrr)
 
 # Seurat
 library(Seurat)
+library(hdf5r)
 
 # resource
 library(progeny)
@@ -411,7 +410,7 @@ misty.results %>% plot_interaction_heatmap(view = "intra")
 
 These importances are associated to the relationship between markers in the same spot. Let's pick the best predictor of PGK1 to confirm this:
 
-```{r}
+```{r, dpi=60}
 misty.results$importances.aggregated[["intra"]] %>%
   select(Predictor, PGK1) %>%
   arrange(-PGK1)
@@ -427,7 +426,7 @@ misty.results %>% plot_interaction_heatmap(view = "para.hypoxia_10")
 
 These importances are associated to the relationship between markers in the spot and markers in the neighborhood (controlled by our parameter l).
 
-```{r}
+```{r, dpi=60}
 SpatialFeaturePlot(seurat.vs, features = c("PGK1", "PFKFB4"))
 ```
 
@@ -439,7 +438,7 @@ Finally, the paraview importances of the estrogen markers. We will inspect the b
 misty.results %>% plot_interaction_heatmap(view = "para.estrogen_10")
 ```
 
-```{r}
+```{r, dpi=60}
 SpatialFeaturePlot(seurat.vs, features = c("PGK1", "TPD52L1"))
 ```
 
