@@ -2,10 +2,14 @@ language: r
 r: bioc-release
 cache: packages
 bioc_check: true
+r_build_args: --compact-vignettes=both
 os:
   - linux
 apt_packages:
   - libhdf5-dev
+  - libmagick++-dev
+  - ghostscript
+  - texlive-extra-utils
 r_github_packages:
   - drighelli/SpatialExperiment
 
