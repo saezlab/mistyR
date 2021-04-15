@@ -224,7 +224,7 @@ build_misty_pipeline <- function(view.data,
                                  out.alias = "default") {
 
   # Adding all spots ids in case they are not defined
-  if (is.null(spot.ids) == TRUE) {
+  if (is.null(spot.ids)) {
     spot.ids <- rownames(view.data[[1]])
   }
 
