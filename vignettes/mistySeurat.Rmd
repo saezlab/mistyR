@@ -3,20 +3,26 @@ title: "mistyR and Seurat"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
-  - &hd Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  - &hd Heidelberg University \& Heidelberg University Hospital, Heidelberg, Germany
 - name: Jovan Tanevski
-  affiliation: *hd
+  affiliation: 
+  - *hd
+  - Jo\v{z}ef Stefan Institute, Ljubljana, Slovenia
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
 package: mistyR
-output: 
-  BiocStyle::html_document:
-    toc_float: true
-    dev: jpeg
+output:
+  # BiocStyle::html_document:
+  #   toc_float: true
+  #   df_print: kable
+  BiocStyle::pdf_document:
+    df_print: kable
+    extra_dependencies:
+      nowidow: ["defaultlines=3", "all"]
 vignette: >
   %\VignetteIndexEntry{mistyR and Seurat}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -37,15 +43,17 @@ In principle `r Githubpkg("saezlab/mistyR")` can be used with data extracted fro
 library(mistyR)
 library(future)
 
+# Seurat
+library(Seurat)
+
 # data manipulation
 library(Matrix)
 library(tibble)
 library(dplyr)
 library(purrr)
 
-# Seurat
-library(Seurat)
-library(hdf5r)
+# normalization
+library(sctransform)
 
 # resource
 library(progeny)
@@ -66,15 +74,18 @@ For user convenience and to facilitate the use of `r Githubpkg("saezlab/mistyR")
 
 ```{r}
 run_misty_seurat <- function(visium.slide,
-                             # Seurat object containing spatial transcriptomics data.
+                             # Seurat object with spatial transcriptomics data.
                              view.assays,
                              # Named list of assays for each view.
                              view.features = NULL,
-                             # Named list of features/markers to use. Use all by default.
+                             # Named list of features/markers to use.
+                             # Use all by default.
                              view.types,
-                             # Named list of the type of view to construct from the assay.
+                             # Named list of the type of view to construct
+                             # from the assay.
                              view.params,
-                             # Named list containing the parameters (NULL or value) for each view.
+                             # Named list with parameters (NULL or value)
+                             # for each view.
                              spot.ids = NULL,
                              # spot IDs to use. Use all by default.
                              out.alias = "results"
@@ -82,7 +93,9 @@ run_misty_seurat <- function(visium.slide,
 ) {
 
   # Extracting geometry
-  geometry <- GetTissueCoordinates(visium.slide, cols = c("row", "col"), scale = NULL)
+  geometry <- GetTissueCoordinates(visium.slide,
+    cols = c("row", "col"), scale = NULL
+  )
 
   # Extracting data
   view.data <- map(view.assays,
@@ -106,7 +119,7 @@ run_misty_seurat <- function(visium.slide,
 
 ## Extracting specific information from Seurat objects
 
-These are helper functions that allow to extract from `r CRANpkg("Seurat")` objects specific assays and transform them into `tibble` which a preferred format for `r Githubpkg("saezlab/mistyR")`.
+These are helper functions that allow to extract from `r CRANpkg("Seurat")` objects specific assays and transform them into `tibble` which is a preferred format for `r Githubpkg("saezlab/mistyR")`.
 
 ```{r}
 # Extracts data from an specific assay from a Seurat object
@@ -134,16 +147,16 @@ filter_data_features <- function(data,
 
 ## View creation
 
-This helper function wraps the three available options for view creation in `r Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
+This helper function wraps the three options available by default for view creation in `r Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
 
 ```{r}
 # Builds views depending on the paramaters defined
-create_any_view <- function(data,
-                            view.type,
-                            view.param,
-                            view.name,
-                            spot.ids,
-                            geometry) {
+create_default_views <- function(data,
+                                 view.type,
+                                 view.param,
+                                 view.name,
+                                 spot.ids,
+                                 geometry) {
   view.data.init <- create_initial_view(data)
 
   if (!(view.type %in% c("intra", "para", "juxta"))) {
@@ -233,7 +246,7 @@ build_misty_pipeline <- function(view.data,
     view.params[-1],
     view.names[-1]
   ),
-  create_any_view,
+  create_default_views,
   spot.ids = spot.ids,
   geometry = geometry
   )
@@ -255,12 +268,14 @@ As an example, we will analyze a 10X Visium spatial gene expression dataset of o
 
 ```{r get_data, include=FALSE}
 cleanup <- FALSE
-if(!dir.exists("breast_A_1")){
+if (!dir.exists("breast_A_1")) {
   download.file("https://www.dropbox.com/s/igby4csbt9u4uuf/breast_A_1.tgz?dl=1",
-                destfile = "breast_A_1.tgz", quiet = TRUE)
+    destfile = "breast_A_1.tgz", quiet = TRUE
+  )
   untar("breast_A_1.tgz", tar = "internal")
   cleanup <- TRUE
 }
+options(future.rng.onMisuse = "ignore")
 ```
 
 We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r Biocpkg("progeny")` and the previously described functions.
@@ -275,8 +290,17 @@ seurat.vs <-
   Load10X_Spatial(
     data.dir = folder,
     filename = "V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5"
-  ) %>%
-  SCTransform(assay = "Spatial", verbose = FALSE)
+  )
+
+sct.data <- vst(GetAssayData(
+  object = seurat.vs,
+  slot = "counts",
+  assay = "Spatial"
+),
+verbosity = 0
+)
+
+seurat.vs[["SCT"]] <- CreateAssayObject(data = sct.data$y)
 ```
 
 ## Filtering genes that are expressed in at least 5% of spots
@@ -362,7 +386,7 @@ misty.results <- run_misty_seurat(
 
 ## Interpretation and downstream analysis
 
-MISTy gives explanatory answers to three general questions:
+MISTy gives answers to three general questions:
 
 **1. How much can the broader spatial context explain the expression of markers (in contrast to the intraview)?**
 
@@ -410,7 +434,7 @@ misty.results %>% plot_interaction_heatmap(view = "intra")
 
 These importances are associated to the relationship between markers in the same spot. Let's pick the best predictor of PGK1 to confirm this:
 
-```{r, dpi=60}
+```{r, dev='jpeg'}
 misty.results$importances.aggregated[["intra"]] %>%
   select(Predictor, PGK1) %>%
   arrange(-PGK1)
@@ -426,7 +450,7 @@ misty.results %>% plot_interaction_heatmap(view = "para.hypoxia_10")
 
 These importances are associated to the relationship between markers in the spot and markers in the neighborhood (controlled by our parameter l).
 
-```{r, dpi=60}
+```{r, dev='jpeg'}
 SpatialFeaturePlot(seurat.vs, features = c("PGK1", "PFKFB4"))
 ```
 
@@ -438,7 +462,7 @@ Finally, the paraview importances of the estrogen markers. We will inspect the b
 misty.results %>% plot_interaction_heatmap(view = "para.estrogen_10")
 ```
 
-```{r, dpi=60}
+```{r, dev='jpeg'}
 SpatialFeaturePlot(seurat.vs, features = c("PGK1", "TPD52L1"))
 ```
 
@@ -448,7 +472,7 @@ It is visible that in some areas the local expression of TPD52L1 overlaps with t
 
 -   The relationships captured in the importances are not to assumed or interpreted as linear or casual.
 
--   1-to-1 importances between predictor and markers should always be interpreted in the context of the other predictors, since MISTy is defined as a multivariate predictive task.
+-   1-to-1 importances between predictor and markers should always be interpreted in the context of the other predictors, since training MISTy models is multivariate predictive task.
 
 # Other use cases
 
@@ -471,9 +495,10 @@ sessionInfo()
 ```
 
 ```{r cleanup, include=FALSE}
-if(cleanup){
-  unlink(c("breast_A_1.tgz", "breast_A_1/"), 
-         recursive = TRUE)
+if (cleanup) {
+  unlink(c("breast_A_1.tgz", "breast_A_1/"),
+    recursive = TRUE
+  )
 }
 unlink("vignette_model_seurat", recursive = TRUE)
 clear_cache()

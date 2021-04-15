@@ -4,13 +4,14 @@ author:
 - name: Jovan Tanevski
   affiliation: 
   - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
 package: mistyR
 output:
   BiocStyle::html_document:
     toc_float: true
-    dev: jpeg
+    df_print: kable
 vignette: >
   %\VignetteIndexEntry{Getting started}
   %\VignetteEngine{knitr::rmarkdown}
@@ -36,7 +37,7 @@ The use of mistyR is conceptualized around building a workflow for analysis usin
 
 -   Plotting
 
-```{r setup}
+```{r setup, warning=FALSE}
 library(mistyR)
 library(magrittr)
 ```

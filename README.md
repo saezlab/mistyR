@@ -61,7 +61,7 @@ tibble,
 tidyr,
 withr
 
-and mainly for the purpose of building the vignettes suggests BiocStyle, future, hdf5r, igraph, knitr, Matrix, progeny, rmarkdown, Seurat and SpatialExperiment from CRAN or Bioconductor.
+and mainly for the purpose of building the vignettes suggests BiocStyle, future, igraph, knitr, Matrix, progeny, rmarkdown, sctransform, Seurat, SingleCellExperiment, SpatialExperiment and SummarizedExperiment from CRAN or Bioconductor.
 
 The installation of MISTy without any additional dependencies and building vignettes should take only seconds.
 

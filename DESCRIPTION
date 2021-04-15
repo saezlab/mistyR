@@ -40,6 +40,7 @@ VignetteBuilder: knitr
 Imports:  assertthat, caret, deldir, digest, distances, dplyr, filelock, 
     furrr (>= 0.2.0), ggplot2, magrittr, MASS, purrr, ranger, readr, rlang, 
     rlist, stats, stringr, tibble, tidyr, withr
-Suggests: BiocStyle, future, hdf5r, igraph, knitr, Matrix, progeny, rmarkdown, 
-    Seurat (>= 3.2), SpatialExperiment (>= 1.1.42)
+Suggests: BiocStyle, future, igraph, knitr, Matrix, progeny, rmarkdown, 
+    sctransform, Seurat (>= 4.0.0), SingleCellExperiment, 
+    SpatialExperiment (>= 1.1.42), SummarizedExperiment
 RoxygenNote: 7.1.1

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>mistyR and SpatialExperiment • mistyR</title>
+<title>mistyR and SpatialExperiment/SingleCellExperiment • mistyR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="mistyR and SpatialExperiment">
+<script src="../pkgdown.js"></script><meta property="og:title" content="mistyR and SpatialExperiment/SingleCellExperiment">
 <meta property="og:description" content="mistyR">
 <meta property="og:image" content="https://saezlab.github.io/mistyR/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -73,7 +73,7 @@
       <a href="../articles/mistySeurat.html">mistyR and Seurat</a>
     </li>
     <li>
-      <a href="../articles/mistySpatialExperiment.html">mistyR and SpatialExperiment</a>
+      <a href="../articles/mistySpatialExperiment.html">mistyR and SpatialExperiment/SingleCellExperiment</a>
     </li>
   </ul>
 </li>
@@ -113,15 +113,15 @@
       </header><script src="mistySpatialExperiment_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>mistyR and SpatialExperiment</h1>
+      <h1 data-toc-skip>mistyR and SpatialExperiment/SingleCellExperiment</h1>
                         <h4 class="author">Ricardo Omar Ramirez Flores</h4>
             <address class="author_afil">
       Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, Germany<br><h4 class="author">Jovan Tanevski</h4>
             <address class="author_afil">
-      Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, Germany<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
+      Heidelberg University &amp; Heidelberg University Hospital, Heidelberg, GermanyJoef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-13</h4>
+            <h4 class="date">2021-04-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySpatialExperiment.Rmd"><code>vignettes/mistySpatialExperiment.Rmd</code></a></small>
       <div class="hidden name"><code>mistySpatialExperiment.Rmd</code></div>
@@ -134,84 +134,578 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
+<p><em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> can be used to analyze spatial omics data sets stored in <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em> object with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em>, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.</p>
+<p>The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> and object manipulation from <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em> and <code>Biocpkg("SingleCellExperiment")</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/mistyR">mistyR</a></span><span class="op">)</span>
-<span class="co">#&gt; mistyR is able to run computationally intensive functions</span>
-<span class="co">#&gt;   in parallel. Please consider specifying a future::plan(). For example by running </span>
-<span class="co">#&gt;   future::plan(future::multisession) before calling mistyR functions.</span>
+<code class="sourceCode R"><span class="co"># MISTy</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/mistyR">mistyR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span>
 
+<span class="co"># SpatialExperiment</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SpatialExperiment</span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: SingleCellExperiment</span>
-<span class="co">#&gt; Loading required package: SummarizedExperiment</span>
-<span class="co">#&gt; Loading required package: MatrixGenerics</span>
-<span class="co">#&gt; Loading required package: matrixStats</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SingleCellExperiment</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/SummarizedExperiment">SummarizedExperiment</a></span><span class="op">)</span>
+
+<span class="co"># data manipulation</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/">Matrix</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
+
+<span class="co"># normalization</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ChristophH/sctransform">sctransform</a></span><span class="op">)</span>
+
+<span class="co"># resource</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/progeny">progeny</a></span><span class="op">)</span>
+
+<span class="co"># plotting</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+
+<span class="co"># setup parallel execution</span>
+<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
+<div id="the-skeleton-of-mistyr-pipelines" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-skeleton-of-mistyr-pipelines" class="anchor"></a>The skeleton of mistyR pipelines</h2>
+<p>For user convenience and to facilitate the use of <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> and <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em>, <code>run_misty_spe()</code> is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a SpatialExperiment object. The function allows for:</p>
+<ol style="list-style-type: decimal">
+<li>Defining a number of assays/views to be used in the model.</li>
+<li>Defining the type of spatial context for each view and their parameters.</li>
+<li>Defining the specific assay and features to be used for the view creation of each view.</li>
+<li>Defining the specific spots where the model will be built.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">run_misty_spe</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">slide</span>,
+                          <span class="co"># SpatialExperiment object with spatial omics data.</span>
+                          <span class="va">view.assays</span>,
+                          <span class="co"># Named list of assays for each view.</span>
+                          <span class="va">view.features</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                          <span class="co"># Named list of features/markers to use.</span>
+                          <span class="co"># Use all by default.</span>
+                          <span class="va">view.types</span>,
+                          <span class="co"># Named list of the type of view to construct</span>
+                          <span class="co"># from the assay.</span>
+                          <span class="va">view.params</span>,
+                          <span class="co"># Named list with parameters (NULL or value)</span>
+                          <span class="co"># for each view.</span>
+                          <span class="va">spot.ids</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                          <span class="co"># spot IDs to use. Use all by default.</span>
+                          <span class="va">out.alias</span> <span class="op">=</span> <span class="st">"results"</span>
+                          <span class="co"># folder name for output</span>
+<span class="op">)</span> <span class="op">{</span>
+
+  <span class="co"># Extracting geometry</span>
+  <span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html">spatialCoords</a></span><span class="op">(</span><span class="va">slide</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-colData.html">colData</a></span><span class="op">(</span><span class="va">slide</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Barcode</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">column_to_rownames</a></span><span class="op">(</span><span class="st">"Barcode"</span><span class="op">)</span>
+
+
+  <span class="co"># Extracting data</span>
+  <span class="va">view.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">view.assays</span>,
+    <span class="va">extract_spe_data</span>,
+    geometry <span class="op">=</span> <span class="va">geometry</span>,
+    slide <span class="op">=</span> <span class="va">slide</span>
+  <span class="op">)</span>
+
+  <span class="co"># Constructing and running a workflow</span>
+  <span class="fu">build_misty_pipeline</span><span class="op">(</span>
+    view.data <span class="op">=</span> <span class="va">view.data</span>,
+    view.features <span class="op">=</span> <span class="va">view.features</span>,
+    view.types <span class="op">=</span> <span class="va">view.types</span>,
+    view.params <span class="op">=</span> <span class="va">view.params</span>,
+    geometry <span class="op">=</span> <span class="va">geometry</span>,
+    spot.ids <span class="op">=</span> <span class="va">spot.ids</span>,
+    out.alias <span class="op">=</span> <span class="va">out.alias</span>
+  <span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="extracting-specific-information-from-spatialexperiment-objects" class="section level2">
+<h2 class="hasAnchor">
+<a href="#extracting-specific-information-from-spatialexperiment-objects" class="anchor"></a>Extracting specific information from SpatialExperiment objects</h2>
+<p>These are helper functions that allow to extract from <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em> objects specific assays and transform them into <code>tibble</code> which is a preferred format for <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Extracts data from an specific assay from a SpatialExperiment object</span>
+<span class="co"># and aligns the IDs to the geometry</span>
+<span class="va">extract_spe_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">slide</span>,
+                             <span class="va">assay</span>,
+                             <span class="va">geometry</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html">altExp</a></span><span class="op">(</span><span class="va">slide</span>, <span class="va">assay</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">assay</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span>rownames <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
+
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">data</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/match.html">match</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+
+<span class="co"># Filters data to contain only features of interest</span>
+<span class="va">filter_data_features</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>,
+                                 <span class="va">features</span><span class="op">)</span> <span class="op">{</span>
+  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>
+
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">data</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">rowname</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="va">make.names</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">column_to_rownames</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="view-creation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#view-creation" class="anchor"></a>View creation</h2>
+<p>This helper function wraps the three options available by default for view creation in <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> with additional features that allow for creating views for specific spots.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Builds views depending on the paramaters defined</span>
+<span class="va">create_default_views</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>,
+                                 <span class="va">view.type</span>,
+                                 <span class="va">view.param</span>,
+                                 <span class="va">view.name</span>,
+                                 <span class="va">spot.ids</span>,
+                                 <span class="va">geometry</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">view.data.init</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>
+
+  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">view.type</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"intra"</span>, <span class="st">"para"</span>, <span class="st">"juxta"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">view.type</span> <span class="op">&lt;-</span> <span class="st">"intra"</span>
+  <span class="op">}</span>
+
+  <span class="kw">if</span> <span class="op">(</span><span class="va">view.type</span> <span class="op">==</span> <span class="st">"intra"</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">data.red</span> <span class="op">&lt;-</span> <span class="va">view.data.tmp</span><span class="op">$</span><span class="va">data</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">rowname</span> <span class="op">%in%</span> <span class="va">spot.ids</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">rowname</span><span class="op">)</span>
+  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">view.type</span> <span class="op">==</span> <span class="st">"para"</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">view.data.tmp</span> <span class="op">&lt;-</span> <span class="va">view.data.init</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">geometry</span>, l <span class="op">=</span> <span class="va">view.param</span><span class="op">)</span>
+
+    <span class="va">data.ix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"paraview."</span>, <span class="va">view.param</span><span class="op">)</span>
+    <span class="va">data.red</span> <span class="op">&lt;-</span> <span class="va">view.data.tmp</span><span class="op">[[</span><span class="va">data.ix</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rowname <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">rowname</span> <span class="op">%in%</span> <span class="va">spot.ids</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">rowname</span><span class="op">)</span>
+  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">view.type</span> <span class="op">==</span> <span class="st">"juxta"</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">view.data.tmp</span> <span class="op">&lt;-</span> <span class="va">view.data.init</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="../reference/add_juxtaview.html">add_juxtaview</a></span><span class="op">(</span>
+        positions <span class="op">=</span> <span class="va">geometry</span>,
+        neighbor.thr <span class="op">=</span> <span class="va">view.param</span>
+      <span class="op">)</span>
+
+    <span class="va">data.ix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"juxtaview."</span>, <span class="va">view.param</span><span class="op">)</span>
+    <span class="va">data.red</span> <span class="op">&lt;-</span> <span class="va">view.data.tmp</span><span class="op">[[</span><span class="va">data.ix</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rowname <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">rowname</span> <span class="op">%in%</span> <span class="va">spot.ids</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">rowname</span><span class="op">)</span>
+  <span class="op">}</span>
+
+  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">view.param</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">misty.view</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_view.html">create_view</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">view.name</span><span class="op">)</span>,
+      <span class="va">data.red</span>
+    <span class="op">)</span>
+  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+    <span class="va">misty.view</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_view.html">create_view</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">view.name</span>, <span class="st">"_"</span>, <span class="va">view.param</span><span class="op">)</span>,
+      <span class="va">data.red</span>
+    <span class="op">)</span>
+  <span class="op">}</span>
+
+  <span class="fu"><a href="../reference/clear_cache.html">clear_cache</a></span><span class="op">(</span><span class="va">view.data.init</span><span class="op">$</span><span class="va">misty.uniqueid</span><span class="op">)</span>
+
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">misty.view</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="building-a-mistyr-pipeline-and-running-the-model" class="section level2">
+<h2 class="hasAnchor">
+<a href="#building-a-mistyr-pipeline-and-running-the-model" class="anchor"></a>Building a mistyR pipeline and running the model</h2>
+<p>This wrapper function <code>build_misty_pipeline()</code> allows for building automatically a <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> workflow from a list of data frames, with specified spatial context, parameters, features and locations.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Builds automatic MISTy workflow and runs it</span>
+<span class="va">build_misty_pipeline</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">view.data</span>,
+                                 <span class="va">view.features</span>,
+                                 <span class="va">view.types</span>,
+                                 <span class="va">view.params</span>,
+                                 <span class="va">geometry</span>,
+                                 <span class="va">spot.ids</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                                 <span class="va">out.alias</span> <span class="op">=</span> <span class="st">"default"</span><span class="op">)</span> <span class="op">{</span>
+
+  <span class="co"># Adding all spots ids in case they are not defined</span>
+  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">spot.ids</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">spot.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">view.data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+  <span class="op">}</span>
+
+  <span class="co"># First filter the features from the data</span>
+  <span class="va">view.data.filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html">map2</a></span><span class="op">(</span><span class="va">view.data</span>, <span class="va">view.features</span>, <span class="va">filter_data_features</span><span class="op">)</span>
+
+  <span class="co"># Create initial view</span>
+  <span class="va">views.main</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="va">view.data.filt</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">rowname</span> <span class="op">%in%</span> <span class="va">spot.ids</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">rowname</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="co"># Create other views</span>
+  <span class="va">view.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">view.data.filt</span><span class="op">)</span>
+
+  <span class="va">all.views</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html">pmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    <span class="va">view.data.filt</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
+    <span class="va">view.types</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
+    <span class="va">view.params</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
+    <span class="va">view.names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>
+  <span class="op">)</span>,
+  <span class="va">create_default_views</span>,
+  spot.ids <span class="op">=</span> <span class="va">spot.ids</span>,
+  geometry <span class="op">=</span> <span class="va">geometry</span>
+  <span class="op">)</span>
+
+  <span class="va">pline.views</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_views.html">add_views</a></span><span class="op">(</span>
+    <span class="va">views.main</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">all.views</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="op">)</span>
+
+
+  <span class="co"># Run MISTy</span>
+  <span class="fu"><a href="../reference/run_misty.html">run_misty</a></span><span class="op">(</span><span class="va">pline.views</span>, <span class="va">out.alias</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="basic-visualization-function" class="section level2">
+<h2 class="hasAnchor">
+<a href="#basic-visualization-function" class="anchor"></a>Basic visualization function</h2>
+<p>Finally, we adapted the function <code>plotMolecules()</code> from <em><a href="https://github.com/lmweber/ggspavis">ggspavis</a></em> to visualize features from custom assays for the purposes of the use case.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">plotMolecules_adapted</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">spe</span>,
+                                  <span class="va">molecule</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                                  <span class="va">x_coord</span> <span class="op">=</span> <span class="st">"array_col"</span>,
+                                  <span class="va">y_coord</span> <span class="op">=</span> <span class="st">"array_row"</span>,
+                                  <span class="va">palette</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                                  <span class="va">alt_assay</span> <span class="op">=</span> <span class="st">"lognorm"</span><span class="op">)</span> <span class="op">{</span>
+  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">palette</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">palette</span> <span class="op">&lt;-</span> <span class="st">"yellow"</span>
+  <span class="op">}</span>
+  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">palette</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">palette</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">palette</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="va">palette</span><span class="op">)</span>
+  <span class="op">}</span>
+  <span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html">spatialData</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">x_coord</span>, <span class="va">y_coord</span><span class="op">)</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>
+  <span class="va">mRNA_counts</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">assay</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html">altExp</a></span><span class="op">(</span><span class="va">spe</span>, <span class="va">alt_assay</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="va">molecule</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">mRNA_counts</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">df_plot</span>, expression <span class="op">=</span> <span class="va">mRNA_counts</span><span class="op">)</span>
+
+  <span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>array_row <span class="op">=</span> <span class="va">array_row</span> <span class="op">*</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>
+
+  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>
+    <span class="va">df_plot</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html">aes_string</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_coord</span>, y <span class="op">=</span> <span class="va">y_coord</span>, color <span class="op">=</span> <span class="st">"expression"</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_color_gradient</a></span><span class="op">(</span>
+      low <span class="op">=</span> <span class="va">palette</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
+      high <span class="op">=</span> <span class="va">palette</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, trans <span class="op">=</span> <span class="st">"sqrt"</span>
+    <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="va">molecule</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="va">p</span>
+<span class="op">}</span></code></pre></div>
+</div>
+</div>
+<div id="use-case" class="section level1">
+<h1 class="hasAnchor">
+<a href="#use-case" class="anchor"></a>Use case</h1>
+<p>As an example, we will analyze a 10X Visium spatial gene expression dataset of one breast cancer section (Block A Section 1) available here [<a href="https://support.10xgenomics.com/spatial-gene-expression/datasets" class="uri">https://support.10xgenomics.com/spatial-gene-expression/datasets</a>]. We assume that the required files <u>Feature/cell matrix HDF5 (filtered)</u> and the <u>Spatial imaging data</u> (extracted) are in a folder named ‘breast_A_1’ in the current working directory.</p>
+<p>We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package <em><a href="https://bioconductor.org/packages/3.12/progeny">progeny</a></em> and the previously described functions.</p>
+<p>Please note that the <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em> function <code><a href="https://rdrr.io/pkg/SpatialExperiment/man/read10xVisium.html">read10xVisium()</a></code> requires a fixed file structure that we create programmatically for this example. Furthermore, in this example we dropped all repeated symbols, however, the user must define what’s the best solution for their analysis.</p>
+<div id="loading-and-normalizing-the-data-sets" class="section level2">
+<h2 class="hasAnchor">
+<a href="#loading-and-normalizing-the-data-sets" class="anchor"></a>Loading and normalizing the data sets</h2>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load and normalize using SCT</span>
+<span class="va">folder</span> <span class="op">&lt;-</span> <span class="st">"breast_A_1"</span>
+
+<span class="co"># rename to create the required file structure</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files.html">file.rename</a></span><span class="op">(</span>
+  <span class="st">"breast_A_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5"</span>,
+  <span class="st">"breast_A_1/filtered_feature_bc_matrix.h5"</span>
+<span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span>
+
+<span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/read10xVisium.html">read10xVisium</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span>
+
+
+<span class="co"># normalize data</span>
+<span class="co"># counts are of class DelayedMatrix which is incompatible with vst</span>
+<span class="va">sct.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sctransform/man/vst.html">vst</a></span><span class="op">(</span><span class="fu">as</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/assays.html">counts</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span>, <span class="st">"dgCMatrix"</span><span class="op">)</span>, verbosity <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">y</span>
+
+<span class="co"># Dropping duplicates</span>
+<span class="va">spe</span> <span class="op">&lt;-</span> <span class="va">spe</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">rowData</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
+
+<span class="co"># Getting relevant genes</span>
+<span class="va">gene.dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">rowData</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span>, rownames <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"ENSEMBL"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">ENSEMBL</span> <span class="op">%in%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">sct.data</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Re-naming normalized data with gene symbols</span>
+<span class="va">sct.data</span> <span class="op">&lt;-</span> <span class="va">sct.data</span><span class="op">[</span><span class="va">gene.dict</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="st">"ENSEMBL"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">sct.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">gene.dict</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">symbol</span><span class="op">)</span>
+
+<span class="co"># undo file rename</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files.html">file.rename</a></span><span class="op">(</span>
+  <span class="st">"breast_A_1/filtered_feature_bc_matrix.h5"</span>,
+  <span class="st">"breast_A_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5"</span>
+<span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+</div>
+<div id="filtering-genes-that-are-expressed-in-at-least-5-of-the-spots" class="section level2">
+<h2 class="hasAnchor">
+<a href="#filtering-genes-that-are-expressed-in-at-least-5-of-the-spots" class="anchor"></a>Filtering genes that are expressed in at least 5% of the spots</h2>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coverage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">sct.data</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">sct.data</span><span class="op">)</span>
+<span class="va">slide.markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">coverage</span><span class="op">[</span><span class="va">coverage</span> <span class="op">&gt;=</span> <span class="fl">0.05</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="defining-hypoxia-and-estrogen-responsive-genes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#defining-hypoxia-and-estrogen-responsive-genes" class="anchor"></a>Defining Hypoxia and Estrogen responsive genes</h2>
+<p>For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package <code>progeny</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">estrogen.footprints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/progeny/man/getModel.html">getModel</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"gene"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Estrogen</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="va">gene</span> <span class="op">%in%</span> <span class="va">slide.markers</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">gene</span><span class="op">)</span>
+
+<span class="va">hypoxia.footprints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/progeny/man/getModel.html">getModel</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"gene"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Hypoxia</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="va">gene</span> <span class="op">%in%</span> <span class="va">slide.markers</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">gene</span><span class="op">)</span></code></pre></div>
+<p>Note that for this use case we assume that all normalizations and assays used by <code>mistyR</code> are defined as <strong>alternative experiments with identical names in the assay and the experiment</strong>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sct.exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/RangedSummarizedExperiment-class.html">SummarizedExperiment</a></span><span class="op">(</span><span class="va">sct.data</span><span class="op">[</span><span class="va">slide.markers</span>, <span class="op">]</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">assayNames</a></span><span class="op">(</span><span class="va">sct.exp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT"</span>
+<span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html">altExp</a></span><span class="op">(</span><span class="va">spe</span>, <span class="st">"SCT"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">sct.exp</span></code></pre></div>
+</div>
+<div id="defining-the-parameters-of-the-workflow" class="section level2">
+<h2 class="hasAnchor">
+<a href="#defining-the-parameters-of-the-workflow" class="anchor"></a>Defining the parameters of the workflow</h2>
+<p>In this example we will explain the expression of hypoxia responsive genes in terms of three different views:</p>
+<ol style="list-style-type: decimal">
+<li>Main (intrinsic) view (containing genes to be predicted): intrinsic expression of <code>hypoxia.footprints</code>
+</li>
+<li>Paraview - hypoxia genes: expression of hypoxia markers in a significance radius of 10 spots</li>
+<li>Paraview - estrogen genes: expression of estrogen markers in a significance radius of 10 spots</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define assay for each view</span>
+<span class="va">view.assays</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="st">"main"</span> <span class="op">=</span> <span class="st">"SCT"</span>,
+  <span class="st">"para.hypoxia"</span> <span class="op">=</span> <span class="st">"SCT"</span>,
+  <span class="st">"para.estrogen"</span> <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span>
+
+<span class="co"># Define features for each view</span>
+<span class="va">view.features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="st">"main"</span> <span class="op">=</span> <span class="va">hypoxia.footprints</span>,
+  <span class="st">"para.hypoxia"</span> <span class="op">=</span> <span class="va">hypoxia.footprints</span>,
+  <span class="st">"para.estrogen"</span> <span class="op">=</span> <span class="va">estrogen.footprints</span>
+<span class="op">)</span>
+
+<span class="co"># Define spatial context for each view</span>
+<span class="va">view.types</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="st">"main"</span> <span class="op">=</span> <span class="st">"intra"</span>,
+  <span class="st">"para.hypoxia"</span> <span class="op">=</span> <span class="st">"para"</span>,
+  <span class="st">"para.estrogen"</span> <span class="op">=</span> <span class="st">"para"</span>
+<span class="op">)</span>
+
+<span class="co"># Define additional parameters (l in the case of paraview)</span>
+<span class="va">view.params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="st">"main"</span> <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="st">"para.hypoxia"</span> <span class="op">=</span> <span class="fl">10</span>,
+  <span class="st">"para.estrogen"</span> <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
+
+<span class="va">misty.out</span> <span class="op">&lt;-</span> <span class="st">"vignette_model_spe"</span></code></pre></div>
+</div>
+<div id="run-misty-pipeline-and-collect-results" class="section level2">
+<h2 class="hasAnchor">
+<a href="#run-misty-pipeline-and-collect-results" class="anchor"></a>Run MISTy pipeline and collect results</h2>
+<p>Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> workflow.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">&lt;-</span> <span class="fu">run_misty_spe</span><span class="op">(</span>
+  slide <span class="op">=</span> <span class="va">spe</span>,
+  view.assays <span class="op">=</span> <span class="va">view.assays</span>,
+  view.features <span class="op">=</span> <span class="va">view.features</span>,
+  view.types <span class="op">=</span> <span class="va">view.types</span>,
+  view.params <span class="op">=</span> <span class="va">view.params</span>,
+  spot.ids <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Using the whole slide</span>
+  out.alias <span class="op">=</span> <span class="va">misty.out</span>
+<span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/collect_results.html">collect_results</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Generating paraview</span>
+<span class="co">#&gt; Cache cleared</span>
+<span class="co">#&gt; Generating paraview</span>
+<span class="co">#&gt; Cache cleared</span>
+<span class="co">#&gt; Training models</span>
+<span class="co">#&gt; Collecting results from vignette_model_spe</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'MatrixGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span>
+<span class="co">#&gt; Collecting improvements</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;     colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,</span>
-<span class="co">#&gt;     colCounts, colCummaxs, colCummins, colCumprods, colCumsums,</span>
-<span class="co">#&gt;     colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,</span>
-<span class="co">#&gt;     colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,</span>
-<span class="co">#&gt;     colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,</span>
-<span class="co">#&gt;     colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,</span>
-<span class="co">#&gt;     colWeightedMeans, colWeightedMedians, colWeightedSds,</span>
-<span class="co">#&gt;     colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,</span>
-<span class="co">#&gt;     rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,</span>
-<span class="co">#&gt;     rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,</span>
-<span class="co">#&gt;     rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,</span>
-<span class="co">#&gt;     rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,</span>
-<span class="co">#&gt;     rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,</span>
-<span class="co">#&gt;     rowWeightedMads, rowWeightedMeans, rowWeightedMedians,</span>
-<span class="co">#&gt;     rowWeightedSds, rowWeightedVars</span>
-<span class="co">#&gt; Loading required package: GenomicRanges</span>
-<span class="co">#&gt; Loading required package: stats4</span>
-<span class="co">#&gt; Loading required package: BiocGenerics</span>
-<span class="co">#&gt; Loading required package: parallel</span>
+<span class="co">#&gt; Collecting contributions</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
+<span class="co">#&gt; Collecting importances</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyDuplicated, append, as.data.frame, basename, cbind, colnames,</span>
-<span class="co">#&gt;     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,</span>
-<span class="co">#&gt;     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,</span>
-<span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span>
-<span class="co">#&gt;     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,</span>
-<span class="co">#&gt;     union, unique, unsplit, which.max, which.min</span>
-<span class="co">#&gt; Loading required package: S4Vectors</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
-<span class="co">#&gt; The following object is masked from 'package:future':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     values</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand.grid</span>
-<span class="co">#&gt; Loading required package: IRanges</span>
-<span class="co">#&gt; Loading required package: GenomeInfoDb</span>
-<span class="co">#&gt; Loading required package: Biobase</span>
-<span class="co">#&gt; Welcome to Bioconductor</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     Vignettes contain introductory material; view with</span>
-<span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span>
-<span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'Biobase'</span>
-<span class="co">#&gt; The following object is masked from 'package:MatrixGenerics':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     rowMedians</span>
-<span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyMissing, rowMedians</span></code></pre></div>
+<span class="co">#&gt; Aggregating</span></code></pre></div>
+</div>
+<div id="interpretation-and-downstream-analysis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#interpretation-and-downstream-analysis" class="anchor"></a>Interpretation and downstream analysis</h2>
+<p>MISTy gives explanatory answers to three general questions:</p>
+<p><strong>1. How much can the broader spatial context explain the expression of markers (in contrast to the intraview)?</strong></p>
+<p>This can be observed in the gain in R2 (or RMSE) of using the multiview model in contrast to the single <code>main</code> view model.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.RMSE"</span><span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-13-1.png" width="700"><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-13-2.png" width="700"></p>
+<p>In this example, PGK1 is a marker whose expression can be explained better by modeling the broader spatial context around each spot.</p>
+<p>We can further inspect the significance of the gain in variance explained, by the assigned p-value of improvement based on cross-validation.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">improvements</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">measure</span> <span class="op">==</span> <span class="st">"p.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 15 x 4</span>
+<span class="co">#&gt;    target  sample             measure    value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;              &lt;chr&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 INSIG2  vignette_model_spe p.R2    0.000849</span>
+<span class="co">#&gt;  2 FUT11   vignette_model_spe p.R2    0.00389 </span>
+<span class="co">#&gt;  3 PGK1    vignette_model_spe p.R2    0.00392 </span>
+<span class="co">#&gt;  4 FAM162A vignette_model_spe p.R2    0.0117  </span>
+<span class="co">#&gt;  5 PDK1    vignette_model_spe p.R2    0.0510  </span>
+<span class="co">#&gt;  6 NDRG1   vignette_model_spe p.R2    0.0516  </span>
+<span class="co">#&gt;  7 ANKZF1  vignette_model_spe p.R2    0.0812  </span>
+<span class="co">#&gt;  8 PFKFB4  vignette_model_spe p.R2    0.0826  </span>
+<span class="co">#&gt;  9 HILPDA  vignette_model_spe p.R2    0.0873  </span>
+<span class="co">#&gt; 10 BNIP3L  vignette_model_spe p.R2    0.0968  </span>
+<span class="co">#&gt; 11 ENO2    vignette_model_spe p.R2    0.170   </span>
+<span class="co">#&gt; 12 KDM3A   vignette_model_spe p.R2    0.187   </span>
+<span class="co">#&gt; 13 EGLN1   vignette_model_spe p.R2    0.192   </span>
+<span class="co">#&gt; 14 ANKRD37 vignette_model_spe p.R2    0.233   </span>
+<span class="co">#&gt; 15 GBE1    vignette_model_spe p.R2    0.557</span></code></pre></div>
+<p>In general, the significant gain in R2 can be interpreted as the following:</p>
+<p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
+<p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_view_contributions.html">plot_view_contributions</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">misty.results</span><span class="op">$</span><span class="va">contributions.stats</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">target</span> <span class="op">==</span> <span class="st">"PGK1"</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 3 x 6</span>
+<span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
+<span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 PGK1   intra            0.477    0.366 3.13e-68    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.575    0.442 6.89e-49    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.250    0.192 2.00e-10    NA</span></code></pre></div>
+<p>In the case of PGK1, we observe that around 37% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (63%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.</p>
+<p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
+<p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
+<p>First, the intrinsic importances of the hypoxia markers.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"intra"</span><span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p>These importances are associated to the relationship between markers in the same spot. Let’s pick the best predictor of PGK1 to confirm this:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">importances.aggregated</span><span class="op">[[</span><span class="st">"intra"</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 15 x 2</span>
+<span class="co">#&gt;    Predictor   PGK1</span>
+<span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 NDRG1      2.66 </span>
+<span class="co">#&gt;  2 FAM162A    1.76 </span>
+<span class="co">#&gt;  3 PFKFB4     0.202</span>
+<span class="co">#&gt;  4 HILPDA     0.164</span>
+<span class="co">#&gt;  5 ENO2       0.102</span>
+<span class="co">#&gt;  6 EGLN1     -0.275</span>
+<span class="co">#&gt;  7 ANKRD37   -0.455</span>
+<span class="co">#&gt;  8 GBE1      -0.466</span>
+<span class="co">#&gt;  9 PDK1      -0.561</span>
+<span class="co">#&gt; 10 KDM3A     -0.570</span>
+<span class="co">#&gt; 11 BNIP3L    -0.582</span>
+<span class="co">#&gt; 12 ANKZF1    -0.633</span>
+<span class="co">#&gt; 13 INSIG2    -0.666</span>
+<span class="co">#&gt; 14 FUT11     -0.673</span>
+<span class="co">#&gt; 15 PGK1      NA</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
+  molecule <span class="op">=</span> <span class="st">"PGK1"</span>,
+  x_coord <span class="op">=</span> <span class="st">"array_col"</span>,
+  y_coord <span class="op">=</span> <span class="st">"array_row"</span>,
+  alt_assay <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
+  molecule <span class="op">=</span> <span class="st">"NDRG1"</span>,
+  x_coord <span class="op">=</span> <span class="st">"array_col"</span>,
+  y_coord <span class="op">=</span> <span class="st">"array_row"</span>,
+  alt_assay <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p>Second, the paraview importances of the hypoxia markers.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.hypoxia_10"</span><span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p>These importances are associated to the relationship between markers in the spot and markers in the neighborhood (controlled by our parameter l).</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
+  molecule <span class="op">=</span> <span class="st">"PGK1"</span>,
+  x_coord <span class="op">=</span> <span class="st">"array_col"</span>,
+  y_coord <span class="op">=</span> <span class="st">"array_row"</span>,
+  alt_assay <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
+  molecule <span class="op">=</span> <span class="st">"PFKFB4"</span>,
+  x_coord <span class="op">=</span> <span class="st">"array_col"</span>,
+  y_coord <span class="op">=</span> <span class="st">"array_row"</span>,
+  alt_assay <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
+<p>As expected, the expression of PFKFB4 (the best predictor from this view) in the neighborhood of each spot allows to explain the expression of PGK1.</p>
+<p>Finally, the paraview importances of the estrogen markers. We will inspect the best predictor in this view.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.estrogen_10"</span><span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
+  molecule <span class="op">=</span> <span class="st">"PGK1"</span>,
+  x_coord <span class="op">=</span> <span class="st">"array_col"</span>,
+  y_coord <span class="op">=</span> <span class="st">"array_row"</span>,
+  alt_assay <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
+  molecule <span class="op">=</span> <span class="st">"TPD52L1"</span>,
+  x_coord <span class="op">=</span> <span class="st">"array_col"</span>,
+  y_coord <span class="op">=</span> <span class="st">"array_row"</span>,
+  alt_assay <span class="op">=</span> <span class="st">"SCT"</span>
+<span class="op">)</span></code></pre></div>
+<p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p>It is visible that in some areas the local expression of TPD52L1 overlaps with the areas with the highest expression of PGK1.</p>
+</div>
+<div id="important-notes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#important-notes" class="anchor"></a>Important notes</h2>
+<ul>
+<li><p>The relationships captured in the importances are not to assumed or interpreted as linear or casual.</p></li>
+<li><p>1-to-1 importances between predictor and markers should always be interpreted in the context of the other predictors, since training MISTy models is multivariate predictive task.</p></li>
+</ul>
+</div>
+</div>
+<div id="other-use-cases" class="section level1">
+<h1 class="hasAnchor">
+<a href="#other-use-cases" class="anchor"></a>Other use cases</h1>
+<p>The shown example is not the only way to use mistyR to analyze spatial transcriptomics data. Similar and complementary workflows can be constructed to describe different aspects of biology, for example:</p>
+<ul>
+<li><p>Spatial interactions between pathway activities and putative ligands, as shown <a href="https://doi.org/10.1101/2020.05.08.084145">here</a>.</p></li>
+<li><p>Spatial interactions between cell-state lineage markers and putative ligands, as shown <a href="https://doi.org/10.1101/2020.12.08.411686">here</a>.</p></li>
+<li><p>Spatial interactions between cell-type abundances leveraging deconvolution methods and creating descriptions of cell colocalization and tissue architecture.</p></li>
+</ul>
+<p>Additionally, <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> through the function <code><a href="../reference/collect_results.html">collect_results()</a></code> allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.</p>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
@@ -233,47 +727,69 @@
 #&gt; [8] methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt;  [1] SpatialExperiment_1.1.5     SingleCellExperiment_1.12.0
-#&gt;  [3] SummarizedExperiment_1.20.0 Biobase_2.50.0             
-#&gt;  [5] GenomicRanges_1.42.0        GenomeInfoDb_1.26.5        
-#&gt;  [7] IRanges_2.24.1              S4Vectors_0.28.1           
-#&gt;  [9] BiocGenerics_0.36.0         MatrixGenerics_1.2.1       
-#&gt; [11] matrixStats_0.58.0          future_1.21.0              
-#&gt; [13] mistyR_0.99.0               BiocStyle_2.18.1           
+#&gt;  [1] ggplot2_3.3.3               progeny_1.12.0             
+#&gt;  [3] sctransform_0.3.2           purrr_0.3.4                
+#&gt;  [5] dplyr_1.0.5                 tibble_3.1.0               
+#&gt;  [7] Matrix_1.3-2                SpatialExperiment_1.1.5    
+#&gt;  [9] SingleCellExperiment_1.12.0 SummarizedExperiment_1.20.0
+#&gt; [11] Biobase_2.50.0              GenomicRanges_1.42.0       
+#&gt; [13] GenomeInfoDb_1.26.7         IRanges_2.24.1             
+#&gt; [15] S4Vectors_0.28.1            BiocGenerics_0.36.0        
+#&gt; [17] MatrixGenerics_1.2.1        matrixStats_0.58.0         
+#&gt; [19] future_1.21.0               mistyR_0.99.0              
+#&gt; [21] BiocStyle_2.18.1           
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
-#&gt;  [1] sass_0.3.1                edgeR_3.32.1             
-#&gt;  [3] jsonlite_1.7.2            DelayedMatrixStats_1.12.3
-#&gt;  [5] scuttle_1.0.4             R.utils_2.10.1           
-#&gt;  [7] bslib_0.2.4               BiocManager_1.30.12      
-#&gt;  [9] dqrng_0.2.1               GenomeInfoDbData_1.2.4   
-#&gt; [11] yaml_2.2.1                globals_0.14.0           
-#&gt; [13] lattice_0.20-41           limma_3.46.0             
-#&gt; [15] beachmat_2.6.4            digest_0.6.27            
-#&gt; [17] XVector_0.30.0            htmltools_0.5.1.1        
-#&gt; [19] Matrix_1.3-2              R.oo_1.24.0              
-#&gt; [21] listenv_0.8.0             magick_2.7.1             
-#&gt; [23] bookdown_0.21             zlibbioc_1.36.0          
-#&gt; [25] HDF5Array_1.18.1          BiocParallel_1.24.1      
-#&gt; [27] cachem_1.0.4              magrittr_2.0.1           
-#&gt; [29] crayon_1.4.1              memoise_2.0.0            
-#&gt; [31] evaluate_0.14             R.methodsS3_1.8.1        
-#&gt; [33] fs_1.5.0                  parallelly_1.24.0        
-#&gt; [35] textshaping_0.3.3         tools_4.0.5              
-#&gt; [37] stringr_1.4.0             Rhdf5lib_1.12.1          
-#&gt; [39] DropletUtils_1.10.3       locfit_1.5-9.4           
-#&gt; [41] DelayedArray_0.16.3       compiler_4.0.5           
-#&gt; [43] pkgdown_1.6.1             jquerylib_0.1.3          
-#&gt; [45] systemfonts_1.0.1         rlang_0.4.10             
-#&gt; [47] rhdf5_2.34.0              grid_4.0.5               
-#&gt; [49] RCurl_1.98-1.3            rhdf5filters_1.2.0       
-#&gt; [51] rjson_0.2.20              bitops_1.0-6             
-#&gt; [53] rmarkdown_2.7             codetools_0.2-18         
-#&gt; [55] R6_2.5.0                  knitr_1.31               
-#&gt; [57] fastmap_1.1.0             rprojroot_2.0.2          
-#&gt; [59] ragg_1.1.2                desc_1.3.0               
-#&gt; [61] stringi_1.5.3             Rcpp_1.0.6               
-#&gt; [63] xfun_0.22                 sparseMatrixStats_1.2.1</code></pre>
+#&gt;   [1] colorspace_2.0-0          rjson_0.2.20             
+#&gt;   [3] ellipsis_0.3.1            rprojroot_2.0.2          
+#&gt;   [5] scuttle_1.0.4             XVector_0.30.0           
+#&gt;   [7] fs_1.5.0                  rstudioapi_0.13          
+#&gt;   [9] farver_2.1.0              listenv_0.8.0            
+#&gt;  [11] furrr_0.2.2               ggrepel_0.9.1            
+#&gt;  [13] fansi_0.4.2               codetools_0.2-18         
+#&gt;  [15] R.methodsS3_1.8.1         sparseMatrixStats_1.2.1  
+#&gt;  [17] cachem_1.0.4              knitr_1.32               
+#&gt;  [19] rlist_0.4.6.1             jsonlite_1.7.2           
+#&gt;  [21] R.oo_1.24.0               HDF5Array_1.18.1         
+#&gt;  [23] BiocManager_1.30.12       readr_1.4.0              
+#&gt;  [25] compiler_4.0.5            dqrng_0.2.1              
+#&gt;  [27] assertthat_0.2.1          fastmap_1.1.0            
+#&gt;  [29] cli_2.4.0                 limma_3.46.0             
+#&gt;  [31] htmltools_0.5.1.1         tools_4.0.5              
+#&gt;  [33] gtable_0.3.0              glue_1.4.2               
+#&gt;  [35] GenomeInfoDbData_1.2.4    reshape2_1.4.4           
+#&gt;  [37] Rcpp_1.0.6                jquerylib_0.1.3          
+#&gt;  [39] pkgdown_1.6.1             vctrs_0.3.7              
+#&gt;  [41] rhdf5filters_1.2.0        DelayedMatrixStats_1.12.3
+#&gt;  [43] xfun_0.22                 stringr_1.4.0            
+#&gt;  [45] globals_0.14.0            beachmat_2.6.4           
+#&gt;  [47] lifecycle_1.0.0           edgeR_3.32.1             
+#&gt;  [49] zlibbioc_1.36.0           MASS_7.3-53.1            
+#&gt;  [51] scales_1.1.1              ragg_1.1.2               
+#&gt;  [53] hms_1.0.0                 rhdf5_2.34.0             
+#&gt;  [55] RColorBrewer_1.1-2        yaml_2.2.1               
+#&gt;  [57] memoise_2.0.0             gridExtra_2.3            
+#&gt;  [59] sass_0.3.1                stringi_1.5.3            
+#&gt;  [61] highr_0.8                 distances_0.1.8          
+#&gt;  [63] desc_1.3.0                filelock_1.0.2           
+#&gt;  [65] BiocParallel_1.24.1       rlang_0.4.10             
+#&gt;  [67] pkgconfig_2.0.3           systemfonts_1.0.1        
+#&gt;  [69] bitops_1.0-6              evaluate_0.14            
+#&gt;  [71] lattice_0.20-41           Rhdf5lib_1.12.1          
+#&gt;  [73] labeling_0.4.2            tidyselect_1.1.0         
+#&gt;  [75] parallelly_1.24.0         plyr_1.8.6               
+#&gt;  [77] magrittr_2.0.1            bookdown_0.21            
+#&gt;  [79] R6_2.5.0                  magick_2.7.1             
+#&gt;  [81] generics_0.1.0            DelayedArray_0.16.3      
+#&gt;  [83] DBI_1.1.1                 pillar_1.6.0             
+#&gt;  [85] withr_2.4.1               RCurl_1.98-1.3           
+#&gt;  [87] future.apply_1.7.0        crayon_1.4.1             
+#&gt;  [89] DropletUtils_1.10.3       utf8_1.2.1               
+#&gt;  [91] rmarkdown_2.7             locfit_1.5-9.4           
+#&gt;  [93] grid_4.0.5                data.table_1.14.0        
+#&gt;  [95] digest_0.6.27             tidyr_1.1.3              
+#&gt;  [97] R.utils_2.10.1            textshaping_0.3.3        
+#&gt;  [99] munsell_0.5.0             bslib_0.2.4</code></pre>
 </div>
   </div>
 
