@@ -3,7 +3,7 @@ title: "Modeling spatially resolved omics with mistyR"
 author:
 - name: Jovan Tanevski
   affiliation: 
-  - Heidelberg University & Heidelberg University Hospital, Heidelberg, Germany
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
   - Jožef Stefan Institute, Ljubljana, Slovenia
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
@@ -37,17 +37,26 @@ The use of mistyR is conceptualized around building a workflow for analysis usin
 
 -   Plotting
 
-```{r setup, warning=FALSE}
-library(mistyR)
-library(magrittr)
-```
+`r Githubpkg("saezlab/mistyR")` is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
 
-mistyR is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
-
-When loading mistyR please consider configuring a `future::multisession()` parallel 
-execution plan. mistyR will then use all available cores for execution of 
+When loading `r Githubpkg("saezlab/mistyR")` please consider configuring a `future::multisession()` parallel 
+execution plan. `r Githubpkg("saezlab/mistyR")` will then use all available cores for execution of 
 computationally demanding functions. It is recommended that the user modifies the 
 `future::plan()` according to their needs.
+
+```{r setup, message=FALSE}
+library(mistyR)
+library(magrittr)
+library(future)
+
+plan(multisession)
+```
+
+
+```{r}
+?synthetic
+```
+
 
 # View composition
 
@@ -64,4 +73,3 @@ Here is the output of `sessionInfo()` at the point when this document was compil
 ```{r info, echo=FALSE}
 sessionInfo()
 ```
-

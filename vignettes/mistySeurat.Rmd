@@ -3,18 +3,15 @@ title: "mistyR and Seurat"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
-  - &hd Heidelberg University \& Heidelberg University Hospital, Heidelberg, Germany
+  - &hd Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
 - name: Jovan Tanevski
   affiliation: 
   - *hd
-  - Jo\v{z}ef Stefan Institute, Ljubljana, Slovenia
+  - Jožef Stefan Institute, Ljubljana, Slovenia
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"
 package: mistyR
 output:
-  # BiocStyle::html_document:
-  #   toc_float: true
-  #   df_print: kable
   BiocStyle::pdf_document:
     df_print: kable
     extra_dependencies:
