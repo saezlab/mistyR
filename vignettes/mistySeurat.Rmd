@@ -483,6 +483,20 @@ The shown example is not the only way to use mistyR to analyze spatial transcrip
 
 Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
 
+---
+
+# See also {-}
+
+## More vignettes {-}
+
+`vignette("mistyR")`
+ 
+`vignette("mistySpatialExperiment")`
+
+## Paper {-}
+
+*`r format(citation("mistyR"), "textVersion")`*
+
 # Session info
 
 Here is the output of `sessionInfo()` at the point when this document was compiled:

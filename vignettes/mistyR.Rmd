@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The use of mistyR is conceptualized around building a workflow for analysis using four classes of functions:
+The use of mistyR is conceptualized around building a workflow for analysis of spatial omics data by four classes of functions:
 
 -   View composition
 
@@ -37,12 +37,9 @@ The use of mistyR is conceptualized around building a workflow for analysis usin
 
 -   Plotting
 
-`r Githubpkg("saezlab/mistyR")` is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) to construct a workflow by chaining functions in mind.
+To construct a workflow `r Githubpkg("saezlab/mistyR")` is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) for chaining functions in mind.
 
-When loading `r Githubpkg("saezlab/mistyR")` please consider configuring a `future::multisession()` parallel 
-execution plan. `r Githubpkg("saezlab/mistyR")` will then use all available cores for execution of 
-computationally demanding functions. It is recommended that the user modifies the 
-`future::plan()` according to their needs.
+When loading `r Githubpkg("saezlab/mistyR")` please consider configuring a `future::multisession()` parallel execution plan. `r Githubpkg("saezlab/mistyR")` will then use all available cores for execution of computationally demanding functions. It is recommended that the user modifies the `future::plan()` according to their needs.
 
 ```{r setup, message=FALSE}
 library(mistyR)
@@ -52,11 +49,9 @@ library(future)
 plan(multisession)
 ```
 
-
 ```{r}
-?synthetic
-```
 
+```
 
 # View composition
 
@@ -66,7 +61,21 @@ plan(multisession)
 
 # Plotting
 
-# Session info
+---
+
+# See also {-}
+
+## More vignettes {-}
+
+`vignette("mistySeurat")`
+
+`vignette("mistySpatialExperiment")`
+
+## Paper {-}
+
+*`r format(citation("mistyR"), "textVersion")`*
+
+# Session info {-}
 
 Here is the output of `sessionInfo()` at the point when this document was compiled:
 

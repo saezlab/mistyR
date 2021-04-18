@@ -119,7 +119,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany<br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-16</h4>
+            <h4 class="date">2021-04-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistyR.Rmd"><code>vignettes/mistyR.Rmd</code></a></small>
       <div class="hidden name"><code>mistyR.Rmd</code></div>
@@ -131,14 +131,14 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The use of mistyR is conceptualized around building a workflow for analysis using four classes of functions:</p>
+<p>The use of mistyR is conceptualized around building a workflow for analysis of spatial omics data by four classes of functions:</p>
 <ul>
 <li><p>View composition</p></li>
 <li><p>Train models</p></li>
 <li><p>Result processing</p></li>
 <li><p>Plotting</p></li>
 </ul>
-<p><em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> is designed with the use of pipe operators (for example the operator <code><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></code> from <em><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></em>) to construct a workflow by chaining functions in mind.</p>
+<p>To construct a workflow <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> is designed with the use of pipe operators (for example the operator <code><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></code> from <em><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></em>) for chaining functions in mind.</p>
 <p>When loading <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> please consider configuring a <code><a href="https://rdrr.io/pkg/future/man/multisession.html">future::multisession()</a></code> parallel execution plan. <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> will then use all available cores for execution of computationally demanding functions. It is recommended that the user modifies the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> according to their needs.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/mistyR">mistyR</a></span><span class="op">)</span>
@@ -162,8 +162,24 @@
 <div id="plotting" class="section level1">
 <h1 class="hasAnchor">
 <a href="#plotting" class="anchor"></a>Plotting</h1>
+<hr>
 </div>
-<div id="session-info" class="section level1">
+<div id="see-also" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#see-also" class="anchor"></a>See also</h1>
+<div id="more-vignettes" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#more-vignettes" class="anchor"></a>More vignettes</h2>
+<p><code><a href="../articles/mistySeurat.html">vignette("mistySeurat")</a></code></p>
+<p><code><a href="../articles/mistySpatialExperiment.html">vignette("mistySpatialExperiment")</a></code></p>
+</div>
+<div id="paper" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#paper" class="anchor"></a>Paper</h2>
+<p><em>Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. bioRxiv 2020.05.08.084145 doi: 10.1101/2020.05.08.084145 (2020).</em></p>
+</div>
+</div>
+<div id="session-info" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code> at the point when this document was compiled:</p>
