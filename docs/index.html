@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multiview Intercellular SpaTial modeling framework • MISTy</title>
+<title>Multiview Intercellular SpaTial modeling framework • mistyR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -18,23 +18,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Multiview Intercellular SpaTial modeling framework">
-<meta property="og:description" content="Multiview Intercellular SpaTial modeling framework (MISTy) is an 
-    explainable machine learning framework for knowledge extraction and 
-    analysis of single-cell, highly multiplexed, spatially resolved data. 
-    MISTy facilitates an in-depth understanding of marker interactions by 
-    profiling the intra- and intercellular relationships. MISTy is a flexible 
-    framework able to process a custom number of views. Each of these views 
-    can describe a different spatial context, i.e., define a relationship 
-    among the observed expressions of the markers, such as intracellular 
-    regulation or paracrine regulation, but also, the views can also capture 
-    cell-type specific relationships, capture relations between functional 
-    footprints or focus on relations between different anatomical regions. 
-    Each MISTy view is considered as a potential source of variability in the 
-    measured marker expressions. Each MISTy view is then analyzed for its 
-    contribution to the total expression of each marker and is explained in 
-    terms of the interactions with other measurements that led to the observed 
-    contribution.">
-<meta property="og:image" content="https://saezlab.github.io/misty/logo.png">
+<meta property="og:description" content="mistyR is an impolementation of the Multiview Intercellular 
+    SpaTialmodeling framework (MISTy). MISTy is an explainable machine 
+    learning framework  for knowledge extraction and analysis of single-cell, 
+    highly multiplexed, spatially resolved data. MISTy facilitates an 
+    in-depth understanding of marker interactions by profiling the intra- 
+    and intercellular relationships. MISTy is a flexible framework able to 
+    process a custom number of views. Each of these views can describe a 
+    different spatial context, i.e., define a relationship among the 
+    observed expressions of the markers, such as intracellular regulation 
+    or paracrine regulation, but also, the views can also capture cell-type 
+    specific relationships, capture relations between functional footprints 
+    or focus on relations between different anatomical regions. Each MISTy 
+    view is considered as a potential source of variability in the measured 
+    marker expressions. Each MISTy view is then analyzed for its contribution 
+    to the total expression of each marker and is explained in terms of the 
+    interactions with other measurements that led to the observed contribution.">
+<meta property="og:image" content="https://saezlab.github.io/mistyR/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -58,8 +58,8 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <a class="navbar-link" href="index.html">mistyR</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
   </a>
 </li>
 <li>
-  <a href="articles/MISTy.html">Get started</a>
+  <a href="articles/mistyR.html">Get started</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
@@ -85,10 +85,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/SeuratObject.html">Running MISTy with a Seurat object</a>
+      <a href="articles/mistySeurat.html">mistyR and Seurat</a>
     </li>
     <li>
-      <a href="articles/SpatialExperimentObject.html">Running MISTy with a SpatialExperiment object</a>
+      <a href="articles/mistySpatialExperiment.html">mistyR and SpatialExperiment/SingleCellExperiment</a>
     </li>
   </ul>
 </li>
@@ -98,7 +98,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/saezlab/misty/">
+  <a href="https://github.com/saezlab/mistyR/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -132,48 +132,44 @@
 <a href="#misty---multiview-intercellular-spatial-modeling-framework-" class="anchor"></a>MISTy - <strong>M</strong>ultiview <strong>I</strong>ntercellular <strong>S</strong>pa<strong>T</strong>ial modeling framework <img src="reference/figures/logo.png" align="right" height="139">
 </h1></div>
 <!-- badges: start -->
-<ul>
-<li>master <a href="https://travis-ci.org/saezlab/misty"><img src="https://travis-ci.org/saezlab/misty.svg?branch=master" alt="Build Status"></a>
-</li>
-<li>devel <a href="https://travis-ci.org/saezlab/misty"><img src="https://travis-ci.org/saezlab/misty.svg?branch=devel" alt="Build Status"></a> <!-- badges: end -->
-</li>
-</ul>
-<div id="overview" class="section level2">
+<!-- badges: end --><div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
 <p>The advancement of technologies for measurement of highly multiplexed spatial data require the development of scalable methods that can leverage the availability of the spatial context. Multiview Intercellular SpaTial modeling framework (MISTy) is an explainable machine learning framework for knowledge extraction and analysis of single-cell, highly multiplexed, spatially resolved data.</p>
 <p><img src="reference/figures/graphical_abstract.png" align="center" width="800"></p>
 <p>MISTy facilitates an in-depth understanding of marker interactions by profiling the intra- and intercellular relationships. MISTy is a flexible framework able to process a custom number of views. Each of these views can describe a different spatial context, i.e., define a relationship among the observed expressions of the markers, such as intracellular regulation or paracrine regulation. However, the views can also capture cell-type specific relationships, capture relations between functional footprints or focus on relations between different anatomical regions. Each MISTy view is considered as a potential source of variability in the measured marker expressions. Each MISTy view is then analyzed for its contribution to the total expression of each marker and is explained in terms of the interactions with other measurements that led to the observed contribution. Our approach is modular, easily parallelizable and thus scalable to samples with millions of cells and thousands of measured markers.</p>
+<p><strong>mistyR</strong> is a R package implementing MISTy.</p>
 </div>
 <div id="system-requirements" class="section level2">
 <h2 class="hasAnchor">
 <a href="#system-requirements" class="anchor"></a>System Requirements</h2>
-<p>MISTy requires a standard configuration and enough RAM to store the analyzed dataset and to support in-memory operations.</p>
-<p>The package requires installed R version 4.0.3 (Bunny-Wunnies Freak Out) or higher. This package has been tested on a macOS (11.0.1). The package should be compatible with Windows, Linux and maxOS operating systems.</p>
+<p>mistyR requires a standard configuration and enough RAM to store the analyzed dataset and to support in-memory operations.</p>
+<p>The package requires installed R version 4.0 or higher. This package has been tested on a macOS Big Sur. The package should be compatible with Windows, Linux and maxOS operating systems.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>Install from GitHub using devtools:</p>
+<p>Install from GitHub using remotes:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"saezlab/misty"</span><span class="op">)</span></code></pre></div>
-<p>MISTy is dependent on the following packages that are available from CRAN:</p>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"saezlab/mistyR"</span><span class="op">)</span></code></pre></div>
+<p>mistyR is dependent on the following packages that are available from CRAN:</p>
 <p>assertthat, caret, deldir, digest, distances, dplyr, filelock, furrr, ggplot2, magrittr, MASS, purrr, ranger, readr, rlang, rlist, stats, stringr, tibble, tidyr, withr</p>
-<p>and suggests BiocStyle, igraph, knitr and rmarkdown.</p>
-<p>The installation of MISTy without any additional dependencies should take only seconds.</p>
+<p>and mainly for the purpose of building the vignettes suggests BiocStyle, future, hdf5r, igraph, knitr, Matrix, progeny, rmarkdown, sctransform, Seurat, SingleCellExperiment, SpatialExperiment and SummarizedExperiment from CRAN or Bioconductor.</p>
+<p>The installation of MISTy without any additional dependencies and building vignettes should take only seconds.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>Example pipelines and synthetic data for running MISTy are also available from <a href="https://github.com/saezlab/misty_pipelines/">this repository</a>. To run MISTy on the provided synthetic data run the script synthetic_pipeline.R.</p>
+<p>Start by reading <code><a href="articles/mistyR.html">vignette("mistyR")</a></code> to learn how to run mistyR. To use mistyR with commonly used objects for spatial omics data see <code><a href="articles/mistySeurat.html">vignette("mistySeurat")</a></code> and <code><a href="articles/mistySpatialExperiment.html">vignette("mistySpatialExperiment")</a></code>.</p>
+<p>Example pipelines and synthetic data for running mistyR are also available from <a href="https://github.com/saezlab/misty_pipelines/">this repository</a>. To run mistyR on the provided synthetic data run the script synthetic_pipeline.R.</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
-<p>If you use MISTy for your research please cite the <a href="https://doi.org/10.1101/2020.05.08.084145">following publication</a>:</p>
+<p>If you use mistyR for your research please cite the <a href="https://doi.org/10.1101/2020.05.08.084145">following publication</a>:</p>
 <blockquote>
-<p>Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. bioRxiv 2020.05.08.084145 doi: <a href="https://doi.org/10.1101/2020.05.08.084145">10.1101/2020.05.08.084145</a> (2020).</p>
+<p>Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. <em>bioRxiv</em>. doi: <a href="https://doi.org/10.1101/2020.05.08.084145">10.1101/2020.05.08.084145</a></p>
 </blockquote>
 </div>
 </div>
@@ -183,9 +179,9 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/saezlab/misty/">https://​github.com/​saezlab/​misty/​</a>
+<li>Browse source code at <br><a href="https://github.com/saezlab/mistyR/">https://​github.com/​saezlab/​mistyR/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/saezlab/misty/issues">https://​github.com/​saezlab/​misty/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/saezlab/mistyR/issues">https://​github.com/​saezlab/​mistyR/​issues</a>
 </li>
 </ul>
 </div>
@@ -200,17 +196,25 @@
 <div class="citation">
 <h2>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing MISTy</a></li>
+<li><a href="authors.html">Citing mistyR</a></li>
 </ul>
 </div>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>Jovan Tanevski <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0001-7177-1003" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.org/saezlab/mistyR"><img src="https://travis-ci.org/saezlab/mistyR.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://travis-ci.org/saezlab/mistyR"><img src="https://travis-ci.org/saezlab/mistyR.svg?branch=devel" alt="Build Status"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 

@@ -4,5 +4,5 @@
 ^man/figures$
 ^doc$
 ^Meta$
-^\.misty\.temp$
-^results$
+(^|/)\.misty\.temp$
+(^|/)results$

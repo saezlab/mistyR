@@ -46,3 +46,7 @@ doc
 Meta
 .misty.temp
 results
+vignettes/breast_A_1
+vignettes/vignette_model_seurat
+/doc/
+/Meta/

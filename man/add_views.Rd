@@ -13,7 +13,7 @@ add_views(current.views, new.views)
 \code{\link{create_view}()} or otherwise.}
 }
 \value{
-A MISTy view composition containing an union of views from
+A mistyR view composition containing an union of views from
     \code{current.views} and \code{new.views}.
 }
 \description{

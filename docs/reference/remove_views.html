@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Remove views from the current view composition — remove_views • MISTy</title>
+<title>Remove views from the current view composition — remove_views • mistyR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,7 @@
 
 <meta property="og:title" content="Remove views from the current view composition — remove_views" />
 <meta property="og:description" content="Remove one or more views from the view composition." />
-<meta property="og:image" content="https://saezlab.github.io/misty/logo.png" />
+<meta property="og:image" content="https://saezlab.github.io/mistyR/logo.png" />
 
 
 
@@ -89,8 +89,8 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">MISTy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <a class="navbar-link" href="../index.html">mistyR</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/MISTy.html">Get started</a>
+  <a href="../articles/mistyR.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -116,10 +116,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/SeuratObject.html">Running MISTy with a Seurat object</a>
+      <a href="../articles/mistySeurat.html">mistyR and Seurat</a>
     </li>
     <li>
-      <a href="../articles/SpatialExperimentObject.html">Running MISTy with a SpatialExperiment object</a>
+      <a href="../articles/mistySpatialExperiment.html">mistyR and SpatialExperiment/SingleCellExperiment</a>
     </li>
   </ul>
 </li>
@@ -129,7 +129,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/saezlab/misty/">
+  <a href="https://github.com/saezlab/mistyR/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -160,7 +160,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Remove views from the current view composition</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/misty/blob/master/R/views.R'><code>R/views.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/mistyR/blob/master/R/views.R'><code>R/views.R</code></a></small>
     <div class="hidden name"><code>remove_views.Rd</code></div>
     </div>
 
@@ -185,7 +185,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A MISTy view composition with <code>view.names</code> views removed.</p>
+    <p>A mistyR view composition with <code>view.names</code> views removed.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The intraview and the unique id cannot be removed with this function.</p>
@@ -216,7 +216,7 @@
 </div><div class='output co'>#&gt; List of 4
 #&gt;  $ intraview     :List of 2
 #&gt;   ..$ abbrev: chr "intra"
-#&gt;   ..$ data  : tibble[,11] [4,205 × 11] (S3: tbl_df/tbl/data.frame)
+#&gt;   ..$ data  : tibble[,11] [4,205 x 11] (S3: tbl_df/tbl/data.frame)
 #&gt;   .. ..$ ECM  : num [1:4205] 0.0385 0.0327 0.1444 0.387 0.1635 ...
 #&gt;   .. ..$ ligA : num [1:4205] 0.834 0.119 0.525 0.269 0.195 ...
 #&gt;   .. ..$ ligB : num [1:4205] 0.0157 0.0104 0.014 0.0367 0.1176 ...
@@ -262,7 +262,7 @@
 </div><div class='output co'>#&gt; List of 3
 #&gt;  $ intraview     :List of 2
 #&gt;   ..$ abbrev: chr "intra"
-#&gt;   ..$ data  : tibble[,11] [4,205 × 11] (S3: tbl_df/tbl/data.frame)
+#&gt;   ..$ data  : tibble[,11] [4,205 x 11] (S3: tbl_df/tbl/data.frame)
 #&gt;   .. ..$ ECM  : num [1:4205] 0.0385 0.0327 0.1444 0.387 0.1635 ...
 #&gt;   .. ..$ ligA : num [1:4205] 0.834 0.119 0.525 0.269 0.195 ...
 #&gt;   .. ..$ ligB : num [1:4205] 0.0157 0.0104 0.014 0.0367 0.1176 ...
@@ -294,7 +294,7 @@
 </div><div class='output co'>#&gt; List of 2
 #&gt;  $ intraview     :List of 2
 #&gt;   ..$ abbrev: chr "intra"
-#&gt;   ..$ data  : tibble[,11] [4,205 × 11] (S3: tbl_df/tbl/data.frame)
+#&gt;   ..$ data  : tibble[,11] [4,205 x 11] (S3: tbl_df/tbl/data.frame)
 #&gt;   .. ..$ ECM  : num [1:4205] 0.0385 0.0327 0.1444 0.387 0.1635 ...
 #&gt;   .. ..$ ligA : num [1:4205] 0.834 0.119 0.525 0.269 0.195 ...
 #&gt;   .. ..$ ligB : num [1:4205] 0.0157 0.0104 0.014 0.0367 0.1176 ...

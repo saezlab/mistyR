@@ -1,4 +1,4 @@
-# MISTy utility functions
+# mistyR utility functions
 # Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Clear cached objects

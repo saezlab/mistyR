@@ -1,10 +1,10 @@
-# MISTy companion data
+# mistyR companion data
 # Copyright (c) 2020 Jovan Tanevski, Attila Gabor <attila.gabor@uni-heidelberg.de>
 
-#' Synthetic benchmark data for MISTy
+#' Synthetic benchmark data for mistyR
 #'
 #' Data generated from 10 random layouts of four cell types and empty space on
-#' 100-by-100 gridby simulating a two-dimensional cellular automata model that
+#' 100-by-100 grid by simulating a two-dimensional cellular automata model that
 #' focuses on signaling events. Cell growth, division, motility and death are
 #' neglected. The intracellular processes involve two layers, first the ligand
 #' activation of signaling hubs and ligand production/secretion regulated by
