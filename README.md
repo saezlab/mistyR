@@ -74,4 +74,4 @@ Example pipelines and synthetic data for running mistyR are also available from 
 ## Citation
 If you use mistyR for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 
 
-> Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez. Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. bioRxiv 2020.05.08.084145 doi: [10.1101/2020.05.08.084145](https://doi.org/10.1101/2020.05.08.084145) (2020).
+> Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. *bioRxiv*. doi: [10.1101/2020.05.08.084145](https://doi.org/10.1101/2020.05.08.084145)

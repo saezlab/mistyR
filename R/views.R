@@ -494,5 +494,9 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 remove_views <- function(current.views, view.names) {
   to.match <- !(view.names %in% c("intraview", "misty.uniqueid"))
   view.indexes <- match(view.names[to.match], names(current.views))
-  current.views %>% rlist::list.remove(view.indexes)
+  if(length(view.indexes) > 0){
+    current.views %>% rlist::list.remove(view.indexes)
+  } else {
+    current.views
+  }
 }

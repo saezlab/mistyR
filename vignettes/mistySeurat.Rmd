@@ -493,7 +493,7 @@ Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_resu
  
 `vignette("mistySpatialExperiment")`
 
-## Paper {-}
+## Publication {-}
 
 *`r format(citation("mistyR"), "textVersion")`*
 

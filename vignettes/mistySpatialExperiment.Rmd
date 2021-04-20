@@ -613,7 +613,7 @@ Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_resu
  
 `vignette("mistySeurat")`
 
-## Paper {-}
+## Publication {-}
 
 *`r format(citation("mistyR"), "textVersion")`*
 
