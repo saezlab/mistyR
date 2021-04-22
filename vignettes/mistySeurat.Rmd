@@ -267,7 +267,7 @@ As an example, we will analyze a 10X Visium spatial gene expression dataset of o
 cleanup <- FALSE
 if (!dir.exists("breast_A_1")) {
   download.file("https://www.dropbox.com/s/igby4csbt9u4uuf/breast_A_1.tgz?dl=1",
-    destfile = "breast_A_1.tgz", quiet = TRUE
+    destfile = "breast_A_1.tgz", mode = "wb", quiet = TRUE
   )
   untar("breast_A_1.tgz", tar = "internal")
   cleanup <- TRUE
