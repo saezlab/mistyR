@@ -417,7 +417,7 @@ misty.results %>% plot_view_contributions()
 misty.results$contributions.stats %>% filter(target == "PGK1")
 ```
 
-In the case of PGK1, we observe that around 50% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (46%) comes from the expression of estrogen responsive genes from the broader tissue structure.
+In the case of PGK1, we observe that around 50% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest comes from the expression of estrogen responsive genes from the broader tissue structure.
 
 **3.What are the specific relations that can explain the contributions?**
 

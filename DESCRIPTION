@@ -1,7 +1,7 @@
 Package: mistyR
 Type: Package
 Title: Multiview Intercellular SpaTial modeling framework
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",

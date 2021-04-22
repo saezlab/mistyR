@@ -341,7 +341,8 @@ file.rename(
   "breast_A_1/filtered_feature_bc_matrix.h5"
 )
 
-spe <- read10xVisium(folder, type = "HDF5", data = "filtered")
+spe <- read10xVisium(folder, type = "HDF5", data = "filtered", 
+                     images = "lowres")
 
 
 # normalize data

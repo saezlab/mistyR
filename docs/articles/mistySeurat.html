@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.2</span>
       </span>
     </div>
 
@@ -498,23 +498,23 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt;   method     from         </span>
 <span class="co">#&gt;   print.boxx spatstat.geom</span>
 <span class="co">#&gt; # A tibble: 15 x 4</span>
-<span class="co">#&gt;    target  sample                measure   value</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                 &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    vignette_model_seurat p.R2    0.00238</span>
-<span class="co">#&gt;  2 FUT11   vignette_model_seurat p.R2    0.00591</span>
-<span class="co">#&gt;  3 ANKZF1  vignette_model_seurat p.R2    0.00846</span>
-<span class="co">#&gt;  4 INSIG2  vignette_model_seurat p.R2    0.0164 </span>
-<span class="co">#&gt;  5 PDK1    vignette_model_seurat p.R2    0.0381 </span>
-<span class="co">#&gt;  6 KDM3A   vignette_model_seurat p.R2    0.0680 </span>
-<span class="co">#&gt;  7 NDRG1   vignette_model_seurat p.R2    0.0701 </span>
-<span class="co">#&gt;  8 EGLN1   vignette_model_seurat p.R2    0.0753 </span>
-<span class="co">#&gt;  9 ENO2    vignette_model_seurat p.R2    0.0842 </span>
-<span class="co">#&gt; 10 FAM162A vignette_model_seurat p.R2    0.0948 </span>
-<span class="co">#&gt; 11 HILPDA  vignette_model_seurat p.R2    0.104  </span>
-<span class="co">#&gt; 12 BNIP3L  vignette_model_seurat p.R2    0.125  </span>
-<span class="co">#&gt; 13 PFKFB4  vignette_model_seurat p.R2    0.143  </span>
-<span class="co">#&gt; 14 ANKRD37 vignette_model_seurat p.R2    0.260  </span>
-<span class="co">#&gt; 15 GBE1    vignette_model_seurat p.R2    0.463</span></code></pre></div>
+<span class="co">#&gt;    target  sample                measure     value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                 &lt;chr&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 PGK1    vignette_model_seurat p.R2    0.0000402</span>
+<span class="co">#&gt;  2 INSIG2  vignette_model_seurat p.R2    0.00233  </span>
+<span class="co">#&gt;  3 FUT11   vignette_model_seurat p.R2    0.00492  </span>
+<span class="co">#&gt;  4 PDK1    vignette_model_seurat p.R2    0.00653  </span>
+<span class="co">#&gt;  5 FAM162A vignette_model_seurat p.R2    0.0181   </span>
+<span class="co">#&gt;  6 ANKZF1  vignette_model_seurat p.R2    0.0275   </span>
+<span class="co">#&gt;  7 KDM3A   vignette_model_seurat p.R2    0.0355   </span>
+<span class="co">#&gt;  8 NDRG1   vignette_model_seurat p.R2    0.0397   </span>
+<span class="co">#&gt;  9 HILPDA  vignette_model_seurat p.R2    0.0598   </span>
+<span class="co">#&gt; 10 ENO2    vignette_model_seurat p.R2    0.0714   </span>
+<span class="co">#&gt; 11 EGLN1   vignette_model_seurat p.R2    0.0898   </span>
+<span class="co">#&gt; 12 BNIP3L  vignette_model_seurat p.R2    0.102    </span>
+<span class="co">#&gt; 13 PFKFB4  vignette_model_seurat p.R2    0.198    </span>
+<span class="co">#&gt; 14 ANKRD37 vignette_model_seurat p.R2    0.258    </span>
+<span class="co">#&gt; 15 GBE1    vignette_model_seurat p.R2    0.693</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -527,10 +527,10 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.479    0.370 9.48e-68    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.563    0.435 2.02e-45    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.252    0.195 1.28e-10    NA</span></code></pre></div>
-<p>In the case of PGK1, we observe that around 50% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (46%) comes from the expression of estrogen responsive genes from the broader tissue structure.</p>
+<span class="co">#&gt; 1 PGK1   intra            0.492    0.377 2.19e-71    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.571    0.437 5.78e-47    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.243    0.186 6.20e-10    NA</span></code></pre></div>
+<p>In the case of PGK1, we observe that around 50% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest comes from the expression of estrogen responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
 <p>First, the intrinsic importances of the hypoxia markers.</p>
@@ -543,22 +543,22 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 x 2</span>
-<span class="co">#&gt;    Predictor   PGK1</span>
-<span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.72 </span>
-<span class="co">#&gt;  2 FAM162A    1.60 </span>
-<span class="co">#&gt;  3 PFKFB4     0.328</span>
-<span class="co">#&gt;  4 ENO2       0.177</span>
-<span class="co">#&gt;  5 HILPDA     0.137</span>
-<span class="co">#&gt;  6 EGLN1     -0.253</span>
-<span class="co">#&gt;  7 GBE1      -0.458</span>
-<span class="co">#&gt;  8 ANKRD37   -0.459</span>
-<span class="co">#&gt;  9 BNIP3L    -0.516</span>
-<span class="co">#&gt; 10 PDK1      -0.605</span>
-<span class="co">#&gt; 11 KDM3A     -0.623</span>
-<span class="co">#&gt; 12 INSIG2    -0.666</span>
-<span class="co">#&gt; 13 ANKZF1    -0.668</span>
-<span class="co">#&gt; 14 FUT11     -0.712</span>
+<span class="co">#&gt;    Predictor    PGK1</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 NDRG1      2.70  </span>
+<span class="co">#&gt;  2 FAM162A    1.66  </span>
+<span class="co">#&gt;  3 PFKFB4     0.263 </span>
+<span class="co">#&gt;  4 HILPDA     0.225 </span>
+<span class="co">#&gt;  5 ENO2       0.0896</span>
+<span class="co">#&gt;  6 EGLN1     -0.277 </span>
+<span class="co">#&gt;  7 GBE1      -0.444 </span>
+<span class="co">#&gt;  8 ANKRD37   -0.464 </span>
+<span class="co">#&gt;  9 BNIP3L    -0.561 </span>
+<span class="co">#&gt; 10 KDM3A     -0.567 </span>
+<span class="co">#&gt; 11 ANKZF1    -0.634 </span>
+<span class="co">#&gt; 12 INSIG2    -0.651 </span>
+<span class="co">#&gt; 13 PDK1      -0.663 </span>
+<span class="co">#&gt; 14 FUT11     -0.672 </span>
 <span class="co">#&gt; 15 PGK1      NA</span>
 
 <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat.vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PGK1"</span>, <span class="st">"NDRG1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -638,7 +638,7 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 #&gt; other attached packages:
 #&gt;  [1] progeny_1.12.0     sctransform_0.3.2  purrr_0.3.4        dplyr_1.0.5       
 #&gt;  [5] tibble_3.1.1       Matrix_1.3-2       SeuratObject_4.0.0 Seurat_4.0.1      
-#&gt;  [9] future_1.21.0      mistyR_0.99.1      BiocStyle_2.18.1  
+#&gt;  [9] future_1.21.0      mistyR_0.99.2      BiocStyle_2.18.1  
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
 #&gt;   [1] systemfonts_1.0.1     plyr_1.8.6            igraph_1.2.6         

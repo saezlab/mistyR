@@ -1,3 +1,7 @@
+# mistyR 0.99.2
+
+-   Fix vignette build related to older version of SpatialExperiment.
+
 # mistyR 0.99.1
 
 -   Fix vignette build issues on some systems.
