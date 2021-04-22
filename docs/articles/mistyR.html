@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.1</span>
       </span>
     </div>
 
@@ -119,7 +119,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany<br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-20</h4>
+            <h4 class="date">2021-04-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistyR.Rmd"><code>vignettes/mistyR.Rmd</code></a></small>
       <div class="hidden name"><code>mistyR.Rmd</code></div>
@@ -371,18 +371,18 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">mean.p</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 11 x 2</span>
-<span class="co">#&gt;    target      mean.p</span>
-<span class="co">#&gt;    &lt;chr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 ligC   0.000000880</span>
-<span class="co">#&gt;  2 ligB   0.0254     </span>
-<span class="co">#&gt;  3 ECM    0.0480     </span>
-<span class="co">#&gt;  4 ligD   0.131      </span>
-<span class="co">#&gt;  5 ligA   0.240      </span>
-<span class="co">#&gt;  6 prodC  0.384      </span>
-<span class="co">#&gt;  7 prodA  0.448      </span>
-<span class="co">#&gt;  8 prodD  0.455      </span>
-<span class="co">#&gt;  9 protF  0.468      </span>
-<span class="co">#&gt; 10 prodB  0.477      </span>
+<span class="co">#&gt;    target     mean.p</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 ligC   0.00000138</span>
+<span class="co">#&gt;  2 ECM    0.0340    </span>
+<span class="co">#&gt;  3 ligB   0.0431    </span>
+<span class="co">#&gt;  4 ligD   0.117     </span>
+<span class="co">#&gt;  5 ligA   0.238     </span>
+<span class="co">#&gt;  6 prodC  0.383     </span>
+<span class="co">#&gt;  7 prodA  0.446     </span>
+<span class="co">#&gt;  8 prodD  0.449     </span>
+<span class="co">#&gt;  9 protF  0.472     </span>
+<span class="co">#&gt; 10 prodB  0.480     </span>
 <span class="co">#&gt; 11 protE  0.498</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
@@ -458,7 +458,7 @@
 #&gt; 
 #&gt; other attached packages:
 #&gt; [1] ggplot2_3.3.3    distances_0.1.8  purrr_0.3.4      dplyr_1.0.5     
-#&gt; [5] future_1.21.0    mistyR_0.99.0    BiocStyle_2.18.1
+#&gt; [5] future_1.21.0    mistyR_0.99.1    BiocStyle_2.18.1
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
 #&gt;  [1] tidyr_1.1.3         listenv_0.8.0       ps_1.6.0           
@@ -473,7 +473,7 @@
 #&gt; [28] xfun_0.22           pkgconfig_2.0.3     systemfonts_1.0.1  
 #&gt; [31] globals_0.14.0      htmltools_0.5.1.1   tidyselect_1.1.0   
 #&gt; [34] tibble_3.1.1        bookdown_0.21       codetools_0.2-18   
-#&gt; [37] fansi_0.4.2         crayon_1.4.1        withr_2.4.1        
+#&gt; [37] fansi_0.4.2         crayon_1.4.1        withr_2.4.2        
 #&gt; [40] grid_4.0.5          jsonlite_1.7.2      gtable_0.3.0       
 #&gt; [43] lifecycle_1.0.0     DBI_1.1.1           magrittr_2.0.1     
 #&gt; [46] scales_1.1.1        rlist_0.4.6.1       cli_2.4.0          

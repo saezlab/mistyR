@@ -318,7 +318,7 @@ As an example, we will analyze a 10X Visium spatial gene expression dataset of o
 cleanup <- FALSE
 if (!dir.exists("breast_A_1")) {
   download.file("https://www.dropbox.com/s/igby4csbt9u4uuf/breast_A_1.tgz?dl=1",
-    destfile = "breast_A_1.tgz", quiet = TRUE
+    destfile = "breast_A_1.tgz", mode ="wb", quiet = TRUE
   )
   untar("breast_A_1.tgz", tar = "internal")
   cleanup <- TRUE
@@ -327,7 +327,7 @@ if (!dir.exists("breast_A_1")) {
 
 We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r Biocpkg("progeny")` and the previously described functions.
 
-Please note that the `r Biocpkg("SpatialExperiment")` function `read10xVisium()` requires a fixed file structure that we create programmatically for this example. Furthermore, in this example we dropped all repeated symbols, however, the user must define what's the best solution for their analysis.
+Please note that the `r Biocpkg("SpatialExperiment")` function `read10xVisium()` requires a fixed file structure that we create programmatically for this e xample. Furthermore, in this example we dropped all repeated symbols, however, the user must define what's the best solution for their analysis.
 
 ## Loading and normalizing the data sets
 
@@ -341,7 +341,7 @@ file.rename(
   "breast_A_1/filtered_feature_bc_matrix.h5"
 )
 
-spe <- read10xVisium(folder)
+spe <- read10xVisium(folder, type = "HDF5", data = "filtered")
 
 
 # normalize data

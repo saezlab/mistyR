@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.1</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany<br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-20</h4>
+            <h4 class="date">2021-04-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySpatialExperiment.Rmd"><code>vignettes/mistySpatialExperiment.Rmd</code></a></small>
       <div class="hidden name"><code>mistySpatialExperiment.Rmd</code></div>
@@ -408,7 +408,7 @@
 <a href="#use-case" class="anchor"></a>Use case</h1>
 <p>As an example, we will analyze a 10X Visium spatial gene expression dataset of one breast cancer section (Block A Section 1) available here [<a href="https://support.10xgenomics.com/spatial-gene-expression/datasets" class="uri">https://support.10xgenomics.com/spatial-gene-expression/datasets</a>]. We assume that the required files <u>Feature/cell matrix HDF5 (filtered)</u> and the <u>Spatial imaging data</u> (extracted) are in a folder named ‘breast_A_1’ in the current working directory.</p>
 <p>We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package <em><a href="https://bioconductor.org/packages/3.12/progeny">progeny</a></em> and the previously described functions.</p>
-<p>Please note that the <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em> function <code><a href="https://rdrr.io/pkg/SpatialExperiment/man/read10xVisium.html">read10xVisium()</a></code> requires a fixed file structure that we create programmatically for this example. Furthermore, in this example we dropped all repeated symbols, however, the user must define what’s the best solution for their analysis.</p>
+<p>Please note that the <em><a href="https://bioconductor.org/packages/3.12/SpatialExperiment">SpatialExperiment</a></em> function <code><a href="https://rdrr.io/pkg/SpatialExperiment/man/read10xVisium.html">read10xVisium()</a></code> requires a fixed file structure that we create programmatically for this e xample. Furthermore, in this example we dropped all repeated symbols, however, the user must define what’s the best solution for their analysis.</p>
 <div id="loading-and-normalizing-the-data-sets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#loading-and-normalizing-the-data-sets" class="anchor"></a>Loading and normalizing the data sets</h2>
@@ -423,7 +423,7 @@
 <span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span>
 
-<span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/read10xVisium.html">read10xVisium</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span>
+<span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/read10xVisium.html">read10xVisium</a></span><span class="op">(</span><span class="va">folder</span>, type <span class="op">=</span> <span class="st">"HDF5"</span>, data <span class="op">=</span> <span class="st">"filtered"</span><span class="op">)</span>
 
 
 <span class="co"># normalize data</span>
@@ -565,23 +565,23 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">measure</span> <span class="op">==</span> <span class="st">"p.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 x 4</span>
-<span class="co">#&gt;    target  sample             measure      value</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;              &lt;chr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    vignette_model_spe p.R2    0.00000375</span>
-<span class="co">#&gt;  2 INSIG2  vignette_model_spe p.R2    0.000634  </span>
-<span class="co">#&gt;  3 FAM162A vignette_model_spe p.R2    0.000823  </span>
-<span class="co">#&gt;  4 ANKZF1  vignette_model_spe p.R2    0.0128    </span>
-<span class="co">#&gt;  5 NDRG1   vignette_model_spe p.R2    0.0306    </span>
-<span class="co">#&gt;  6 FUT11   vignette_model_spe p.R2    0.0403    </span>
-<span class="co">#&gt;  7 HILPDA  vignette_model_spe p.R2    0.0487    </span>
-<span class="co">#&gt;  8 PFKFB4  vignette_model_spe p.R2    0.0582    </span>
-<span class="co">#&gt;  9 PDK1    vignette_model_spe p.R2    0.0859    </span>
-<span class="co">#&gt; 10 BNIP3L  vignette_model_spe p.R2    0.115     </span>
-<span class="co">#&gt; 11 KDM3A   vignette_model_spe p.R2    0.135     </span>
-<span class="co">#&gt; 12 EGLN1   vignette_model_spe p.R2    0.150     </span>
-<span class="co">#&gt; 13 ENO2    vignette_model_spe p.R2    0.166     </span>
-<span class="co">#&gt; 14 ANKRD37 vignette_model_spe p.R2    0.318     </span>
-<span class="co">#&gt; 15 GBE1    vignette_model_spe p.R2    0.515</span></code></pre></div>
+<span class="co">#&gt;    target  sample             measure     value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;              &lt;chr&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 PGK1    vignette_model_spe p.R2    0.0000638</span>
+<span class="co">#&gt;  2 ANKZF1  vignette_model_spe p.R2    0.00153  </span>
+<span class="co">#&gt;  3 FUT11   vignette_model_spe p.R2    0.00365  </span>
+<span class="co">#&gt;  4 PDK1    vignette_model_spe p.R2    0.0178   </span>
+<span class="co">#&gt;  5 FAM162A vignette_model_spe p.R2    0.0271   </span>
+<span class="co">#&gt;  6 NDRG1   vignette_model_spe p.R2    0.0335   </span>
+<span class="co">#&gt;  7 INSIG2  vignette_model_spe p.R2    0.0377   </span>
+<span class="co">#&gt;  8 EGLN1   vignette_model_spe p.R2    0.0765   </span>
+<span class="co">#&gt;  9 ENO2    vignette_model_spe p.R2    0.0819   </span>
+<span class="co">#&gt; 10 KDM3A   vignette_model_spe p.R2    0.0984   </span>
+<span class="co">#&gt; 11 PFKFB4  vignette_model_spe p.R2    0.122    </span>
+<span class="co">#&gt; 12 HILPDA  vignette_model_spe p.R2    0.133    </span>
+<span class="co">#&gt; 13 BNIP3L  vignette_model_spe p.R2    0.195    </span>
+<span class="co">#&gt; 14 ANKRD37 vignette_model_spe p.R2    0.221    </span>
+<span class="co">#&gt; 15 GBE1    vignette_model_spe p.R2    0.458</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -594,9 +594,9 @@
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.484    0.372 1.48e-67    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.608    0.467 1.99e-51    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.210    0.161 1.43e- 7    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.475    0.365 6.15e-69    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.558    0.429 3.14e-46    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.268    0.206 3.15e-11    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (63%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -610,22 +610,22 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 x 2</span>
-<span class="co">#&gt;    Predictor   PGK1</span>
-<span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.71 </span>
-<span class="co">#&gt;  2 FAM162A    1.62 </span>
-<span class="co">#&gt;  3 PFKFB4     0.277</span>
-<span class="co">#&gt;  4 HILPDA     0.179</span>
-<span class="co">#&gt;  5 ENO2       0.168</span>
-<span class="co">#&gt;  6 EGLN1     -0.257</span>
-<span class="co">#&gt;  7 GBE1      -0.438</span>
-<span class="co">#&gt;  8 ANKRD37   -0.493</span>
-<span class="co">#&gt;  9 BNIP3L    -0.556</span>
-<span class="co">#&gt; 10 KDM3A     -0.567</span>
-<span class="co">#&gt; 11 PDK1      -0.639</span>
-<span class="co">#&gt; 12 INSIG2    -0.663</span>
-<span class="co">#&gt; 13 ANKZF1    -0.671</span>
-<span class="co">#&gt; 14 FUT11     -0.673</span>
+<span class="co">#&gt;    Predictor    PGK1</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 NDRG1      2.63  </span>
+<span class="co">#&gt;  2 FAM162A    1.75  </span>
+<span class="co">#&gt;  3 PFKFB4     0.332 </span>
+<span class="co">#&gt;  4 HILPDA     0.162 </span>
+<span class="co">#&gt;  5 ENO2       0.0915</span>
+<span class="co">#&gt;  6 EGLN1     -0.349 </span>
+<span class="co">#&gt;  7 ANKRD37   -0.385 </span>
+<span class="co">#&gt;  8 GBE1      -0.432 </span>
+<span class="co">#&gt;  9 BNIP3L    -0.556 </span>
+<span class="co">#&gt; 10 KDM3A     -0.568 </span>
+<span class="co">#&gt; 11 PDK1      -0.634 </span>
+<span class="co">#&gt; 12 FUT11     -0.673 </span>
+<span class="co">#&gt; 13 INSIG2    -0.678 </span>
+<span class="co">#&gt; 14 ANKZF1    -0.689 </span>
 <span class="co">#&gt; 15 PGK1      NA</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
@@ -750,9 +750,9 @@
 #&gt;  [9] SingleCellExperiment_1.12.0 SummarizedExperiment_1.20.0
 #&gt; [11] Biobase_2.50.0              GenomicRanges_1.42.0       
 #&gt; [13] GenomeInfoDb_1.26.7         IRanges_2.24.1             
-#&gt; [15] S4Vectors_0.28.1            BiocGenerics_0.36.0        
+#&gt; [15] S4Vectors_0.28.1            BiocGenerics_0.36.1        
 #&gt; [17] MatrixGenerics_1.2.1        matrixStats_0.58.0         
-#&gt; [19] future_1.21.0               mistyR_0.99.0              
+#&gt; [19] future_1.21.0               mistyR_0.99.1              
 #&gt; [21] BiocStyle_2.18.1           
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
@@ -798,7 +798,7 @@
 #&gt;  [79] bookdown_0.21             R6_2.5.0                 
 #&gt;  [81] magick_2.7.1              generics_0.1.0           
 #&gt;  [83] DelayedArray_0.16.3       DBI_1.1.1                
-#&gt;  [85] pillar_1.6.0              withr_2.4.1              
+#&gt;  [85] pillar_1.6.0              withr_2.4.2              
 #&gt;  [87] RCurl_1.98-1.3            future.apply_1.7.0       
 #&gt;  [89] crayon_1.4.1              DropletUtils_1.10.3      
 #&gt;  [91] utf8_1.2.1                rmarkdown_2.7            
