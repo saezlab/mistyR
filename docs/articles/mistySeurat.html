@@ -121,7 +121,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany<br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-04-22</h4>
+            <h4 class="date">2021-04-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySeurat.Rmd"><code>vignettes/mistySeurat.Rmd</code></a></small>
       <div class="hidden name"><code>mistySeurat.Rmd</code></div>
@@ -498,23 +498,23 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt;   method     from         </span>
 <span class="co">#&gt;   print.boxx spatstat.geom</span>
 <span class="co">#&gt; # A tibble: 15 x 4</span>
-<span class="co">#&gt;    target  sample                measure     value</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                 &lt;chr&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    vignette_model_seurat p.R2    0.0000402</span>
-<span class="co">#&gt;  2 INSIG2  vignette_model_seurat p.R2    0.00233  </span>
-<span class="co">#&gt;  3 FUT11   vignette_model_seurat p.R2    0.00492  </span>
-<span class="co">#&gt;  4 PDK1    vignette_model_seurat p.R2    0.00653  </span>
-<span class="co">#&gt;  5 FAM162A vignette_model_seurat p.R2    0.0181   </span>
-<span class="co">#&gt;  6 ANKZF1  vignette_model_seurat p.R2    0.0275   </span>
-<span class="co">#&gt;  7 KDM3A   vignette_model_seurat p.R2    0.0355   </span>
-<span class="co">#&gt;  8 NDRG1   vignette_model_seurat p.R2    0.0397   </span>
-<span class="co">#&gt;  9 HILPDA  vignette_model_seurat p.R2    0.0598   </span>
-<span class="co">#&gt; 10 ENO2    vignette_model_seurat p.R2    0.0714   </span>
-<span class="co">#&gt; 11 EGLN1   vignette_model_seurat p.R2    0.0898   </span>
-<span class="co">#&gt; 12 BNIP3L  vignette_model_seurat p.R2    0.102    </span>
-<span class="co">#&gt; 13 PFKFB4  vignette_model_seurat p.R2    0.198    </span>
-<span class="co">#&gt; 14 ANKRD37 vignette_model_seurat p.R2    0.258    </span>
-<span class="co">#&gt; 15 GBE1    vignette_model_seurat p.R2    0.693</span></code></pre></div>
+<span class="co">#&gt;    target  sample                measure    value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                 &lt;chr&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 PGK1    vignette_model_seurat p.R2    0.000819</span>
+<span class="co">#&gt;  2 FUT11   vignette_model_seurat p.R2    0.00789 </span>
+<span class="co">#&gt;  3 ANKZF1  vignette_model_seurat p.R2    0.0118  </span>
+<span class="co">#&gt;  4 KDM3A   vignette_model_seurat p.R2    0.0148  </span>
+<span class="co">#&gt;  5 INSIG2  vignette_model_seurat p.R2    0.0213  </span>
+<span class="co">#&gt;  6 FAM162A vignette_model_seurat p.R2    0.0250  </span>
+<span class="co">#&gt;  7 BNIP3L  vignette_model_seurat p.R2    0.0323  </span>
+<span class="co">#&gt;  8 PDK1    vignette_model_seurat p.R2    0.0395  </span>
+<span class="co">#&gt;  9 HILPDA  vignette_model_seurat p.R2    0.0409  </span>
+<span class="co">#&gt; 10 EGLN1   vignette_model_seurat p.R2    0.0502  </span>
+<span class="co">#&gt; 11 ENO2    vignette_model_seurat p.R2    0.0589  </span>
+<span class="co">#&gt; 12 NDRG1   vignette_model_seurat p.R2    0.0699  </span>
+<span class="co">#&gt; 13 PFKFB4  vignette_model_seurat p.R2    0.122   </span>
+<span class="co">#&gt; 14 GBE1    vignette_model_seurat p.R2    0.132   </span>
+<span class="co">#&gt; 15 ANKRD37 vignette_model_seurat p.R2    0.219</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -527,9 +527,9 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.492    0.377 2.19e-71    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.571    0.437 5.78e-47    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.243    0.186 6.20e-10    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.499    0.382 3.10e-74    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.535    0.410 3.20e-44    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.271    0.208 1.17e-12    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 50% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest comes from the expression of estrogen responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -545,20 +545,20 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt; # A tibble: 15 x 2</span>
 <span class="co">#&gt;    Predictor    PGK1</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.70  </span>
-<span class="co">#&gt;  2 FAM162A    1.66  </span>
-<span class="co">#&gt;  3 PFKFB4     0.263 </span>
-<span class="co">#&gt;  4 HILPDA     0.225 </span>
-<span class="co">#&gt;  5 ENO2       0.0896</span>
-<span class="co">#&gt;  6 EGLN1     -0.277 </span>
-<span class="co">#&gt;  7 GBE1      -0.444 </span>
-<span class="co">#&gt;  8 ANKRD37   -0.464 </span>
-<span class="co">#&gt;  9 BNIP3L    -0.561 </span>
-<span class="co">#&gt; 10 KDM3A     -0.567 </span>
-<span class="co">#&gt; 11 ANKZF1    -0.634 </span>
-<span class="co">#&gt; 12 INSIG2    -0.651 </span>
-<span class="co">#&gt; 13 PDK1      -0.663 </span>
-<span class="co">#&gt; 14 FUT11     -0.672 </span>
+<span class="co">#&gt;  1 NDRG1      2.69  </span>
+<span class="co">#&gt;  2 FAM162A    1.67  </span>
+<span class="co">#&gt;  3 PFKFB4     0.288 </span>
+<span class="co">#&gt;  4 HILPDA     0.164 </span>
+<span class="co">#&gt;  5 ENO2       0.0963</span>
+<span class="co">#&gt;  6 EGLN1     -0.266 </span>
+<span class="co">#&gt;  7 ANKRD37   -0.460 </span>
+<span class="co">#&gt;  8 GBE1      -0.466 </span>
+<span class="co">#&gt;  9 KDM3A     -0.550 </span>
+<span class="co">#&gt; 10 BNIP3L    -0.564 </span>
+<span class="co">#&gt; 11 ANKZF1    -0.613 </span>
+<span class="co">#&gt; 12 PDK1      -0.617 </span>
+<span class="co">#&gt; 13 INSIG2    -0.683 </span>
+<span class="co">#&gt; 14 FUT11     -0.695 </span>
 <span class="co">#&gt; 15 PGK1      NA</span>
 
 <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat.vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PGK1"</span>, <span class="st">"NDRG1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -650,7 +650,7 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 #&gt;  [19] matrixStats_0.58.0    pkgdown_1.6.1         spatstat.sparse_2.0-0
 #&gt;  [22] colorspace_2.0-0      ggrepel_0.9.1         textshaping_0.3.3    
 #&gt;  [25] xfun_0.22             crayon_1.4.1          jsonlite_1.7.2       
-#&gt;  [28] spatstat.data_2.1-0   survival_3.2-10       zoo_1.8-9            
+#&gt;  [28] spatstat.data_2.1-0   survival_3.2-11       zoo_1.8-9            
 #&gt;  [31] glue_1.4.2            polyclip_1.10-0       gtable_0.3.0         
 #&gt;  [34] leiden_0.3.7          future.apply_1.7.0    abind_1.4-5          
 #&gt;  [37] scales_1.1.1          DBI_1.1.1             miniUI_0.1.1.1       
@@ -661,11 +661,11 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 #&gt;  [52] farver_2.1.0          sass_0.3.1            uwot_0.1.10          
 #&gt;  [55] deldir_0.2-10         utf8_1.2.1            tidyselect_1.1.0     
 #&gt;  [58] labeling_0.4.2        rlang_0.4.10          reshape2_1.4.4       
-#&gt;  [61] later_1.1.0.1         munsell_0.5.0         tools_4.0.5          
-#&gt;  [64] cachem_1.0.4          cli_2.4.0             generics_0.1.0       
+#&gt;  [61] later_1.2.0           munsell_0.5.0         tools_4.0.5          
+#&gt;  [64] cachem_1.0.4          cli_2.5.0             generics_0.1.0       
 #&gt;  [67] ggridges_0.5.3        evaluate_0.14         stringr_1.4.0        
 #&gt;  [70] fastmap_1.1.0         yaml_2.2.1            ragg_1.1.2           
-#&gt;  [73] goftest_1.2-2         knitr_1.32            bit64_4.0.5          
+#&gt;  [73] goftest_1.2-2         knitr_1.33            bit64_4.0.5          
 #&gt;  [76] fs_1.5.0              fitdistrplus_1.1-3    RANN_2.6.1           
 #&gt;  [79] pbapply_1.4-3         nlme_3.1-152          mime_0.10            
 #&gt;  [82] rstudioapi_0.13       hdf5r_1.3.3           compiler_4.0.5       
@@ -674,10 +674,10 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 #&gt;  [91] ps_1.6.0              highr_0.9             desc_1.3.0           
 #&gt;  [94] lattice_0.20-41       vctrs_0.3.7           pillar_1.6.0         
 #&gt;  [97] lifecycle_1.0.0       furrr_0.2.2           BiocManager_1.30.12  
-#&gt; [100] spatstat.geom_2.1-0   lmtest_0.9-38         jquerylib_0.1.3      
+#&gt; [100] spatstat.geom_2.1-0   lmtest_0.9-38         jquerylib_0.1.4      
 #&gt; [103] RcppAnnoy_0.0.18      data.table_1.14.0     cowplot_1.1.1        
-#&gt; [106] irlba_2.3.3           httpuv_1.5.5          patchwork_1.1.1      
-#&gt; [109] R6_2.5.0              bookdown_0.21         promises_1.2.0.1     
+#&gt; [106] irlba_2.3.3           httpuv_1.6.0          patchwork_1.1.1      
+#&gt; [109] R6_2.5.0              bookdown_0.22         promises_1.2.0.1     
 #&gt; [112] KernSmooth_2.23-18    gridExtra_2.3         parallelly_1.24.0    
 #&gt; [115] codetools_0.2-18      MASS_7.3-53.1         assertthat_0.2.1     
 #&gt; [118] rprojroot_2.0.2       rlist_0.4.6.1         mgcv_1.8-35          
