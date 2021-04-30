@@ -1,3 +1,7 @@
+# mistyR 0.99.3
+
+-   Changes in the mistyR vignette to reflect changes to insilico evaluation from the paper.
+
 # mistyR 0.99.2
 
 -   Fix vignette build related to older version of SpatialExperiment.
