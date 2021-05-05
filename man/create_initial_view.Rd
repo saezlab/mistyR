@@ -34,6 +34,7 @@ the sample.
 library(dplyr)
 
 # get the expression data
+data("synthetic")
 expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
 
 create_initial_view(expr)

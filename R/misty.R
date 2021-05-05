@@ -46,6 +46,7 @@
 #' library(dplyr)
 #' 
 #' # get the expression data
+#' data("synthetic")
 #' expr <- synthetic[[1]] %>% select(-c(row,col,type))
 #' # get the coordinates for each cell
 #' pos <- synthetic[[1]] %>% select(row,col)

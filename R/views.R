@@ -29,6 +29,7 @@
 #' library(dplyr)
 #' 
 #' # get the expression data
+#' data("synthetic")
 #' expr <- synthetic[[1]] %>% select(-c(row,col,type))
 #' 
 #' create_initial_view(expr)
@@ -88,6 +89,7 @@ create_initial_view <- function(data, unique.id = NULL) {
 #' library(distances)
 #' 
 #' # get the expression data
+#' data("synthetic")
 #' expr <- synthetic[[1]] %>% select(-c(row,col,type))
 #' # get the coordinates for each cell
 #' pos <- synthetic[[1]] %>% select(row,col)
@@ -229,6 +231,7 @@ add_views <- function(current.views, new.views) {
 #' library(dplyr)
 #' 
 #' # get the expression data
+#' data("synthetic")
 #' expr <- synthetic[[1]] %>% select(-c(row,col,type))
 #' # get the coordinates for each cell
 #' pos <- synthetic[[1]] %>% select(row,col)
@@ -347,6 +350,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #' library(dplyr)
 #' 
 #' # get the expression data
+#' data("synthetic")
 #' expr <- synthetic[[1]] %>% select(-c(row,col,type))
 #' # get the coordinates for each cell
 #' pos <- synthetic[[1]] %>% select(row,col)
@@ -466,6 +470,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 #' library(dplyr)
 #' 
 #' # get the expression data
+#' data("synthetic")
 #' expr <- synthetic[[1]] %>% select(-c(row,col,type))
 #' # get the coordinates for each cell
 #' pos <- synthetic[[1]] %>% select(row,col)

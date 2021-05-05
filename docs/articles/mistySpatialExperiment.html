@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.6</span>
       </span>
     </div>
 
@@ -566,23 +566,23 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">measure</span> <span class="op">==</span> <span class="st">"p.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 x 4</span>
-<span class="co">#&gt;    target  sample             measure     value</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;              &lt;chr&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    vignette_model_spe p.R2    0.0000239</span>
-<span class="co">#&gt;  2 FUT11   vignette_model_spe p.R2    0.00487  </span>
-<span class="co">#&gt;  3 PDK1    vignette_model_spe p.R2    0.00488  </span>
-<span class="co">#&gt;  4 ANKZF1  vignette_model_spe p.R2    0.0122   </span>
-<span class="co">#&gt;  5 FAM162A vignette_model_spe p.R2    0.0178   </span>
-<span class="co">#&gt;  6 INSIG2  vignette_model_spe p.R2    0.0221   </span>
-<span class="co">#&gt;  7 EGLN1   vignette_model_spe p.R2    0.0494   </span>
-<span class="co">#&gt;  8 NDRG1   vignette_model_spe p.R2    0.0642   </span>
-<span class="co">#&gt;  9 BNIP3L  vignette_model_spe p.R2    0.0756   </span>
-<span class="co">#&gt; 10 HILPDA  vignette_model_spe p.R2    0.0902   </span>
-<span class="co">#&gt; 11 ENO2    vignette_model_spe p.R2    0.110    </span>
-<span class="co">#&gt; 12 PFKFB4  vignette_model_spe p.R2    0.112    </span>
-<span class="co">#&gt; 13 KDM3A   vignette_model_spe p.R2    0.163    </span>
-<span class="co">#&gt; 14 ANKRD37 vignette_model_spe p.R2    0.228    </span>
-<span class="co">#&gt; 15 GBE1    vignette_model_spe p.R2    0.504</span></code></pre></div>
+<span class="co">#&gt;    target  sample             measure    value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;              &lt;chr&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 PGK1    vignette_model_spe p.R2    0.000262</span>
+<span class="co">#&gt;  2 INSIG2  vignette_model_spe p.R2    0.00887 </span>
+<span class="co">#&gt;  3 NDRG1   vignette_model_spe p.R2    0.0147  </span>
+<span class="co">#&gt;  4 FAM162A vignette_model_spe p.R2    0.0150  </span>
+<span class="co">#&gt;  5 BNIP3L  vignette_model_spe p.R2    0.0153  </span>
+<span class="co">#&gt;  6 FUT11   vignette_model_spe p.R2    0.0156  </span>
+<span class="co">#&gt;  7 PDK1    vignette_model_spe p.R2    0.0204  </span>
+<span class="co">#&gt;  8 EGLN1   vignette_model_spe p.R2    0.0237  </span>
+<span class="co">#&gt;  9 ANKZF1  vignette_model_spe p.R2    0.0301  </span>
+<span class="co">#&gt; 10 KDM3A   vignette_model_spe p.R2    0.0380  </span>
+<span class="co">#&gt; 11 PFKFB4  vignette_model_spe p.R2    0.0515  </span>
+<span class="co">#&gt; 12 ANKRD37 vignette_model_spe p.R2    0.131   </span>
+<span class="co">#&gt; 13 HILPDA  vignette_model_spe p.R2    0.137   </span>
+<span class="co">#&gt; 14 ENO2    vignette_model_spe p.R2    0.193   </span>
+<span class="co">#&gt; 15 GBE1    vignette_model_spe p.R2    0.870</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -595,9 +595,9 @@
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.489    0.377 2.58e-73    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.565    0.435 5.58e-47    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.244    0.188 9.17e-10    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.498    0.378 5.98e-73    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.551    0.418 1.32e-42    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.270    0.204 1.13e-11    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (63%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -611,22 +611,22 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 x 2</span>
-<span class="co">#&gt;    Predictor   PGK1</span>
-<span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.67 </span>
-<span class="co">#&gt;  2 FAM162A    1.71 </span>
-<span class="co">#&gt;  3 HILPDA     0.244</span>
-<span class="co">#&gt;  4 PFKFB4     0.166</span>
-<span class="co">#&gt;  5 ENO2       0.106</span>
-<span class="co">#&gt;  6 EGLN1     -0.319</span>
-<span class="co">#&gt;  7 GBE1      -0.321</span>
-<span class="co">#&gt;  8 ANKRD37   -0.488</span>
-<span class="co">#&gt;  9 BNIP3L    -0.502</span>
-<span class="co">#&gt; 10 KDM3A     -0.612</span>
-<span class="co">#&gt; 11 PDK1      -0.645</span>
-<span class="co">#&gt; 12 FUT11     -0.661</span>
-<span class="co">#&gt; 13 ANKZF1    -0.671</span>
-<span class="co">#&gt; 14 INSIG2    -0.679</span>
+<span class="co">#&gt;    Predictor    PGK1</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 NDRG1      2.70  </span>
+<span class="co">#&gt;  2 FAM162A    1.72  </span>
+<span class="co">#&gt;  3 PFKFB4     0.164 </span>
+<span class="co">#&gt;  4 HILPDA     0.116 </span>
+<span class="co">#&gt;  5 ENO2       0.0510</span>
+<span class="co">#&gt;  6 EGLN1     -0.196 </span>
+<span class="co">#&gt;  7 ANKRD37   -0.409 </span>
+<span class="co">#&gt;  8 GBE1      -0.447 </span>
+<span class="co">#&gt;  9 BNIP3L    -0.511 </span>
+<span class="co">#&gt; 10 PDK1      -0.602 </span>
+<span class="co">#&gt; 11 KDM3A     -0.614 </span>
+<span class="co">#&gt; 12 FUT11     -0.641 </span>
+<span class="co">#&gt; 13 ANKZF1    -0.643 </span>
+<span class="co">#&gt; 14 INSIG2    -0.690 </span>
 <span class="co">#&gt; 15 PGK1      NA</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
@@ -753,7 +753,7 @@
 #&gt; [13] GenomeInfoDb_1.26.7         IRanges_2.24.1             
 #&gt; [15] S4Vectors_0.28.1            BiocGenerics_0.36.1        
 #&gt; [17] MatrixGenerics_1.2.1        matrixStats_0.58.0         
-#&gt; [19] future_1.21.0               mistyR_0.99.5              
+#&gt; [19] future_1.21.0               mistyR_0.99.6              
 #&gt; [21] BiocStyle_2.18.1           
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
@@ -779,7 +779,7 @@
 #&gt;  [39] reshape2_1.4.4            rappdirs_0.3.3           
 #&gt;  [41] Rcpp_1.0.6                jquerylib_0.1.4          
 #&gt;  [43] pkgdown_1.6.1             vctrs_0.3.8              
-#&gt;  [45] rhdf5filters_1.2.0        DelayedMatrixStats_1.12.3
+#&gt;  [45] rhdf5filters_1.2.1        DelayedMatrixStats_1.12.3
 #&gt;  [47] xfun_0.22                 stringr_1.4.0            
 #&gt;  [49] ps_1.6.0                  globals_0.14.0           
 #&gt;  [51] beachmat_2.6.4            lifecycle_1.0.0          
@@ -800,7 +800,7 @@
 #&gt;  [81] bit_4.0.4                 tidyselect_1.1.1         
 #&gt;  [83] parallelly_1.25.0         plyr_1.8.6               
 #&gt;  [85] magrittr_2.0.1            bookdown_0.22            
-#&gt;  [87] R6_2.5.0                  magick_2.7.1             
+#&gt;  [87] R6_2.5.0                  magick_2.7.2             
 #&gt;  [89] generics_0.1.0            DelayedArray_0.16.3      
 #&gt;  [91] DBI_1.1.1                 withr_2.4.2              
 #&gt;  [93] pillar_1.6.0              RCurl_1.98-1.3           

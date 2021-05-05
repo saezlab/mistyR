@@ -20,7 +20,7 @@ cell in rows described by the following 14 variables:
 \url{https://github.com/saezlab/misty_pipelines/}
 }
 \usage{
-synthetic
+data("synthetic")
 }
 \description{
 Data generated from 10 random layouts of four cell types and empty space on

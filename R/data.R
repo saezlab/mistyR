@@ -26,6 +26,7 @@
 #'  \item{type}{cell type id}
 #' }
 #'
+#' @usage data("synthetic")
 #'
 #' @source \url{https://github.com/saezlab/misty_pipelines/}
 "synthetic"

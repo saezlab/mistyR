@@ -59,6 +59,8 @@ of a set of raw results produced by \code{\link{run_misty}()}.
 library(dplyr)
 library(purrr)
 
+data("synthetic")
+
 misty.results <- synthetic[seq_len(3)] \%>\% 
                    imap_chr(~ create_initial_view(.x \%>\% select(-c(row,col,type))) \%>\%
                    add_paraview(.x \%>\% select(row,col), l = 10) \%>\% 
