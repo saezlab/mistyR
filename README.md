@@ -39,37 +39,19 @@ remotes::install_github("saezlab/mistyR")
 
 mistyR is dependent on the following packages that are available from CRAN:
 
-assertthat,
-caret,
-deldir,
-digest,
-distances,
-dplyr,
-filelock,
-furrr,
-ggplot2,
-magrittr,
-MASS,
-purrr,
-ranger,
-readr,
-rlang,
-rlist,
-stats,
-stringr,
-tibble,
-tidyr,
-withr
+assertthat, caret, deldir, digest, distances, dplyr, filelock, furrr, ggplot2,
+magrittr, MASS, purrr, ranger, readr, rlang, rlist, stats, stringr, tibble,
+tidyr, withr
 
-and mainly for the purpose of building the vignettes suggests BiocStyle, future, hdf5r, igraph, knitr, Matrix, progeny, rmarkdown, sctransform, Seurat, SingleCellExperiment, SpatialExperiment and SummarizedExperiment from CRAN or Bioconductor.
+and mainly for the purpose of building the vignettes suggests BiocStyle, future, igraph, knitr, Matrix, progeny, rmarkdown, sctransform, SingleCellExperiment, SpatialExperiment and SummarizedExperiment from CRAN or Bioconductor.
 
 The installation of MISTy without any additional dependencies and building vignettes should take only seconds.
 
 ## Usage
 
-Start by reading `vignette("mistyR")` to learn how to run mistyR. To use mistyR with commonly used objects for spatial omics data see `vignette("mistySeurat")` and `vignette("mistySpatialExperiment")`.
+Start by reading `vignette("mistyR")` to learn how to run mistyR. To use mistyR with commonly used objects for spatial omics data see the [articles](https://saezlab.github.io/mistyR/articles/).
 
-Example pipelines and synthetic data for running mistyR are also available from [this repository](https://github.com/saezlab/misty_pipelines/). To run mistyR on the provided synthetic data run the script synthetic_pipeline.R.
+Example pipelines and synthetic data for running mistyR are also available from [this repository](/articles/). To run mistyR on the provided synthetic data run the script synthetic_pipeline.R.
 
 ## Citation
 If you use mistyR for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 

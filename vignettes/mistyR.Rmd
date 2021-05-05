@@ -89,10 +89,11 @@ summary(misty.intra)
 summary(misty.intra$intraview)
 ```
 
-From the intrinsic view (*intraview*)^[You will notice that `misty.intra` contains an element named  `misty.uniqueid` that is used for caching. If not provided, this id is automatically generated.] `r Githubpkg("saezlab/mistyR")` will model the expression of each marker as a function of the expression of other markers within the cell. We are interested in exploring marker expressions coming from different spatial contexts that are complementary, i.e., that are distinguishable and contribute to the explanation of the overall expression of the markers.
+From the intrinsic view (*intraview*)[^1] `r Githubpkg("saezlab/mistyR")` will model the expression of each marker as a function of the expression of other markers within the cell. We are interested in exploring marker expressions coming from different spatial contexts that are complementary, i.e., that are distinguishable and contribute to the explanation of the overall expression of the markers.
+
+[^1]: You will notice that `misty.intra` contains an element named `misty.uniqueid` that is used for caching. If not provided, this id is automatically generated.
 
 `r Githubpkg("saezlab/mistyR")` includes two default helper functions for calculating and adding views that take into account the spatial context of the data: `add_juxtaview()` and `add_paraview()`. The *juxtaview* represent a local spatial view and captures the expression of all markers available in the intraview within the immediate neighborhood of each cell. The *paraview* captures the expression of all markers avainalbe in the intraview in the boarder tissue structure where the importance of the influence is proportional to the inverse of the distance between two cells. To add a *paraview* in the view composition, we first need information about the location of each cell from the intraview. Using this information we can create and add a *paraview* with importance radius of 10 to the view composition.
-
 
 ```{r}
 pos <- synthetic[[1]] %>% select(row, col)
@@ -142,7 +143,6 @@ extended.views %>%
   summary()
 ```
 
-
 # Model training
 
 Once the view composition is created, the model training is managed by the function `run_misty()`. By default, models are trained for each marker available in the *intraview* for each view independently. The results of the model training will be stored in a folder named "results".
@@ -165,7 +165,9 @@ result.folders <- synthetic %>% imap_chr(function(sample, name) {
 result.folders
 ```
 
-Note that by default, `r Githubpkg("saezlab/mistyR")` caches calculated views^[*juxtaview* and *paraview* calculated and added by `add_juxtaview()` and `add_paraview()` respectively] and trained models, such that in case of repeated running of the workflow they will be retrieved instead of recalculated, thus saving significant computational time. However, the size of the generated cache files can be large. Therefore, the functions that can work with cached files, such as `run_misty()`, have parameter named `cached` that can be set to `FALSE`. Additionally the function `clear_cache()` provides means to remove cache files.
+Note that by default, `r Githubpkg("saezlab/mistyR")` caches calculated views[^2] and trained models, such that in case of repeated running of the workflow they will be retrieved instead of recalculated, thus saving significant computational time. However, the size of the generated cache files can be large. Therefore, the functions that can work with cached files, such as `run_misty()`, have parameter named `cached` that can be set to `FALSE`. Additionally the function `clear_cache()` provides means to remove cache files.
+
+[^2]: *juxtaview* and *paraview* calculated and added by `add_juxtaview()` and `add_paraview()` respectively
 
 # Result processing
 
@@ -219,7 +221,7 @@ As expected most of the contribution to the prediction of the expression of the 
 
 To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of all markers.
 
-First, the *intraview* importances. 
+First, the *intraview* importances.
 
 ```{r}
 misty.results %>% plot_interaction_heatmap(view = "intra", cutoff = 0.8)
@@ -259,13 +261,13 @@ When interpreting the results and the plots it is important to note that the rel
 
 # See also {-}
 
-## More vignettes {-}
+## More examples {-}
 
-`vignette("mistySeurat")`
+`browseVignettes("mistyR")`
 
-`vignette("mistySpatialExperiment")`
+[Online articles](https://saezlab.github.io/mistyR/articles/)
 
-## Publication {-}
+## Publication {.unnumbered}
 
 *`r format(citation("mistyR"), "textVersion")`*
 

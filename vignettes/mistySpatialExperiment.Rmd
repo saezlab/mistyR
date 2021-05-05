@@ -608,11 +608,11 @@ Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_resu
 
 # See also {-}
 
-## More vignettes {-}
+## More examples {-}
 
-`vignette("mistyR")`
- 
-`vignette("mistySeurat")`
+`browseVignettes("mistyR")`
+
+[Online articles](https://saezlab.github.io/mistyR/articles/)
 
 ## Publication {-}
 

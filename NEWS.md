@@ -1,3 +1,7 @@
+# mistyR 0.99.5
+
+-   Remove Seurat vignette from package due to missing hdf5r binary for R 4.1 on CRAN for MacOS.
+
 # mistyR 0.99.4
 
 -   Triggering bioc rebuild.
