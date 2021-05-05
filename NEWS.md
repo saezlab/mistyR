@@ -1,3 +1,7 @@
+# mistyR 0.99.6
+
+-   Minor revisions for bioc release.
+
 # mistyR 0.99.5
 
 -   Remove Seurat vignette from package due to missing hdf5r binary for R 4.1 on CRAN for MacOS.

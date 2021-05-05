@@ -6,3 +6,5 @@
 ^Meta$
 (^|/)\.misty\.temp$
 (^|/)results$
+^vignettes/mistySeurat.Rmd$
+^LICENSE$

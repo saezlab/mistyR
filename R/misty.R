@@ -161,7 +161,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     # performance
     if (sum(target.model[["performance.estimate"]] < 0) > 0) {
-      warning(paste("Negative performance detected and replaced with 0 for target", target))
+      warning.message <- 
+        paste("Negative performance detected and replaced with 0 for target", 
+              target)
+      warning(warning.message)
     }
 
     performance.estimate <- target.model[["performance.estimate"]] %>%

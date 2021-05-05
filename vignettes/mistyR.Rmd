@@ -267,7 +267,7 @@ When interpreting the results and the plots it is important to note that the rel
 
 [Online articles](https://saezlab.github.io/mistyR/articles/)
 
-## Publication {.unnumbered}
+## Publication {-}
 
 *`r format(citation("mistyR"), "textVersion")`*
 

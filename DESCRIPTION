@@ -1,7 +1,7 @@
 Package: mistyR
 Type: Package
 Title: Multiview Intercellular SpaTial modeling framework
-Version: 0.99.5
+Version: 0.99.6
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",
@@ -33,9 +33,8 @@ BugReports: https://github.com/saezlab/mistyR/issues
 biocViews: Software, BiomedicalInformatics, CellBiology, SystemsBiology, 
     Regression, DecisionTree, SingleCell
 Depends: R (>= 4.0)
-License: GPL-3 + file LICENSE
+License: GPL-3
 Encoding: UTF-8
-LazyData: true
 VignetteBuilder: knitr
 Imports:  assertthat, caret, deldir, digest, distances, dplyr, filelock, 
     furrr (>= 0.2.0), ggplot2, magrittr, MASS, purrr, ranger, readr, rlang, 
