@@ -1,3 +1,7 @@
+# mistyR 0.99.7
+
+-   Vignette compatibility with the new release of SpatialExperiment.
+
 # mistyR 0.99.6
 
 -   Minor revisions for bioc release.

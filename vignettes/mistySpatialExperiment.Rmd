@@ -94,10 +94,8 @@ run_misty_spe <- function(slide,
 ) {
 
   # Extracting geometry
-  geometry <- as_tibble(spatialCoords(slide)) %>%
-    bind_cols(as_tibble(colData(slide)) %>% select(Barcode)) %>%
-    column_to_rownames("Barcode")
-
+  geometry <- as.data.frame(spatialData(slide)) %>%
+    select(array_row, array_col)
 
   # Extracting data
   view.data <- map(view.assays,
