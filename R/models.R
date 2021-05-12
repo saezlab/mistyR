@@ -22,10 +22,10 @@
 build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
                         ...) {
 
-  cache.location <- paste0(
+  cache.location <- normalizePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
-  )
+  ))
 
   if (!dir.exists(cache.location)) {
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
@@ -129,8 +129,6 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
     )
   })
 
-
-  # make final.model an object from class misty.model?
   final.model <- list(
     meta.model = combined.views,
     model.views = model.views,

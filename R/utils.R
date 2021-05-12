@@ -12,23 +12,23 @@
 #' @param id the unique id of the sample.
 #'
 #' @return None (\code{NULL})
-#' 
-#' @examples 
-#' clear_cache("b98ad35f4e671871cba35f2155228612")
-#' 
-#' clear_cache()
 #'
+#' @examples
+#' clear_cache("b98ad35f4e671871cba35f2155228612")
+#'
+#' clear_cache()
 #' @export
 clear_cache <- function(id = NULL) {
+  cache.folder <- normalizePath(".misty.temp")
   if (is.null(id)) {
-    if (unlink(".misty.temp", recursive = TRUE) == 0) {
+    if (unlink(cache.folder, recursive = TRUE) == 0) {
       message("Cache cleared")
     } else {
       message("Failed to clear cache")
     }
   } else {
     if (unlink(paste0(
-      ".misty.temp", .Platform$file.sep, id
+      cache.folder, .Platform$file.sep, id
     ), recursive = TRUE) == 0) {
       message("Cache cleared\n")
     } else {
@@ -86,37 +86,37 @@ clear_cache <- function(id = NULL) {
 #'
 #' @seealso \code{\link{run_misty}()} to train models and
 #'     generate results.
-#'     
+#'
 #' @examples
 #' # Train and collect results for 3 samples in synthetic
-#' 
+#'
 #' library(dplyr)
 #' library(purrr)
-#' 
+#'
 #' data("synthetic")
-#' 
-#' misty.results <- synthetic[seq_len(3)] %>% 
-#'                    imap_chr(~ create_initial_view(.x %>% select(-c(row,col,type))) %>%
-#'                    add_paraview(.x %>% select(row,col), l = 10) %>% 
-#'                    run_misty(paste0("results/", .y))) %>%
-#'                    collect_results()
+#'
+#' misty.results <- synthetic[seq_len(3)] %>%
+#'   imap_chr(~ create_initial_view(.x %>% select(-c(row, col, type))) %>%
+#'     add_paraview(.x %>% select(row, col), l = 10) %>%
+#'     run_misty(paste0("results/", .y))) %>%
+#'   collect_results()
 #' str(misty.results)
-#' 
+#'
 #' # Alternatives
 #' \dontrun{
-#' 
-#'  run_misty(misty.views) %>% collect_results()
-#'  
-#'  collect_results(c("results/sample1", "results/sample2", "results/sample3"))
-#'  
-#'  collect_results("results/sample")
+#'
+#' run_misty(misty.views) %>% collect_results()
+#'
+#' collect_results(c("results/sample1", "results/sample2", "results/sample3"))
+#'
+#' collect_results("results/sample")
 #' }
 #'
 #' @export
 collect_results <- function(folders) {
-  samples <- folders[dir.exists(folders)]
+  samples <- normalizePath(folders)
 
-  message(paste("Collecting results from", paste(samples, collapse = " ")))
+  message(paste("Collecting results from", paste(folders, collapse = " ")))
 
   message("\nCollecting improvements")
   improvements <- samples %>%
@@ -210,10 +210,13 @@ collect_results <- function(folders) {
             tibble::tibble(feature = features, zero.imp = 0) %>%
               dplyr::left_join(.x, by = "feature") %>%
               dplyr::arrange(.data$feature) %>%
-              dplyr::mutate(imp = scale(.data$imp)[, 1], !!targets[.y] := .data$zero.imp + (.data$imp *
-                (pvalues %>%
-                  dplyr::filter(target == targets[.y]) %>%
-                  dplyr::pull(.data$value))))
+              dplyr::mutate(
+                imp = scale(.data$imp)[, 1],
+                !!targets[.y] := .data$zero.imp + (.data$imp *
+                  (pvalues %>%
+                    dplyr::filter(target == targets[.y]) %>%
+                    dplyr::pull(.data$value)))
+              )
               %>%
               dplyr::select(targets[.y])) %>%
             dplyr::mutate(Predictor = features)
@@ -254,26 +257,32 @@ collect_results <- function(folders) {
 #'
 #' @seealso \code{\link{collect_results}()} to generate a
 #'     results list from raw results.
-#'     
+#'
 #' @noRd
 aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
+  normalized.folders <- normalizePath(folders)
   # check if folders are in names of misty.results
-  assertthat::assert_that(all(folders %in% names(misty.results$importances)),
+  assertthat::assert_that(all(normalized.folders %in% names(misty.results$importances)),
     msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
 
   message("Aggregating subset")
-  importances.aggregated.subset <- rlist::list.subset(misty.results$importances, folders) %>%
+  importances.aggregated.subset <- rlist::list.subset(
+    misty.results$importances,
+    normalized.folders
+  ) %>%
     purrr::reduce(function(acc, l) {
-      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-Predictor)) + (.y %>% dplyr::select(-Predictor))) %>%
+      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-Predictor)) +
+        (.y %>% dplyr::select(-Predictor))) %>%
         dplyr::mutate(Predictor = .x %>% dplyr::pull(Predictor))))
     }) %>%
-    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(folders)))
+    purrr::map(~ .x %>%
+      dplyr::mutate_if(is.numeric, ~ . / length(normalized.folders)))
 
   misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
 

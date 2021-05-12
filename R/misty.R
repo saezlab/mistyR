@@ -6,7 +6,7 @@
 #' @importFrom rlang !! := .data
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("mistyR is able to run computationally intensive functions
-  in parallel. Please consider specifying a future::plan(). For example by running 
+  in parallel. Please consider specifying a future::plan(). For example by running
   future::plan(future::multisession) before calling mistyR functions.")
 }
 
@@ -38,34 +38,40 @@
 #'
 #' @seealso \code{\link{create_initial_view}()} for
 #'     starting a view composition.
-#'     
-#' @examples 
+#'
+#' @examples
 #' # Create a view composition of an intraview and a paraview with radius 10 then
 #' # run MISTy for a single sample.
-#' 
+#'
 #' library(dplyr)
-#' 
+#'
 #' # get the expression data
 #' data("synthetic")
-#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' expr <- synthetic[[1]] %>% select(-c(row, col, type))
 #' # get the coordinates for each cell
-#' pos <- synthetic[[1]] %>% select(row,col)
-#' 
+#' pos <- synthetic[[1]] %>% select(row, col)
+#'
 #' # compose
 #' misty.views <- create_initial_view(expr) %>% add_paraview(pos, l = 10)
-#' 
+#'
 #' # run with default parameters
 #' run_misty(misty.views)
-#' 
+#'
 #' # Alternatives
 #' \dontrun{
-#' 
-#'  create_initial_view(expr) %>% add_paraview(pos, l = 10) %>% run_misty()
+#'
+#' create_initial_view(expr) %>%
+#'   add_paraview(pos, l = 10) %>%
+#'   run_misty()
 #' }
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
-  if (!dir.exists(results.folder)) dir.create(results.folder, recursive = TRUE)
+  normalized.results.folder <- normalizePath(results.folder)
+
+  if (!dir.exists(normalized.results.folder)) {
+    dir.create(normalized.results.folder, recursive = TRUE)
+  }
 
   view.abbrev <- views %>%
     rlist::list.remove(c("misty.uniqueid")) %>%
@@ -85,8 +91,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   )
 
 
-  coef.file <- paste0(results.folder, .Platform$file.sep, "coefficients.txt")
-  coef.lock <- paste0(results.folder, .Platform$file.sep, "coefficients.txt.lock")
+  coef.file <- paste0(
+    normalized.results.folder, .Platform$file.sep,
+    "coefficients.txt"
+  )
+  coef.lock <- paste0(
+    normalized.results.folder, .Platform$file.sep,
+    "coefficients.txt.lock"
+  )
   on.exit(file.remove(coef.lock))
 
   if (!file.exists(coef.file)) {
@@ -100,8 +112,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
   header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2 p.RMSE p.R2"
 
-  perf.file <- paste0(results.folder, .Platform$file.sep, "performance.txt")
-  perf.lock <- paste0(results.folder, .Platform$file.sep, "performance.txt.lock")
+  perf.file <- paste0(
+    normalized.results.folder, .Platform$file.sep,
+    "performance.txt"
+  )
+  perf.lock <- paste0(
+    normalized.results.folder, .Platform$file.sep,
+    "performance.txt.lock"
+  )
   on.exit(file.remove(perf.lock), add = TRUE)
 
   if (!file.exists(perf.file)) {
@@ -153,7 +171,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         readr::write_csv(
           imps,
           paste0(
-            results.folder, .Platform$file.sep,
+            normalized.results.folder, .Platform$file.sep,
             "importances_", target, "_", abbrev, ".txt"
           )
         )
@@ -162,9 +180,11 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     # performance
     if (sum(target.model[["performance.estimate"]] < 0) > 0) {
-      warning.message <- 
-        paste("Negative performance detected and replaced with 0 for target", 
-              target)
+      warning.message <-
+        paste(
+          "Negative performance detected and replaced with 0 for target",
+          target
+        )
       warning(warning.message)
     }
 
@@ -197,5 +217,5 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
 
 
-  return(results.folder)
+  return(normalized.results.folder)
 }

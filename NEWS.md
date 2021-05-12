@@ -1,3 +1,7 @@
+# mistyR 0.99.8
+
+-   All passed paths and cache location are normalized.
+
 # mistyR 0.99.7
 
 -   Vignette compatibility with the new release of SpatialExperiment.

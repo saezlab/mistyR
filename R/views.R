@@ -22,18 +22,17 @@
 #'     subfolder of \file{.misty.temp/} with the same name as \code{unique.id}.
 #'
 #' @family view composition functions
-#' 
-#' @examples 
+#'
+#' @examples
 #' # Create an intrinsic view from the first sample in the dataset synthetic.
-#' 
+#'
 #' library(dplyr)
-#' 
+#'
 #' # get the expression data
 #' data("synthetic")
-#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
-#' 
-#' create_initial_view(expr)
+#' expr <- synthetic[[1]] %>% select(-c(row, col, type))
 #'
+#' create_initial_view(expr)
 #' @export
 create_initial_view <- function(data, unique.id = NULL) {
   init.list <- list(intraview = list(abbrev = "intra", data = data))
@@ -46,10 +45,10 @@ create_initial_view <- function(data, unique.id = NULL) {
   view <- append(init.list, list(misty.uniqueid = misty.uniqueid))
 
   # create cache
-  cache.location <- paste0(
+  cache.location <- normalizePath(paste0(
     ".misty.temp", .Platform$file.sep,
     view[["misty.uniqueid"]]
-  )
+  ))
 
   if (!dir.exists(cache.location)) {
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
@@ -79,31 +78,32 @@ create_initial_view <- function(data, unique.id = NULL) {
 #'     to a view composition.
 #'
 #' @family view composition functions
-#' 
+#'
 #' @examples
 #' # Create a view from the mean expression of the 10 nearest neighbors of
 #' # each cell.
-#' 
+#'
 #' library(dplyr)
 #' library(purrr)
 #' library(distances)
-#' 
+#'
 #' # get the expression data
 #' data("synthetic")
-#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' expr <- synthetic[[1]] %>% select(-c(row, col, type))
 #' # get the coordinates for each cell
-#' pos <- synthetic[[1]] %>% select(row,col)
-#' 
+#' pos <- synthetic[[1]] %>% select(row, col)
+#'
 #' # find the 10 nearest neighbors
 #' neighbors <- nearest_neighbor_search(distances(as.matrix(pos)), k = 11)[-1, ]
-#' 
+#'
 #' # calculate the mean expression of the nearest neighbors for all markers
 #' # for each cell in expr
-#' nnexpr <- seq_len(nrow(expr)) %>% 
-#'   map_dfr(~ expr %>% slice(neighbors[, .x]) %>% colMeans())
-#' 
+#' nnexpr <- seq_len(nrow(expr)) %>%
+#'   map_dfr(~ expr %>%
+#'     slice(neighbors[, .x]) %>%
+#'     colMeans())
+#'
 #' create_view("nearest", nnexpr, "nn")
-#' 
 #' @export
 create_view <- function(name, data, abbrev = name) {
   new.list <- list(list(abbrev = abbrev, data = data))
@@ -127,24 +127,24 @@ create_view <- function(name, data, abbrev = name) {
 #'     \code{\link{create_view}()} for creating a custom view.
 #'
 #' @family view composition functions
-#' 
+#'
 #' @examples
 #' # Add custom views created with create_view() to the view composition.
-#' 
+#'
 #' # Alternatives
 #' \dontrun{
-#' 
+#'
 #' new.view <- create_view("nearest", nnexpr, "")
 #' add_views(misty.views, new.view)
-#'   
+#'
 #' misty.views %>% add_views(create_view("nearest", nnexpr, ""))
-#' 
-#' misty.views %>% 
+#'
+#' misty.views %>%
 #'   add_views(c(create_view("nearest", nnexpr, ""), view2, view3))
-#'   
+#'
 #' misty.views %>% add_views(list(new.view, another.view))
 #' }
-#' 
+#'
 #' @export
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
@@ -227,28 +227,28 @@ add_views <- function(current.views, new.views) {
 #'
 #' @examples
 #' # Create a view composition of an intraview and a juxtaview.
-#' 
+#'
 #' library(dplyr)
-#' 
+#'
 #' # get the expression data
 #' data("synthetic")
-#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' expr <- synthetic[[1]] %>% select(-c(row, col, type))
 #' # get the coordinates for each cell
-#' pos <- synthetic[[1]] %>% select(row,col)
-#' 
+#' pos <- synthetic[[1]] %>% select(row, col)
+#'
 #' # compose
 #' misty.views <- create_initial_view(expr) %>% add_juxtaview(pos, neighbor.thr = 1.5)
-#' 
+#'
 #' # preview
 #' str(misty.views[["juxtaview.1.5"]])
-#' 
+#'
 #' # Alternatives
 #' \dontrun{
-#' 
+#'
 #' initial.view <- create_initial_view(expr)
 #' misty.views <- add_juxtaview(initial.view, pos, neighbor.thr = 1.5)
 #' }
-#' 
+#'
 #' @export
 add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
                           cached = TRUE, verbose = TRUE) {
@@ -343,27 +343,27 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #'     starting a view composition with an intraview only.
 #'
 #' @family view composition functions
-#' 
+#'
 #' @examples
 #' # Create a view composition of an intraview and a paraview with radius 10.
-#' 
+#'
 #' library(dplyr)
-#' 
+#'
 #' # get the expression data
 #' data("synthetic")
-#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' expr <- synthetic[[1]] %>% select(-c(row, col, type))
 #' # get the coordinates for each cell
-#' pos <- synthetic[[1]] %>% select(row,col)
-#' 
+#' pos <- synthetic[[1]] %>% select(row, col)
+#'
 #' # compose
 #' misty.views <- create_initial_view(expr) %>% add_paraview(pos, l = 10)
-#' 
+#'
 #' # preview
 #' str(misty.views[["paraview.10"]])
-#' 
+#'
 #' # Alternatives
 #' \dontrun{
-#' 
+#'
 #' initial.view <- create_initial_view(expr)
 #' misty.views <- add_paraview(initial.view, pos, l = 10)
 #' }
@@ -465,33 +465,37 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 #' @return A mistyR view composition with \code{view.names} views removed.
 #'
 #' @family view composition functions
-#' 
+#'
 #' @examples
 #' library(dplyr)
-#' 
+#'
 #' # get the expression data
 #' data("synthetic")
-#' expr <- synthetic[[1]] %>% select(-c(row,col,type))
+#' expr <- synthetic[[1]] %>% select(-c(row, col, type))
 #' # get the coordinates for each cell
-#' pos <- synthetic[[1]] %>% select(row,col)
-#' 
+#' pos <- synthetic[[1]] %>% select(row, col)
+#'
 #' # compose
-#' misty.views <- create_initial_view(expr) %>% 
-#'                add_juxtaview(pos, neighbor.thr = 1.5) %>%
-#'                add_paraview(pos, l = 10)
-#' 
+#' misty.views <- create_initial_view(expr) %>%
+#'   add_juxtaview(pos, neighbor.thr = 1.5) %>%
+#'   add_paraview(pos, l = 10)
+#'
 #' # preview
 #' str(misty.views)
-#' 
-#' #remove juxtaview and preview
-#' misty.views %>% remove_views("juxtaview.1.5") %>% str()
-#' 
-#' #remove juxtaview and paraview and preview
-#' misty.views %>% remove_views(c("juxtaview.1.5", "paraview.10")) %>% str()
-#' 
+#'
+#' # remove juxtaview and preview
+#' misty.views %>%
+#'   remove_views("juxtaview.1.5") %>%
+#'   str()
+#'
+#' # remove juxtaview and paraview and preview
+#' misty.views %>%
+#'   remove_views(c("juxtaview.1.5", "paraview.10")) %>%
+#'   str()
+#'
 #' # Alternatives
 #' \dontrun{
-#' 
+#'
 #' reduced.views <- remove_views(misty.views, "paraview.10")
 #' }
 #'
@@ -499,7 +503,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 remove_views <- function(current.views, view.names) {
   to.match <- !(view.names %in% c("intraview", "misty.uniqueid"))
   view.indexes <- match(view.names[to.match], names(current.views))
-  if(length(view.indexes) > 0){
+  if (length(view.indexes) > 0) {
     current.views %>% rlist::list.remove(view.indexes)
   } else {
     current.views
