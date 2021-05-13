@@ -1,6 +1,18 @@
 # mistyR 0.99.8
 
+## Revisions requested by Bioconductor
+
+-   Removed magrittr from dependencies. Reexported pipe operator. Removed from examples.
+-   Caching turned off by default.
+-   Added parameter for appending performance and coefficient files in run_misty.
+-   Internal functions in views.R are now explicit.
+-   Removed alternatives and additional examples for function use from documentation.
+-   Removed redundant messages, escalated to warnings where required.
+
+## Minor changes
+
 -   All passed paths and cache location are normalized.
+-   run_misty cleans up empty cache directories.
 
 # mistyR 0.99.7
 

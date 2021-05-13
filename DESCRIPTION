@@ -37,8 +37,8 @@ License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr
 Imports:  assertthat, caret, deldir, digest, distances, dplyr, filelock, 
-    furrr (>= 0.2.0), ggplot2, magrittr, MASS, purrr, ranger, readr, rlang, 
-    rlist, stats, stringr, tibble, tidyr, withr
+    furrr (>= 0.2.0), ggplot2, MASS, purrr, ranger, readr, rlang, rlist, 
+    stats, stringr, tibble, tidyr, withr
 Suggests: BiocStyle, future, igraph, knitr, Matrix, progeny, rmarkdown, 
     sctransform, SingleCellExperiment, SpatialExperiment, SummarizedExperiment
 RoxygenNote: 7.1.1

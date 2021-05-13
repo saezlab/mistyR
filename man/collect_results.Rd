@@ -61,23 +61,12 @@ library(purrr)
 
 data("synthetic")
 
-misty.results <- synthetic[seq_len(3)] \%>\% 
-                   imap_chr(~ create_initial_view(.x \%>\% select(-c(row,col,type))) \%>\%
-                   add_paraview(.x \%>\% select(row,col), l = 10) \%>\% 
-                   run_misty(paste0("results/", .y))) \%>\%
-                   collect_results()
+misty.results <- synthetic[seq_len(3)] \%>\%
+  imap_chr(~ create_initial_view(.x \%>\% select(-c(row, col, type))) \%>\%
+    add_paraview(.x \%>\% select(row, col), l = 10) \%>\%
+    run_misty(paste0("results/", .y))) \%>\%
+  collect_results()
 str(misty.results)
-
-# Alternatives
-\dontrun{
-
- run_misty(misty.views) \%>\% collect_results()
- 
- collect_results(c("results/sample1", "results/sample2", "results/sample3"))
- 
- collect_results("results/sample")
-}
-
 }
 \seealso{
 \code{\link{run_misty}()} to train models and

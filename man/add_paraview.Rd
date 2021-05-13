@@ -10,7 +10,7 @@ add_paraview(
   l,
   approx = 1,
   nn = NULL,
-  cached = TRUE,
+  cached = FALSE,
   verbose = TRUE
 )
 }
@@ -73,22 +73,15 @@ library(dplyr)
 
 # get the expression data
 data("synthetic")
-expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+expr <- synthetic[[1]] \%>\% select(-c(row, col, type))
 # get the coordinates for each cell
-pos <- synthetic[[1]] \%>\% select(row,col)
+pos <- synthetic[[1]] \%>\% select(row, col)
 
 # compose
 misty.views <- create_initial_view(expr) \%>\% add_paraview(pos, l = 10)
 
 # preview
 str(misty.views[["paraview.10"]])
-
-# Alternatives
-\dontrun{
-
-initial.view <- create_initial_view(expr)
-misty.views <- add_paraview(initial.view, pos, l = 10)
-}
 
 }
 \seealso{

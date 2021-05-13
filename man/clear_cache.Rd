@@ -24,5 +24,4 @@ contents of the folder \file{.misty.temp} will be removed.
 clear_cache("b98ad35f4e671871cba35f2155228612")
 
 clear_cache()
-
 }

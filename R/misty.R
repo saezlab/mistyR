@@ -2,13 +2,17 @@
 # Copyright (c) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
 
-#' @importFrom magrittr %>%
 #' @importFrom rlang !! := .data
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("mistyR is able to run computationally intensive functions
   in parallel. Please consider specifying a future::plan(). For example by running
   future::plan(future::multisession) before calling mistyR functions.")
 }
+
+#' @importFrom dplyr %>%
+#' @inherit run_misty examples
+#' @export
+dplyr::`%>%`
 
 #' Train MISTy models
 #'
@@ -29,6 +33,10 @@
 #'     the performance of the multi-view models.
 #' @param cached a \code{logical} indicating whether to cache the trained models
 #'     and to reuse previously cached ones if they already exist for this sample.
+#' @param append a \code{logical} indicating whether to append the performance
+#'     and coefficient files in the \code{results.folder}. Consider setting to
+#'     \code{TRUE} when rerunning a workflow with different \code{target.subset}
+#'     parameters.
 #' @param ... all additional parameters are passed to
 #'     \code{\link[ranger]{ranger}()} for training the view-specific models
 #'     (see Details for defaults).
@@ -56,17 +64,10 @@
 #'
 #' # run with default parameters
 #' run_misty(misty.views)
-#'
-#' # Alternatives
-#' \dontrun{
-#'
-#' create_initial_view(expr) %>%
-#'   add_paraview(pos, l = 10) %>%
-#'   run_misty()
-#' }
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
-                      target.subset = NULL, cv.folds = 10, cached = TRUE, ...) {
+                      target.subset = NULL, cv.folds = 10, cached = FALSE,
+                      append = FALSE, ...) {
   normalized.results.folder <- normalizePath(results.folder)
 
   if (!dir.exists(normalized.results.folder)) {
@@ -101,14 +102,11 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   )
   on.exit(file.remove(coef.lock))
 
-  if (!file.exists(coef.file)) {
+  if (!append) {
     current.lock <- filelock::lock(coef.lock)
     write(header, file = coef.file)
     filelock::unlock(current.lock)
-  } else {
-    message("Coefficients file already exists. Appending!\n")
   }
-
 
   header <- "target intra.RMSE intra.R2 multi.RMSE multi.R2 p.RMSE p.R2"
 
@@ -122,12 +120,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   )
   on.exit(file.remove(perf.lock), add = TRUE)
 
-  if (!file.exists(perf.file)) {
+  if (!append) {
     current.lock <- filelock::lock(perf.lock)
     write(header, file = perf.file)
     filelock::unlock(current.lock)
-  } else {
-    message("Performance file already exists. Appending!\n")
   }
 
   targets <- switch(class(target.subset),
@@ -215,7 +211,18 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     return(target)
   }, .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
 
-
+  if (!cached) {
+    cache.location <- normalizePath(paste0(
+      ".misty.temp", .Platform$file.sep,
+      views[["misty.uniqueid"]]
+    ))
+    if (length(list.files(cache.location)) == 0) {
+      clear_cache(views[["misty.uniqueid"]])
+    }
+    if (length(list.files(normalizePath(".misty.temp"))) == 0) {
+      clear_cache()
+    }
+  }
 
   return(normalized.results.folder)
 }

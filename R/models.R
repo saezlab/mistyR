@@ -19,7 +19,7 @@
 #' view-specific models and performance estimates.
 #' 
 #' @noRd
-build_model <- function(views, target, seed = 42, cv.folds = 10, cached = TRUE,
+build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
                         ...) {
 
   cache.location <- normalizePath(paste0(

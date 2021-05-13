@@ -121,7 +121,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany<br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-05-12</h4>
+            <h4 class="date">2021-05-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySpatialExperiment.Rmd"><code>vignettes/mistySpatialExperiment.Rmd</code></a></small>
       <div class="hidden name"><code>mistySpatialExperiment.Rmd</code></div>
@@ -532,11 +532,8 @@
 <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/collect_results.html">collect_results</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Generating paraview</span>
-<span class="co">#&gt; Cache cleared</span>
 <span class="co">#&gt; Generating paraview</span>
-<span class="co">#&gt; Cache cleared</span>
 <span class="co">#&gt; Training models</span>
-<span class="co">#&gt; Collecting results from vignette_model_spe</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Collecting improvements</span>
 <span class="co">#&gt; </span>
@@ -564,23 +561,23 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">measure</span> <span class="op">==</span> <span class="st">"p.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 x 4</span>
-<span class="co">#&gt;    target  sample                                               measure    value</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     1.26e-5</span>
-<span class="co">#&gt;  2 FUT11   /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     7.09e-3</span>
-<span class="co">#&gt;  3 PDK1    /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     9.64e-3</span>
-<span class="co">#&gt;  4 NDRG1   /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     2.26e-2</span>
-<span class="co">#&gt;  5 FAM162A /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     3.86e-2</span>
-<span class="co">#&gt;  6 INSIG2  /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     4.06e-2</span>
-<span class="co">#&gt;  7 ANKZF1  /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     5.12e-2</span>
-<span class="co">#&gt;  8 HILPDA  /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     7.71e-2</span>
-<span class="co">#&gt;  9 ENO2    /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     8.64e-2</span>
-<span class="co">#&gt; 10 EGLN1   /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     9.07e-2</span>
-<span class="co">#&gt; 11 PFKFB4  /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     1.12e-1</span>
-<span class="co">#&gt; 12 KDM3A   /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     1.30e-1</span>
-<span class="co">#&gt; 13 ANKRD37 /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     2.12e-1</span>
-<span class="co">#&gt; 14 BNIP3L  /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     2.31e-1</span>
-<span class="co">#&gt; 15 GBE1    /Users/jovant/Work/mistyR/vignettes/vignette_model_~ p.R2     5.53e-1</span></code></pre></div>
+<span class="co">#&gt;    target  sample                                                measure   value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                 &lt;chr&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 PGK1    /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    4.37e-4</span>
+<span class="co">#&gt;  2 FUT11   /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    4.13e-3</span>
+<span class="co">#&gt;  3 INSIG2  /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    9.08e-3</span>
+<span class="co">#&gt;  4 ANKZF1  /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    2.02e-2</span>
+<span class="co">#&gt;  5 PDK1    /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    2.37e-2</span>
+<span class="co">#&gt;  6 HILPDA  /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    2.80e-2</span>
+<span class="co">#&gt;  7 FAM162A /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    4.48e-2</span>
+<span class="co">#&gt;  8 KDM3A   /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    5.46e-2</span>
+<span class="co">#&gt;  9 ENO2    /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    7.39e-2</span>
+<span class="co">#&gt; 10 NDRG1   /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    8.63e-2</span>
+<span class="co">#&gt; 11 BNIP3L  /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    9.64e-2</span>
+<span class="co">#&gt; 12 EGLN1   /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    1.05e-1</span>
+<span class="co">#&gt; 13 PFKFB4  /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    1.30e-1</span>
+<span class="co">#&gt; 14 GBE1    /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    1.38e-1</span>
+<span class="co">#&gt; 15 ANKRD37 /Users/jovant/Work/mistyR/vignettes/vignette_model_s~ p.R2    1.70e-1</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -593,9 +590,9 @@
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.479    0.365 2.70e-70    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.511    0.389 1.60e-37    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.324    0.247 3.59e-16    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.475    0.363 5.63e-68    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.570    0.436 2.17e-46    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.262    0.201 2.16e-11    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (63%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -611,20 +608,20 @@
 <span class="co">#&gt; # A tibble: 15 x 2</span>
 <span class="co">#&gt;    Predictor   PGK1</span>
 <span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.66 </span>
-<span class="co">#&gt;  2 FAM162A    1.74 </span>
+<span class="co">#&gt;  1 NDRG1      2.75 </span>
+<span class="co">#&gt;  2 FAM162A    1.60 </span>
 <span class="co">#&gt;  3 PFKFB4     0.190</span>
-<span class="co">#&gt;  4 HILPDA     0.154</span>
-<span class="co">#&gt;  5 ENO2       0.114</span>
-<span class="co">#&gt;  6 EGLN1     -0.207</span>
-<span class="co">#&gt;  7 ANKRD37   -0.433</span>
-<span class="co">#&gt;  8 GBE1      -0.479</span>
-<span class="co">#&gt;  9 BNIP3L    -0.519</span>
-<span class="co">#&gt; 10 KDM3A     -0.609</span>
-<span class="co">#&gt; 11 PDK1      -0.616</span>
-<span class="co">#&gt; 12 FUT11     -0.654</span>
-<span class="co">#&gt; 13 INSIG2    -0.658</span>
-<span class="co">#&gt; 14 ANKZF1    -0.685</span>
+<span class="co">#&gt;  4 HILPDA     0.169</span>
+<span class="co">#&gt;  5 ENO2       0.153</span>
+<span class="co">#&gt;  6 EGLN1     -0.257</span>
+<span class="co">#&gt;  7 GBE1      -0.366</span>
+<span class="co">#&gt;  8 ANKRD37   -0.455</span>
+<span class="co">#&gt;  9 KDM3A     -0.566</span>
+<span class="co">#&gt; 10 BNIP3L    -0.582</span>
+<span class="co">#&gt; 11 ANKZF1    -0.604</span>
+<span class="co">#&gt; 12 PDK1      -0.621</span>
+<span class="co">#&gt; 13 INSIG2    -0.666</span>
+<span class="co">#&gt; 14 FUT11     -0.740</span>
 <span class="co">#&gt; 15 PGK1      NA</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
@@ -755,57 +752,56 @@
 #&gt; [21] BiocStyle_2.18.1           
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
-#&gt;   [1] colorspace_2.0-1          rjson_0.2.20             
-#&gt;   [3] ellipsis_0.3.2            rprojroot_2.0.2          
-#&gt;   [5] scuttle_1.0.4             XVector_0.30.0           
-#&gt;   [7] fs_1.5.0                  rstudioapi_0.13          
-#&gt;   [9] farver_2.1.0              listenv_0.8.0            
-#&gt;  [11] furrr_0.2.2               ggrepel_0.9.1            
-#&gt;  [13] fansi_0.4.2               codetools_0.2-18         
-#&gt;  [15] R.methodsS3_1.8.1         sparseMatrixStats_1.2.1  
-#&gt;  [17] cachem_1.0.4              knitr_1.33               
-#&gt;  [19] rlist_0.4.6.1             jsonlite_1.7.2           
-#&gt;  [21] R.oo_1.24.0               HDF5Array_1.18.1         
-#&gt;  [23] BiocManager_1.30.14       readr_1.4.0              
-#&gt;  [25] compiler_4.0.5            dqrng_0.3.0              
-#&gt;  [27] assertthat_0.2.1          fastmap_1.1.0            
-#&gt;  [29] cli_2.5.0                 limma_3.46.0             
-#&gt;  [31] htmltools_0.5.1.1         tools_4.0.5              
-#&gt;  [33] gtable_0.3.0              glue_1.4.2               
-#&gt;  [35] GenomeInfoDbData_1.2.4    reshape2_1.4.4           
-#&gt;  [37] Rcpp_1.0.6                jquerylib_0.1.4          
-#&gt;  [39] pkgdown_1.6.1             vctrs_0.3.8              
-#&gt;  [41] rhdf5filters_1.2.1        DelayedMatrixStats_1.12.3
-#&gt;  [43] xfun_0.22                 stringr_1.4.0            
-#&gt;  [45] ps_1.6.0                  globals_0.14.0           
-#&gt;  [47] beachmat_2.6.4            lifecycle_1.0.0          
-#&gt;  [49] edgeR_3.32.1              zlibbioc_1.36.0          
-#&gt;  [51] MASS_7.3-54               scales_1.1.1             
-#&gt;  [53] ragg_1.1.2                hms_1.0.0                
-#&gt;  [55] rhdf5_2.34.0              RColorBrewer_1.1-2       
-#&gt;  [57] yaml_2.2.1                memoise_2.0.0            
-#&gt;  [59] gridExtra_2.3             sass_0.3.1               
-#&gt;  [61] stringi_1.6.1             highr_0.9                
-#&gt;  [63] distances_0.1.8           desc_1.3.0               
-#&gt;  [65] filelock_1.0.2            BiocParallel_1.24.1      
-#&gt;  [67] rlang_0.4.11              pkgconfig_2.0.3          
-#&gt;  [69] systemfonts_1.0.1         bitops_1.0-7             
-#&gt;  [71] evaluate_0.14             lattice_0.20-44          
-#&gt;  [73] Rhdf5lib_1.12.1           labeling_0.4.2           
-#&gt;  [75] tidyselect_1.1.1          parallelly_1.25.0        
-#&gt;  [77] plyr_1.8.6                magrittr_2.0.1           
-#&gt;  [79] bookdown_0.22             R6_2.5.0                 
-#&gt;  [81] magick_2.7.2              generics_0.1.0           
-#&gt;  [83] DelayedArray_0.16.3       DBI_1.1.1                
-#&gt;  [85] pillar_1.6.0              withr_2.4.2              
-#&gt;  [87] RCurl_1.98-1.3            future.apply_1.7.0       
-#&gt;  [89] crayon_1.4.1              DropletUtils_1.10.3      
-#&gt;  [91] utf8_1.2.1                rmarkdown_2.8            
-#&gt;  [93] locfit_1.5-9.4            grid_4.0.5               
-#&gt;  [95] data.table_1.14.0         digest_0.6.27            
-#&gt;  [97] tidyr_1.1.3               R.utils_2.10.1           
-#&gt;  [99] textshaping_0.3.3         munsell_0.5.0            
-#&gt; [101] bslib_0.2.4</code></pre>
+#&gt;  [1] colorspace_2.0-1          rjson_0.2.20             
+#&gt;  [3] ellipsis_0.3.2            rprojroot_2.0.2          
+#&gt;  [5] scuttle_1.0.4             XVector_0.30.0           
+#&gt;  [7] fs_1.5.0                  rstudioapi_0.13          
+#&gt;  [9] farver_2.1.0              listenv_0.8.0            
+#&gt; [11] furrr_0.2.2               ggrepel_0.9.1            
+#&gt; [13] fansi_0.4.2               codetools_0.2-18         
+#&gt; [15] R.methodsS3_1.8.1         sparseMatrixStats_1.2.1  
+#&gt; [17] cachem_1.0.4              knitr_1.33               
+#&gt; [19] rlist_0.4.6.1             jsonlite_1.7.2           
+#&gt; [21] R.oo_1.24.0               HDF5Array_1.18.1         
+#&gt; [23] BiocManager_1.30.15       compiler_4.0.5           
+#&gt; [25] dqrng_0.3.0               assertthat_0.2.1         
+#&gt; [27] fastmap_1.1.0             cli_2.5.0                
+#&gt; [29] limma_3.46.0              htmltools_0.5.1.1        
+#&gt; [31] tools_4.0.5               gtable_0.3.0             
+#&gt; [33] glue_1.4.2                GenomeInfoDbData_1.2.4   
+#&gt; [35] reshape2_1.4.4            Rcpp_1.0.6               
+#&gt; [37] jquerylib_0.1.4           pkgdown_1.6.1            
+#&gt; [39] vctrs_0.3.8               rhdf5filters_1.2.1       
+#&gt; [41] DelayedMatrixStats_1.12.3 xfun_0.22                
+#&gt; [43] stringr_1.4.0             ps_1.6.0                 
+#&gt; [45] globals_0.14.0            beachmat_2.6.4           
+#&gt; [47] lifecycle_1.0.0           edgeR_3.32.1             
+#&gt; [49] zlibbioc_1.36.0           MASS_7.3-54              
+#&gt; [51] scales_1.1.1              ragg_1.1.2               
+#&gt; [53] rhdf5_2.34.0              RColorBrewer_1.1-2       
+#&gt; [55] yaml_2.2.1                memoise_2.0.0            
+#&gt; [57] gridExtra_2.3             sass_0.4.0               
+#&gt; [59] stringi_1.6.1             highr_0.9                
+#&gt; [61] distances_0.1.8           desc_1.3.0               
+#&gt; [63] filelock_1.0.2            BiocParallel_1.24.1      
+#&gt; [65] rlang_0.4.11              pkgconfig_2.0.3          
+#&gt; [67] systemfonts_1.0.2         bitops_1.0-7             
+#&gt; [69] evaluate_0.14             lattice_0.20-44          
+#&gt; [71] Rhdf5lib_1.12.1           labeling_0.4.2           
+#&gt; [73] tidyselect_1.1.1          parallelly_1.25.0        
+#&gt; [75] plyr_1.8.6                magrittr_2.0.1           
+#&gt; [77] bookdown_0.22             R6_2.5.0                 
+#&gt; [79] magick_2.7.2              generics_0.1.0           
+#&gt; [81] DelayedArray_0.16.3       DBI_1.1.1                
+#&gt; [83] pillar_1.6.0              withr_2.4.2              
+#&gt; [85] RCurl_1.98-1.3            future.apply_1.7.0       
+#&gt; [87] crayon_1.4.1              DropletUtils_1.10.3      
+#&gt; [89] utf8_1.2.1                rmarkdown_2.8            
+#&gt; [91] locfit_1.5-9.4            grid_4.0.5               
+#&gt; [93] data.table_1.14.0         digest_0.6.27            
+#&gt; [95] tidyr_1.1.3               R.utils_2.10.1           
+#&gt; [97] textshaping_0.3.4         munsell_0.5.0            
+#&gt; [99] bslib_0.2.4</code></pre>
 </div>
   </div>
 

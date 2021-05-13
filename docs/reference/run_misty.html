@@ -92,7 +92,7 @@ markers for each target marker." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.8</span>
       </span>
     </div>
 
@@ -178,7 +178,8 @@ markers for each target marker.</p>
   seed <span class='op'>=</span> <span class='fl'>42</span>,
   target.subset <span class='op'>=</span> <span class='cn'>NULL</span>,
   cv.folds <span class='op'>=</span> <span class='fl'>10</span>,
-  cached <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  cached <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  append <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -213,6 +214,13 @@ the performance of the multi-view models.</p></td>
 and to reuse previously cached ones if they already exist for this sample.</p></td>
     </tr>
     <tr>
+      <th>append</th>
+      <td><p>a <code>logical</code> indicating whether to append the performance
+and coefficient files in the <code>results.folder</code>. Consider setting to
+<code>TRUE</code> when rerunning a workflow with different <code>target.subset</code>
+parameters.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>all additional parameters are passed to
 <code><a href='https://rdrr.io/pkg/ranger/man/ranger.html'>ranger</a>()</code> for training the view-specific models
@@ -242,22 +250,16 @@ view-specific models: <code>num.trees = 100</code>, <code>importance = "impurity
 
 <span class='co'># get the expression data</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"synthetic"</span><span class='op'>)</span>
-<span class='va'>expr</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>row</span>,<span class='va'>col</span>,<span class='va'>type</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>expr</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>row</span>, <span class='va'>col</span>, <span class='va'>type</span><span class='op'>)</span><span class='op'>)</span>
 <span class='co'># get the coordinates for each cell</span>
-<span class='va'>pos</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>row</span>,<span class='va'>col</span><span class='op'>)</span>
+<span class='va'>pos</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>row</span>, <span class='va'>col</span><span class='op'>)</span>
 
 <span class='co'># compose</span>
 <span class='va'>misty.views</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_initial_view.html'>create_initial_view</a></span><span class='op'>(</span><span class='va'>expr</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='add_paraview.html'>add_paraview</a></span><span class='op'>(</span><span class='va'>pos</span>, l <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Paraview retrieved from cache</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Generating paraview</span></div><div class='input'>
 <span class='co'># run with default parameters</span>
 <span class='fu'>run_misty</span><span class='op'>(</span><span class='va'>misty.views</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Training models</span></div><div class='output co'>#&gt; [1] "results"</div><div class='input'>
-<span class='co'># Alternatives</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
- <span class='fu'><a href='create_initial_view.html'>create_initial_view</a></span><span class='op'>(</span><span class='va'>expr</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='add_paraview.html'>add_paraview</a></span><span class='op'>(</span><span class='va'>pos</span>, l <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>run_misty</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Training models</span></div><div class='output co'>#&gt; [1] "/Users/jovant/Work/mistyR/docs/reference/results"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

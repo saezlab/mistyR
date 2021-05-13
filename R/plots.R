@@ -19,8 +19,6 @@
 #' @family plotting functions
 #'
 #' @examples
-#' library(magrittr)
-#'
 #' all.samples <- list.dirs("results", recursive = FALSE)
 #'
 #' collect_results(all.samples) %>% plot_improvement_stats()
@@ -80,7 +78,6 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 #' @family plotting functions
 #'
 #' @examples
-#' library(magrittr)
 #' all.samples <- list.dirs("results", recursive = FALSE)
 #'
 #' collect_results(all.samples) %>% plot_view_contributions()
@@ -123,7 +120,6 @@ plot_view_contributions <- function(misty.results) {
 #' @family plotting functions
 #'
 #' @examples
-#' library(magrittr)
 #' all.samples <- list.dirs("results", recursive = FALSE)
 #'
 #' collect_results(all.samples) %>%
@@ -172,7 +168,6 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
 #' @family plotting functions
 #'
 #' @examples
-#' library(magrittr)
 #' all.samples <- list.dirs("results", recursive = FALSE)
 #'
 #' misty.results <- collect_results(all.samples)
@@ -240,7 +235,6 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
 #' @family plotting functions
 #'
 #' @examples
-#' library(magrittr)
 #' all.samples <- list.dirs("results", recursive = FALSE)
 #'
 #' misty.results <- collect_results(all.samples)
@@ -320,21 +314,19 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 #' @family plotting functions
 #'
 #' @examples
-#' \dontrun{
-#'
-#' # the available samples come from different grades of tumors
-#' grade1.results <- collect_results(grade1.folders)
-#' grade3.results <- collect_results(grade3.folders)
+#' # if for example the available samples come from different grades of tumors
+#' 
+#' grade1.results <- collect_results(c("results/synthetic1", "results/synthetic2"))
+#' grade3.results <- collect_results("results/synthetic10")
 #'
 #' # highlight interactions present in grade 1 tumors but not in grade 3 tumors
 #' # in the paraview
 #'
-#' grade3.results %>% plot_contrast_results(grade1.results, views = "para.100")
+#' grade3.results %>% plot_contrast_results(grade1.results, views = "para.10")
 #'
 #' # see the loss of interactions in all views with lower sensitivity
 #'
 #' plot_contrast_results(grade3.results, grade1.results, cutoff.from = 0.75, cutoff.to = 0.5)
-#' }
 #'
 #' @export
 plot_contrast_results <- function(misty.results.from, misty.results.to,

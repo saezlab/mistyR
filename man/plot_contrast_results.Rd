@@ -28,27 +28,25 @@ The \code{misty.results.from} list (invisibly).
 Plot interexperiment contrast of views.
 }
 \details{
-The heatmaps show the interactions that are present and have importance above 
-a \code{cutoff.to} value in the \code{views} of \code{misty.results.to} but 
-not present or have importance below \code{cutoff.from} in the \code{views} 
+The heatmaps show the interactions that are present and have importance above
+a \code{cutoff.to} value in the \code{views} of \code{misty.results.to} but
+not present or have importance below \code{cutoff.from} in the \code{views}
 of \code{misty.results.from}.
 }
 \examples{
-\dontrun{
+# if for example the available samples come from different grades of tumors
 
-# the available samples come from different grades of tumors
-grade1.results <- collect_results(grade1.folders)
-grade3.results <- collect_results(grade3.folders)
+grade1.results <- collect_results(c("results/synthetic1", "results/synthetic2"))
+grade3.results <- collect_results("results/synthetic10")
 
 # highlight interactions present in grade 1 tumors but not in grade 3 tumors
 # in the paraview
 
-grade3.results \%>\% plot_contrast_results(grade1.results, views = "para.100")
+grade3.results \%>\% plot_contrast_results(grade1.results, views = "para.10")
 
 # see the loss of interactions in all views with lower sensitivity
 
 plot_contrast_results(grade3.results, grade1.results, cutoff.from = 0.75, cutoff.to = 0.5)
-}
 
 }
 \seealso{

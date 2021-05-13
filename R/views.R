@@ -127,23 +127,19 @@ create_view <- function(name, data, abbrev = name) {
 #'     \code{\link{create_view}()} for creating a custom view.
 #'
 #' @family view composition functions
-#'
+#' 
 #' @examples
-#' # Add custom views created with create_view() to the view composition.
-#'
-#' # Alternatives
-#' \dontrun{
-#'
-#' new.view <- create_view("nearest", nnexpr, "")
+#' 
+#' # create random views
+#' view1 <- data.frame(marker1 = rnorm(100, 10, 2), marker2 = rnorm(100, 15, 3))
+#' view2 <- data.frame(marker1 = rnorm(100, 10, 5), marker2 = rnorm(100, 15, 5))
+#' 
+#' misty.views <- create_initial_view(view1)
+#' 
+#' new.view <- create_view("dummyname", view2, "dname")
 #' add_views(misty.views, new.view)
-#'
-#' misty.views %>% add_views(create_view("nearest", nnexpr, ""))
-#'
-#' misty.views %>%
-#'   add_views(c(create_view("nearest", nnexpr, ""), view2, view3))
-#'
-#' misty.views %>% add_views(list(new.view, another.view))
-#' }
+#'   
+#' misty.views %>% add_views(create_view("dummyname", view2, "dname"))
 #'
 #' @export
 add_views <- function(current.views, new.views) {
@@ -196,6 +192,26 @@ add_views <- function(current.views, new.views) {
   return(append(current.views, new.views))
 }
 
+
+
+
+#' Get neighbors from Delauney triangulation
+#'
+#' Helper function for \code{\link{add_juxtaview}()}.
+#' 
+#' @param ddobj deldir object.
+#' @param id cell/spatial unit id.
+#'
+#' @return a vector of neighbors of \code{id}.
+#' @noRd
+get_neighbors <- function(ddobj, id) {
+  dplyr::union(
+    ddobj$delsgs$ind1[which(ddobj$delsgs$ind2 == id)],
+    ddobj$delsgs$ind2[which(ddobj$delsgs$ind1 == id)]
+  )
+}
+
+
 #' Generate and add a juxtaview to the current view composition
 #'
 #' The juxtaview captures the expression of all markers within the immediate
@@ -242,23 +258,9 @@ add_views <- function(current.views, new.views) {
 #' # preview
 #' str(misty.views[["juxtaview.1.5"]])
 #'
-#' # Alternatives
-#' \dontrun{
-#'
-#' initial.view <- create_initial_view(expr)
-#' misty.views <- add_juxtaview(initial.view, pos, neighbor.thr = 1.5)
-#' }
-#'
 #' @export
 add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
-                          cached = TRUE, verbose = TRUE) {
-  # from a deldir object
-  get_neighbors <- function(ddobj, id) {
-    dplyr::union(
-      ddobj$delsgs$ind1[which(ddobj$delsgs$ind2 == id)],
-      ddobj$delsgs$ind2[which(ddobj$delsgs$ind1 == id)]
-    )
-  }
+                          cached = FALSE, verbose = TRUE) {
 
   expr <- current.views[["intraview"]][["data"]]
 
@@ -273,7 +275,6 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
   )
 
   if (cached & file.exists(juxta.cache.file)) {
-    message("Juxtaview retrieved from cache\n")
     juxta.view <- readr::read_rds(juxta.cache.file)
   }
   else {
@@ -284,7 +285,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
     juxta.view <- seq(nrow(expr)) %>% furrr::future_map_dfr(function(cid) {
       alln <- get_neighbors(delaunay, cid)
       # suboptimal placement of dists, but makes conflict if out of scope
-      # probably due to azy evaluations
+      # probably due to lazy evaluations
       dists <- distances::distances(as.data.frame(positions))
       actualn <- alln[which(dists[alln, cid] <= neighbor.thr)]
       data.frame(t(colSums(expr[actualn, ])))
@@ -300,7 +301,41 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
   )))
 }
 
-# ncells has priority over nystrom
+
+
+#' Sample a Nystrom approximated row
+#'
+#' Helper function for \code{\link{add_paraview}()}.
+#' 
+#' Kumar et al. 2012. Sampling methods for the Nystrom method. 
+#' Journal of Machine Learning Research 13(1):981-1006 
+#' \url{https://www.jmlr.org/papers/volume13/kumar12a/kumar12a.pdf}
+#'
+#' @param K.approx a list containing elemnts \code{s} - indexes of sampled 
+#'     columns, \code{C} - sample of columns \code{s} of the original matrix, and 
+#'    \code{W.plus} - pseudo inverse of W (sample of rows \code{s} from \code{C}).
+#' @param k row to be approximated.
+#'
+#' @return approximated values of row k.
+#' @noRd
+sample_nystrom_row <- function(K.approx, k) {
+  
+  # transform k into the row index of reordered K.approx
+  k.ind <- which(K.approx$s == k)
+  if (purrr::is_empty(k.ind)) {
+    k.ind <- length(K.approx$s) + k
+  }
+  
+  cw <- seq(ncol(K.approx$W.plus)) %>%
+    purrr::map_dbl(~ K.approx$C[k.ind, ] %*% K.approx$W.plus[, .x])
+  
+  cwct <- seq(ncol(t(K.approx$C))) %>%
+    purrr::map_dbl(~ cw %*% t(K.approx$C)[, .x])
+  
+  # reorder the columns of cwct so that they correspond to the original order
+  cwct[c(K.approx$s, seq_along(cwct)[-K.approx$s])]
+}
+
 
 #' Generate and add a paraview to the current view composition
 #'
@@ -361,34 +396,9 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #' # preview
 #' str(misty.views[["paraview.10"]])
 #'
-#' # Alternatives
-#' \dontrun{
-#'
-#' initial.view <- create_initial_view(expr)
-#' misty.views <- add_paraview(initial.view, pos, l = 10)
-#' }
-#'
 #' @export
 add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
-                         cached = TRUE, verbose = TRUE) {
-  # K.approx is a list containing C, W.plus and s (indexes of sampled columns)
-  sample_nystrom_row <- function(K.approx, k) {
-
-    # transform k into the row index of reordered K.approx
-    k.ind <- which(K.approx$s == k)
-    if (purrr::is_empty(k.ind)) {
-      k.ind <- length(K.approx$s) + k
-    }
-
-    cw <- seq(ncol(K.approx$W.plus)) %>%
-      purrr::map_dbl(~ K.approx$C[k.ind, ] %*% K.approx$W.plus[, .x])
-
-    cwct <- seq(ncol(t(K.approx$C))) %>%
-      purrr::map_dbl(~ cw %*% t(K.approx$C)[, .x])
-
-    # reorder the columns of cwct so that they correspond to the original order
-    cwct[c(K.approx$s, seq_along(cwct)[-s])]
-  }
+                         cached = FALSE, verbose = TRUE) {
 
   dists <- distances::distances(as.data.frame(positions))
   expr <- current.views[["intraview"]][["data"]]
@@ -404,7 +414,6 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
   )
 
   if (cached & file.exists(para.cache.file)) {
-    message("Paraview retrieved from cache\n")
     para.view <- readr::read_rds(para.cache.file)
   }
   else {
@@ -435,7 +444,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
           furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
       }
     } else {
-      message("Generating paraview using ", nn, " nearest neighbors per unit")
+      if (verbose) message("Generating paraview using ", nn, " nearest neighbors per unit")
       para.view <- seq(nrow(expr)) %>%
         furrr::future_map_dfr(function(rowid) {
           knn <- distances::nearest_neighbor_search(dists, nn + 1, query_indices = rowid)[-1, 1]
@@ -492,12 +501,6 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 #' misty.views %>%
 #'   remove_views(c("juxtaview.1.5", "paraview.10")) %>%
 #'   str()
-#'
-#' # Alternatives
-#' \dontrun{
-#'
-#' reduced.views <- remove_views(misty.views, "paraview.10")
-#' }
 #'
 #' @export
 remove_views <- function(current.views, view.names) {

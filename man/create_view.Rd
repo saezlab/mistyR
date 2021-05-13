@@ -35,20 +35,21 @@ library(distances)
 
 # get the expression data
 data("synthetic")
-expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+expr <- synthetic[[1]] \%>\% select(-c(row, col, type))
 # get the coordinates for each cell
-pos <- synthetic[[1]] \%>\% select(row,col)
+pos <- synthetic[[1]] \%>\% select(row, col)
 
 # find the 10 nearest neighbors
 neighbors <- nearest_neighbor_search(distances(as.matrix(pos)), k = 11)[-1, ]
 
 # calculate the mean expression of the nearest neighbors for all markers
 # for each cell in expr
-nnexpr <- seq_len(nrow(expr)) \%>\% 
-  map_dfr(~ expr \%>\% slice(neighbors[, .x]) \%>\% colMeans())
+nnexpr <- seq_len(nrow(expr)) \%>\%
+  map_dfr(~ expr \%>\%
+    slice(neighbors[, .x]) \%>\%
+    colMeans())
 
 create_view("nearest", nnexpr, "nn")
-
 }
 \seealso{
 \code{\link{add_views}()} for adding created views

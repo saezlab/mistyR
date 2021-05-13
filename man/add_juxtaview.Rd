@@ -8,7 +8,7 @@ add_juxtaview(
   current.views,
   positions,
   neighbor.thr = 15,
-  cached = TRUE,
+  cached = FALSE,
   verbose = TRUE
 )
 }
@@ -49,22 +49,15 @@ library(dplyr)
 
 # get the expression data
 data("synthetic")
-expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+expr <- synthetic[[1]] \%>\% select(-c(row, col, type))
 # get the coordinates for each cell
-pos <- synthetic[[1]] \%>\% select(row,col)
+pos <- synthetic[[1]] \%>\% select(row, col)
 
 # compose
 misty.views <- create_initial_view(expr) \%>\% add_juxtaview(pos, neighbor.thr = 1.5)
 
 # preview
 str(misty.views[["juxtaview.1.5"]])
-
-# Alternatives
-\dontrun{
-
-initial.view <- create_initial_view(expr)
-misty.views <- add_juxtaview(initial.view, pos, neighbor.thr = 1.5)
-}
 
 }
 \seealso{

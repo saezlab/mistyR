@@ -21,18 +21,14 @@
 clear_cache <- function(id = NULL) {
   cache.folder <- normalizePath(".misty.temp")
   if (is.null(id)) {
-    if (unlink(cache.folder, recursive = TRUE) == 0) {
-      message("Cache cleared")
-    } else {
-      message("Failed to clear cache")
+    if (!unlink(cache.folder, recursive = TRUE) == 0) {
+      warning("Failed to clear cache.")
     }
   } else {
-    if (unlink(paste0(
+    if (!unlink(paste0(
       cache.folder, .Platform$file.sep, id
     ), recursive = TRUE) == 0) {
-      message("Cache cleared\n")
-    } else {
-      message("Failed to clear cache\n")
+      warning("Failed to clear cache.")
     }
   }
 }
@@ -101,22 +97,9 @@ clear_cache <- function(id = NULL) {
 #'     run_misty(paste0("results/", .y))) %>%
 #'   collect_results()
 #' str(misty.results)
-#'
-#' # Alternatives
-#' \dontrun{
-#'
-#' run_misty(misty.views) %>% collect_results()
-#'
-#' collect_results(c("results/sample1", "results/sample2", "results/sample3"))
-#'
-#' collect_results("results/sample")
-#' }
-#'
 #' @export
 collect_results <- function(folders) {
   samples <- normalizePath(folders)
-
-  message(paste("Collecting results from", paste(folders, collapse = " ")))
 
   message("\nCollecting improvements")
   improvements <- samples %>%

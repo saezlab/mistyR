@@ -25,29 +25,27 @@ library(dplyr)
 
 # get the expression data
 data("synthetic")
-expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+expr <- synthetic[[1]] \%>\% select(-c(row, col, type))
 # get the coordinates for each cell
-pos <- synthetic[[1]] \%>\% select(row,col)
+pos <- synthetic[[1]] \%>\% select(row, col)
 
 # compose
-misty.views <- create_initial_view(expr) \%>\% 
-               add_juxtaview(pos, neighbor.thr = 1.5) \%>\%
-               add_paraview(pos, l = 10)
+misty.views <- create_initial_view(expr) \%>\%
+  add_juxtaview(pos, neighbor.thr = 1.5) \%>\%
+  add_paraview(pos, l = 10)
 
 # preview
 str(misty.views)
 
-#remove juxtaview and preview
-misty.views \%>\% remove_views("juxtaview.1.5") \%>\% str()
+# remove juxtaview and preview
+misty.views \%>\%
+  remove_views("juxtaview.1.5") \%>\%
+  str()
 
-#remove juxtaview and paraview and preview
-misty.views \%>\% remove_views(c("juxtaview.1.5", "paraview.10")) \%>\% str()
-
-# Alternatives
-\dontrun{
-
-reduced.views <- remove_views(misty.views, "paraview.10")
-}
+# remove juxtaview and paraview and preview
+misty.views \%>\%
+  remove_views(c("juxtaview.1.5", "paraview.10")) \%>\%
+  str()
 
 }
 \seealso{

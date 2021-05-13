@@ -10,7 +10,8 @@ run_misty(
   seed = 42,
   target.subset = NULL,
   cv.folds = 10,
-  cached = TRUE,
+  cached = FALSE,
+  append = FALSE,
   ...
 )
 }
@@ -29,6 +30,11 @@ the performance of the multi-view models.}
 
 \item{cached}{a \code{logical} indicating whether to cache the trained models
 and to reuse previously cached ones if they already exist for this sample.}
+
+\item{append}{a \code{logical} indicating whether to append the performance
+and coefficient files in the \code{results.folder}. Consider setting to
+\code{TRUE} when rerunning a workflow with different \code{target.subset}
+parameters.}
 
 \item{...}{all additional parameters are passed to
 \code{\link[ranger]{ranger}()} for training the view-specific models
@@ -56,21 +62,15 @@ library(dplyr)
 
 # get the expression data
 data("synthetic")
-expr <- synthetic[[1]] \%>\% select(-c(row,col,type))
+expr <- synthetic[[1]] \%>\% select(-c(row, col, type))
 # get the coordinates for each cell
-pos <- synthetic[[1]] \%>\% select(row,col)
+pos <- synthetic[[1]] \%>\% select(row, col)
 
 # compose
 misty.views <- create_initial_view(expr) \%>\% add_paraview(pos, l = 10)
 
 # run with default parameters
 run_misty(misty.views)
-
-# Alternatives
-\dontrun{
-
- create_initial_view(expr) \%>\% add_paraview(pos, l = 10) \%>\% run_misty()
-}
 }
 \seealso{
 \code{\link{create_initial_view}()} for

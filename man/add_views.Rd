@@ -20,21 +20,17 @@ A mistyR view composition containing an union of views from
 Add one or more custom views to the current view composition.
 }
 \examples{
-# Add custom views created with create_view() to the view composition.
 
-# Alternatives
-\dontrun{
+# create random views
+view1 <- data.frame(marker1 = rnorm(100, 10, 2), marker2 = rnorm(100, 15, 3))
+view2 <- data.frame(marker1 = rnorm(100, 10, 5), marker2 = rnorm(100, 15, 5))
 
-new.view <- create_view("nearest", nnexpr, "")
+misty.views <- create_initial_view(view1)
+
+new.view <- create_view("dummyname", view2, "dname")
 add_views(misty.views, new.view)
   
-misty.views \%>\% add_views(create_view("nearest", nnexpr, ""))
-
-misty.views \%>\% 
-  add_views(c(create_view("nearest", nnexpr, ""), view2, view3))
-  
-misty.views \%>\% add_views(list(new.view, another.view))
-}
+misty.views \%>\% add_views(create_view("dummyname", view2, "dname"))
 
 }
 \seealso{

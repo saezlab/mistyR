@@ -34,8 +34,8 @@ Install from Bioconductor:
 ```r
 if(!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("mistyR")
 
+BiocManager::install("mistyR")
 ```
 
 or install the latest version from GitHub with `remotes`:
@@ -43,21 +43,7 @@ or install the latest version from GitHub with `remotes`:
 ```r
 # install.packages("remotes")
 remotes::install_github("saezlab/mistyR")
-
 ```
-
-
-mistyR is dependent on the following packages that are available from CRAN:
-
-assertthat, caret, deldir, digest, distances, dplyr, filelock, furrr, ggplot2,
-magrittr, MASS, purrr, ranger, readr, rlang, rlist, stats, stringr, tibble,
-tidyr, withr
-
-and mainly for the purpose of building the vignettes suggests 
-
-BiocStyle, future, igraph, knitr, Matrix, progeny, rmarkdown, sctransform, SingleCellExperiment, SpatialExperiment and SummarizedExperiment 
-
-from CRAN or Bioconductor.
 
 The installation of mistyR without any additional dependencies and building vignettes should take only seconds.
 
