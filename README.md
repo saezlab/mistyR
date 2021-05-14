@@ -3,6 +3,8 @@
 <!-- badges: start -->
 
 [![R4.1-bioc3.13](https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml)
+[![BioC status](http://www.bioconductor.org/shields/build/release/bioc/mistyR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/mistyR)
+[![BioC devel status](http://www.bioconductor.org/shields/build/devel/bioc/mistyR.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/mistyR)
 
 <!-- badges: end -->
 
@@ -19,9 +21,9 @@ MISTy facilitates an in-depth understanding of marker interactions by profiling 
 
 ## System Requirements
 
-mistyR requires a standard configuration and enough RAM to store the analyzed dataset and to support in-memory operations.
+**mistyR** requires a standard configuration and enough RAM to store the analyzed dataset and to support in-memory operations.
 
-The package requires installed R version 4.0 or higher. This package has been tested on a macOS Big Sur. The package should be compatible with Windows, Linux and maxOS operating systems.
+The package requires R version 4.0 or higher. This package is developed on macOS Big Sur. The package should be compatible with Windows, Linux and maxOS operating systems.
 
 
 ## Installation
@@ -29,9 +31,7 @@ The package requires installed R version 4.0 or higher. This package has been te
 Install from Bioconductor:
 
 ```r
-if(!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
+# install.packages("BiocManager")
 BiocManager::install("mistyR")
 ```
 
@@ -42,15 +42,15 @@ or install the latest version from GitHub with `remotes`:
 remotes::install_github("saezlab/mistyR")
 ```
 
-The installation of mistyR without any additional dependencies and building vignettes should take only seconds.
+The installation without any additional dependencies and building vignettes should take only seconds.
 
 ## Usage
 
-Start by reading `vignette("mistyR")` to learn how to run mistyR. To use mistyR with commonly used objects for spatial omics data see the [articles](https://saezlab.github.io/mistyR/articles/).
+Start by reading `vignette("mistyR")` to learn how to run **mistyR**. To learn how to use the package with commonly used objects for spatial omics data see the [articles](https://saezlab.github.io/mistyR/articles/).
 
-Example pipelines and synthetic data for running mistyR are also available from [this repository](https://github.com/saezlab/misty_pipelines). To run mistyR on the provided synthetic data run the script synthetic_pipeline.R.
+Example pipelines and synthetic data for **mistyR** are also available from [this repository](https://github.com/saezlab/misty_pipelines). To run **mistyR** on the provided synthetic data run the script *synthetic_pipeline.R*.
 
 ## Citation
-If you use mistyR for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 
+If you use **mistyR** for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 
 
 > Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. *bioRxiv*. doi: [10.1101/2020.05.08.084145](https://doi.org/10.1101/2020.05.08.084145)
