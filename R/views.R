@@ -45,7 +45,7 @@ create_initial_view <- function(data, unique.id = NULL) {
   view <- append(init.list, list(misty.uniqueid = misty.uniqueid))
 
   # create cache
-  cache.location <- normalizePath(paste0(
+  cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     view[["misty.uniqueid"]]
   ))
@@ -264,10 +264,10 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 
   expr <- current.views[["intraview"]][["data"]]
 
-  cache.location <- paste0(
+  cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     current.views[["misty.uniqueid"]]
-  )
+  ))
 
   juxta.cache.file <- paste0(
     cache.location, .Platform$file.sep,
@@ -403,10 +403,10 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
   dists <- distances::distances(as.data.frame(positions))
   expr <- current.views[["intraview"]][["data"]]
 
-  cache.location <- paste0(
+  cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     current.views[["misty.uniqueid"]]
-  )
+  ))
 
   para.cache.file <- paste0(
     cache.location, .Platform$file.sep,

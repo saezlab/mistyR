@@ -19,7 +19,7 @@
 #' clear_cache()
 #' @export
 clear_cache <- function(id = NULL) {
-  cache.folder <- normalizePath(".misty.temp")
+  cache.folder <- R.utils::getAbsolutePath(".misty.temp")
   if (is.null(id)) {
     if (!unlink(cache.folder, recursive = TRUE) == 0) {
       warning("Failed to clear cache.")
@@ -99,7 +99,7 @@ clear_cache <- function(id = NULL) {
 #' str(misty.results)
 #' @export
 collect_results <- function(folders) {
-  samples <- normalizePath(folders)
+  samples <- R.utils::getAbsolutePath(folders)
 
   message("\nCollecting improvements")
   improvements <- samples %>%
@@ -247,7 +247,7 @@ aggregate_results_subset <- function(misty.results, folders) {
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  normalized.folders <- normalizePath(folders)
+  normalized.folders <- R.utils::getAbsolutePath(folders)
   # check if folders are in names of misty.results
   assertthat::assert_that(all(normalized.folders %in% names(misty.results$importances)),
     msg = "The provided results list doesn't contain information about some of

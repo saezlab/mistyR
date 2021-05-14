@@ -22,7 +22,7 @@
 build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
                         ...) {
 
-  cache.location <- normalizePath(paste0(
+  cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
   ))

@@ -68,7 +68,7 @@ dplyr::`%>%`
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, cv.folds = 10, cached = FALSE,
                       append = FALSE, ...) {
-  normalized.results.folder <- normalizePath(results.folder)
+  normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
   if (!dir.exists(normalized.results.folder)) {
     dir.create(normalized.results.folder, recursive = TRUE)
@@ -212,14 +212,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   }, .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
 
   if (!cached) {
-    cache.location <- normalizePath(paste0(
+    cache.location <- R.utils::getAbsolutePath(paste0(
       ".misty.temp", .Platform$file.sep,
       views[["misty.uniqueid"]]
     ))
     if (length(list.files(cache.location)) == 0) {
       clear_cache(views[["misty.uniqueid"]])
     }
-    if (length(list.files(normalizePath(".misty.temp"))) == 0) {
+    if (length(list.files(R.utils::getAbsolutePath(".misty.temp"))) == 0) {
       clear_cache()
     }
   }
