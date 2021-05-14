@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![R build status](https://github.com/saezlab/mistyR/workflows/R-bioc-devel/badge.svg)](https://github.com/saezlab/mistyR/actions)
+[![R4.1-bioc3.13](https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml)
 
 <!-- badges: end -->
 
