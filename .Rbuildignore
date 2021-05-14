@@ -1,4 +1,4 @@
-^\.travis\.yml$
+^\.github$
 ^docs$
 ^pkgdown$
 ^man/figures$

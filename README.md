@@ -2,10 +2,7 @@
 
 <!-- badges: start -->
 
-| branch | status                                                       |
-| :----- | :----------------------------------------------------------- |
-| master | [![Build Status](https://travis-ci.org/saezlab/mistyR.svg?branch=master)](https://travis-ci.org/saezlab/mistyR) |
-| devel  | [![Build Status](https://travis-ci.org/saezlab/mistyR.svg?branch=devel)](https://travis-ci.org/saezlab/mistyR) |
+[![R build status](https://github.com/saezlab/mistyR/workflows/R-bioc-devel/badge.svg)](https://github.com/saezlab/mistyR/actions)
 
 <!-- badges: end -->
 
