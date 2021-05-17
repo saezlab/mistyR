@@ -26,25 +26,25 @@ test_that("add_paraview creates and adds a correct view", {
   expr <- generate_random_tibble(100, 5)
   pos <- sample_grid_geometry(100, 10, 10)
   misty.views <- create_initial_view(expr) %>%
-    add_paraview(pos, l = 1)
+    add_paraview(pos, l = 2)
   expect_length(misty.views, 3)
 
   # nn approximation
-  nn.views <- create_initial_view(expr) %>% add_paraview(pos, l = 1, nn = 10)
+  nn.views <- create_initial_view(expr) %>% add_paraview(pos, l = 2, nn = 10)
   nn.correlations <- cor(
-    misty.views[["paraview.1"]]$data,
-    nn.views[["paraview.1"]]$data
+    misty.views[["paraview.2"]]$data,
+    nn.views[["paraview.2"]]$data
   )
   expect_equal(apply(nn.correlations, 2, max), diag(nn.correlations))
 
   # nystrom approximation
   nystrom.views <- create_initial_view(expr) %>%
-    add_paraview(pos, l = 1, approx = 20)
+    add_paraview(pos, l = 2, approx = 0.5)
   nystrom.correlations <- cor(
-    misty.views[["paraview.1"]]$data,
-    nystrom.views[["paraview.1"]]$data
+    misty.views[["paraview.2"]]$data,
+    nystrom.views[["paraview.2"]]$data
   )
-  expect_equal(apply(nn.correlations, 2, max), diag(nn.correlations))
+  expect_equal(apply(nystrom.correlations, 2, max), diag(nystrom.correlations))
 })
 
 test_that("create_view creates expected structure", {
