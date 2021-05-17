@@ -319,21 +319,13 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #' @return approximated values of row k.
 #' @noRd
 sample_nystrom_row <- function(K.approx, k) {
-  
-  # transform k into the row index of reordered K.approx
-  k.ind <- which(K.approx$s == k)
-  if (purrr::is_empty(k.ind)) {
-    k.ind <- length(K.approx$s) + k
-  }
-  
   cw <- seq(ncol(K.approx$W.plus)) %>%
-    purrr::map_dbl(~ K.approx$C[k.ind, ] %*% K.approx$W.plus[, .x])
+    purrr::map_dbl(~ K.approx$C[k, ] %*% K.approx$W.plus[, .x])
   
-  cwct <- seq(ncol(t(K.approx$C))) %>%
+  cwct <- seq(nrow(K.approx$C)) %>%
     purrr::map_dbl(~ cw %*% t(K.approx$C)[, .x])
   
-  # reorder the columns of cwct so that they correspond to the original order
-  cwct[c(K.approx$s, seq_along(cwct)[-K.approx$s])]
+  cwct
 }
 
 
@@ -430,7 +422,7 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
         if (approx < 1) approx <- base::round(approx * ncol(dists))
 
         if (verbose) message("Approximating RBF matrix using the Nystrom method")
-        # single Nystrom approximation expert, given RBF with paramter l
+        # single Nystrom approximation expert, given RBF with parameter l
         s <- sort(sample.int(n = ncol(dists), size = approx))
         C <- exp(-(dists[, s]^2) / l^2)
 

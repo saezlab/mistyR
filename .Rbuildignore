@@ -7,3 +7,5 @@
 (^|/)results$
 ^vignettes/mistySeurat.Rmd$
 ^LICENSE$
+^.*\.Rproj$
+^\.Rproj\.user$

@@ -1,3 +1,8 @@
+# mistyR 0.99.10
+
+- Fixed a bug in Nystrom approximation for creating paraview.
+- Added tests for view composition.
+
 # mistyR 0.99.9
 
 - Revisions requested by Bioconductor
