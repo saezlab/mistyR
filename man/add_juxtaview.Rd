@@ -58,7 +58,6 @@ misty.views <- create_initial_view(expr) \%>\% add_juxtaview(pos, neighbor.thr =
 
 # preview
 str(misty.views[["juxtaview.1.5"]])
-
 }
 \seealso{
 \code{\link{create_initial_view}()} for

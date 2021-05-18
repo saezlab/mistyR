@@ -1,7 +1,7 @@
 Package: mistyR
 Type: Package
 Title: Multiview Intercellular SpaTial modeling framework
-Version: 0.99.10
+Version: 0.99.11
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",
@@ -39,8 +39,19 @@ VignetteBuilder: knitr
 Imports: assertthat, caret, deldir, digest, distances, dplyr, filelock, 
     furrr (>= 0.2.0), ggplot2, MASS, purrr, ranger, readr, rlang, rlist, 
     R.utils, stats, stringr, tibble, tidyr, withr
-Suggests: BiocStyle, future, igraph, knitr, Matrix, progeny, rmarkdown, 
-    sctransform, SingleCellExperiment, SpatialExperiment, SummarizedExperiment,
+Suggests: 
+    covr,
+    BiocStyle,
+    future,
+    igraph,
+    knitr,
+    Matrix,
+    progeny,
+    rmarkdown,
+    sctransform,
+    SingleCellExperiment,
+    SpatialExperiment,
+    SummarizedExperiment,
     testthat (>= 3.0.0)
 RoxygenNote: 7.1.1
 Config/testthat/edition: 3

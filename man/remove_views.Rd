@@ -46,7 +46,6 @@ misty.views \%>\%
 misty.views \%>\%
   remove_views(c("juxtaview.1.5", "paraview.10")) \%>\%
   str()
-
 }
 \seealso{
 Other view composition functions: 

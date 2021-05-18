@@ -1,7 +1,8 @@
-# mistyR 0.99.10
+# mistyR 0.99.11
 
 - Fixed a bug in Nystrom approximation for creating paraview.
-- Added tests for view composition.
+- Added a suite of tests with high coverage.
+- Cleaner cache control.
 
 # mistyR 0.99.9
 

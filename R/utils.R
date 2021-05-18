@@ -1,39 +1,6 @@
 # mistyR utility functions
 # Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
-#' Clear cached objects
-#'
-#' Purge the cache or clear the cached objects for a single sample.
-#'
-#' The cached objects are removed from disk and cannot be retrieved. Whenever
-#' possible specifying an \code{id} is reccomended. If \code{id = NULL} all
-#' contents of the folder \file{.misty.temp} will be removed.
-#'
-#' @param id the unique id of the sample.
-#'
-#' @return None (\code{NULL})
-#'
-#' @examples
-#' clear_cache("b98ad35f4e671871cba35f2155228612")
-#'
-#' clear_cache()
-#' @export
-clear_cache <- function(id = NULL) {
-  cache.folder <- R.utils::getAbsolutePath(".misty.temp")
-  if (is.null(id)) {
-    if (!unlink(cache.folder, recursive = TRUE) == 0) {
-      warning("Failed to clear cache.")
-    }
-  } else {
-    if (!unlink(paste0(
-      cache.folder, .Platform$file.sep, id
-    ), recursive = TRUE) == 0) {
-      warning("Failed to clear cache.")
-    }
-  }
-}
-
-
 #' Collect and aggregate results
 #'
 #' Collect and aggregate performance, contribution and importance estimations
@@ -187,7 +154,8 @@ collect_results <- function(folders) {
             dplyr::filter(sample == !!sample, view == paste0("p.", !!view)) %>%
             dplyr::mutate(value = 1 - .data$value)
 
-          # importances are standardized for each target an multiplied by 1-pval(view)
+          # importances are standardized for each target 
+          # and multiplied by 1-pval(view)
           all.importances %>%
             purrr::imap_dfc(~
             tibble::tibble(feature = features, zero.imp = 0) %>%
@@ -249,7 +217,8 @@ aggregate_results_subset <- function(misty.results, folders) {
 
   normalized.folders <- R.utils::getAbsolutePath(folders)
   # check if folders are in names of misty.results
-  assertthat::assert_that(all(normalized.folders %in% names(misty.results$importances)),
+  assertthat::assert_that(all(normalized.folders %in% 
+                                names(misty.results$importances)),
     msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
@@ -270,4 +239,57 @@ aggregate_results_subset <- function(misty.results, folders) {
   misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
 
   return(misty.results)
+}
+
+#' Clear cached objects
+#'
+#' Purge the cache or clear the cached objects for a single sample.
+#'
+#' The cached objects are removed from disk and cannot be retrieved. Whenever
+#' possible specifying an \code{id} is reccomended. If \code{id = NULL} all
+#' contents of the folder \file{.misty.temp} will be removed.
+#'
+#' @param id the unique id of the sample.
+#'
+#' @return None (\code{NULL})
+#'
+#' @examples
+#' clear_cache("b98ad35f4e671871cba35f2155228612")
+#'
+#' clear_cache()
+#' @export
+clear_cache <- function(id = NULL) {
+  cache.folder <- R.utils::getAbsolutePath(".misty.temp")
+  if (is.null(id)) {
+    if (!unlink(cache.folder, recursive = TRUE) == 0) {
+      warning("Failed to clear cache.")
+    }
+  } else {
+    if (!unlink(paste0(
+      cache.folder, .Platform$file.sep, id
+    ), recursive = TRUE) == 0) {
+      warning("Failed to clear cache.")
+    }
+  }
+}
+
+#' Removes empty cache folders.
+#'
+#' @return None (\code{NULL})
+#'
+#' @noRd
+sweep_cache <- function() {
+  cache.folder <- R.utils::getAbsolutePath(".misty.temp")
+  if (dir.exists(cache.folder)) {
+    list.files(cache.folder, full.names = TRUE) %>%
+      purrr::walk(function(path) {
+        if (length(list.files(path)) == 0) {
+          unlink(path, recursive = TRUE)
+        }
+      })
+
+    if (length(list.files(cache.folder, full.names = TRUE)) == 0) {
+      clear_cache()
+    }
+  }
 }

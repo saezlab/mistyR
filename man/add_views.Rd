@@ -29,9 +29,8 @@ misty.views <- create_initial_view(view1)
 
 new.view <- create_view("dummyname", view2, "dname")
 add_views(misty.views, new.view)
-  
-misty.views \%>\% add_views(create_view("dummyname", view2, "dname"))
 
+misty.views \%>\% add_views(create_view("dummyname", view2, "dname"))
 }
 \seealso{
 \code{\link{create_initial_view}()} for

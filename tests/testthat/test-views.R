@@ -30,7 +30,7 @@ test_that("add_paraview creates and adds a correct view", {
   expect_length(misty.views, 3)
 
   # nn approximation
-  nn.views <- create_initial_view(expr) %>% add_paraview(pos, l = 2, nn = 10)
+  nn.views <- create_initial_view(expr) %>% add_paraview(pos, l = 2, nn = 20)
   nn.correlations <- cor(
     misty.views[["paraview.2"]]$data,
     nn.views[["paraview.2"]]$data
@@ -39,7 +39,7 @@ test_that("add_paraview creates and adds a correct view", {
 
   # nystrom approximation
   nystrom.views <- create_initial_view(expr) %>%
-    add_paraview(pos, l = 2, approx = 0.5)
+    add_paraview(pos, l = 2, approx = 0.6)
   nystrom.correlations <- cor(
     misty.views[["paraview.2"]]$data,
     nystrom.views[["paraview.2"]]$data
@@ -69,13 +69,13 @@ test_that("add_views works with created views", {
   )
 })
 
-test_that("remove_views removes only non-essential views",{
+test_that("remove_views removes only non-essential views", {
   expr <- generate_random_tibble(30, 5)
   pos <- sample_grid_geometry(30, 10, 10)
   misty.views <- create_initial_view(expr) %>%
-    add_juxtaview(pos, 1) %>%
-    add_paraview(pos, 1)
-  expect_length(misty.views %>% remove_views("paraview.1"), 3)
+    add_juxtaview(pos, 1.5) %>%
+    add_paraview(pos, 2)
+  expect_length(misty.views %>% remove_views("paraview.2"), 3)
   expect_length(misty.views %>% remove_views("intraview"), 4)
   expect_length(misty.views %>% remove_views("misty.uniqueid"), 4)
 })
@@ -85,10 +85,25 @@ test_that("view composition works correctly", {
   pos <- sample_grid_geometry(30, 10, 10)
   new.expr <- generate_random_tibble(30, 5)
   misty.views <- create_initial_view(expr) %>%
-    add_juxtaview(pos, 1) %>%
-    add_paraview(pos, 1) %>%
+    add_juxtaview(pos, 1.5) %>%
+    add_paraview(pos, 2) %>%
     add_views(create_view("new", new.expr))
   expect_length(misty.views, 5)
 })
 
-
+test_that("views are cached and retrieved", {
+  expr <- generate_random_tibble(30, 5)
+  pos <- sample_grid_geometry(30, 10, 10)
+  initial.view <- create_initial_view(expr)
+  expect_message(
+    initial.view %>% add_juxtaview(pos, 1.5, cached = TRUE),
+    "Generating juxtaview"
+  )
+  expect_silent(initial.view %>% add_juxtaview(pos, 1.5, cached = TRUE))
+  expect_message(
+    initial.view %>% add_paraview(pos, 2, cached = TRUE),
+    "Generating paraview"
+  )
+  expect_silent(initial.view %>% add_paraview(pos, 2, cached = TRUE))
+  clear_cache()
+})

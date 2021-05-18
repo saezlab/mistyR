@@ -74,6 +74,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     dir.create(normalized.results.folder, recursive = TRUE)
   }
 
+  on.exit(sweep_cache())
+
   view.abbrev <- views %>%
     rlist::list.remove(c("misty.uniqueid")) %>%
     purrr::map_chr(~ .x[["abbrev"]])
@@ -100,7 +102,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     normalized.results.folder, .Platform$file.sep,
     "coefficients.txt.lock"
   )
-  on.exit(file.remove(coef.lock))
+  on.exit(file.remove(coef.lock), add = TRUE)
 
   if (!append) {
     current.lock <- filelock::lock(coef.lock)
@@ -188,15 +190,19 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0))
     performance.summary <- c(
       performance.estimate %>% colMeans(),
-      tryCatch(stats::t.test(performance.estimate %>% dplyr::pull(.data$intra.RMSE),
-        performance.estimate %>% dplyr::pull(.data$multi.RMSE),
-        alternative = "greater"
+      tryCatch(stats::t.test(performance.estimate %>%
+        dplyr::pull(.data$intra.RMSE),
+      performance.estimate %>%
+        dplyr::pull(.data$multi.RMSE),
+      alternative = "greater"
       )$p.value, error = function(e) {
         1
       }),
-      tryCatch(stats::t.test(performance.estimate %>% dplyr::pull(.data$intra.R2),
-        performance.estimate %>% dplyr::pull(.data$multi.R2),
-        alternative = "less"
+      tryCatch(stats::t.test(performance.estimate %>%
+        dplyr::pull(.data$intra.R2),
+      performance.estimate %>%
+        dplyr::pull(.data$multi.R2),
+      alternative = "less"
       )$p.value, error = function(e) {
         1
       })
@@ -210,19 +216,6 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     return(target)
   }, .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
-
-  if (!cached) {
-    cache.location <- R.utils::getAbsolutePath(paste0(
-      ".misty.temp", .Platform$file.sep,
-      views[["misty.uniqueid"]]
-    ))
-    if (length(list.files(cache.location)) == 0) {
-      clear_cache(views[["misty.uniqueid"]])
-    }
-    if (length(list.files(R.utils::getAbsolutePath(".misty.temp"))) == 0) {
-      clear_cache()
-    }
-  }
 
   return(normalized.results.folder)
 }

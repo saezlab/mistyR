@@ -34,8 +34,8 @@ name: R4.1-bioc3.13
 ## Note that you can always run a GHA test without the cache by using the word
 ## "/nocache" in the commit message.
 env:
-  has_testthat: 'false'
-  run_covr: 'false'
+  has_testthat: 'true'
+  run_covr: 'true'
   run_pkgdown: 'true'
   has_RUnit: 'false'
   cache-version: 'cache-v1'

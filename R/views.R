@@ -44,16 +44,6 @@ create_initial_view <- function(data, unique.id = NULL) {
 
   view <- append(init.list, list(misty.uniqueid = misty.uniqueid))
 
-  # create cache
-  cache.location <- R.utils::getAbsolutePath(paste0(
-    ".misty.temp", .Platform$file.sep,
-    view[["misty.uniqueid"]]
-  ))
-
-  if (!dir.exists(cache.location)) {
-    dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
-  }
-
   return(view)
 }
 
@@ -127,20 +117,19 @@ create_view <- function(name, data, abbrev = name) {
 #'     \code{\link{create_view}()} for creating a custom view.
 #'
 #' @family view composition functions
-#' 
+#'
 #' @examples
-#' 
+#'
 #' # create random views
 #' view1 <- data.frame(marker1 = rnorm(100, 10, 2), marker2 = rnorm(100, 15, 3))
 #' view2 <- data.frame(marker1 = rnorm(100, 10, 5), marker2 = rnorm(100, 15, 5))
-#' 
+#'
 #' misty.views <- create_initial_view(view1)
-#' 
+#'
 #' new.view <- create_view("dummyname", view2, "dname")
 #' add_views(misty.views, new.view)
-#'   
-#' misty.views %>% add_views(create_view("dummyname", view2, "dname"))
 #'
+#' misty.views %>% add_views(create_view("dummyname", view2, "dname"))
 #' @export
 add_views <- function(current.views, new.views) {
   assertthat::assert_that(length(current.views) >= 1,
@@ -153,7 +142,8 @@ add_views <- function(current.views, new.views) {
     msg = "The new views are not in a list or vector."
   )
 
-  assertthat::assert_that(length(new.views %>% unlist(recursive = FALSE)) %% 2 == 0,
+  assertthat::assert_that(length(new.views %>% 
+                                   unlist(recursive = FALSE)) %% 2 == 0,
     msg = "The new view is malformed. Consider using create_view()."
   )
 
@@ -198,7 +188,7 @@ add_views <- function(current.views, new.views) {
 #' Get neighbors from Delauney triangulation
 #'
 #' Helper function for \code{\link{add_juxtaview}()}.
-#' 
+#'
 #' @param ddobj deldir object.
 #' @param id cell/spatial unit id.
 #'
@@ -257,11 +247,9 @@ get_neighbors <- function(ddobj, id) {
 #'
 #' # preview
 #' str(misty.views[["juxtaview.1.5"]])
-#'
 #' @export
 add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
                           cached = FALSE, verbose = TRUE) {
-
   expr <- current.views[["intraview"]][["data"]]
 
   cache.location <- R.utils::getAbsolutePath(paste0(
@@ -273,6 +261,10 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
     cache.location, .Platform$file.sep,
     "juxta.view.", neighbor.thr, ".rds"
   )
+
+  if (cached && !dir.exists(cache.location)) {
+    dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
+  }
 
   if (cached & file.exists(juxta.cache.file)) {
     juxta.view <- readr::read_rds(juxta.cache.file)
@@ -306,13 +298,13 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 #' Sample a Nystrom approximated row
 #'
 #' Helper function for \code{\link{add_paraview}()}.
-#' 
-#' Kumar et al. 2012. Sampling methods for the Nystrom method. 
-#' Journal of Machine Learning Research 13(1):981-1006 
+#'
+#' Kumar et al. 2012. Sampling methods for the Nystrom method.
+#' Journal of Machine Learning Research 13(1):981-1006
 #' \url{https://www.jmlr.org/papers/volume13/kumar12a/kumar12a.pdf}
 #'
-#' @param K.approx a list containing elemnts \code{s} - indexes of sampled 
-#'     columns, \code{C} - sample of columns \code{s} of the original matrix, and 
+#' @param K.approx a list containing elemnts \code{s} - indexes of sampled
+#'     columns, \code{C} - sample of columns \code{s} of the original matrix, and
 #'    \code{W.plus} - pseudo inverse of W (sample of rows \code{s} from \code{C}).
 #' @param k row to be approximated.
 #'
@@ -321,10 +313,10 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 sample_nystrom_row <- function(K.approx, k) {
   cw <- seq(ncol(K.approx$W.plus)) %>%
     purrr::map_dbl(~ K.approx$C[k, ] %*% K.approx$W.plus[, .x])
-  
+
   cwct <- seq(nrow(K.approx$C)) %>%
     purrr::map_dbl(~ cw %*% t(K.approx$C)[, .x])
-  
+
   cwct
 }
 
@@ -387,11 +379,9 @@ sample_nystrom_row <- function(K.approx, k) {
 #'
 #' # preview
 #' str(misty.views[["paraview.10"]])
-#'
 #' @export
 add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
                          cached = FALSE, verbose = TRUE) {
-
   dists <- distances::distances(as.data.frame(positions))
   expr <- current.views[["intraview"]][["data"]]
 
@@ -404,6 +394,10 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
     cache.location, .Platform$file.sep,
     "para.view.", l, ".rds"
   )
+
+  if (cached && !dir.exists(cache.location)) {
+    dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
+  }
 
   if (cached & file.exists(para.cache.file)) {
     para.view <- readr::read_rds(para.cache.file)
@@ -493,7 +487,6 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
 #' misty.views %>%
 #'   remove_views(c("juxtaview.1.5", "paraview.10")) %>%
 #'   str()
-#'
 #' @export
 remove_views <- function(current.views, view.names) {
   to.match <- !(view.names %in% c("intraview", "misty.uniqueid"))

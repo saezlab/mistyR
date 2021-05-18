@@ -82,7 +82,6 @@ misty.views <- create_initial_view(expr) \%>\% add_paraview(pos, l = 10)
 
 # preview
 str(misty.views[["paraview.10"]])
-
 }
 \seealso{
 \code{\link{create_initial_view}()} for

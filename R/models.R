@@ -17,17 +17,16 @@
 #'
 #' @return A list containing the trained meta-model, a list of trained
 #' view-specific models and performance estimates.
-#' 
+#'
 #' @noRd
 build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
                         ...) {
-
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
   ))
 
-  if (!dir.exists(cache.location)) {
+  if (cached && !dir.exists(cache.location)) {
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
   }
 
@@ -90,8 +89,10 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
   )
 
   # cv performance estimate
-  test.folds <- withr::with_seed(seed, 
-                                 caret::createFolds(target.vector, k = cv.folds))
+  test.folds <- withr::with_seed(
+    seed,
+    caret::createFolds(target.vector, k = cv.folds)
+  )
 
   intra.view.only <-
     model.views[["intraview"]]$predictions %>%
