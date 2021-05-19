@@ -52,7 +52,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: '4.1', bioc: '3.13', cont: "bioconductor/bioconductor_docker:RELEASE_3_13", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: ubuntu-latest, r: '4.1', bioc: '3.13', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
           - { os: macOS-latest, r: '4.1', bioc: '3.13'}
           - { os: windows-latest, r: '4.1', bioc: '3.13'}
     env:
@@ -64,15 +64,6 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-
-      ## Set the R library to the directory matching the
-      ## R packages cache step further below when running on Docker (Linux).
-      - name: Set R Library home on Linux
-        if: runner.os == 'Linux'
-        run: |
-          mkdir /__w/_temp/Library
-          echo ".libPaths('/__w/_temp/Library')" > ~/.Rprofile
-
       ## Most of these steps are the same as the ones in
       ## https://github.com/r-lib/actions/blob/master/examples/check-standard.yaml
       ## If they update their steps, we will also need to update ours.
@@ -81,14 +72,12 @@ jobs:
 
       ## R is already included in the Bioconductor docker images
       - name: Setup R from r-lib
-        if: runner.os != 'Linux'
         uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.config.r }}
 
       ## pandoc is already included in the Bioconductor docker images
       - name: Setup pandoc from r-lib
-        if: runner.os != 'Linux'
         uses: r-lib/actions/setup-pandoc@master
 
       - name: Query dependencies
@@ -119,6 +108,9 @@ jobs:
           sysreqs=$(Rscript -e 'cat("apt-get update -y && apt-get install -y", paste(gsub("apt-get install -y ", "", remotes::system_requirements("ubuntu", "20.04")), collapse = " "))')
           echo $sysreqs
           sudo -s eval "$sysreqs"
+          
+          # SpatialExperiment (magick) dependency
+          sudo apt-get install -y libmagick++-dev  
 
       - name: Install macOS system dependencies
         if: matrix.config.os == 'macOS-latest'
@@ -136,11 +128,11 @@ jobs:
 
           ## For installing usethis's dependency gert
           brew install libgit2
-
+      
       - name: Install Windows system dependencies
         if: runner.os == 'Windows'
         run: |
-          ## Edit below if you have any Windows system dependencies
+          # Nothing needed 
         shell: Rscript {0}
 
       - name: Install BiocManager
@@ -162,10 +154,16 @@ jobs:
           ## https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016675.html
           ## https://github.com/r-lib/remotes/issues/296
           ## Ideally, all dependencies should get installed in the first pass.
+          
+          ## For producing vignette pdf output
+          remotes::install_cran("tinytex")
+          tinytex::install_tinytex()
+          tinytex::tlmgr_update()
+          tinytex::tlmgr_install("pdfcrop")
 
           ## Pass #1 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
-          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE, upgrade = TRUE)
+          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), upgrade = TRUE)
         continue-on-error: true
         shell: Rscript {0}
 
@@ -173,7 +171,7 @@ jobs:
         run: |
           ## Pass #2 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
-          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE, upgrade = TRUE)
+          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), upgrade = TRUE)
 
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
@@ -201,10 +199,10 @@ jobs:
         shell: Rscript {0}
         
       ## For gh-pages. Only needed because hdf5r cannot be installed on macos with R4.1. 
-      - name: install Seurat and dependencies
+      - name: Install Seurat and dependencies
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run : |
-          apt-get install -y libhdf5-dev
+          sudo apt-get install -y libhdf5-dev
           Rscript -e 'remotes::install_cran(c("Seurat", "hdf5r"), upgrade = TRUE)'
 
       - name: Session info
@@ -259,7 +257,7 @@ jobs:
 
 
       ## Changing package deployment to make the necessary changes to the vignette files
-      - name: Deploy package
+      - name: Set up package deployment
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           git config --local user.email "actions@github.com"
@@ -305,7 +303,7 @@ jobs:
             unlink(paste0(dest_dir, c("/reference/.misty.temp", "/reference/results")), recursive = TRUE)
             
             if (github_pages) {
-                pkgdown::build_github_pages(pkg)
+                pkgdown:::build_github_pages(pkg)
             }
             pkgdown:::github_push(dest_dir, commit_message, remote, branch)
             invisible()
@@ -328,7 +326,7 @@ jobs:
             content
           })
           
-          pkgdown::deploy_to_branch_mod(lazy =TRUE, new_process = FALSE)
+          deploy_to_branch_mod(new_process = FALSE)
           
           purrr::walk2(original, vignettes, ~xfun::write_utf8(c(.x$front_matter, .x$body), .y))
         shell: Rscript {0}
