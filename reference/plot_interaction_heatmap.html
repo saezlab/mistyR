@@ -52,8 +52,6 @@
 
 
 
-
-
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -75,16 +73,9 @@
 </script>
 
 
-
-  
-
-  
-
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -105,6 +96,12 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../articles/mistyR.html">Get started</a>
 </li>
 <li>
@@ -170,7 +167,7 @@
     <p>Generate a heatmap with importances of predictor-target interaction.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>plot_interaction_heatmap</span><span class='op'>(</span><span class='va'>misty.results</span>, <span class='va'>view</span>, cutoff <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
+    <pre class="usage"><span class='fu'>plot_interaction_heatmap</span><span class='op'>(</span><span class='va'>misty.results</span>, <span class='va'>view</span>, cutoff <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,7 +203,7 @@ be colored white in the heatmap and considered as not relevant.</p></td>
 <code><a href='plot_view_contributions.html'>plot_view_contributions</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='va'>all.samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.dirs</a></span><span class='op'>(</span><span class='st'>"results"</span>, recursive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+    <pre class="examples"><span class='r-in'><span class='va'>all.samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.dirs</a></span><span class='op'>(</span><span class='st'>"results"</span>, recursive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='fu'><a href='collect_results.html'>collect_results</a></span><span class='op'>(</span><span class='va'>all.samples</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span class='r-in'>  <span class='fu'>plot_interaction_heatmap</span><span class='op'>(</span><span class='st'>"intra"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
@@ -221,7 +218,7 @@ be colored white in the heatmap and considered as not relevant.</p></td>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> Aggregating</span>
 <span class='r-plt'><img src='plot_interaction_heatmap-1.png' alt='' width='700' height='433' /></span>
 <span class='r-plt'><img src='plot_interaction_heatmap-2.png' alt='' width='700' height='433' /></span>
-</code></pre></div>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -233,11 +230,11 @@ be colored white in the heatmap and considered as not relevant.</p></td>
 
       <footer>
       <div class="copyright">
-  <p><p>Developed by Jovan Tanevski.</p></p>
+  <p>Developed by Jovan Tanevski.</p>
 </div>
 
 <div class="pkgdown">
-  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -245,8 +242,6 @@ be colored white in the heatmap and considered as not relevant.</p></td>
 
   
 
-
-  
 
   </body>
 </html>

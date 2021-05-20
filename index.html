@@ -46,8 +46,6 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -66,6 +64,12 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+<li>
+  <a href="index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
 <li>
   <a href="articles/mistyR.html">Get started</a>
 </li>
@@ -124,13 +128,13 @@
   <div class="contents col-md-9">
 <div id="misty---multiview-intercellular-spatial-modeling-framework-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#misty---multiview-intercellular-spatial-modeling-framework-" class="anchor" aria-hidden="true"></a>MISTy - <strong>M</strong>ultiview <strong>I</strong>ntercellular <strong>S</strong>pa<strong>T</strong>ial modeling framework <img src="https://www.dropbox.com/s/0yawdbykdzyxb53/logo.png?raw=1" align="right" height="139">
+<a href="#misty---multiview-intercellular-spatial-modeling-framework-" class="anchor"></a>MISTy - <strong>M</strong>ultiview <strong>I</strong>ntercellular <strong>S</strong>pa<strong>T</strong>ial modeling framework <img src="https://www.dropbox.com/s/0yawdbykdzyxb53/logo.png?raw=1" align="right" height="139">
 </h1></div>
 <!-- badges: start -->
 
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
-<a href="#overview" class="anchor" aria-hidden="true"></a>Overview</h2>
+<a href="#overview" class="anchor"></a>Overview</h2>
 <p>The advancement of technologies for measurement of highly multiplexed spatial data require the development of scalable methods that can leverage the availability of the spatial context. Multiview Intercellular SpaTial modeling framework (MISTy) is an explainable machine learning framework for knowledge extraction and analysis of single-cell, highly multiplexed, spatially resolved data.</p>
 <p><img src="https://www.dropbox.com/s/4j2ccdol2n7rvd8/graphical_abstract.png?raw=1" align="center" width="800"></p>
 <p>MISTy facilitates an in-depth understanding of marker interactions by profiling the intra- and intercellular relationships. MISTy is a flexible framework able to process a custom number of views. Each of these views can describe a different spatial context, i.e., define a relationship among the observed expressions of the markers, such as intracellular regulation or paracrine regulation. However, the views can also capture cell-type specific relationships, capture relations between functional footprints or focus on relations between different anatomical regions. Each MISTy view is considered as a potential source of variability in the measured marker expressions. Each MISTy view is then analyzed for its contribution to the total expression of each marker and is explained in terms of the interactions with other measurements that led to the observed contribution. Our approach is modular, easily parallelizable and thus scalable to samples with millions of cells and thousands of measured markers.</p>
@@ -138,35 +142,35 @@
 </div>
 <div id="system-requirements" class="section level2">
 <h2 class="hasAnchor">
-<a href="#system-requirements" class="anchor" aria-hidden="true"></a>System Requirements</h2>
+<a href="#system-requirements" class="anchor"></a>System Requirements</h2>
 <p><strong>mistyR</strong> requires a standard configuration and enough RAM to store the analyzed dataset and to support in-memory operations.</p>
 <p>The package requires R version 4.0 or higher. This package is developed on macOS Big Sur. The package should be compatible with Windows, Linux and maxOS operating systems.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation" class="anchor" aria-hidden="true"></a>Installation</h2>
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install from Bioconductor:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("BiocManager")</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"mistyR"</span><span class="op">)</span></code></pre></div>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"mistyR"</span><span class="op">)</span></code></pre></div>
 <p>or install the latest version from GitHub with <code>remotes</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"saezlab/mistyR"</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"saezlab/mistyR"</span><span class="op">)</span></code></pre></div>
 <p>The installation without any additional dependencies and building vignettes should take only seconds.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#usage" class="anchor" aria-hidden="true"></a>Usage</h2>
+<a href="#usage" class="anchor"></a>Usage</h2>
 <p>Start by reading <code><a href="articles/mistyR.html">vignette("mistyR")</a></code> to learn how to run <strong>mistyR</strong>. To learn how to use the package with commonly used objects for spatial omics data see the <a href="https://saezlab.github.io/mistyR/articles/">articles</a>.</p>
-<p>Example pipelines and synthetic data for <strong>mistyR</strong> are also available from <a href="https://github.com/saezlab/misty_pipelines" class="external-link">this repository</a>. To run <strong>mistyR</strong> on the provided synthetic data run the script <em>synthetic_pipeline.R</em>.</p>
+<p>Example pipelines and synthetic data for <strong>mistyR</strong> are also available from <a href="https://github.com/saezlab/misty_pipelines">this repository</a>. To run <strong>mistyR</strong> on the provided synthetic data run the script <em>synthetic_pipeline.R</em>.</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#citation" class="anchor" aria-hidden="true"></a>Citation</h2>
-<p>If you use <strong>mistyR</strong> for your research please cite the <a href="https://doi.org/10.1101/2020.05.08.084145" class="external-link">following publication</a>:</p>
+<a href="#citation" class="anchor"></a>Citation</h2>
+<p>If you use <strong>mistyR</strong> for your research please cite the <a href="https://doi.org/10.1101/2020.05.08.084145">following publication</a>:</p>
 <blockquote>
-<p>Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. <em>bioRxiv</em>. doi: <a href="https://doi.org/10.1101/2020.05.08.084145" class="external-link">10.1101/2020.05.08.084145</a></p>
+<p>Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. <em>bioRxiv</em>. doi: <a href="https://doi.org/10.1101/2020.05.08.084145">10.1101/2020.05.08.084145</a></p>
 </blockquote>
 </div>
 </div>
@@ -174,7 +178,7 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2 data-toc-skip>Links</h2>
+<h2>Links</h2>
 <ul class="list-unstyled">
 <li>Download from BIOC at <br><a href="https://www.bioconductor.org/packages/mistyR">https://​www.bioconductor.org/​packages/​mistyR</a>
 </li>
@@ -184,58 +188,51 @@
 </li>
 </ul>
 </div>
-
 <div class="license">
-<h2 data-toc-skip>License</h2>
+<h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
-
 <div class="community">
-<h2 data-toc-skip>Community</h2>
+<h2>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
-
 <div class="citation">
-<h2 data-toc-skip>Citation</h2>
+<h2>Citation</h2>
 <ul class="list-unstyled">
 <li><a href="authors.html">Citing mistyR</a></li>
 </ul>
 </div>
-
 <div class="developers">
-<h2 data-toc-skip>Developers</h2>
+<h2>Developers</h2>
 <ul class="list-unstyled">
 <li>Jovan Tanevski <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0001-7177-1003" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">More on authors...</a></li>
+<li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
+  <div class="dev-status">
+<h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml" class="external-link"><img src="https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml/badge.svg" alt="R4.1-bioc3.13"></a></li>
-<li><a href="https://bioconductor.org/checkResults/release/bioc-LATEST/mistyR" class="external-link"><img src="http://www.bioconductor.org/shields/build/release/bioc/mistyR.svg" alt="BioC status"></a></li>
-<li><a href="https://bioconductor.org/checkResults/devel/bioc-LATEST/mistyR" class="external-link"><img src="http://www.bioconductor.org/shields/build/devel/bioc/mistyR.svg" alt="BioC devel status"></a></li>
-<li><a href="https://codecov.io/gh/saezlab/mistyR?branch=master" class="external-link"><img src="https://codecov.io/gh/saezlab/mistyR/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml"><img src="https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml/badge.svg" alt="R4.1-bioc3.13"></a></li>
+<li><a href="https://bioconductor.org/checkResults/release/bioc-LATEST/mistyR"><img src="http://www.bioconductor.org/shields/build/release/bioc/mistyR.svg" alt="BioC status"></a></li>
+<li><a href="https://bioconductor.org/checkResults/devel/bioc-LATEST/mistyR"><img src="http://www.bioconductor.org/shields/build/devel/bioc/mistyR.svg" alt="BioC devel status"></a></li>
+<li><a href="https://codecov.io/gh/saezlab/mistyR?branch=master"><img src="https://codecov.io/gh/saezlab/mistyR/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
-
-  </div>
+</div>
 </div>
 
 
       <footer><div class="copyright">
-  <p></p>
-<p>Developed by Jovan Tanevski.</p>
+  <p>Developed by Jovan Tanevski.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -243,8 +240,6 @@
 
   
 
-
-  
 
   </body>
 </html>

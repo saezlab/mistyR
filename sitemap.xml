@@ -1,37 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://saezlab.github.io/mistyR/404.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/SUPPORT.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/articles/mistyR.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/articles/mistySeurat.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/articles/mistySpatialExperiment.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/authors.html</loc>
-  </url>
-  <url>
     <loc>https://saezlab.github.io/mistyR/index.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/news/index.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/mistyR/reference/add_juxtaview.html</loc>
@@ -53,9 +23,6 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/mistyR/reference/create_view.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/mistyR/reference/index.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/mistyR/reference/plot_contrast_heatmap.html</loc>
@@ -86,5 +53,14 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/mistyR/reference/synthetic.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/articles/mistyR.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/articles/mistySeurat.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/articles/mistySpatialExperiment.html</loc>
   </url>
 </urlset>
