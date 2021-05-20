@@ -3,10 +3,10 @@ title: "mistyR and SpatialExperiment/SingleCellExperiment"
 author:
 - name: Ricardo Omar Ramirez Flores
   affiliation:
-  - &hd Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
 - name: Jovan Tanevski
   affiliation: 
-  - *hd
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
   - Jožef Stefan Institute, Ljubljana, Slovenia
   email: jovan.tanevski@uni-heidelberg.de
 date: "`r Sys.Date()`"

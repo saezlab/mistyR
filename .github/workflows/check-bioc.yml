@@ -274,7 +274,7 @@ jobs:
         run: |
           ## modified from pkgdown::deploy_to_branch
           deploy_to_branch_mod <- function(pkg = ".", commit_message = pkgdown:::construct_commit_message(pkg), 
-            clean = FALSE, branch = "gh-pages", remote = "origin", github_pages = (branch == 
+            clean = TRUE, branch = "gh-pages", remote = "origin", github_pages = (branch == 
               "gh-pages"), ...)
           {
             dest_dir <- fs::dir_create(fs::file_temp())
@@ -320,7 +320,7 @@ jobs:
             from.to <- (grep("(output:|vignette:)", rmd.front))
             rmd.front <- rmd.front[-seq(from.to[1]+1, from.to[2]-1)]
             rmd.front[from.to[1]] <- "output:\n  BiocStyle::html_document:\n    toc_float: true\n    df_print: kable" 
-            rmd.front <- sub("- Jožef", "- <br/>Jožef", rmd.front)
+            rmd.front <- sub("- Jožef", "  <br/>Jožef", rmd.front)
             rmd.body <- content$body
             xfun::write_utf8(c(rmd.front, rmd.body), vignette)
             content
