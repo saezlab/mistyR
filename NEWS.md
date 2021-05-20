@@ -1,3 +1,7 @@
+# mistyR 1.0.0
+
+- Release version for Bioconductor 3.13.
+
 # mistyR 0.99.11
 
 - Fixed a bug in Nystrom approximation for creating paraview.
@@ -6,20 +10,23 @@
 
 # mistyR 0.99.9
 
-- Revisions requested by Bioconductor
-  - Removed magrittr from dependencies. Reexported pipe operator. Removed from examples.
-  - Caching turned off by default.
-  - Added parameter for appending performance and coefficient files in run_misty.
-  - Internal functions in views.R are now explicit.
-  - Removed alternatives and additional examples for function use from documentation.
-  - Removed redundant messages, escalated to warnings where required.
-  - run_misty cleans up empty cache directories.
-  - Vignette compatibility with the new release of SpatialExperiment.
-  - Remove Seurat vignette from package due to missing hdf5r binary for R 4.1 on CRAN for MacOS.
-- Other changes
-  - README.md figures moved to the cloud.
-  - All passed paths and cache location are normalized.
-  - Changes in the mistyR vignette to reflect changes to insilico evaluation from the paper.
+## Revisions requested by Bioconductor
+
+- Removed magrittr from dependencies. Reexported pipe operator. Removed from examples.
+- Caching turned off by default.
+- Added parameter for appending performance and coefficient files in run_misty.
+- Internal functions in views.R are now explicit.
+- Removed alternatives and additional examples for function use from documentation.
+- Removed redundant messages, escalated to warnings where required.
+- run_misty cleans up empty cache directories.
+- Vignette compatibility with the new release of SpatialExperiment.
+- Remove Seurat vignette from package due to missing hdf5r binary for R 4.1 on CRAN for MacOS.
+
+## Other changes
+
+- README.md figures moved to the cloud.
+- All passed paths and cache location are normalized.
+- Changes in the mistyR vignette to reflect changes to insilico evaluation from the paper.
 
 # mistyR 0.99.0
 
