@@ -10,3 +10,4 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^codecov\.yml$
+^Dockerfile$
