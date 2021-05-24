@@ -34,14 +34,30 @@ Install from Bioconductor:
 BiocManager::install("mistyR")
 ```
 
-or install the latest version from GitHub with `remotes`:
+You can install the latest stable and development versions from GitHub with `remotes`:
+
+- stable
 
 ```r
 # install.packages("remotes")
 remotes::install_github("saezlab/mistyR")
 ```
 
-The installation without any additional dependencies and building vignettes should take only seconds.
+- development
+
+```R
+remotes::install_github("saezlab/mistyR@devel")
+```
+
+## Docker
+
+For the released and the latest stable and development versions we also provide [Docker images]( https://hub.docker.com/r/tanevski/mistyr) based on the [Rocker project](https://www.rocker-project.org/) - [rocker/r-base](https://github.com/rocker-org/rocker/tree/master/r-base) image.
+
+To create and start a container from the latest docker image and run R in interactive mode:
+
+```bash
+docker run -it tanevski/mistyr:latest
+```
 
 ## Usage
 

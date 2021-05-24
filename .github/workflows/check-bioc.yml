@@ -2,7 +2,7 @@ on:
   push:
   pull_request:
 
-name: R4.1-bioc3.13
+name: check-bioc3.13
 
 ## If you need to clear the cache of packages, update the number inside
 ## cache-version as discussed at https://github.com/r-lib/actions/issues/86.
