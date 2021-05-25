@@ -1,7 +1,8 @@
 # mistyR 1.0.1
 
 - Bugfix: passing arguments to ranger.
-- Warnings on clearing nonexistent cache folders.
+- Warnings on clearing nonexistent cache folders and tests of performance.
+- Increased test coverage.
 
 # mistyR 1.0.0
 
