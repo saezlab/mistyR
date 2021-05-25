@@ -44,7 +44,7 @@ test_that("collect_results creates expected structure", {
   expect_length(misty.results$importances, samples)
   expect_length(unlist(misty.results$importances, recursive = FALSE), samples*2)
   expect_length(misty.results$importances.aggregated, 2)
-  subset.results <- aggregate_results_subset(misty.results, "results/results1")
+  subset.results <- aggregate_results_subset(misty.results, c("results/results1","results/results2"))
   expect_length(subset.results, 7)
   expect_length(subset.results$importances.aggregated.subset, 2)
   unlink("results", recursive = TRUE)

@@ -46,11 +46,15 @@ test_that("run_misty handles evaluation parameters correctly", {
     subset.time <- system.time(
       run_misty(misty.views, "results3", target.subset = c("expr1", "expr2"))
     )["user.self"] * 1000
+    ntrees.time <- system.time(
+      run_misty(misty.views, "results4", num.trees = 500)
+    )["user.self"] * 1000
   })
   expect_lt(cv.time, default.time)
   expect_lt(subset.time, default.time)
+  expect_gt(ntrees.time, default.time)
   expect_length(list.files("results3"), 6)
-  unlink(paste0("results", seq_len(3)), recursive = TRUE)
+  unlink(paste0("results", seq_len(4)), recursive = TRUE)
 })
 
 test_that("run_misty models are cached and retrieved", {
@@ -60,6 +64,11 @@ test_that("run_misty models are cached and retrieved", {
   cache.folder <- paste0(".misty.temp/", misty.views[["misty.uniqueid"]])
   expect_true(dir.exists(cache.folder))
   expect_length(list.files(cache.folder), 10)
+  suppressWarnings({
+    run_misty(misty.views, cached = TRUE)
+  })
+  cache.files <- file.info(list.files(cache.folder, full.names = TRUE))
+  expect_true(all(cache.files$atime > cache.files$mtime))
   unlink("results", recursive = TRUE)
   clear_cache()
 })

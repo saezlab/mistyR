@@ -215,7 +215,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     filelock::unlock(current.lock)
 
     return(target)
-  }, .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
+  }, ..., .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
 
   return(normalized.results.folder)
 }
