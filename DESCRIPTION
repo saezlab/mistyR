@@ -1,7 +1,7 @@
 Package: mistyR
 Type: Package
 Title: Multiview Intercellular SpaTial modeling framework
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",
@@ -12,7 +12,7 @@ Authors@R: c(
            family = "Ramirez Flores",
            role = "ctb",
            comment = c(ORCID = "0000-0003-0087-371X")))
-Description: mistyR is an impolementation of the Multiview Intercellular 
+Description: mistyR is an implementation of the Multiview Intercellular 
     SpaTialmodeling framework (MISTy). MISTy is an explainable machine 
     learning framework  for knowledge extraction and analysis of single-cell, 
     highly multiplexed, spatially resolved data. MISTy facilitates an 

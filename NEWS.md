@@ -1,3 +1,8 @@
+# mistyR 1.0.1
+
+- Bugfix: passing arguments to ranger.
+- Warnings on clearing nonexistent cache folders.
+
 # mistyR 1.0.0
 
 - Release version for Bioconductor 3.13.
