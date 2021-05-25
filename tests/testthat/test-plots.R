@@ -56,14 +56,24 @@ test_that("contrast_results runs successfully", {
       run_misty("results2")
   })
   misty.results2 <- collect_results("results2")
-
   expect_invisible(suppressWarnings(plot_contrast_results(misty.results,
     misty.results2,
     c("intra", "para.2"),
     cutoff.from = 0.5,
     cutoff.to = 0.5
   )))
+  expect_invisible(plot_contrast_results(misty.results,
+    misty.results2,
+    cutoff.from = 0.5,
+    cutoff.to = 0.5
+  ))
+  misty.results2$importances.aggregated$para.2 <- NULL
+  expect_error(plot_contrast_results(misty.results,
+    misty.results2,
+    cutoff.from = 0.5,
+    cutoff.to = 0.5
+  ))
 })
 
 unlink(c("results", "results2"), recursive = TRUE)
-if(file.exists("Rplots.pdf")) unlink("Rplots.pdf")
+if (file.exists("Rplots.pdf")) unlink("Rplots.pdf")

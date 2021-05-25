@@ -196,6 +196,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         dplyr::pull(.data$multi.RMSE),
       alternative = "greater"
       )$p.value, error = function(e) {
+        warning.message<- paste("t-test of RMSE performance failed with error:", 
+                                e$message)
+        warning(warning.message)
         1
       }),
       tryCatch(stats::t.test(performance.estimate %>%
@@ -204,6 +207,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         dplyr::pull(.data$multi.R2),
       alternative = "less"
       )$p.value, error = function(e) {
+        warning.message<- paste("t-test of R2 performance failed with error:", 
+                                e$message)
+        warning(warning.message)
         1
       })
     )

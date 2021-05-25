@@ -154,7 +154,7 @@ collect_results <- function(folders) {
             dplyr::filter(sample == !!sample, view == paste0("p.", !!view)) %>%
             dplyr::mutate(value = 1 - .data$value)
 
-          # importances are standardized for each target 
+          # importances are standardized for each target
           # and multiplied by 1-pval(view)
           all.importances %>%
             purrr::imap_dfc(~
@@ -217,9 +217,9 @@ aggregate_results_subset <- function(misty.results, folders) {
 
   normalized.folders <- R.utils::getAbsolutePath(folders)
   # check if folders are in names of misty.results
-  assertthat::assert_that(all(normalized.folders %in% 
-                                names(misty.results$importances)),
-    msg = "The provided results list doesn't contain information about some of
+  assertthat::assert_that(all(normalized.folders %in%
+    names(misty.results$importances)),
+  msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
 
@@ -262,18 +262,15 @@ clear_cache <- function(id = NULL) {
   cache.folder <- R.utils::getAbsolutePath(".misty.temp")
   if (is.null(id)) {
     if (dir.exists(cache.folder)) {
-      if (!unlink(cache.folder, recursive = TRUE) == 0) {
-        warning("Failed to clear cache.")
-      }
-    } else {
+      unlink(cache.folder, recursive = TRUE)
+    }
+    else {
       warning("Cache folder doesn't exist.")
     }
   } else {
     sample.cache.folder <- paste0(cache.folder, .Platform$file.sep, id)
     if (dir.exists(sample.cache.folder)) {
-      if (!unlink(sample.cache.folder, recursive = TRUE) == 0) {
-        warning("Failed to clear cache.")
-      }
+      unlink(sample.cache.folder, recursive = TRUE)
     } else {
       warning("Cache folder for requested id doesn't exist.")
     }
