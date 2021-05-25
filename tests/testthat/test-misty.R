@@ -59,7 +59,7 @@ test_that("run_misty handles evaluation parameters correctly", {
 
 test_that("run_misty models are cached and retrieved", {
   suppressWarnings({
-      run_misty(misty.views, cached = TRUE)
+    run_misty(misty.views, cached = TRUE)
   })
   cache.folder <- paste0(".misty.temp/", misty.views[["misty.uniqueid"]])
   expect_true(dir.exists(cache.folder))
@@ -72,4 +72,12 @@ test_that("run_misty models are cached and retrieved", {
   clear_cache()
   skip_on_os("windows")
   expect_true(all(cache.files$atime > cache.files$mtime))
+})
+
+test_that("run_misty handles tests of failures",{
+  expr <- tibble::tibble(expr1 = c(rep(1,50), rep(2,50))) %>% 
+    dplyr::mutate(expr2 = rev(expr1))
+  sig.warnings <- capture_warnings(create_initial_view(expr) %>% run_misty())
+  expect_true(any(grepl("RMSE", sig.warnings)))
+  expect_true(any(grepl("R2", sig.warnings)))
 })

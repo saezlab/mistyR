@@ -9,6 +9,8 @@ test_that("clean_cache cleans correctly", {
   expect_length(list.files(".misty.temp", ), 0)
   clear_cache()
   expect_false(dir.exists(".misty.temp"))
+  expect_warning(clear_cache("nonexistent"))
+  expect_warning(clear_cache())
 })
 
 test_that("sweep_cache sweeps empty folders only", {
