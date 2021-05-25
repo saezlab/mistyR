@@ -153,11 +153,25 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("BiocManager")</span>
 <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"mistyR"</span><span class="op">)</span></code></pre></div>
-<p>or install the latest version from GitHub with <code>remotes</code>:</p>
+<p>You can install the latest stable and development versions from GitHub with <code>remotes</code>:</p>
+<ul>
+<li>stable</li>
+</ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"saezlab/mistyR"</span><span class="op">)</span></code></pre></div>
-<p>The installation without any additional dependencies and building vignettes should take only seconds.</p>
+<ul>
+<li>development</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"saezlab/mistyR@devel"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="docker" class="section level2">
+<h2 class="hasAnchor">
+<a href="#docker" class="anchor"></a>Docker</h2>
+<p>For the released and the latest stable and development versions we also provide <a href="https://hub.docker.com/r/tanevski/mistyr">Docker images</a> based on the <a href="https://www.rocker-project.org/">Rocker project</a> - <a href="https://github.com/rocker-org/rocker/tree/master/r-base">rocker/r-base</a> image.</p>
+<p>To create and start a container from the latest docker image and run R in interactive mode:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">docker</span> run -it tanevski/mistyr:latest</span></code></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
