@@ -42,7 +42,7 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
     dependent.variable.name = target
   )
 
-  if (!length(list(...)) == 0) {
+  if (!(length(list(...)) == 0)) {
     algo.arguments <- rlist::list.merge(algo.arguments, list(...))
   }
 

@@ -59,6 +59,7 @@ test_that("contrast_results runs successfully", {
 
   expect_invisible(suppressWarnings(plot_contrast_results(misty.results,
     misty.results2,
+    c("intra", "para.2"),
     cutoff.from = 0.5,
     cutoff.to = 0.5
   )))

@@ -261,14 +261,21 @@ aggregate_results_subset <- function(misty.results, folders) {
 clear_cache <- function(id = NULL) {
   cache.folder <- R.utils::getAbsolutePath(".misty.temp")
   if (is.null(id)) {
-    if (!unlink(cache.folder, recursive = TRUE) == 0) {
-      warning("Failed to clear cache.")
+    if (dir.exists(cache.folder)) {
+      if (!unlink(cache.folder, recursive = TRUE) == 0) {
+        warning("Failed to clear cache.")
+      }
+    } else {
+      warning("Cache folder doesn't exist.")
     }
   } else {
-    if (!unlink(paste0(
-      cache.folder, .Platform$file.sep, id
-    ), recursive = TRUE) == 0) {
-      warning("Failed to clear cache.")
+    sample.cache.folder <- paste0(cache.folder, .Platform$file.sep, id)
+    if (dir.exists(sample.cache.folder)) {
+      if (!unlink(sample.cache.folder, recursive = TRUE) == 0) {
+        warning("Failed to clear cache.")
+      }
+    } else {
+      warning("Cache folder for requested id doesn't exist.")
     }
   }
 }
