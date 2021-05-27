@@ -42,8 +42,12 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
     dependent.variable.name = target
   )
 
-  if (!(length(list(...)) == 0)) {
-    algo.arguments <- rlist::list.merge(algo.arguments, list(...))
+  ellipsis.args <- list(...)
+  ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args, 
+                              sep = ".", collapse = ".")
+  
+  if (!(length(ellipsis.args) == 0)) {
+    algo.arguments <- rlist::list.merge(algo.arguments, ellipsis.args)
   }
 
   # returns a list of models
@@ -53,7 +57,8 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
       model.view.cache.file <-
         paste0(
           cache.location, .Platform$file.sep,
-          "model.", view[["abbrev"]], ".", target, ".rds"
+          "model.", view[["abbrev"]], ".", target, 
+          ".par", ellipsis.args.text, ".rds"
         )
 
       if (file.exists(model.view.cache.file) & cached) {

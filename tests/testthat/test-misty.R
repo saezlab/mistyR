@@ -64,14 +64,11 @@ test_that("run_misty models are cached and retrieved", {
   cache.folder <- paste0(".misty.temp/", misty.views[["misty.uniqueid"]])
   expect_true(dir.exists(cache.folder))
   expect_length(list.files(cache.folder), 10)
-  suppressWarnings({
+  expect_match(suppressWarnings({
     run_misty(misty.views, cached = TRUE)
-  })
-  cache.files <- file.info(list.files(cache.folder, full.names = TRUE))
+  }), "results")
   unlink("results", recursive = TRUE)
   clear_cache()
-  skip_on_os("windows")
-  expect_true(all(cache.files$atime > cache.files$mtime))
 })
 
 test_that("run_misty handles tests of failures",{
@@ -80,4 +77,5 @@ test_that("run_misty handles tests of failures",{
   sig.warnings <- capture_warnings(create_initial_view(expr) %>% run_misty())
   expect_true(any(grepl("RMSE", sig.warnings)))
   expect_true(any(grepl("R2", sig.warnings)))
+  unlink("results", recursive = TRUE)
 })
