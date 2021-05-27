@@ -5,6 +5,7 @@
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/mistyR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/mistyR)
 [![BioC devel status](http://www.bioconductor.org/shields/build/devel/bioc/mistyR.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/mistyR)
 [![Codecov test coverage](https://codecov.io/gh/saezlab/mistyR/branch/master/graph/badge.svg)](https://codecov.io/gh/saezlab/mistyR?branch=master)
+[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/tanevski/mistyr)](https://hub.docker.com/r/tanevski/mistyr)
 <!-- badges: end -->
 
 ## Overview
