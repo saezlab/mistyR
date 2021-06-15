@@ -270,10 +270,10 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
     juxta.view <- readr::read_rds(juxta.cache.file)
   }
   else {
-    if (verbose) message("Computing triangulation")
+    if (verbose) message("\nComputing triangulation")
     delaunay <- deldir::deldir(as.data.frame(positions))
 
-    if (verbose) message("Generating juxtaview")
+    if (verbose) message("\nGenerating juxtaview")
     juxta.view <- seq(nrow(expr)) %>% furrr::future_map_dfr(function(cid) {
       alln <- get_neighbors(delaunay, cid)
       # suboptimal placement of dists, but makes conflict if out of scope
@@ -405,17 +405,18 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
   else {
     if (is.null(nn)) {
       if (approx == 1) {
-        if (verbose) message("Generating paraview")
+        if (verbose) message("\nGenerating paraview")
         para.view <- seq(nrow(expr)) %>%
           furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
             exp(-(dists[, .x][-.x]^2) / l^2)))),
-          .options = furrr::furrr_options(packages = "distances")
+          .options = furrr::furrr_options(packages = "distances"),
+          .progress = verbose
           )
       }
       else {
         if (approx < 1) approx <- base::round(approx * ncol(dists))
 
-        if (verbose) message("Approximating RBF matrix using the Nystrom method")
+        if (verbose) message("\nApproximating RBF matrix using the Nystrom method")
         # single Nystrom approximation expert, given RBF with parameter l
         s <- sort(sample.int(n = ncol(dists), size = approx))
         C <- exp(-(dists[, s]^2) / l^2)
@@ -425,17 +426,19 @@ add_paraview <- function(current.views, positions, l, approx = 1, nn = NULL,
         # return Nystrom list
         K.approx <- list(s = s, C = C, W.plus = W.plus)
 
-        if (verbose) message("Generating paraview")
+        if (verbose) message("\nGenerating paraview")
         para.view <- seq(nrow(expr)) %>%
-          furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))))
+          furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] * sample_nystrom_row(K.approx, .x)[-.x]))), 
+                                .progress = verbose)
       }
     } else {
-      if (verbose) message("Generating paraview using ", nn, " nearest neighbors per unit")
+      if (verbose) message("\nGenerating paraview using ", nn, " nearest neighbors per unit")
       para.view <- seq(nrow(expr)) %>%
         furrr::future_map_dfr(function(rowid) {
           knn <- distances::nearest_neighbor_search(dists, nn + 1, query_indices = rowid)[-1, 1]
           data.frame(t(colSums(expr[knn, ] * exp(-(dists[knn, rowid]^2) / l^2))))
-        }, .options = furrr::furrr_options(packages = "distances"))
+        }, .options = furrr::furrr_options(packages = "distances"), 
+        .progress = verbose)
     }
     if (cached) readr::write_rds(para.view, para.cache.file)
   }
