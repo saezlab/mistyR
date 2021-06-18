@@ -283,5 +283,4 @@ sessionInfo()
 
 ```{r cleanup, include=FALSE}
 unlink("results", recursive = TRUE)
-clear_cache()
 ```

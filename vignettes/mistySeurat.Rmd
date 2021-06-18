@@ -200,8 +200,6 @@ create_default_views <- function(data,
     )
   }
 
-  clear_cache(view.data.init$misty.uniqueid)
-
   return(misty.view)
 }
 ```
@@ -512,5 +510,4 @@ if (cleanup) {
   )
 }
 unlink("vignette_model_seurat", recursive = TRUE)
-clear_cache()
 ```
