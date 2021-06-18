@@ -93,6 +93,7 @@ plot_view_contributions <- function(misty.results) {
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$target, y = .data$fraction)) +
     ggplot2::geom_col(ggplot2::aes(group = .data$view, fill = .data$view)) +
     ggplot2::scale_fill_brewer(palette = "Set2") +
+    ggplot2::theme_classic() +
     ggplot2::ylab("Contribution") +
     ggplot2::xlab("Target") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
