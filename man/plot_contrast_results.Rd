@@ -47,7 +47,6 @@ grade3.results \%>\% plot_contrast_results(grade1.results, views = "para.10")
 # see the loss of interactions in all views with lower sensitivity
 
 plot_contrast_results(grade3.results, grade1.results, cutoff.from = 0.75, cutoff.to = 0.5)
-
 }
 \seealso{
 \code{\link{collect_results}()} to generate a
