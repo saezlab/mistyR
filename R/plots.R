@@ -10,6 +10,8 @@
 #'     \code{\link{collect_results}()}.
 #' @param measure performance measure to be plotted (See
 #'     \code{\link{collect_results}()}).
+#' @param trim display targets with performance value above (if R2 or gain) or
+#'     below (otherwise) this value only.
 #'
 #' @return The \code{misty.results} list (invisibly).
 #'
@@ -27,16 +29,19 @@
 #' misty.results %>% plot_improvement_stats(measure = "gain.RMSE")
 #' misty.results %>% plot_improvement_stats(measure = "intra.R2")
 #' @export
-plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
+plot_improvement_stats <- function(misty.results, measure = "gain.R2", trim = -Inf) {
   assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  plot.data <- misty.results$improvements.stats %>%
-    dplyr::filter(measure == !!measure)
+  inv <- sign((stringr::str_detect(measure, "gain") &
+    stringr::str_detect(measure, "RMSE", negate = TRUE)) - 0.5)
 
-  assertthat::assert_that(nrow(plot.data) > 0,
-    msg = "The selected measure cannot be found in the results table."
+  plot.data <- misty.results$improvements.stats %>%
+    dplyr::filter(measure == !!measure, inv * mean >= inv * trim)
+
+  assertthat::assert_that(assertthat::not_empty(plot.data),
+    msg = "Invalid selection of measure and/or trim value."
   )
 
   set2.orange <- "#FC8D62"
@@ -70,6 +75,8 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 #'
 #' @inheritParams plot_improvement_stats
 #'
+#' @param trim.measure the measure used for trimming.
+#'
 #' @return The \code{misty.results} list (invisibly).
 #'
 #' @seealso \code{\link{collect_results}()} to generate a
@@ -82,13 +89,29 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2") {
 #'
 #' collect_results(all.samples) %>% plot_view_contributions()
 #' @export
-plot_view_contributions <- function(misty.results) {
+plot_view_contributions <- function(misty.results, trim = -Inf,
+                                    trim.measure = "gain.R2") {
   assertthat::assert_that(("contributions.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  plot.data <- misty.results$contributions.stats
+  assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
+    msg = "The provided result list is malformed. Consider using collect_results()."
+  )
 
+  inv <- sign((stringr::str_detect(trim.measure, "gain") &
+    stringr::str_detect(trim.measure, "RMSE", negate = TRUE)) - 0.5)
+
+  targets <- misty.results$improvements.stats %>%
+    dplyr::filter(measure == trim.measure, inv * mean >= inv * trim) %>%
+    dplyr::pull(target)
+
+  assertthat::assert_that(assertthat::not_empty(targets),
+    msg = "Invalid selection of trim measure and/or value."
+  )
+
+  plot.data <- misty.results$contributions.stats %>%
+    dplyr::filter(target %in% targets)
 
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$target, y = .data$fraction)) +
     ggplot2::geom_col(ggplot2::aes(group = .data$view, fill = .data$view)) +
@@ -316,7 +339,7 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 #'
 #' @examples
 #' # if for example the available samples come from different grades of tumors
-#' 
+#'
 #' grade1.results <- collect_results(c("results/synthetic1", "results/synthetic2"))
 #' grade3.results <- collect_results("results/synthetic10")
 #'
@@ -328,7 +351,6 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 #' # see the loss of interactions in all views with lower sensitivity
 #'
 #' plot_contrast_results(grade3.results, grade1.results, cutoff.from = 0.75, cutoff.to = 0.5)
-#'
 #' @export
 plot_contrast_results <- function(misty.results.from, misty.results.to,
                                   views = NULL, cutoff.from = 1, cutoff.to = 1) {
