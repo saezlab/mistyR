@@ -135,6 +135,8 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
 #' @param view abbreviated name of the view.
 #' @param cutoff importance threshold. Importances below this value will
 #' be colored white in the heatmap and considered as not relevant.
+#' @param clean a \code{logical} indicating whether to remove rows and columns
+#' with all importances are below \code{cutoff} from the heatmap.
 #'
 #' @return The \code{misty.results} list (invisibly).
 #'
@@ -150,7 +152,8 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
 #'   plot_interaction_heatmap("intra") %>%
 #'   plot_interaction_heatmap("para.10", cutoff = 0.5)
 #' @export
-plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
+plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
+                                     clean = FALSE) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
@@ -160,13 +163,48 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1) {
   )
 
   plot.data <- misty.results$importances.aggregated[[view]] %>%
-    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
+    tidyr::pivot_longer(
+      names_to = "Target",
+      values_to = "Importance",
+      -.data$Predictor
+    )
+
+#TODO: fix max
+  if (clean) {
+    clean.predictors <- plot.data %>%
+      dplyr::mutate(Importance = Importance*(Importance >= cutoff)) %>%
+      dplyr::group_by(Predictor) %>%
+      dplyr::summarize(total = sum(Importance, na.rm = TRUE)) %>%
+      dplyr::filter(total > 0) %>%
+      dplyr::pull(Predictor)
+    clean.targets <- plot.data %>%
+      dplyr::mutate(Importance = Importance*(Importance >= cutoff)) %>%
+      dplyr::group_by(Target) %>%
+      dplyr::summarize(total = sum(Importance, na.rm = TRUE)) %>%
+      dplyr::filter(total > 0) %>%
+      dplyr::pull(Target)
+    plot.data.clean <- plot.data %>%
+      dplyr::filter(Predictor %in% clean.predictors, Target %in% clean.targets)
+  } else {
+    plot.data.clean <- plot.data
+  }
 
   set2.blue <- "#8DA0CB"
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
+  results.plot <- ggplot2::ggplot(
+    plot.data.clean,
+    ggplot2::aes(
+      x = .data$Predictor,
+      y = .data$Target
+    )
+  ) +
     ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
-    ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
+    ggplot2::scale_fill_gradient2(
+      low = "white",
+      mid = "white",
+      high = set2.blue,
+      midpoint = cutoff
+    ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::ggtitle(view)
 
