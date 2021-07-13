@@ -84,7 +84,7 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
   oob.predictions <- model.views %>%
     purrr::map(~ .x$predictions) %>%
     rlist::list.cbind() %>%
-    tibble::as_tibble() %>%
+    tibble::as_tibble(.name_repair = make.names) %>%
     dplyr::mutate(!!target := target.vector)
 
   # train lm on above

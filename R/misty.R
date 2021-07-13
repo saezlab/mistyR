@@ -93,9 +93,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     msg = "The data has less rows than the requested number of cv folds."
   )
 
-  target.var <- apply(expr, 2, sd)
+  target.var <- apply(expr, 2, stats::sd)
 
-  if (length(target.var) == 0) {
+  if (any(target.var == 0)) {
     warning.message <- paste(
       "Targets",
       paste(names(which(target.var == 0)),
