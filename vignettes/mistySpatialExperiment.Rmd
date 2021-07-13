@@ -12,10 +12,9 @@ author:
 date: "`r Sys.Date()`"
 package: mistyR
 output:
-  BiocStyle::pdf_document:
+  BiocStyle::html_document:
+    toc_float: true
     df_print: kable
-    extra_dependencies:
-      nowidow: ["defaultlines=3", "all"]
 vignette: >
   %\VignetteIndexEntry{mistyR and SpatialExperiment}
   %\VignetteEngine{knitr::rmarkdown}
