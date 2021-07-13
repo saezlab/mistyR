@@ -34,7 +34,7 @@ plot_improvement_stats <- function(misty.results, measure = "gain.R2", trim = -I
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  inv <- sign((stringr::str_detect(measure, "gain") &
+  inv <- sign((stringr::str_detect(measure, "gain") |
     stringr::str_detect(measure, "RMSE", negate = TRUE)) - 0.5)
 
   plot.data <- misty.results$improvements.stats %>%
@@ -99,7 +99,7 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  inv <- sign((stringr::str_detect(trim.measure, "gain") &
+  inv <- sign((stringr::str_detect(trim.measure, "gain") |
     stringr::str_detect(trim.measure, "RMSE", negate = TRUE)) - 0.5)
 
   targets <- misty.results$improvements.stats %>%
