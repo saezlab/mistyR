@@ -93,6 +93,18 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     msg = "The data has less rows than the requested number of cv folds."
   )
 
+  target.var <- apply(expr, 2, sd)
+
+  if (length(target.var) == 0) {
+    warning.message <- paste(
+      "Targets",
+      paste(names(which(target.var == 0)),
+        collapse = ", "
+      ),
+      "have zero variance."
+    )
+    warning(warning.message)
+  }
 
   coef.file <- paste0(
     normalized.results.folder, .Platform$file.sep,
@@ -196,8 +208,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         dplyr::pull(.data$multi.RMSE),
       alternative = "greater"
       )$p.value, error = function(e) {
-        warning.message<- paste("t-test of RMSE performance failed with error:", 
-                                e$message)
+        warning.message <- paste(
+          "t-test of RMSE performance failed with error:",
+          e$message
+        )
         warning(warning.message)
         1
       }),
@@ -207,8 +221,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         dplyr::pull(.data$multi.R2),
       alternative = "less"
       )$p.value, error = function(e) {
-        warning.message<- paste("t-test of R2 performance failed with error:", 
-                                e$message)
+        warning.message <- paste(
+          "t-test of R2 performance failed with error:",
+          e$message
+        )
         warning(warning.message)
         1
       })
