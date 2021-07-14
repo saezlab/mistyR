@@ -169,7 +169,6 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
       -.data$Predictor
     )
 
-#TODO: fix max
   if (clean) {
     clean.predictors <- plot.data %>%
       dplyr::mutate(Importance = Importance*(Importance >= cutoff)) %>%
@@ -206,7 +205,9 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
       midpoint = cutoff
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+    ggplot2::coord_equal() +
     ggplot2::ggtitle(view)
+    
 
   print(results.plot)
 
@@ -273,6 +274,7 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
     ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+    ggplot2::coord_equal() +
     ggplot2::ggtitle(paste0(to.view, " - ", from.view))
 
   print(results.plot)
@@ -450,6 +452,7 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
       ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
       ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff.to) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+      ggplot2::coord_equal() +
       ggplot2::ggtitle(current.view)
 
     print(results.plot)
