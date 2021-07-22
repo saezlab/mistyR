@@ -71,8 +71,8 @@ collect_results <- function(folders) {
   message("\nCollecting improvements")
   improvements <- samples %>%
     furrr::future_map_dfr(function(sample) {
-      performance <- readr::read_delim(paste0(sample, .Platform$file.sep, "performance.txt"),
-        delim = " ", col_types = readr::cols()
+      performance <- readr::read_table(paste0(sample, .Platform$file.sep, "performance.txt"),
+        na = c("", "NA", "NaN"), col_types = readr::cols()
       ) %>% dplyr::distinct()
 
       performance %>%
@@ -87,8 +87,8 @@ collect_results <- function(folders) {
 
   message("\nCollecting contributions")
   contributions <- samples %>% furrr::future_map_dfr(function(sample) {
-    coefficients <- readr::read_delim(paste0(sample, .Platform$file.sep, "coefficients.txt"),
-      delim = " ", col_types = readr::cols()
+    coefficients <- readr::read_table(paste0(sample, .Platform$file.sep, "coefficients.txt"),
+      na = c("", "NA", "NaN"), col_types = readr::cols()
     ) %>% dplyr::distinct()
 
     coefficients %>%
@@ -263,8 +263,7 @@ clear_cache <- function(id = NULL) {
   if (is.null(id)) {
     if (dir.exists(cache.folder)) {
       unlink(cache.folder, recursive = TRUE)
-    }
-    else {
+    } else {
       warning("Cache folder doesn't exist.")
     }
   } else {
