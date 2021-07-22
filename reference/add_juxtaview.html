@@ -90,7 +90,7 @@ neighborhood of a spatial unit." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -229,46 +229,42 @@ expressions across its estimated neighbors for each marker.</p>
 <code><a href='remove_views.html'>remove_views</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='co'># Create a view composition of an intraview and a juxtaview.</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span>     filter, lag</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># get the expression data</span></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"synthetic"</span><span class='op'>)</span></span>
-<span class='r-in'><span class='va'>expr</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>row</span>, <span class='va'>col</span>, <span class='va'>type</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-in'><span class='co'># get the coordinates for each cell</span></span>
-<span class='r-in'><span class='va'>pos</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>row</span>, <span class='va'>col</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># compose</span></span>
-<span class='r-in'><span class='va'>misty.views</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_initial_view.html'>create_initial_view</a></span><span class='op'>(</span><span class='va'>expr</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>add_juxtaview</span><span class='op'>(</span><span class='va'>pos</span>, neighbor.thr <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> Computing triangulation</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> Generating juxtaview</span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># preview</span></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>misty.views</span><span class='op'>[[</span><span class='st'>"juxtaview.1.5"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> List of 2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ abbrev: chr "juxta.1.5"</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ data  :'data.frame':	4205 obs. of  11 variables:</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ ECM  : num [1:4205] 0.116 0.105 1.395 1.315 1.395 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ ligA : num [1:4205] 1.3988 0.0653 0.5141 0.965 0.5141 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ ligB : num [1:4205] 0.0394 0.0188 0.0629 0.1578 0.0629 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ ligC : num [1:4205] 0.53 0.856 0.825 0.89 0.825 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ ligD : num [1:4205] 1.9261 0.0577 0.4646 0.8604 0.4646 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ protE: num [1:4205] 0.779 0 1.617 3.286 1.617 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ protF: num [1:4205] 4.31 0.25 0.988 1.851 0.988 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ prodA: num [1:4205] 0.455 0 0 0.472 0 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ prodB: num [1:4205] 0 0 0 0.16 0 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ prodC: num [1:4205] 0.433 0.548 0.418 0 0.418 ...</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   ..$ prodD: num [1:4205] 0.536 0 0 0.379 0 ...</span>
-</pre>
+    <pre class="examples"><div class='input'><span class='co'># Create a view composition of an intraview and a juxtaview.</span>
+
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'>
+<span class='co'># get the expression data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"synthetic"</span><span class='op'>)</span>
+<span class='va'>expr</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>row</span>, <span class='va'>col</span>, <span class='va'>type</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># get the coordinates for each cell</span>
+<span class='va'>pos</span> <span class='op'>&lt;-</span> <span class='va'>synthetic</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>row</span>, <span class='va'>col</span><span class='op'>)</span>
+
+<span class='co'># compose</span>
+<span class='va'>misty.views</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_initial_view.html'>create_initial_view</a></span><span class='op'>(</span><span class='va'>expr</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>add_juxtaview</span><span class='op'>(</span><span class='va'>pos</span>, neighbor.thr <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Computing triangulation</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Generating juxtaview</span></div><div class='input'>
+<span class='co'># preview</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>misty.views</span><span class='op'>[[</span><span class='st'>"juxtaview.1.5"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ abbrev: chr "juxta.1.5"
+#&gt;  $ data  :'data.frame':	4205 obs. of  11 variables:
+#&gt;   ..$ ECM  : num [1:4205] 0.116 0.105 1.395 1.315 1.395 ...
+#&gt;   ..$ ligA : num [1:4205] 1.3988 0.0653 0.5141 0.965 0.5141 ...
+#&gt;   ..$ ligB : num [1:4205] 0.0394 0.0188 0.0629 0.1578 0.0629 ...
+#&gt;   ..$ ligC : num [1:4205] 0.53 0.856 0.825 0.89 0.825 ...
+#&gt;   ..$ ligD : num [1:4205] 1.9261 0.0577 0.4646 0.8604 0.4646 ...
+#&gt;   ..$ protE: num [1:4205] 0.779 0 1.617 3.286 1.617 ...
+#&gt;   ..$ protF: num [1:4205] 4.31 0.25 0.988 1.851 0.988 ...
+#&gt;   ..$ prodA: num [1:4205] 0.455 0 0 0.472 0 ...
+#&gt;   ..$ prodB: num [1:4205] 0 0 0 0.16 0 ...
+#&gt;   ..$ prodC: num [1:4205] 0.433 0.548 0.418 0 0.418 ...
+#&gt;   ..$ prodD: num [1:4205] 0.536 0 0 0.379 0 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -118,7 +118,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-05-27</h4>
+            <h4 class="date">2021-07-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistyR.Rmd"><code>vignettes/mistyR.Rmd</code></a></small>
       <div class="hidden name"><code>mistyR.Rmd</code></div>
@@ -137,7 +137,7 @@
 <li><p><a href="#result-processing">Result processing</a></p></li>
 <li><p><a href="#plotting">Plotting</a></p></li>
 </ul>
-<p>To construct a workflow <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> is designed with the use of pipe operators (for example the operator <code>%&gt;%</code> from <em><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></em>) for chaining functions in mind.</p>
+<p>To construct a workflow <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> is designed with the use of pipe operators (for example the operator <code><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></code> from <em><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></em>) for chaining functions in mind.</p>
 <p>When loading <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> please consider configuring a <code><a href="https://rdrr.io/pkg/future/man/multisession.html">future::multisession()</a></code> parallel execution plan. <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> will then use all available cores for execution of computationally demanding functions. It is recommended that the user modifies the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> according to their needs.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># MISTy</span>
@@ -189,7 +189,7 @@
 <a href="#view-composition" class="anchor"></a>View composition</h1>
 <p>The <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> workflow always starts by defining an intraview (<code><a href="../reference/create_initial_view.html">create_initial_view()</a></code>) containing measurements of the markers that are the target of the modeling at each cell of interest. For the first sample from the <code>synthetic</code> dataset we select all markers except for the ligands for all available cells.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">expr</span> <span class="op">&lt;-</span> <span class="va">synthetic</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span>, <span class="va">type</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"lig"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">expr</span> <span class="op">&lt;-</span> <span class="va">synthetic</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span>, <span class="va">type</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"lig"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">misty.intra</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span>
 
@@ -204,9 +204,10 @@
 <p>From the intrinsic view (<em>intraview</em>)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> will model the expression of each marker as a function of the expression of other markers within the cell. We are interested in exploring marker expressions coming from different spatial contexts that are complementary, i.e., that are distinguishable and contribute to the explanation of the overall expression of the markers.</p>
 <p><em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> includes two default helper functions for calculating and adding views that take into account the spatial context of the data: <code><a href="../reference/add_juxtaview.html">add_juxtaview()</a></code> and <code><a href="../reference/add_paraview.html">add_paraview()</a></code>. The <em>juxtaview</em> represent a local spatial view and captures the expression of all markers available in the intraview within the immediate neighborhood of each cell. The <em>paraview</em> captures the expression of all markers avainalbe in the intraview in the boarder tissue structure where the importance of the influence is proportional to the inverse of the distance between two cells. To add a <em>paraview</em> in the view composition, we first need information about the location of each cell from the intraview. Using this information we can create and add a <em>paraview</em> with importance radius of 10 to the view composition.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pos</span> <span class="op">&lt;-</span> <span class="va">synthetic</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">pos</span> <span class="op">&lt;-</span> <span class="va">synthetic</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span><span class="op">)</span>
 
-<span class="va">misty.views</span> <span class="op">&lt;-</span> <span class="va">misty.intra</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">pos</span>, l <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">misty.views</span> <span class="op">&lt;-</span> <span class="va">misty.intra</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">pos</span>, l <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">misty.views</span><span class="op">)</span>
@@ -222,9 +223,9 @@
 
 <span class="co"># calculate the mean expression of the nearest neighbors for all markers</span>
 <span class="co"># for each cell in expr</span>
-<span class="va">nnexpr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="op">~</span> <span class="va">expr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="va">neighbors</span><span class="op">[</span>, <span class="va">.x</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<span class="va">nnexpr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="op">~</span> <span class="va">expr</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="va">neighbors</span><span class="op">[</span>, <span class="va">.x</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">nn.view</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_view.html">create_view</a></span><span class="op">(</span><span class="st">"nearest"</span>, <span class="va">nnexpr</span>, <span class="st">"nn"</span><span class="op">)</span>
@@ -251,7 +252,7 @@
 <span class="co">#&gt; # … with 4,195 more rows</span></code></pre></div>
 <p>The created view(s) can be added (<code><a href="../reference/add_views.html">add_views()</a></code>) to an existing view composition one by one or by providing them in a form of a list. Other examples of creating and adding custom views to the composition can be found in the resources in <a href="#see-also">See also</a>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">extended.views</span> <span class="op">&lt;-</span> <span class="va">misty.views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/add_views.html">add_views</a></span><span class="op">(</span><span class="va">nn.view</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">extended.views</span> <span class="op">&lt;-</span> <span class="va">misty.views</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/add_views.html">add_views</a></span><span class="op">(</span><span class="va">nn.view</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">extended.views</span><span class="op">)</span>
 <span class="co">#&gt;                Length Class  Mode     </span>
@@ -261,16 +262,16 @@
 <span class="co">#&gt; nearest        2      -none- list</span></code></pre></div>
 <p>Views can also be removed from the composition by providing one or more names of views to <code><a href="../reference/remove_views.html">remove_views()</a></code>. The <em>intraview</em> and <em>misty.uniqueid</em> cannot be removed with this function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">extended.views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/remove_views.html">remove_views</a></span><span class="op">(</span><span class="st">"nearest"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">extended.views</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/remove_views.html">remove_views</a></span><span class="op">(</span><span class="st">"nearest"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;                Length Class  Mode     </span>
 <span class="co">#&gt; intraview      2      -none- list     </span>
 <span class="co">#&gt; misty.uniqueid 1      -none- character</span>
 <span class="co">#&gt; paraview.10    2      -none- list</span>
 
-<span class="va">extended.views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/remove_views.html">remove_views</a></span><span class="op">(</span><span class="st">"intraview"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<span class="va">extended.views</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/remove_views.html">remove_views</a></span><span class="op">(</span><span class="st">"intraview"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;                Length Class  Mode     </span>
 <span class="co">#&gt; intraview      2      -none- list     </span>
@@ -283,36 +284,46 @@
 <a href="#model-training" class="anchor"></a>Model training</h1>
 <p>Once the view composition is created, the model training is managed by the function <code><a href="../reference/run_misty.html">run_misty()</a></code>. By default, models are trained for each marker available in the <em>intraview</em> for each view independently. The results of the model training will be stored in a folder named “results”.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/run_misty.html">run_misty</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">misty.views</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_misty.html">run_misty</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Training models</span>
 <span class="co">#&gt; [1] "/home/runner/work/mistyR/mistyR/vignettes/results"</span></code></pre></div>
 <p>The workflow that we used for the first sample from the <code>synthetic</code> dataset can be easily extended to be applied to all 10 samples to completely reproduce one of the results reported in the <a href="#publication">publication</a>. The results for each sample will be stored in a subfolder of the folder “results”.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">result.folders</span> <span class="op">&lt;-</span> <span class="va">synthetic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html">imap_chr</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">sample</span>, <span class="va">name</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">sample.expr</span> <span class="op">&lt;-</span> <span class="va">sample</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span>, <span class="va">type</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"lig"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-  <span class="va">sample.pos</span> <span class="op">&lt;-</span> <span class="va">sample</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">result.folders</span> <span class="op">&lt;-</span> <span class="va">synthetic</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html">imap_chr</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">sample</span>, <span class="va">name</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">sample.expr</span> <span class="op">&lt;-</span> <span class="va">sample</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span>, <span class="va">type</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"lig"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">sample.pos</span> <span class="op">&lt;-</span> <span class="va">sample</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span><span class="op">)</span>
   
-  <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="va">sample.expr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">sample.pos</span>, l <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="va">sample.expr</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">sample.pos</span>, l <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/run_misty.html">run_misty</a></span><span class="op">(</span>results.folder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"results"</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; Training models</span>
 
@@ -371,16 +382,16 @@
 <p><strong>1. How much can the broader spatial context explain the expression of markers (in contrast to the intraview)?</strong></p>
 <p>This can be observed in the gain in R2 (absolute percentage) (or relative percentage of decrease RMSE) of using the multiview model in contrast to the single <em>intraview</em> only model.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.R2"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.RMSE"</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-11-1.png" width="700"><img src="mistyR_files/figure-html/unnamed-chunk-11-2.png" width="700"></p>
 <p>We can further inspect the significance of the gain in variance explained, by the assigned p-value of improvement based on cross-validation.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">improvements</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">measure</span> <span class="op">==</span> <span class="st">"p.R2"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">target</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">improvements</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">measure</span> <span class="op">==</span> <span class="st">"p.R2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">target</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">mean.p</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 7 x 2</span>
 <span class="co">#&gt;   target mean.p</span>
@@ -396,32 +407,32 @@
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_view_contributions.html">plot_view_contributions</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_view_contributions.html">plot_view_contributions</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>As expected most of the contribution to the prediction of the expression of the markers comes from the <em>intraview</em>. However for the markers that we observed significant improvement of variance we can also observe a proportional estimated contribution of the <em>paraview</em>.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of all markers.</p>
 <p>First, the <em>intraview</em> importances.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"intra"</span>, cutoff <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"intra"</span>, cutoff <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>These importances are associated to the relationship between markers in the same cell. As we didn’t use the information about the cell types in any way during the process of modeling the significant interactions that we see in the heatmap may come from any of the cell types.</p>
 <p>Second, the <em>paraview</em> importances.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.10"</span>, cutoff <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.10"</span>, cutoff <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>These importances are associated to the relationship between markers in the cell and markers in the broader structure (controlled by our parameter l).</p>
 <p>We can observe that some interactions in the <em>paraview</em> might be redundant, i.e., they are also found to be important in the <em>intraview</em>. To focus on the interactions coming from the <em>paraview</em> only we can plot the contrast between these results.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_contrast_heatmap.html">plot_contrast_heatmap</a></span><span class="op">(</span><span class="st">"intra"</span>, <span class="st">"para.10"</span>, cutoff <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_contrast_heatmap.html">plot_contrast_heatmap</a></span><span class="op">(</span><span class="st">"intra"</span>, <span class="st">"para.10"</span>, cutoff <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <p>Futhermore, since the predictor and target markers in both views are the same, we can plot the interaction communities that can be extracted from the estimated interaction pairs from the <em>intraview</em></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_interaction_communities.html">plot_interaction_communities</a></span><span class="op">(</span><span class="st">"intra"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_communities.html">plot_interaction_communities</a></span><span class="op">(</span><span class="st">"intra"</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>and the <em>paraview</em>.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_interaction_communities.html">plot_interaction_communities</a></span><span class="op">(</span><span class="st">"para.10"</span>, cutoff <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/plot_interaction_communities.html">plot_interaction_communities</a></span><span class="op">(</span><span class="st">"para.10"</span>, cutoff <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
 <p><img src="mistyR_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>When interpreting the results and the plots it is important to note that the relationships captured in the importances are not to assumed or interpreted as linear or casual. Furthermore, the estimated importance of a single predictor - marker pair should not be interpredes in isolation but in the context of the other predictors, since training MISTy models is multivariate predictive task.</p>
 <hr>
@@ -432,7 +443,7 @@
 <div id="more-examples" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#more-examples" class="anchor"></a>More examples</h2>
-<p><code>browseVignettes("mistyR")</code></p>
+<p><code><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes("mistyR")</a></code></p>
 <p><a href="https://saezlab.github.io/mistyR/articles/">Online articles</a></p>
 </div>
 <div id="publication" class="section level2 unnumbered">
@@ -468,34 +479,33 @@
 #&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt; [1] ggplot2_3.3.3    distances_0.1.8  purrr_0.3.4      dplyr_1.0.6     
-#&gt; [5] future_1.21.0    mistyR_1.0.2     BiocStyle_2.20.0
+#&gt; [1] ggplot2_3.3.5    distances_0.1.8  purrr_0.3.4      dplyr_1.0.7     
+#&gt; [5] future_1.21.0    mistyR_1.0.3     BiocStyle_2.20.2
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
-#&gt;  [1] tidyr_1.1.3         listenv_0.8.0       ps_1.6.0           
-#&gt;  [4] assertthat_0.2.1    rprojroot_2.0.2     digest_0.6.27      
-#&gt;  [7] utf8_1.2.1          parallelly_1.25.0   R6_2.5.0           
-#&gt; [10] evaluate_0.14       highr_0.9           pillar_1.6.1       
-#&gt; [13] rlang_0.4.11        data.table_1.14.0   rstudioapi_0.13    
-#&gt; [16] furrr_0.2.2         jquerylib_0.1.4     R.utils_2.10.1     
-#&gt; [19] R.oo_1.24.0         rmarkdown_2.8       pkgdown_1.6.1      
-#&gt; [22] textshaping_0.3.4   desc_1.3.0          labeling_0.4.2     
-#&gt; [25] stringr_1.4.0       igraph_1.2.6        munsell_0.5.0      
-#&gt; [28] compiler_4.1.0      xfun_0.23           pkgconfig_2.0.3    
-#&gt; [31] systemfonts_1.0.2   globals_0.14.0      htmltools_0.5.1.1  
-#&gt; [34] tidyselect_1.1.1    tibble_3.1.2        bookdown_0.22      
-#&gt; [37] codetools_0.2-18    fansi_0.5.0         crayon_1.4.1       
-#&gt; [40] withr_2.4.2         R.methodsS3_1.8.1   grid_4.1.0         
-#&gt; [43] jsonlite_1.7.2      gtable_0.3.0        lifecycle_1.0.0    
-#&gt; [46] DBI_1.1.1           magrittr_2.0.1      scales_1.1.1       
-#&gt; [49] rlist_0.4.6.1       cli_2.5.0           stringi_1.6.2      
-#&gt; [52] cachem_1.0.5        farver_2.1.0        fs_1.5.0           
-#&gt; [55] bslib_0.2.5.1       filelock_1.0.2      ellipsis_0.3.2     
-#&gt; [58] ragg_1.1.2          generics_0.1.0      vctrs_0.3.8        
-#&gt; [61] RColorBrewer_1.1-2  tools_4.1.0         glue_1.4.2         
-#&gt; [64] parallel_4.1.0      fastmap_1.1.0       yaml_2.2.1         
-#&gt; [67] colorspace_2.0-1    BiocManager_1.30.15 memoise_2.0.0      
-#&gt; [70] knitr_1.33          sass_0.4.0</code></pre>
+#&gt;  [1] tidyr_1.1.3         listenv_0.8.0       assertthat_0.2.1   
+#&gt;  [4] rprojroot_2.0.2     digest_0.6.27       utf8_1.2.1         
+#&gt;  [7] parallelly_1.27.0   R6_2.5.0            evaluate_0.14      
+#&gt; [10] highr_0.9           pillar_1.6.1        rlang_0.4.11       
+#&gt; [13] data.table_1.14.0   furrr_0.2.3         jquerylib_0.1.4    
+#&gt; [16] R.utils_2.10.1      R.oo_1.24.0         rmarkdown_2.9      
+#&gt; [19] pkgdown_1.6.1       textshaping_0.3.5   desc_1.3.0         
+#&gt; [22] labeling_0.4.2      stringr_1.4.0       igraph_1.2.6       
+#&gt; [25] munsell_0.5.0       compiler_4.1.0      xfun_0.24          
+#&gt; [28] pkgconfig_2.0.3     systemfonts_1.0.2   globals_0.14.0     
+#&gt; [31] htmltools_0.5.1.1   tidyselect_1.1.1    tibble_3.1.2       
+#&gt; [34] bookdown_0.22       codetools_0.2-18    fansi_0.5.0        
+#&gt; [37] crayon_1.4.1        withr_2.4.2         R.methodsS3_1.8.1  
+#&gt; [40] grid_4.1.0          jsonlite_1.7.2      gtable_0.3.0       
+#&gt; [43] lifecycle_1.0.0     DBI_1.1.1           magrittr_2.0.1     
+#&gt; [46] scales_1.1.1        rlist_0.4.6.1       cli_3.0.1          
+#&gt; [49] stringi_1.7.3       cachem_1.0.5        farver_2.1.0       
+#&gt; [52] fs_1.5.0            bslib_0.2.5.1       filelock_1.0.2     
+#&gt; [55] ellipsis_0.3.2      ragg_1.1.3          generics_0.1.0     
+#&gt; [58] vctrs_0.3.8         RColorBrewer_1.1-2  tools_4.1.0        
+#&gt; [61] glue_1.4.2          parallel_4.1.0      fastmap_1.1.0      
+#&gt; [64] yaml_2.2.1          colorspace_2.0-2    BiocManager_1.30.16
+#&gt; [67] memoise_2.0.0       knitr_1.33          sass_0.4.0</code></pre>
 </div>
 <div class="footnotes">
 <hr>
