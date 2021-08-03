@@ -1,3 +1,7 @@
+# mistyR 1.1.x
+
+- Improvements
+
 # mistyR 1.0.3
 
 - Fixed display of messages and progress during view generation.
