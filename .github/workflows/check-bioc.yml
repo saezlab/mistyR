@@ -278,11 +278,11 @@ jobs:
           tags: tanevski/mistyr:master,tanevski/mistyr:latest
       -
         name: Build and push other
-        if: "!contains(github.event.head_commit.message, '/nodocker') && runner.os == 'Linux' && github.ref != 'refs/heads/master'"
+        if: "!contains(github.event.head_commit.message, '/nodocker') && runner.os == 'Linux' && github.ref == 'refs/heads/devel'"
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: tanevski/mistyr:${GITHUB_REF##*/}
+          tags: tanevski/mistyr:devel
 
       - name: Upload check results
         if: failure()
