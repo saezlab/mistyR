@@ -39,9 +39,9 @@ The use of mistyR is conceptualized around building a workflow for analysis of s
 
 -   [Plotting]
 
-To construct a workflow `r Githubpkg("saezlab/mistyR")` is designed with the use of pipe operators (for example the operator `%>%` from `r CRANpkg("magrittr")`) for chaining functions in mind.
+To construct a workflow `r BiocStyle::Githubpkg("saezlab/mistyR")` is designed with the use of pipe operators (for example the operator `%>%` from `r BiocStyle::CRANpkg("magrittr")`) for chaining functions in mind.
 
-When loading `r Githubpkg("saezlab/mistyR")` please consider configuring a `future::multisession()` parallel execution plan. `r Githubpkg("saezlab/mistyR")` will then use all available cores for execution of computationally demanding functions. It is recommended that the user modifies the `future::plan()` according to their needs.
+When loading `r BiocStyle::Githubpkg("saezlab/mistyR")` please consider configuring a `future::multisession()` parallel execution plan. `r BiocStyle::Githubpkg("saezlab/mistyR")` will then use all available cores for execution of computationally demanding functions. It is recommended that the user modifies the `future::plan()` according to their needs.
 
 ```{r setup, message=FALSE}
 # MISTy
@@ -80,7 +80,7 @@ For more information about the underlying model and data generation see `help(sy
 
 # View composition
 
-The `r Githubpkg("saezlab/mistyR")` workflow always starts by defining an intraview (`create_initial_view()`) containing measurements of the markers that are the target of the modeling at each cell of interest. For the first sample from the `synthetic` dataset we select all markers except for the ligands for all available cells.
+The `r BiocStyle::Githubpkg("saezlab/mistyR")` workflow always starts by defining an intraview (`create_initial_view()`) containing measurements of the markers that are the target of the modeling at each cell of interest. For the first sample from the `synthetic` dataset we select all markers except for the ligands for all available cells.
 
 ```{r}
 expr <- synthetic[[1]] %>% select(-c(row, col, type, starts_with("lig")))
@@ -91,11 +91,11 @@ summary(misty.intra)
 summary(misty.intra$intraview)
 ```
 
-From the intrinsic view (*intraview*)[^1] `r Githubpkg("saezlab/mistyR")` will model the expression of each marker as a function of the expression of other markers within the cell. We are interested in exploring marker expressions coming from different spatial contexts that are complementary, i.e., that are distinguishable and contribute to the explanation of the overall expression of the markers.
+From the intrinsic view (*intraview*)[^1] `r BiocStyle::Githubpkg("saezlab/mistyR")` will model the expression of each marker as a function of the expression of other markers within the cell. We are interested in exploring marker expressions coming from different spatial contexts that are complementary, i.e., that are distinguishable and contribute to the explanation of the overall expression of the markers.
 
 [^1]: You will notice that `misty.intra` contains an element named `misty.uniqueid` that is used for caching. If not provided, this id is automatically generated.
 
-`r Githubpkg("saezlab/mistyR")` includes two default helper functions for calculating and adding views that take into account the spatial context of the data: `add_juxtaview()` and `add_paraview()`. The *juxtaview* represent a local spatial view and captures the expression of all markers available in the intraview within the immediate neighborhood of each cell. The *paraview* captures the expression of all markers avainalbe in the intraview in the boarder tissue structure where the importance of the influence is proportional to the inverse of the distance between two cells. To add a *paraview* in the view composition, we first need information about the location of each cell from the intraview. Using this information we can create and add a *paraview* with importance radius of 10 to the view composition.
+`r BiocStyle::Githubpkg("saezlab/mistyR")` includes two default helper functions for calculating and adding views that take into account the spatial context of the data: `add_juxtaview()` and `add_paraview()`. The *juxtaview* represent a local spatial view and captures the expression of all markers available in the intraview within the immediate neighborhood of each cell. The *paraview* captures the expression of all markers avainalbe in the intraview in the boarder tissue structure where the importance of the influence is proportional to the inverse of the distance between two cells. To add a *paraview* in the view composition, we first need information about the location of each cell from the intraview. Using this information we can create and add a *paraview* with importance radius of 10 to the view composition.
 
 ```{r}
 pos <- synthetic[[1]] %>% select(row, col)
@@ -167,13 +167,13 @@ result.folders <- synthetic %>% imap_chr(function(sample, name) {
 result.folders
 ```
 
-Note that by default, `r Githubpkg("saezlab/mistyR")` caches calculated views[^2] and trained models, such that in case of repeated running of the workflow they will be retrieved instead of recalculated, thus saving significant computational time. However, the size of the generated cache files can be large. Therefore, the functions that can work with cached files, such as `run_misty()`, have parameter named `cached` that can be set to `FALSE`. Additionally the function `clear_cache()` provides means to remove cache files.
+Note that by default, `r BiocStyle::Githubpkg("saezlab/mistyR")` caches calculated views[^2] and trained models, such that in case of repeated running of the workflow they will be retrieved instead of recalculated, thus saving significant computational time. However, the size of the generated cache files can be large. Therefore, the functions that can work with cached files, such as `run_misty()`, have parameter named `cached` that can be set to `FALSE`. Additionally the function `clear_cache()` provides means to remove cache files.
 
 [^2]: *juxtaview* and *paraview* calculated and added by `add_juxtaview()` and `add_paraview()` respectively
 
 # Result processing
 
-The raw `r Githubpkg("saezlab/mistyR")` results are stored in several text files in the output folder for each analyzed sample. The results from one or more samples can be collected, aggregated and coverted to an R object with the function `collect_results()`, by providing path(s) to folder(s) containing results generated by `run_misty()`.
+The raw `r BiocStyle::Githubpkg("saezlab/mistyR")` results are stored in several text files in the output folder for each analyzed sample. The results from one or more samples can be collected, aggregated and coverted to an R object with the function `collect_results()`, by providing path(s) to folder(s) containing results generated by `run_misty()`.
 
 ```{r}
 misty.results <- collect_results(result.folders)
