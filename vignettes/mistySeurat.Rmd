@@ -31,9 +31,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-`r Githubpkg("saezlab/mistyR")` can be used to analyze spatial transcriptomics data sets stored in `r CRANpkg("SeuratObject")` with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running `r Githubpkg("saezlab/mistyR")`, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.
+`r BiocStyle::Githubpkg("saezlab/mistyR")` can be used to analyze spatial transcriptomics data sets stored in `r BiocStyle::CRANpkg("SeuratObject")` with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running `r BiocStyle::Githubpkg("saezlab/mistyR")`, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.
 
-In principle `r Githubpkg("saezlab/mistyR")` can be used with data extracted from a `r CRANpkg("SeuratObject")` only. For the sake of completeness of the process of modeling with `r Githubpkg("saezlab/mistyR")` we demonstrate a complete workflow, including data preprocessing with `r CRANpkg("Seurat")`. The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from `r Githubpkg("saezlab/mistyR")` and object manipulation from `r CRANpkg("Seurat")`.
+In principle `r BiocStyle::Githubpkg("saezlab/mistyR")` can be used with data extracted from a `r BiocStyle::CRANpkg("SeuratObject")` only. For the sake of completeness of the process of modeling with `r BiocStyle::Githubpkg("saezlab/mistyR")` we demonstrate a complete workflow, including data preprocessing with `r BiocStyle::CRANpkg("Seurat")`. The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from `r BiocStyle::Githubpkg("saezlab/mistyR")` and object manipulation from `r BiocStyle::CRANpkg("Seurat")`.
 
 ```{r setup, warning=FALSE, message=FALSE}
 # MISTy
@@ -62,7 +62,7 @@ plan(multisession)
 
 ## The skeleton of mistyR pipelines
 
-For user convenience and to facilitate the use of `r Githubpkg("saezlab/mistyR")` and `r CRANpkg("Seurat")`, `run_misty_seurat()` is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a Seurat object. The function allows for:
+For user convenience and to facilitate the use of `r BiocStyle::Githubpkg("saezlab/mistyR")` and `r BiocStyle::CRANpkg("Seurat")`, `run_misty_seurat()` is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a Seurat object. The function allows for:
 
 1)  Defining a number of assays/views to be used in the model.
 2)  Defining the type of spatial context for each view and their parameters.
@@ -116,7 +116,7 @@ run_misty_seurat <- function(visium.slide,
 
 ## Extracting specific information from Seurat objects
 
-These are helper functions that allow to extract from `r CRANpkg("Seurat")` objects specific assays and transform them into `tibble` which is a preferred format for `r Githubpkg("saezlab/mistyR")`.
+These are helper functions that allow to extract from `r BiocStyle::CRANpkg("Seurat")` objects specific assays and transform them into `tibble` which is a preferred format for `r BiocStyle::Githubpkg("saezlab/mistyR")`.
 
 ```{r}
 # Extracts data from an specific assay from a Seurat object
@@ -144,7 +144,7 @@ filter_data_features <- function(data,
 
 ## View creation
 
-This helper function wraps the three options available by default for view creation in `r Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
+This helper function wraps the three options available by default for view creation in `r BiocStyle::Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
 
 ```{r}
 # Builds views depending on the paramaters defined
@@ -206,7 +206,7 @@ create_default_views <- function(data,
 
 ## Building a mistyR pipeline and running the model
 
-Finally, we show a wrapper function `build_misty_pipeline()` that allows you to build automatically a `r Githubpkg("saezlab/mistyR")` workflow from a list of data frames, with specified spatial context, parameters, features and locations.
+Finally, we show a wrapper function `build_misty_pipeline()` that allows you to build automatically a `r BiocStyle::Githubpkg("saezlab/mistyR")` workflow from a list of data frames, with specified spatial context, parameters, features and locations.
 
 ```{r}
 # Builds automatic MISTy workflow and runs it
@@ -273,7 +273,7 @@ if (!dir.exists("breast_A_1")) {
 options(future.rng.onMisuse = "ignore")
 ```
 
-We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r Biocpkg("progeny")` and the previously described functions.
+We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r BiocStyle::Biocpkg("progeny")` and the previously described functions.
 
 ## Loading and normalizing the data sets
 
@@ -308,7 +308,7 @@ slide.markers <- names(which(coverage >= 0.05))
 
 ## Defining Hypoxia and Estrogen responsive genes
 
-For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package `r Biocpkg("progeny")`.
+For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the package `r BiocStyle::Biocpkg("progeny")`.
 
 ```{r}
 estrogen.footprints <- getModel(top = 15) %>%
@@ -364,7 +364,7 @@ misty.out <- "vignette_model_seurat"
 
 ## Run MISTy pipeline and collect results
 
-Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a `r Githubpkg("saezlab/mistyR")` workflow.
+Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a `r BiocStyle::Githubpkg("saezlab/mistyR")` workflow.
 
 ```{r, warning=FALSE}
 misty.results <- run_misty_seurat(
@@ -479,7 +479,7 @@ The shown example is not the only way to use mistyR to analyze spatial transcrip
 
 -   Spatial interactions between cell-type abundances leveraging deconvolution methods and creating descriptions of cell colocalization and tissue architecture.
 
-Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
+Additionally, `r BiocStyle::Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
 
 ---
 

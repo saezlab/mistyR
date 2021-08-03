@@ -31,9 +31,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-`r Githubpkg("saezlab/mistyR")` can be used to analyze spatial omics data sets stored in `r Biocpkg("SpatialExperiment")` object with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running `r Githubpkg("saezlab/mistyR")`, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.
+`r BiocStyle::Githubpkg("saezlab/mistyR")` can be used to analyze spatial omics data sets stored in `r BiocStyle::Biocpkg("SpatialExperiment")` object with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running `r BiocStyle::Githubpkg("saezlab/mistyR")`, to analysis of results, i.e., the spatial interactions between markers stored in alternative assays and specific locations.
 
-The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from `r Githubpkg("saezlab/mistyR")` and object manipulation from `r Biocpkg("SpatialExperiment")` and `Biocpkg("SingleCellExperiment")`.
+The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from `r BiocStyle::Githubpkg("saezlab/mistyR")` and object manipulation from `r BiocStyle::Biocpkg("SpatialExperiment")` and `BiocStyle::Biocpkg("SingleCellExperiment")`.
 
 ```{r setup, message = FALSE}
 # MISTy
@@ -66,7 +66,7 @@ plan(multisession)
 
 ## The skeleton of mistyR pipelines
 
-For user convenience and to facilitate the use of `r Githubpkg("saezlab/mistyR")` and `r Biocpkg("SpatialExperiment")`, `run_misty_spe()` is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a SpatialExperiment object. The function allows for:
+For user convenience and to facilitate the use of `r BiocStyle::Githubpkg("saezlab/mistyR")` and `r BiocStyle::Biocpkg("SpatialExperiment")`, `run_misty_spe()` is a function describing a general skeleton of a mistyR workflow for analysing a 10x Visium slide given in a SpatialExperiment object. The function allows for:
 
 1)  Defining a number of assays/views to be used in the model.
 2)  Defining the type of spatial context for each view and their parameters.
@@ -120,7 +120,7 @@ run_misty_spe <- function(slide,
 
 ## Extracting specific information from SpatialExperiment objects
 
-These are helper functions that allow to extract from `r Biocpkg("SpatialExperiment")` objects specific assays and transform them into `tibble` which is a preferred format for `r Githubpkg("saezlab/mistyR")`.
+These are helper functions that allow to extract from `r BiocStyle::Biocpkg("SpatialExperiment")` objects specific assays and transform them into `tibble` which is a preferred format for `r BiocStyle::Githubpkg("saezlab/mistyR")`.
 
 ```{r}
 # Extracts data from an specific assay from a SpatialExperiment object
@@ -151,7 +151,7 @@ filter_data_features <- function(data,
 
 ## View creation
 
-This helper function wraps the three options available by default for view creation in `r Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
+This helper function wraps the three options available by default for view creation in `r BiocStyle::Githubpkg("saezlab/mistyR")` with additional features that allow for creating views for specific spots.
 
 ```{r}
 # Builds views depending on the paramaters defined
@@ -214,7 +214,7 @@ create_default_views <- function(data,
 
 ## Building a mistyR pipeline and running the model
 
-This wrapper function `build_misty_pipeline()` allows for building automatically a `r Githubpkg("saezlab/mistyR")` workflow from a list of data frames, with specified spatial context, parameters, features and locations.
+This wrapper function `build_misty_pipeline()` allows for building automatically a `r BiocStyle::Githubpkg("saezlab/mistyR")` workflow from a list of data frames, with specified spatial context, parameters, features and locations.
 
 ```{r}
 # Builds automatic MISTy workflow and runs it
@@ -266,7 +266,7 @@ build_misty_pipeline <- function(view.data,
 
 ## Basic visualization function
 
-Finally, we adapted the function `plotMolecules()` from `r Githubpkg("lmweber/ggspavis")` to visualize features from custom assays for the purposes of the use case.
+Finally, we adapted the function `plotMolecules()` from `r BiocStyle::Githubpkg("lmweber/ggspavis")` to visualize features from custom assays for the purposes of the use case.
 
 ```{r}
 plotMolecules_adapted <- function(spe,
@@ -321,9 +321,9 @@ if (!dir.exists("breast_A_1")) {
 }
 ```
 
-We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r Biocpkg("progeny")` and the previously described functions.
+We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will use the model matrix with top significant genes for each pathway from the package `r BiocStyle::Biocpkg("progeny")` and the previously described functions.
 
-Please note that the `r Biocpkg("SpatialExperiment")` function `read10xVisium()` requires a fixed file structure that we create programmatically for this e xample. Furthermore, in this example we dropped all repeated symbols, however, the user must define what's the best solution for their analysis.
+Please note that the `r BiocStyle::Biocpkg("SpatialExperiment")` function `read10xVisium()` requires a fixed file structure that we create programmatically for this e xample. Furthermore, in this example we dropped all repeated symbols, however, the user must define what's the best solution for their analysis.
 
 ## Loading and normalizing the data sets
 
@@ -436,7 +436,7 @@ misty.out <- "vignette_model_spe"
 
 ## Run MISTy pipeline and collect results
 
-Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a `r Githubpkg("saezlab/mistyR")` workflow.
+Now that we have preprocessed the data and have decided on a question to analyze, we can create and run a `r BiocStyle::Githubpkg("saezlab/mistyR")` workflow.
 
 ```{r, warning=FALSE}
 misty.results <- run_misty_spe(
@@ -598,7 +598,7 @@ The shown example is not the only way to use mistyR to analyze spatial transcrip
 
 -   Spatial interactions between cell-type abundances leveraging deconvolution methods and creating descriptions of cell colocalization and tissue architecture.
 
-Additionally, `r Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
+Additionally, `r BiocStyle::Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
 
 ---
 

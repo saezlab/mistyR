@@ -1,7 +1,6 @@
 # MISTy - **M**ultiview **I**ntercellular **S**pa**T**ial modeling framework <img src="https://www.dropbox.com/s/0yawdbykdzyxb53/logo.png?raw=1" align="right" height = "139">
 
 <!-- badges: start -->
-[![R4.1-bioc3.13](https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/saezlab/mistyR/actions/workflows/check-bioc.yml)
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/mistyR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/mistyR)
 [![BioC devel status](http://www.bioconductor.org/shields/build/devel/bioc/mistyR.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/mistyR)
 [![Codecov test coverage](https://codecov.io/gh/saezlab/mistyR/branch/master/graph/badge.svg)](https://codecov.io/gh/saezlab/mistyR?branch=master)

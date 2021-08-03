@@ -1,3 +1,15 @@
+# mistyR 1.0.3
+
+- Fixed display of messages and progress during view generation.
+- Improved plotting control and display.
+- Fixed handling of NaN in results.
+- Vignette output switched from BiocStyle to rmarkdown for pdfs due to BiocStyle issue.
+
+# mistyR 1.0.2
+
+- Bugfix: models built with different parameters stored and retrieved from the same cache file.
+- Avoid calls to os-dependent file.info in tests. 
+
 # mistyR 1.0.1
 
 - Bugfix: passing arguments to ranger.
