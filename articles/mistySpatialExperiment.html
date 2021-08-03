@@ -562,21 +562,21 @@
 <span class="co">#&gt; # A tibble: 15 × 4</span>
 <span class="co">#&gt;    target  sample                                               measure    value</span>
 <span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     3.01e-5</span>
-<span class="co">#&gt;  2 INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     7.86e-3</span>
-<span class="co">#&gt;  3 ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.07e-2</span>
-<span class="co">#&gt;  4 PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.62e-2</span>
-<span class="co">#&gt;  5 FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.05e-2</span>
-<span class="co">#&gt;  6 BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     3.58e-2</span>
-<span class="co">#&gt;  7 NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     4.75e-2</span>
-<span class="co">#&gt;  8 EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.94e-2</span>
-<span class="co">#&gt;  9 FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     6.40e-2</span>
-<span class="co">#&gt; 10 ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     8.10e-2</span>
-<span class="co">#&gt; 11 PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     8.97e-2</span>
-<span class="co">#&gt; 12 ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.28e-1</span>
-<span class="co">#&gt; 13 HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.61e-1</span>
-<span class="co">#&gt; 14 KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.70e-1</span>
-<span class="co">#&gt; 15 GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     4.64e-1</span></code></pre></div>
+<span class="co">#&gt;  1 PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.24e-5</span>
+<span class="co">#&gt;  2 ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.58e-3</span>
+<span class="co">#&gt;  3 FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     4.60e-3</span>
+<span class="co">#&gt;  4 PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     8.14e-3</span>
+<span class="co">#&gt;  5 INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.84e-2</span>
+<span class="co">#&gt;  6 HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.30e-2</span>
+<span class="co">#&gt;  7 BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.66e-2</span>
+<span class="co">#&gt;  8 EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.97e-2</span>
+<span class="co">#&gt;  9 ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     7.15e-2</span>
+<span class="co">#&gt; 10 PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     8.58e-2</span>
+<span class="co">#&gt; 11 NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.09e-1</span>
+<span class="co">#&gt; 12 FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.13e-1</span>
+<span class="co">#&gt; 13 ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.95e-1</span>
+<span class="co">#&gt; 14 KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.63e-1</span>
+<span class="co">#&gt; 15 GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     4.74e-1</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -589,9 +589,9 @@
 <span class="co">#&gt; # A tibble: 3 × 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.497    0.376 1.12e-72    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.604    0.457 3.63e-51    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.221    0.167 4.00e- 8    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.502    0.378 1.21e-76    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.578    0.436 1.38e-48    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.246    0.186 2.14e-10    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (63%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -605,22 +605,22 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 15 × 2</span>
-<span class="co">#&gt;    Predictor    PGK1</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.57  </span>
-<span class="co">#&gt;  2 FAM162A    1.89  </span>
-<span class="co">#&gt;  3 PFKFB4     0.251 </span>
-<span class="co">#&gt;  4 HILPDA     0.177 </span>
-<span class="co">#&gt;  5 ENO2      -0.0106</span>
-<span class="co">#&gt;  6 EGLN1     -0.358 </span>
-<span class="co">#&gt;  7 ANKRD37   -0.486 </span>
-<span class="co">#&gt;  8 KDM3A     -0.493 </span>
-<span class="co">#&gt;  9 GBE1      -0.493 </span>
-<span class="co">#&gt; 10 BNIP3L    -0.507 </span>
-<span class="co">#&gt; 11 INSIG2    -0.544 </span>
-<span class="co">#&gt; 12 ANKZF1    -0.596 </span>
-<span class="co">#&gt; 13 FUT11     -0.643 </span>
-<span class="co">#&gt; 14 PDK1      -0.754 </span>
+<span class="co">#&gt;    Predictor     PGK1</span>
+<span class="co">#&gt;    &lt;chr&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 NDRG1      2.63   </span>
+<span class="co">#&gt;  2 FAM162A    1.80   </span>
+<span class="co">#&gt;  3 HILPDA     0.289  </span>
+<span class="co">#&gt;  4 PFKFB4     0.145  </span>
+<span class="co">#&gt;  5 ENO2       0.00439</span>
+<span class="co">#&gt;  6 EGLN1     -0.318  </span>
+<span class="co">#&gt;  7 ANKRD37   -0.405  </span>
+<span class="co">#&gt;  8 BNIP3L    -0.512  </span>
+<span class="co">#&gt;  9 KDM3A     -0.526  </span>
+<span class="co">#&gt; 10 GBE1      -0.529  </span>
+<span class="co">#&gt; 11 INSIG2    -0.552  </span>
+<span class="co">#&gt; 12 ANKZF1    -0.604  </span>
+<span class="co">#&gt; 13 FUT11     -0.706  </span>
+<span class="co">#&gt; 14 PDK1      -0.712  </span>
 <span class="co">#&gt; 15 PGK1      NA</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
