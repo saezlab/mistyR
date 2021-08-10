@@ -1,4 +1,4 @@
-# MISTy - **M**ultiview **I**ntercellular **S**pa**T**ial modeling framework <img src="https://www.dropbox.com/s/0yawdbykdzyxb53/logo.png?raw=1" align="right" height = "139">
+# MISTy - **M**ultiview **I**ntercellular **S**pa**T**ial modeling framework <img src="https://www.dropbox.com/s/giluat1vo5wa7jq/misty_badge.png?raw=1" align="right" height = "139">
 
 <!-- badges: start -->
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/mistyR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/mistyR)
@@ -13,7 +13,7 @@
 
 The advancement of technologies for measurement of highly multiplexed spatial data require the development of scalable methods that can leverage the availability of the spatial context. Multiview Intercellular SpaTial modeling framework (MISTy) is an explainable machine learning framework for knowledge extraction and analysis of single-cell, highly multiplexed, spatially resolved data.
 
-<img src="https://www.dropbox.com/s/4j2ccdol2n7rvd8/graphical_abstract.png?raw=1" align="center" width="800">
+<img src="https://www.dropbox.com/s/5wyh520i1wl62ul/graphical_abstract.png?raw=1" align="center" width="800">
 
 MISTy facilitates an in-depth understanding of marker interactions by profiling the intra- and intercellular relationships. MISTy is a flexible framework able to process a custom number of views. Each of these views can describe a different spatial context, i.e., define a relationship among the observed expressions of the markers, such as intracellular regulation or paracrine regulation. However, the views can also capture cell-type specific relationships, capture relations between functional footprints or focus on relations between different anatomical regions. Each MISTy view is considered as a potential source of variability in the measured marker expressions. Each MISTy view is then analyzed for its contribution to the total expression of each marker and is explained in terms of the interactions with other measurements that led to the observed contribution. Our approach is modular, easily parallelizable and thus scalable to samples with millions of cells and thousands of measured markers.
 
