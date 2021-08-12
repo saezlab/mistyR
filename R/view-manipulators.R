@@ -60,9 +60,6 @@ filter_views <- function(current.views, rows, view = "intraview", ...) {
       msg = "Filtering based on the unique id is not possible."
     )
 
-    # check that filter expressions are logical
-    dplyr:::check_filter(dplyr:::dplyr_quosures(...))
-
     toslice <- current.views[[view]][["data"]] %>%
       dplyr::transmute(...) %>%
       apply(1, purrr::reduce, `&`) %>%
