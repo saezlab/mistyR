@@ -103,15 +103,15 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
     stringr::str_detect(trim.measure, "RMSE", negate = TRUE)) - 0.5)
 
   targets <- misty.results$improvements.stats %>%
-    dplyr::filter(measure == trim.measure, inv * mean >= inv * trim) %>%
-    dplyr::pull(target)
+    dplyr::filter(.data$measure == trim.measure, inv * mean >= inv * trim) %>%
+    dplyr::pull(.data$target)
 
   assertthat::assert_that(assertthat::not_empty(targets),
     msg = "Invalid selection of trim measure and/or value."
   )
 
   plot.data <- misty.results$contributions.stats %>%
-    dplyr::filter(target %in% targets)
+    dplyr::filter(.data$target %in% targets)
 
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$target, y = .data$fraction)) +
     ggplot2::geom_col(ggplot2::aes(group = .data$view, fill = .data$view)) +
@@ -171,19 +171,20 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
 
   if (clean) {
     clean.predictors <- plot.data %>%
-      dplyr::mutate(Importance = Importance*(Importance >= cutoff)) %>%
-      dplyr::group_by(Predictor) %>%
-      dplyr::summarize(total = sum(Importance, na.rm = TRUE)) %>%
-      dplyr::filter(total > 0) %>%
-      dplyr::pull(Predictor)
+      dplyr::mutate(Importance = .data$Importance*(.data$Importance >= cutoff)) %>%
+      dplyr::group_by(.data$Predictor) %>%
+      dplyr::summarize(total = sum(.data$Importance, na.rm = TRUE)) %>%
+      dplyr::filter(.data$total > 0) %>%
+      dplyr::pull(.data$Predictor)
     clean.targets <- plot.data %>%
-      dplyr::mutate(Importance = Importance*(Importance >= cutoff)) %>%
-      dplyr::group_by(Target) %>%
-      dplyr::summarize(total = sum(Importance, na.rm = TRUE)) %>%
-      dplyr::filter(total > 0) %>%
-      dplyr::pull(Target)
+      dplyr::mutate(Importance = .data$Importance*(.data$Importance >= cutoff)) %>%
+      dplyr::group_by(.data$Target) %>%
+      dplyr::summarize(total = sum(.data$Importance, na.rm = TRUE)) %>%
+      dplyr::filter(.data$total > 0) %>%
+      dplyr::pull(.data$Target)
     plot.data.clean <- plot.data %>%
-      dplyr::filter(Predictor %in% clean.predictors, Target %in% clean.targets)
+      dplyr::filter(.data$Predictor %in% clean.predictors, 
+                    .data$Target %in% clean.targets)
   } else {
     plot.data.clean <- plot.data
   }
