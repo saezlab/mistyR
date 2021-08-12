@@ -58,6 +58,7 @@ misty.views \%>\%
 <\code{\link[dplyr:dplyr_data_masking]{data-masking}}>.
 
 Other view manipulation functions: 
+\code{\link{rename_view}()},
 \code{\link{select_markers}()}
 }
 \concept{view manipulation functions}

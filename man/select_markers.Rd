@@ -41,6 +41,7 @@ misty.views \%>\%
 <\code{\link[dplyr:dplyr_tidy_select()]{tidy-select}}>.
 
 Other view manipulation functions: 
-\code{\link{filter_views}()}
+\code{\link{filter_views}()},
+\code{\link{rename_view}()}
 }
 \concept{view manipulation functions}

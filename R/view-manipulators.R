@@ -1,3 +1,6 @@
+# mistyR view manipulation functions
+# Copyright (c) 2021 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+
 #' Filter spatial units
 #'
 #' Select, remove (or duplicate) rows from all views in a composition by their
@@ -78,7 +81,8 @@ filter_views <- function(current.views, rows, view = "intraview", ...) {
 
 #' Select a subset of markers in a view
 #'
-#' @param current.views the current view composition.
+#' @inheritParams filter_views
+#'
 #' @param view the name of the view to select markers for.
 #' @param ... one or more \link[dplyr:dplyr_tidy_select]{select} expressions
 #' \code{\link[dplyr:select]{dplyr::select}()} for the specified \code{view}.
@@ -127,4 +131,46 @@ select_markers <- function(current.views, view = "intraview", ...) {
       )
     }, ...
   )
+}
+
+
+#' Rename view in a view composition
+#'
+#' @inheritParams filter_views
+#'
+#' @param old.name old name of the view.
+#' @param new.name new name of the view.
+#' @param new.abbrev new abbreviated name.
+#'
+#' @return A mistyR view composition with a renamed view.
+#'
+#' @family view manipulation functions
+#'
+#' @examples
+#' view1 <- data.frame(marker1 = rnorm(100, 10, 2), marker2 = rnorm(100, 15, 3))
+#' view2 <- data.frame(marker1 = rnorm(100, 10, 5), marker2 = rnorm(100, 15, 5))
+#'
+#' misty.views <- create_initial_view(view1) %>%
+#'   add_views(create_view("originalname", view2, "on"))
+#' str(misty.views)
+#'
+#' # rename and preview
+#' misty.views %>%
+#'   rename_view("originalname", "renamed", "rn") %>%
+#'   str()
+#' @export
+rename_view <- function(current.views, old.name,
+                        new.name, new.abbrev = new.name) {
+  assertthat::assert_that(old.name %in% names(current.views),
+    msg = "The requested view cannot be found in the current view composition."
+  )
+
+  old.view <- purrr::pluck(current.views, old.name)
+  old.view$abbrev <- new.abbrev
+  changed.view <- list(old.view)
+  names(changed.view) <- new.name
+
+  current.views %>%
+    rlist::list.remove(old.name) %>%
+    append(changed.view)
 }
