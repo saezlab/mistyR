@@ -63,7 +63,7 @@ filter_views <- function(current.views, rows, view = "intraview", ...) {
     # check that filter expressions are logical
     dplyr:::check_filter(dplyr:::dplyr_quosures(...))
 
-    toslice <- misty.views[[view]][["data"]] %>%
+    toslice <- current.views[[view]][["data"]] %>%
       dplyr::transmute(...) %>%
       apply(1, purrr::reduce, `&`) %>%
       which()
