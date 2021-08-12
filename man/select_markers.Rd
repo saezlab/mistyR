@@ -38,7 +38,7 @@ misty.views \%>\%
   str()
 }
 \seealso{
-<\code{\link[dplyr:dplyr_tidy_select()]{tidy-select}}>.
+<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}>.
 
 Other view manipulation functions: 
 \code{\link{filter_views}()},

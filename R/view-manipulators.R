@@ -89,7 +89,7 @@ filter_views <- function(current.views, rows, view = "intraview", ...) {
 #'
 #' @return A mistyR view composition with selected markers in \code{view}.
 #'
-#' @seealso <\code{\link[dplyr:dplyr_tidy_select()]{tidy-select}}>.
+#' @seealso <\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}>.
 #'
 #' @family view manipulation functions
 #'
