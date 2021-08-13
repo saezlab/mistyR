@@ -1,6 +1,7 @@
 # mistyR 1.1.x
 
-- Improvements
+- Added funtions for view manipulation, including view filtering and marker selection.
+- Added functions for performance, contribution and importance signature extraction from results.
 
 # mistyR 1.0.3
 
