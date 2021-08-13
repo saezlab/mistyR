@@ -384,23 +384,23 @@ extract_signature <- function(misty.results,
     "performance" = {
       misty.results$improvements %>%
         dplyr::filter(
-          stringr::str_ends(measure, "R2"),
-          !stringr::str_ends(measure, "p.R2")
+          stringr::str_ends(.data$measure, "R2"),
+          !stringr::str_ends(.data$measure, "p.R2")
         ) %>%
-        tidyr::unite("Feature", target, measure) %>%
-        dplyr::group_by(sample) %>%
+        tidyr::unite("Feature", .data$target, .data$measure) %>%
+        dplyr::group_by(.data$sample) %>%
         tidyr::pivot_wider(names_from = "Feature", values_from = "value") %>%
         dplyr::ungroup()
     },
     "contribution" = {
       misty.results$contributions %>%
         dplyr::filter(
-          !stringr::str_starts(view, "p\\."),
-          !stringr::str_detect(view, "intercept")
+          !stringr::str_starts(.data$view, "p\\."),
+          !stringr::str_detect(.data$view, "intercept")
         ) %>%
-        dplyr::group_by(sample, target) %>%
-        dplyr::mutate(frac = abs(value) / sum(abs(value)), value = NULL) %>%
-        tidyr::unite("Feature", view, target) %>%
+        dplyr::group_by(.data$sample, .data$target) %>%
+        dplyr::mutate(frac = abs(.data$value) / sum(abs(.data$value)), value = NULL) %>%
+        tidyr::unite("Feature", .data$view, .data$target) %>%
         tidyr::pivot_wider(names_from = "Feature", values_from = "frac") %>%
         dplyr::ungroup()
     },
@@ -410,8 +410,8 @@ extract_signature <- function(misty.results,
           get_view_signature(misty.results, view.name) %>%
             dplyr::rename_with(~ paste(view.name, ., sep = "_"))
         }) %>%
-        purrr::reduce(bind_cols) %>%
-        mutate(sample = names(misty.results$importances), .before = 1)
+        purrr::reduce(dplyr::bind_cols) %>%
+        dplyr::mutate(sample = names(misty.results$importances), .before = 1)
     }
   )
 }
