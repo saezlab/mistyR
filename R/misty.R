@@ -148,7 +148,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     NULL
   )
 
-  message("Training models")
+  message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
     target.model <- build_model(views, target, seed, cv.folds, cached, ...)
 
