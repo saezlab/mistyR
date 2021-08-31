@@ -1,5 +1,66 @@
 # mistyR utility functions
-# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyright (c) 2020-2021 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+
+#' Aggregate collected results
+#'
+#' Helper function
+#'
+#' @param improvements collected improvements.
+#' @param contributions collected contributions.
+#' @param importances collected importances.
+#'
+#' @return a list of improvement stats, contribution stats and
+#' aggregated importances.
+#'
+#' @seealso \code{\link{collect_results}()} to collect results.
+#'
+#' @noRd
+aggregate_results <- function(improvements, contributions, importances) {
+  improvements.stats <- improvements %>%
+    dplyr::filter(!stringr::str_starts(.data$measure, "p\\.")) %>%
+    dplyr::group_by(.data$target, .data$measure) %>%
+    dplyr::summarise(
+      mean = mean(.data$value), sd = stats::sd(.data$value),
+      cv = .data$sd / .data$mean, .groups = "drop"
+    )
+
+
+  contributions.stats <- dplyr::inner_join(
+    # mean coefficients
+    (contributions %>%
+      dplyr::filter(!stringr::str_starts(.data$view, "p\\.") &
+        .data$view != "intercept") %>%
+      dplyr::group_by(.data$target, .data$view) %>%
+      dplyr::summarise(mean = mean(.data$value), .groups = "drop_last") %>%
+      dplyr::mutate(fraction = abs(.data$mean) / sum(abs(.data$mean))) %>%
+      dplyr::ungroup()),
+    # p values
+    (contributions %>%
+      dplyr::filter(stringr::str_starts(.data$view, "p\\.") &
+        !stringr::str_detect(.data$view, "intercept")) %>%
+      dplyr::group_by(.data$target, .data$view) %>%
+      dplyr::mutate(view = stringr::str_remove(.data$view, "^p\\.")) %>%
+      dplyr::summarise(
+        p.mean = mean(.data$value),
+        p.sd = stats::sd(.data$value),
+        .groups = "drop"
+      )),
+    by = c("target", "view")
+  )
+
+  importances.aggregated <- importances %>%
+    tidyr::unite("PT", "Predictor", "Target") %>%
+    dplyr::group_by(.data$view, .data$PT) %>%
+    dplyr::summarise(Importance = mean(.data$Importance), .groups = "drop") %>%
+    tidyr::separate("PT", c("Predictor", "Target"))
+
+  return(list(
+    improvements.stats = improvements.stats,
+    contributions.stats = contributions.stats,
+    importances.aggregated = importances.aggregated
+  ))
+}
+
 
 #' Collect and aggregate results
 #'
@@ -96,46 +157,22 @@ collect_results <- function(folders) {
       tidyr::pivot_longer(cols = -c(.data$sample, .data$target), names_to = "view")
   }, .progress = TRUE)
 
-  improvements.stats <- improvements %>%
-    dplyr::filter(!stringr::str_starts(.data$measure, "p\\.")) %>%
-    dplyr::group_by(.data$target, .data$measure) %>%
-    dplyr::summarise(
-      mean = mean(.data$value), sd = stats::sd(.data$value),
-      cv = .data$sd / .data$mean, .groups = "drop"
-    )
-
-
-  contributions.stats <- dplyr::inner_join(
-    # mean coefficients
-    (contributions %>%
-      dplyr::filter(!stringr::str_starts(.data$view, "p\\.") & .data$view != "intercept") %>%
-      dplyr::group_by(.data$target, .data$view) %>%
-      dplyr::summarise(mean = mean(.data$value), .groups = "drop_last") %>%
-      dplyr::mutate(fraction = abs(.data$mean) / sum(abs(.data$mean))) %>%
-      dplyr::ungroup()),
-    # p values
-    (contributions %>%
-      dplyr::filter(stringr::str_starts(.data$view, "p\\.") & !stringr::str_detect(.data$view, "intercept")) %>%
-      dplyr::group_by(.data$target, .data$view) %>%
-      dplyr::mutate(view = stringr::str_remove(.data$view, "^p\\.")) %>%
-      dplyr::summarise(p.mean = mean(.data$value), p.sd = stats::sd(.data$value), .groups = "drop")),
-    by = c("target", "view")
-  )
-
   message("\nCollecting importances")
   importances <- samples %>%
-    furrr::future_map(function(sample) {
-      targets <- contributions.stats %>%
+    furrr::future_map_dfr(function(sample) {
+      targets <- contributions %>%
         dplyr::pull(.data$target) %>%
         unique() %>%
         sort()
-      views <- contributions.stats %>%
+      views <- contributions %>%
         dplyr::pull(.data$view) %>%
-        unique()
+        unique() %>%
+        stringr::str_subset("^p\\.", negate = TRUE) %>%
+        stringr::str_subset("^intercept$", negate = TRUE)
 
       # one heatmap per view
       maps <- views %>%
-        furrr::future_map(function(view) {
+        furrr::future_map_dfr(function(view) {
           all.importances <- targets %>% purrr::map(~ readr::read_csv(paste0(
             sample, .Platform$file.sep, "importances_", .x, "_", view, ".txt"
           ),
@@ -170,29 +207,29 @@ collect_results <- function(folders) {
               )
               %>%
               dplyr::select(targets[.y])) %>%
-            dplyr::mutate(Predictor = features)
+            dplyr::mutate(Predictor = features) %>%
+            tidyr::pivot_longer(
+              names_to = "Target",
+              values_to = "Importance",
+              -.data$Predictor
+            ) %>%
+            dplyr::mutate(view = view, .before = 1)
         }) %>%
-        `names<-`(views)
-    }, .progress = TRUE) %>%
-    `names<-`(samples)
+        dplyr::mutate(sample = sample, .before = 1)
+    }, .progress = TRUE)
 
   message("\nAggregating")
-  importances.aggregated <- importances %>%
-    purrr::reduce(function(acc, l) {
-      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-.data$Predictor)) +
-        (.y %>% dplyr::select(-.data$Predictor))) %>%
-        dplyr::mutate(Predictor = .x %>% dplyr::pull(.data$Predictor))))
-    }) %>%
-    purrr::map(~ .x %>% dplyr::mutate_if(is.numeric, ~ . / length(samples)))
 
-  return(list(
-    improvements = improvements,
-    improvements.stats = improvements.stats,
-    contributions = contributions,
-    contributions.stats = contributions.stats,
-    importances = importances,
-    importances.aggregated = importances.aggregated
-  ))
+  misty.results <- c(
+    list(
+      improvements = improvements,
+      contributions = contributions,
+      importances = importances
+    ),
+    aggregate_results(improvements, contributions, importances)
+  )
+
+  return(misty.results)
 }
 
 #' Aggregate a subset of results
@@ -218,23 +255,18 @@ aggregate_results_subset <- function(misty.results, folders) {
   normalized.folders <- R.utils::getAbsolutePath(folders)
   # check if folders are in names of misty.results
   assertthat::assert_that(all(normalized.folders %in%
-    names(misty.results$importances)),
+    (misty.results$importances %>% dplyr::pull(.data$sample))),
   msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
 
   message("Aggregating subset")
-  importances.aggregated.subset <- rlist::list.subset(
-    misty.results$importances,
-    normalized.folders
-  ) %>%
-    purrr::reduce(function(acc, l) {
-      acc %>% purrr::map2(l, ~ (((.x %>% dplyr::select(-Predictor)) +
-        (.y %>% dplyr::select(-Predictor))) %>%
-        dplyr::mutate(Predictor = .x %>% dplyr::pull(Predictor))))
-    }) %>%
-    purrr::map(~ .x %>%
-      dplyr::mutate_if(is.numeric, ~ . / length(normalized.folders)))
+  importances.aggregated.subset <- misty.results$importances %>% 
+    dplyr::filter(.data$sample %in% normalized.folders) %>%
+    tidyr::unite("PT", "Predictor", "Target") %>%
+    dplyr::group_by(.data$view, .data$PT) %>%
+    dplyr::summarise(Importance = mean(.data$Importance), .groups = "drop") %>%
+    tidyr::separate("PT", c("Predictor", "Target"))
 
   misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
 
@@ -298,32 +330,6 @@ sweep_cache <- function() {
 }
 
 
-#' Get an importance signature for a single view
-#'
-#' Helper function
-#'
-#' @param misty.results a results list generated by
-#'     \code{\link{collect_results}()}.
-#'
-#' @param view name of the view
-#'
-#' @return A table with one row per sample with its importance signature for
-#' the requested \code{view}.
-#'
-#' @noRd
-get_view_signature <- function(misty.results, view = "intraview") {
-  misty.results$importances %>% purrr::map_dfr(~ .x[[view]] %>%
-    tidyr::pivot_longer(
-      names_to = "Target",
-      values_to = "Importance",
-      -Predictor
-    ) %>%
-    tidyr::unite("Feature", Predictor, Target) %>%
-    dplyr::filter(!is.na(Importance)) %>%
-    tidyr::pivot_wider(names_from = Feature, values_from = Importance))
-}
-
-
 #' Extract signatures from the results
 #'
 #' Signature is a representation of each sample in the space of mistyR results.
@@ -382,8 +388,15 @@ extract_signature <- function(misty.results,
 
   switch(signature.type,
     "performance" = {
+      target.intersection <- misty.results$improvements %>%
+        dplyr::group_by(.data$sample) %>%
+        dplyr::summarize(ts = list(unique(.data$target))) %>%
+        dplyr::pull(.data$ts) %>%
+        purrr::reduce(intersect)
+      
       misty.results$improvements %>%
         dplyr::filter(
+          .data$target %in% target.intersection,
           stringr::str_ends(.data$measure, "R2"),
           !stringr::str_ends(.data$measure, "p.R2")
         ) %>%
@@ -393,8 +406,15 @@ extract_signature <- function(misty.results,
         dplyr::ungroup()
     },
     "contribution" = {
+      target.intersection <- misty.results$contributions %>%
+        dplyr::group_by(.data$sample) %>%
+        dplyr::summarize(ts = list(unique(.data$target))) %>%
+        dplyr::pull(.data$ts) %>%
+        purrr::reduce(intersect)
+      
       misty.results$contributions %>%
         dplyr::filter(
+          .data$target %in% target.intersection,
           !stringr::str_starts(.data$view, "p\\."),
           !stringr::str_detect(.data$view, "intercept")
         ) %>%
@@ -405,13 +425,32 @@ extract_signature <- function(misty.results,
         dplyr::ungroup()
     },
     "importance" = {
-      names(misty.results$importances.aggregated) %>%
-        purrr::map(function(view.name) {
-          get_view_signature(misty.results, view.name) %>%
-            dplyr::rename_with(~ paste(view.name, ., sep = "_"))
-        }) %>%
-        purrr::reduce(dplyr::bind_cols) %>%
-        dplyr::mutate(sample = names(misty.results$importances), .before = 1)
-    }
-  )
+      views <- misty.results$importances %>%
+        dplyr::pull(.data$view) %>%
+        unique()
+      
+      views %>% purrr::map(function(view) {
+        view.importances <- misty.results$importances %>%
+          dplyr::filter(.data$view == !!view, !is.na(.data$Importance))
+        target.intersection <- view.importances %>%
+          dplyr::group_by(.data$sample) %>%
+          dplyr::summarize(ts = list(unique(.data$Target))) %>%
+          dplyr::pull(.data$ts) %>%
+          purrr::reduce(intersect)
+        predictor.intersection <- view.importances %>%
+          dplyr::group_by(.data$sample) %>%
+          dplyr::summarize(ts = list(unique(.data$Predictor))) %>%
+          dplyr::pull(.data$ts) %>%
+          purrr::reduce(intersect)
+
+        view.importances %>%
+          dplyr::filter(
+            .data$Predictor %in% predictor.intersection,
+            .data$Target %in% target.intersection,
+          ) %>% 
+          tidyr::unite("vPT", .data$view, .data$Predictor, .data$Target) %>%
+          tidyr::pivot_wider(names_from = "vPT", values_from = "Importance")
+      }) %>% purrr::reduce(dplyr::full_join, by="sample") 
+      
+    })
 }

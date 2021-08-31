@@ -67,7 +67,8 @@ test_that("contrast_results runs successfully", {
     cutoff.from = 0.5,
     cutoff.to = 0.5
   ))
-  misty.results2$importances.aggregated$para.2 <- NULL
+  misty.results2$importances.aggregated <- 
+    misty.results2$importances.aggregated %>% dplyr::filter(view != "para.2") 
   expect_error(plot_contrast_results(misty.results,
     misty.results2,
     cutoff.from = 0.5,

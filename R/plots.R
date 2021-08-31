@@ -158,33 +158,32 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  assertthat::assert_that((view %in% names(misty.results$importances.aggregated)),
-    msg = "The selected view cannot be found in the results table."
+  assertthat::assert_that((view %in%
+    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+  msg = "The selected view cannot be found in the results table."
   )
 
-  plot.data <- misty.results$importances.aggregated[[view]] %>%
-    tidyr::pivot_longer(
-      names_to = "Target",
-      values_to = "Importance",
-      -.data$Predictor
-    )
+  plot.data <- misty.results$importances.aggregated %>%
+    dplyr::filter(.data$view == !!view)
 
   if (clean) {
     clean.predictors <- plot.data %>%
-      dplyr::mutate(Importance = .data$Importance*(.data$Importance >= cutoff)) %>%
+      dplyr::mutate(Importance = .data$Importance * (.data$Importance >= cutoff)) %>%
       dplyr::group_by(.data$Predictor) %>%
       dplyr::summarize(total = sum(.data$Importance, na.rm = TRUE)) %>%
       dplyr::filter(.data$total > 0) %>%
       dplyr::pull(.data$Predictor)
     clean.targets <- plot.data %>%
-      dplyr::mutate(Importance = .data$Importance*(.data$Importance >= cutoff)) %>%
+      dplyr::mutate(Importance = .data$Importance * (.data$Importance >= cutoff)) %>%
       dplyr::group_by(.data$Target) %>%
       dplyr::summarize(total = sum(.data$Importance, na.rm = TRUE)) %>%
       dplyr::filter(.data$total > 0) %>%
       dplyr::pull(.data$Target)
     plot.data.clean <- plot.data %>%
-      dplyr::filter(.data$Predictor %in% clean.predictors, 
-                    .data$Target %in% clean.targets)
+      dplyr::filter(
+        .data$Predictor %in% clean.predictors,
+        .data$Target %in% clean.targets
+      )
   } else {
     plot.data.clean <- plot.data
   }
@@ -208,7 +207,7 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::coord_equal() +
     ggplot2::ggtitle(view)
-    
+
 
   print(results.plot)
 
@@ -247,20 +246,30 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  assertthat::assert_that((from.view %in% names(misty.results$importances.aggregated)),
-    msg = "The selected from.view cannot be found in the results table."
+  assertthat::assert_that((from.view %in%
+    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+  msg = "The selected from.view cannot be found in the results table."
   )
 
-  assertthat::assert_that((to.view %in% names(misty.results$importances.aggregated)),
-    msg = "The selected to.view cannot be found in the results table."
+  assertthat::assert_that((to.view %in%
+    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+  msg = "The selected to.view cannot be found in the results table."
   )
 
-  mask <- ((misty.results$importances.aggregated[[from.view]] %>%
+  from.view.wide <- misty.results$importances.aggregated %>%
+    dplyr::filter(.data$view == from.view) %>%
+    tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+
+  to.view.wide <- misty.results$importances.aggregated %>%
+    dplyr::filter(.data$view == to.view) %>%
+    tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+
+  mask <- ((from.view.wide %>%
     dplyr::select(-.data$Predictor)) < cutoff) &
-    ((misty.results$importances.aggregated[[to.view]] %>%
+    ((to.view.wide %>%
       dplyr::select(-.data$Predictor)) >= cutoff)
 
-  masked <- ((misty.results$importances.aggregated[[to.view]] %>%
+  masked <- ((to.view.wide %>%
     tibble::column_to_rownames("Predictor")) * mask)
 
   plot.data <- masked %>%
@@ -316,14 +325,20 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  assertthat::assert_that((view %in% names(misty.results$importances.aggregated)),
-    msg = "The selected view cannot be found in the results table."
+  assertthat::assert_that((view %in%
+    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+  msg = "The selected view cannot be found in the results table."
   )
 
+  view.wide <- misty.results$importances.aggregated %>%
+    dplyr::filter(.data$view == !!view) %>%
+    tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+
+
   assertthat::assert_that(
-    all(misty.results$importances.aggregated[[view]] %>%
+    all(view.wide %>%
       dplyr::select(-.data$Predictor) %>% colnames() ==
-      misty.results$importances.aggregated[[view]] %>%
+      view.wide %>%
         dplyr::pull(.data$Predictor)),
     msg = "The predictor and target markers in the view must match."
   )
@@ -332,7 +347,7 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
     msg = "The package igraph is required to calculate the interaction communities."
   )
 
-  A <- misty.results$importances.aggregated[[view]] %>%
+  A <- view.wide %>%
     dplyr::select(-.data$Predictor) %>%
     as.matrix()
   A[A < cutoff | is.na(A)] <- 0
@@ -405,15 +420,25 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
 
   if (is.null(views)) {
     assertthat::assert_that(rlang::is_empty(setdiff(
-      names(misty.results.from$importances.aggregated),
-      names(misty.results.to$importances.aggregated)
+      misty.results.from$importances.aggregated %>%
+        dplyr::pull(.data$view) %>%
+        unique(),
+      misty.results.to$importances.aggregated %>%
+        dplyr::pull(.data$view) %>%
+        unique()
     )),
     msg = "The requested views do not exist in both result lists."
     )
-    views <- names(misty.results.from$importances.aggregated)
+    views <- misty.results.from$importances.aggregated %>%
+      dplyr::pull(.data$view) %>%
+      unique()
   } else {
-    assertthat::assert_that(all(views %in% names(misty.results.from$importances.aggregated)) &
-      all(views %in% names(misty.results.to$importances.aggregated)),
+    assertthat::assert_that(all(views %in%
+      (misty.results.from$importances.aggregated %>%
+        dplyr::pull(.data$view))) &
+      all(views %in%
+        (misty.results.to$importances.aggregated %>%
+          dplyr::pull(.data$view))),
     msg = "The requested views do not exist in both result lists."
     )
   }
@@ -421,24 +446,47 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
   assertthat::assert_that(
     all(views %>% purrr::map_lgl(function(current.view) {
       rlang::is_empty(setdiff(
-        misty.results.from$importances.aggregated[[current.view]] %>% colnames(),
-        misty.results.to$importances.aggregated[[current.view]] %>% colnames()
+        misty.results.from$importances.aggregated %>%
+          dplyr::filter(.data$view == current.view) %>%
+          dplyr::pull(.data$Predictor) %>%
+          unique(),
+        misty.results.to$importances.aggregated %>%
+          dplyr::filter(.data$view == current.view) %>%
+          dplyr::pull(.data$Predictor) %>%
+          unique()
       )) &
         rlang::is_empty(setdiff(
-          misty.results.from$importances.aggregated[[current.view]] %>% dplyr::pull(.data$Predictor),
-          misty.results.to$importances.aggregated[[current.view]] %>% dplyr::pull(.data$Predictor)
+          misty.results.from$importances.aggregated %>%
+            dplyr::filter(.data$view == current.view) %>%
+            dplyr::pull(.data$Target) %>%
+            unique(),
+          misty.results.to$importances.aggregated %>%
+            dplyr::filter(.data$view == current.view) %>%
+            dplyr::pull(.data$Target) %>%
+            unique()
         ))
     })),
     msg = "Incompatible predictors and targets."
   )
 
   views %>% purrr::walk(function(current.view) {
-    mask <- ((misty.results.from$importances.aggregated[[current.view]] %>%
+    from.view.wide <- misty.results.from$importances.aggregated %>%
+      dplyr::filter(.data$view == current.view) %>%
+      tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+    to.view.wide <- misty.results.to$importances.aggregated %>%
+      dplyr::filter(.data$view == current.view) %>%
+      tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+
+    mask <- ((from.view.wide %>%
       dplyr::select(-.data$Predictor)) < cutoff.from) &
-      ((misty.results.to$importances.aggregated[[current.view]] %>%
+      ((to.view.wide %>%
         dplyr::select(-.data$Predictor)) >= cutoff.to)
 
-    masked <- ((misty.results.to$importances.aggregated[[current.view]] %>%
+    assertthat::assert_that(sum(mask, na.rm = TRUE) > 0,
+      msg = paste0("All values are cut off while contrasting.")
+    )
+
+    masked <- ((to.view.wide %>%
       tibble::column_to_rownames("Predictor")) * mask)
 
     plot.data <- masked %>%

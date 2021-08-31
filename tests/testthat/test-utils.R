@@ -43,11 +43,12 @@ test_that("collect_results creates expected structure", {
   expect_equal(nrow(misty.results$improvements.stats), targets*6)
   expect_equal(nrow(misty.results$contributions), samples*targets*6)
   expect_equal(nrow(misty.results$contributions.stats), targets*2)
-  expect_length(misty.results$importances, samples)
-  expect_length(unlist(misty.results$importances, recursive = FALSE), samples*2)
-  expect_length(misty.results$importances.aggregated, 2)
-  subset.results <- aggregate_results_subset(misty.results, c("results/results1","results/results2"))
+  expect_equal(nrow(misty.results$importances), samples*2*targets^2)
+  expect_equal(nrow(misty.results$importances.aggregated), 2*targets^2)
+  subset.results <- aggregate_results_subset(misty.results, 
+                                             c("results/results1",
+                                               "results/results2"))
   expect_length(subset.results, 7)
-  expect_length(subset.results$importances.aggregated.subset, 2)
+  expect_equal(nrow(subset.results$importances.aggregated.subset), 2*targets^2)
   unlink("results", recursive = TRUE)
 })
