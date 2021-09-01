@@ -52,7 +52,7 @@ aggregate_results <- function(improvements, contributions, importances) {
     tidyr::unite("PT", "Predictor", "Target") %>%
     dplyr::group_by(.data$view, .data$PT) %>%
     dplyr::summarise(Importance = mean(.data$Importance), .groups = "drop") %>%
-    tidyr::separate("PT", c("Predictor", "Target"))
+    tidyr::separate("PT", c("Predictor", "Target"), sep = "[^(\\.|[:alnum:])]+")
 
   return(list(
     improvements.stats = improvements.stats,
@@ -213,6 +213,8 @@ collect_results <- function(folders) {
               values_to = "Importance",
               -.data$Predictor
             ) %>%
+            dplyr::mutate(Importance = replace(.data$Importance, 
+                                               is.nan(.data$Importance), 0)) %>%
             dplyr::mutate(view = view, .before = 1)
         }) %>%
         dplyr::mutate(sample = sample, .before = 1)

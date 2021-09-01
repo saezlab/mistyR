@@ -19,8 +19,9 @@
 #' view-specific models and performance estimates.
 #'
 #' @noRd
-build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
-                        ...) {
+build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
+                        cv.folds = 10, cached = FALSE, ...) {
+  
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
@@ -43,9 +44,10 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
   )
 
   ellipsis.args <- list(...)
-  ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args, 
-                              sep = ".", collapse = ".")
-  
+  ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args,
+    sep = ".", collapse = "."
+  )
+
   if (!(length(ellipsis.args) == 0)) {
     algo.arguments <- rlist::list.merge(algo.arguments, ellipsis.args)
   }
@@ -57,18 +59,25 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
       model.view.cache.file <-
         paste0(
           cache.location, .Platform$file.sep,
-          "model.", view[["abbrev"]], ".", target, 
+          "model.", view[["abbrev"]], ".", target,
           ".par", ellipsis.args.text, ".rds"
         )
 
       if (file.exists(model.view.cache.file) & cached) {
         model.view <- readr::read_rds(model.view.cache.file)
       } else {
+        if ((view[["abbrev"]] == "intra") & bypass.intra) {
+          transformed.view.data <-
+            tibble::tibble(!!target := target.vector, .novar := 0)
+        } else {
+          transformed.view.data <- view[["data"]] %>%
+            dplyr::mutate(!!target := target.vector)
+        }
+
         model.view <- do.call(
           ranger::ranger,
           c(
-            list(data = (view[["data"]] %>%
-              dplyr::mutate(!!target := target.vector))),
+            list(data = transformed.view.data),
             algo.arguments
           )
         )

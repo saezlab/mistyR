@@ -20,6 +20,12 @@ dplyr::`%>%`
 #' the contributions of the view specific models and the importance of predictor
 #' markers for each target marker.
 #'
+#' If \code{bypass.intra} is set to \code{TRUE} all variable in the intraview
+#' the intraview data will be treated as targets only. The baseline intraview
+#' model in this case is a trivial model that predicts the average of each
+#' target. If the intraview has only one variable this switch is automatically
+#' set to \code{TRUE}.
+#'
 #' Default values passed to \code{\link[ranger]{ranger}()} for training the
 #' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
 #' \code{num.threads = 1}, \code{seed = seed}.
@@ -29,6 +35,8 @@ dplyr::`%>%`
 #' @param seed seed used for random sampling to ensure reproducibility.
 #' @param target.subset subset of targets to train models for. If \code{NULL},
 #'     models will be trained for markers in the intraview.
+#' @param bypass.intra a \code{logical} indicating whether to train a baseline
+#'     model using the intraview data (see Details).
 #' @param cv.folds number of cross-validation folds to consider for estimating
 #'     the performance of the multi-view models.
 #' @param cached a \code{logical} indicating whether to cache the trained models
@@ -66,8 +74,8 @@ dplyr::`%>%`
 #' run_misty(misty.views)
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
-                      target.subset = NULL, cv.folds = 10, cached = FALSE,
-                      append = FALSE, ...) {
+                      target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
+                      cached = FALSE, append = FALSE, ...) {
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
   if (!dir.exists(normalized.results.folder)) {
@@ -93,6 +101,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     msg = "The data has less rows than the requested number of cv folds."
   )
 
+  if(nrow(expr) == 1) bypass.intra <- TRUE
+  
   target.var <- apply(expr, 2, stats::sd)
 
   if (any(target.var == 0)) {
@@ -150,7 +160,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
-    target.model <- build_model(views, target, seed, cv.folds, cached, ...)
+    target.model <- build_model(
+      views, target, bypass.intra,
+      seed, cv.folds, cached, ...
+    )
 
     combined.views <- target.model[["meta.model"]]
 
