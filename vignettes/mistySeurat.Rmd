@@ -430,9 +430,9 @@ misty.results %>% plot_interaction_heatmap(view = "intra")
 These importances are associated to the relationship between markers in the same spot. Let's pick the best predictor of PGK1 to confirm this:
 
 ```{r, dev='jpeg'}
-misty.results$importances.aggregated[["intra"]] %>%
-  select(Predictor, PGK1) %>%
-  arrange(-PGK1)
+misty.results$importances.aggregated %>% 
+  filter(view == "intra", Target == "PGK1") %>%
+  arrange(-Importance)
 
 SpatialFeaturePlot(seurat.vs, features = c("PGK1", "NDRG1"))
 ```
