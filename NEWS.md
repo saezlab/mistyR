@@ -3,6 +3,7 @@
 - Added funtions for view manipulation, including view filtering and marker selection.
 - Added functions for performance, contribution and importance signature extraction from results.
 - Aggregation and signature generation is generalized for samples with non-identical targets by working on the intersection.
+- Modeling of intraview can be bypassed.
 
 # mistyR 1.0.3
 
