@@ -8,6 +8,7 @@ add_paraview(
   current.views,
   positions,
   l,
+  zoi = 0,
   family = "gaussian",
   approx = 1,
   nn = NULL,
@@ -24,6 +25,9 @@ as in the intraview.}
 
 \item{l}{effective radius of influence of expression in the broader tissue
 structure.}
+
+\item{zoi}{spatial units with distance smaller than the zone of indifference
+will not be taken into account when generating the paraview.}
 
 \item{family}{the family f functions used to generate weights. (see Details)}
 

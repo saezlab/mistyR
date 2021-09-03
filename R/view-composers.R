@@ -332,9 +332,12 @@ sample_nystrom_row <- function(K.approx, k) {
 #'
 #' @noRd
 get_weight <- function(family = c("gaussian", "exponential", "linear", "constant"),
-                       distances, parameter) {
+                       distances, parameter, zoi) {
   expr.family <- match.arg(family)
-
+  
+  distances[distances < zoi] <- Inf
+  dim.orig <- dim(distances)
+  
   switch(expr.family,
     "gaussian" = {
       exp(-distances^2 / parameter^2)
@@ -343,13 +346,14 @@ get_weight <- function(family = c("gaussian", "exponential", "linear", "constant
       exp(-distances / parameter)
     },
     "linear" = {
-      dim.orig <- dim(distances)
       weights <- pmax(0, 1 - distances / parameter)
       dim(weights) <- dim.orig
       weights
     },
     "constant" = {
-      1
+      weights <- as.numeric(!is.infinite(distances))
+      dim(weights) <- dim.orig
+      weights
     }
   )
 }
@@ -409,6 +413,8 @@ get_weight <- function(family = c("gaussian", "exponential", "linear", "constant
 #' @inheritParams add_juxtaview
 #' @param l effective radius of influence of expression in the broader tissue
 #' structure.
+#' @param zoi spatial units with distance smaller than the zone of indifference
+#' will not be taken into account when generating the paraview.
 #' @param family the family f functions used to generate weights. (see Details)
 #' @param approx rank of the Nyström approximation matrix. (see Details)
 #' @param nn the number of spatial units to be used for approximating the
@@ -439,9 +445,9 @@ get_weight <- function(family = c("gaussian", "exponential", "linear", "constant
 #' # preview
 #' str(misty.views[["paraview.10"]])
 #' @export
-add_paraview <- function(current.views, positions, l, family = "gaussian",
-                         approx = 1, nn = NULL, cached = FALSE,
-                         verbose = TRUE) {
+add_paraview <- function(current.views, positions, l, zoi = 0, 
+                         family = "gaussian", approx = 1, nn = NULL, 
+                         cached = FALSE, verbose = TRUE) {
   dists <- distances::distances(as.data.frame(positions))
   expr <- current.views[["intraview"]][["data"]]
 
@@ -472,7 +478,7 @@ add_paraview <- function(current.views, positions, l, family = "gaussian",
         if (verbose) message("\nGenerating paraview")
         para.view <- seq(nrow(expr)) %>%
           furrr::future_map_dfr(~ data.frame(t(colSums(expr[-.x, ] *
-            get_weight(family, dists[, .x][-.x], l)))),
+            get_weight(family, dists[, .x][-.x], l, zoi)))),
           .options = furrr::furrr_options(packages = "distances"),
           .progress = verbose
           )
@@ -485,7 +491,7 @@ add_paraview <- function(current.views, positions, l, family = "gaussian",
 
         # single Nystrom approximation expert, given RBF with parameter l
         s <- sort(sample.int(n = ncol(dists), size = approx))
-        C <- get_weight(family, dists[, s], l)
+        C <- get_weight(family, dists[, s], l, zoi)
         # pseudo inverse of W
         W.plus <- MASS::ginv(C[s, ])
         # return Nystrom list
@@ -509,7 +515,7 @@ add_paraview <- function(current.views, positions, l, family = "gaussian",
             query_indices = rowid
           )[-1, 1]
           data.frame(t(colSums(expr[knn, ] *
-            get_weight(family, dists[knn, rowid], l))))
+            get_weight(family, dists[knn, rowid], l, zoi))))
         },
         .options = furrr::furrr_options(packages = "distances"),
         .progress = verbose
