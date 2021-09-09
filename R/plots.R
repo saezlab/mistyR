@@ -204,9 +204,11 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
       high = set2.blue,
       midpoint = cutoff
     ) +
+    ggplot2::theme_classic() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::coord_equal() +
     ggplot2::ggtitle(view)
+
 
 
   print(results.plot)
@@ -258,11 +260,19 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
 
   from.view.wide <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == from.view) %>%
-    tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+    tidyr::pivot_wider(
+      names_from = "Target",
+      values_from = "Importance",
+      -c(.data$view, .data$nsamples)
+    )
 
   to.view.wide <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == to.view) %>%
-    tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+    tidyr::pivot_wider(
+      names_from = "Target",
+      values_from = "Importance",
+      -c(.data$view, .data$nsamples)
+    )
 
   mask <- ((from.view.wide %>%
     dplyr::select(-.data$Predictor)) < cutoff) &
@@ -283,6 +293,7 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1)
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
     ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
+    ggplot2::theme_classic() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::coord_equal() +
     ggplot2::ggtitle(paste0(to.view, " - ", from.view))
@@ -332,14 +343,17 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 
   view.wide <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == !!view) %>%
-    tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+    tidyr::pivot_wider(
+      names_from = "Target", values_from = "Importance",
+      -c(.data$view, .data$nsamples)
+    )
 
 
   assertthat::assert_that(
-    all(view.wide %>%
-      dplyr::select(-.data$Predictor) %>% colnames() ==
-      view.wide %>%
-        dplyr::pull(.data$Predictor)),
+    all((view.wide %>%
+      dplyr::select(-.data$Predictor) %>% colnames() %>% sort()) ==
+      (view.wide %>%
+        dplyr::pull(.data$Predictor)) %>% sort()),
     msg = "The predictor and target markers in the view must match."
   )
 
@@ -357,8 +371,9 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   . <- NULL
 
   G <- igraph::graph.adjacency(A, mode = "plus", weighted = TRUE) %>%
-    igraph::set.vertex.attribute("name", value = names(igraph::V(.)))
-
+    igraph::set.vertex.attribute("name", value = names(igraph::V(.))) %>%
+    igraph::delete.vertices(which(igraph::degree(.) == 0))
+  
   C <- igraph::cluster_louvain(G)
 
   layout <- igraph::layout.fruchterman.reingold(G)
@@ -472,10 +487,18 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
   views %>% purrr::walk(function(current.view) {
     from.view.wide <- misty.results.from$importances.aggregated %>%
       dplyr::filter(.data$view == current.view) %>%
-      tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+      tidyr::pivot_wider(
+        names_from = "Target",
+        values_from = "Importance",
+        -c(.data$view, .data$nsamples)
+      )
     to.view.wide <- misty.results.to$importances.aggregated %>%
       dplyr::filter(.data$view == current.view) %>%
-      tidyr::pivot_wider(names_from = "Target", values_from = "Importance", -.data$view)
+      tidyr::pivot_wider(
+        names_from = "Target", values_from = "Importance",
+        -.data$view,
+        -c(.data$view, .data$nsamples)
+      )
 
     mask <- ((from.view.wide %>%
       dplyr::select(-.data$Predictor)) < cutoff.from) &
@@ -500,6 +523,7 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
       ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
       ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff.to) +
+      ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
       ggplot2::coord_equal() +
       ggplot2::ggtitle(current.view)
