@@ -6,6 +6,7 @@
 - Modeling of intraview can be bypassed.
 - Added families of distances to calculate paraview.
 - Paraview can exlude measurements within a used defined zone of indifference around each spatial unit.
+- Improved plotting control.
 
 # mistyR 1.0.3
 
