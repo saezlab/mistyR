@@ -6,7 +6,9 @@
 \usage{
 extract_signature(
   misty.results,
-  type = c("performance", "contribution", "importance")
+  type = c("performance", "contribution", "importance"),
+  trim = -Inf,
+  trim.measure = "gain.R2"
 )
 }
 \arguments{
@@ -14,6 +16,11 @@ extract_signature(
 \code{\link{collect_results}()}.}
 
 \item{type}{type of signature to extract from the results.}
+
+\item{trim}{display targets with performance value above (if R2 or gain) or
+below (otherwise) this value only.}
+
+\item{trim.measure}{the measure used for trimming.}
 }
 \value{
 A table with one row per sample from \code{misty.results} representing
