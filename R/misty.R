@@ -101,7 +101,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     msg = "The data has less rows than the requested number of cv folds."
   )
 
-  if(nrow(expr) == 1) bypass.intra <- TRUE
+  if(ncol(expr) == 1) bypass.intra <- TRUE
   
   target.var <- apply(expr, 2, stats::sd)
 
