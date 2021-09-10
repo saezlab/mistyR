@@ -258,9 +258,8 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
 #' misty.results %>%
 #'   plot_contrast_heatmap("intra", "para.10", cutoff = 0.5)
 #' @export
-plot_contrast_heatmap <- function(misty.results, from.view, to.view, 
-                                  trim = -Inf, trim.measure = "gain.R2", 
-                                  cutoff = 1) {
+plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
+                                  trim = -Inf, trim.measure = "gain.R2") {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )

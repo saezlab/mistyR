@@ -8,9 +8,9 @@ plot_contrast_heatmap(
   misty.results,
   from.view,
   to.view,
+  cutoff = 1,
   trim = -Inf,
-  trim.measure = "gain.R2",
-  cutoff = 1
+  trim.measure = "gain.R2"
 )
 }
 \arguments{
@@ -19,13 +19,13 @@ plot_contrast_heatmap(
 
 \item{from.view, to.view}{abbreviated name of the view.}
 
+\item{cutoff}{importance threshold. Importances below this value will
+be colored white in the heatmap and considered as not relevant.}
+
 \item{trim}{display targets with performance value above (if R2 or gain) or
 below (otherwise) this value only.}
 
 \item{trim.measure}{the measure used for trimming.}
-
-\item{cutoff}{importance threshold. Importances below this value will
-be colored white in the heatmap and considered as not relevant.}
 }
 \value{
 The \code{misty.results} list (invisibly).
