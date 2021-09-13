@@ -82,19 +82,21 @@ test_that("run_misty handles tests of failures",{
 
 test_that("modeling of intraview is bypassed if only 1 var in intraview", {
   truncated_expr <- generate_random_tibble(100, 1)
-  pos <- sample_grid_geometry(100, 10, 10)
   misty.views <- create_initial_view(truncated_expr)
-  sig.warnings <- capture_warnings(misty.views %>% run_misty())
-  expect_true(any(grepl("Negative performance", sig.warnings)))
+  capture_warnings(misty.views %>% run_misty())
+  misty.results <- collect_results("results")
+  unlink("results", recursive = TRUE)
 })
 
-test_that("warning raised if variance of target is 0", {
-  expr <- tibble::tibble(expr1 = rnorm(100, 10, 2),
-                         expr2 = rep(10, 100))
-  pos <- sample_grid_geometry(100, 10, 10)
+test_that("warning raised if variance of variable is 0", {
+  expr <- tibble::tibble(expr1 = 10,
+                         expr2 = runif(100, 2, 5),
+                         expr3 = rnorm(100, 10, 2)) %>%
+    dplyr::mutate(expr4 = 2 * expr2 + 0.5 * expr3)
   misty.views <- create_initial_view(expr)
-  sig.warnings <- capture_warnings(misty.views %>% run_misty())
-  expect_true(any(grepl("Targets expr2 have zero variance", sig.warnings)))
+  expect_warning(misty.views %>% run_misty(target.subset="expr4"),
+                 "have zero variance")
+  unlink("results", recursive = TRUE)
 })
 
 
