@@ -68,7 +68,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
       } else {
         if ((view[["abbrev"]] == "intra") & bypass.intra) {
           transformed.view.data <-
-            tibble::tibble(!!target := target.vector, ".novar" = 0)
+            tibble::tibble(!!target := target.vector, ".novar" := 0)
         } else {
           transformed.view.data <- view[["data"]] %>%
             dplyr::mutate(!!target := target.vector)
