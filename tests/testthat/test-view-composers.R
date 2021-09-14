@@ -114,10 +114,9 @@ test_that("add_paraview works with all distance families", {
   initial.view <- create_initial_view(expr)
   expect_error(misty.views <- initial.view %>% 
                  add_paraview(pos, 2, family="bar"))
-  for (fam in c("gaussian", "exponential", "linear", "constant")) {
-    expect_message(misty.views <- initial.view %>% 
-                   add_paraview(pos, 2, family=fam),
-                   "Generating paraview")
-    expect_length(misty.views, 3)
-  }
+  families <- c("gaussian", "exponential", "linear", "constant")
+  expect_message(test.run <- 
+  purrr::map(families, ~ initial.view %>% add_paraview(family=.x, pos, 2)),
+  "Generating paraview")
+  purrr::walk(test.run, ~ expect_length(.x, 3))
 })
