@@ -107,3 +107,16 @@ test_that("views are cached and retrieved", {
   expect_silent(initial.view %>% add_paraview(pos, 2, cached = TRUE))
   clear_cache()
 })
+
+test_that("add_paraview works with all distance families", {
+  expr <- generate_random_tibble(30, 5)
+  pos <- sample_grid_geometry(30, 10, 10)
+  initial.view <- create_initial_view(expr)
+  expect_error(misty.views <- initial.view %>% 
+                 add_paraview(pos, 2, family="bar"))
+  families <- c("gaussian", "exponential", "linear", "constant")
+  expect_message(test.run <- 
+  purrr::map(families, ~ initial.view %>% add_paraview(family=.x, pos, 2)),
+  "Generating paraview")
+  purrr::walk(test.run, ~ expect_length(.x, 3))
+})
