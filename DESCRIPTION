@@ -31,7 +31,7 @@ Description: mistyR is an implementation of the Multiview Intercellular
 URL: https://saezlab.github.io/mistyR/
 BugReports: https://github.com/saezlab/mistyR/issues
 biocViews: Software, BiomedicalInformatics, CellBiology, SystemsBiology, 
-    Regression, DecisionTree, SingleCell
+    Regression, DecisionTree, SingleCell, Spatial
 Depends: R (>= 4.0)
 License: GPL-3
 Encoding: UTF-8
