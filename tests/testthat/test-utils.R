@@ -52,3 +52,30 @@ test_that("collect_results creates expected structure", {
   expect_equal(nrow(subset.results$importances.aggregated.subset), 2*targets^2)
   unlink("results", recursive = TRUE)
 })
+
+test_that("extract_signature creates expected structure", {
+  targets <- 5
+  samples <- 3
+  n.views <- 2
+  suppressWarnings({
+    seq_len(samples) %>% walk(function(id) {
+      expr <- generate_random_tibble(30, targets, id)
+      pos <- sample_grid_geometry(30, 10, 10, id)
+      create_initial_view(expr) %>%
+        add_paraview(pos, 2) %>%
+        run_misty(paste0("results/results", id))
+    })
+  })
+  misty.results <- collect_results(list.files("results", full.names = TRUE))
+  expect_error(misty.results %>% extract_signature("bar"))
+  statistics <- c("performance", "contribution", "importance")
+  col.lengths <- 1 + c(targets*samples, targets*n.views, 
+                       targets*(targets-1)*n.views)
+  purrr::walk2(statistics, col.lengths, function(stat, col.len) {
+    signature <- extract_signature(misty.results, type=stat)
+    expect_equal(nrow(signature), samples)
+    expect_equal(ncol(signature), col.len)
+  })
+  unlink("results", recursive = TRUE)
+})
+  

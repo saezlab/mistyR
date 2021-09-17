@@ -143,7 +143,7 @@ collect_results <- function(folders) {
         dplyr::mutate(
           sample = sample,
           gain.RMSE = 100 * (.data$intra.RMSE - .data$multi.RMSE) / .data$intra.RMSE,
-          gain.R2 = 100 * (.data$multi.R2 - .data$intra.R2),
+          gain.R2 = 100 * (.data$multi.R2 - .data$intra.R2)
         )
     }, .progress = TRUE) %>%
     tidyr::pivot_longer(-c(.data$sample, .data$target), names_to = "measure")
@@ -419,6 +419,7 @@ extract_signature <- function(misty.results,
           !stringr::str_ends(.data$measure, "p.R2")
         ) %>%
         tidyr::unite("Feature", .data$target, .data$measure) %>%
+        # grouping necessary?
         dplyr::group_by(.data$sample) %>%
         tidyr::pivot_wider(names_from = "Feature", values_from = "value") %>%
         dplyr::ungroup()
@@ -465,7 +466,7 @@ extract_signature <- function(misty.results,
           view.importances %>%
             dplyr::filter(
               .data$Predictor %in% predictor.intersection,
-              .data$Target %in% target.intersection,
+              .data$Target %in% target.intersection
             ) %>%
             tidyr::unite("vPT", .data$view, .data$Predictor, .data$Target) %>%
             tidyr::pivot_wider(names_from = "vPT", values_from = "Importance")
