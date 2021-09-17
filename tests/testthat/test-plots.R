@@ -28,6 +28,10 @@ test_that("interaction_heatmap runs successfully", {
     misty.results,
     "intra"
   )))
+  expect_invisible(suppressWarnings(plot_interaction_heatmap(
+    misty.results, clean=TRUE,
+    "intra"
+  )))
 })
 
 test_that("contrast_heatmap runs successfully", {
