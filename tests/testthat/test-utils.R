@@ -78,4 +78,3 @@ test_that("extract_signature creates expected structure", {
   })
   unlink("results", recursive = TRUE)
 })
-  
