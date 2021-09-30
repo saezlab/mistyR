@@ -1,5 +1,5 @@
 # mistyR utility functions
-# Copyright (c) 2020-2021 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2020-2021 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Aggregate collected results
 #'

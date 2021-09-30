@@ -1,5 +1,5 @@
 # mistyR model training functions
-# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Train a multi-view model for a single target
 #'
