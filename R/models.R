@@ -268,10 +268,8 @@ merge_2 <- function(l1, l2) {
 #' view-specific models and performance estimates.
 #'
 #' @noRd
-build_model <- function(views, target, method = method, learner = learner, 
-                        n.vars = n.vars, n.learners = n.learners, 
-                        cv.folds = cv.folds, bypass.intra = bypass.intra, 
-                        seed = seed, cached = cached, ...) {
+build_model <- function(views, target, method, learner, n.vars, n.learners, 
+                        cv.folds, bypass.intra, seed, cached, ...) {
   
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
