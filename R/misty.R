@@ -1,6 +1,59 @@
 # MISTy runner
 # Copyright (c) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
+#' Helper function to extract importances from different models
+#'
+#' Since different ML algorithms can be used to model the different views, 
+#' this function is needed to 
+#'
+#' @return Relative Importances
+#'
+#' @noRd
+imp_model <- function(models, learner) {
+  
+  switch(learner,
+         "ranger" = {
+           models[[1]]$variable.importance
+         },
+         "lm" = {
+           if (length(models) == 1) {
+             coefs <- models[[1]]$coefficients
+             coefs[names(coefs) != "(Intercept)"]
+           } else {
+             coefs <- purrr::map_dfr(models, function(model) {
+               model$coefficients }) %>%
+               colMeans(na.rm = TRUE)
+             coefs[names(coefs) != "(Intercept)"]
+           }
+         },
+         "svmLinear" = {
+           if (length(models) == 1) {
+             (t(models[[1]]@coef) %*% models[[1]]@xmatrix)[1,]
+           } else {
+             purrr::map_dfr(models, function(model) {
+               # scaling or no scaling?
+               # t(m@coef) %*% as.matrix(expr[bag$in.bag, -1][m@SVindex,])
+               coefs <- t(model@coef) %*% model@xmatrix
+               names(coefs) <- colnames(coefs)
+               coefs
+             } ) %>% colMeans(na.rm = TRUE)
+           }
+         },
+         "earth" = {
+           if (length(models) == 1) {
+             coefs <- earth::evimp(models[[1]], trim = FALSE, sqrt. = TRUE)[, 6]
+             names(coefs) <- stringr::str_remove(names(coefs), "-unused")
+             coefs
+           } else {
+             purrr::map_dfr(models, function(model) {
+               coefs <- earth::evimp(model, trim = FALSE, sqrt. = TRUE)[, 6] 
+               names(coefs) <- stringr::str_remove(names(coefs), "-unused")
+               coefs
+             }) %>% colMeans(na.rm = TRUE)
+           }
+         }
+  ) 
+}
 
 #' @importFrom rlang !! := .data
 .onAttach <- function(libname, pkgname) {
@@ -74,8 +127,22 @@ dplyr::`%>%`
 #' run_misty(misty.views)
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
-                      target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
+                      # possible methods = c("bag", "cv")
+                      target.subset = NULL, method = "bag", 
+                      # possible learners = c("dt", "lm", "svm", "mars")
+                      learner = "ranger", n.vars = NULL, n.learners = 100,
+                      bypass.intra = FALSE, cv.folds = 10,
                       cached = FALSE, append = FALSE, ...) {
+  
+  assertthat::assert_that(method %in% c("bag", "cv"),
+    msg = "The selected method has to be bag (bagging) or cv
+    (cross validation)")
+  
+  supported.models <- c("ranger", "lm", "svmLinear", "earth")
+  assertthat::assert_that(learner %in% supported.models,
+    msg = paste0("The selected learner (model) is not supported. Currently, the 
+                 following models are supported: ", toString(supported.models)))
+  
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
   if (!dir.exists(normalized.results.folder)) {
@@ -158,12 +225,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     NULL
   )
 
+  ######## STOP HERE ######
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
+    # TODO: Check if the call is correct.
     target.model <- build_model(
-      views, target, bypass.intra,
-      seed, cv.folds, cached, ...
-    )
+      views, target, method = method, learner = learner, n.vars = n.vars, 
+      n.learners = n.learners, bypass.intra = bypass.intra, seed = seed, 
+      cv.folds = cv.folds, cached = cached, ...)
 
     combined.views <- target.model[["meta.model"]]
 
@@ -180,10 +249,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     filelock::unlock(current.lock)
 
     # raw importances
+    # I think we are only using the model.views here so I could 
+    # actually put this functionality to other places!
     target.model[["model.views"]] %>% purrr::walk2(
       view.abbrev,
       function(model.view, abbrev) {
-        model.view.imps <- model.view$variable.importance
+        # TODO: Implement proper importance extraction (is imp_model working?)
+        model.view.imps <- imp_model(models = model.view$models, 
+                                     learner = learner)
         targets <- names(model.view.imps)
 
         imps <- tibble::tibble(
