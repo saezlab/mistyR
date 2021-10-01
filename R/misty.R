@@ -225,14 +225,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     NULL
   )
 
-  ######## STOP HERE ######
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
     # TODO: Check if the call is correct.
-    target.model <- build_model(
-      views, target, method = method, learner = learner, n.vars = n.vars, 
-      n.learners = n.learners, bypass.intra = bypass.intra, seed = seed, 
-      cv.folds = cv.folds, cached = cached, ...)
+    target.model <- build_model(views = views, target = target, method = method, 
+                                learner = learner, n.vars = n.vars, 
+                                n.learners = n.learners, cv.folds = cv.folds, 
+                                bypass.intra = bypass.intra, seed = seed, 
+                                cached = cached, ...)
 
     combined.views <- target.model[["meta.model"]]
 

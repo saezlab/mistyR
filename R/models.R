@@ -202,7 +202,7 @@ build_cv_model <- function(input, target, learner, cv.folds, seed, ...) {
   
   set.seed(seed)
   
-  cvs <- generate_folds(input, cv.folds, seed = seed)
+  cvs <- generate_folds(input = input, n.folds = cv.folds, seed = seed)
   vars <- colnames(input)[colnames(input) != target]
   
   models <- purrr::map(cvs, function(cv) {
@@ -268,9 +268,10 @@ merge_2 <- function(l1, l2) {
 #' view-specific models and performance estimates.
 #'
 #' @noRd
-build_model <- function(views, target, method = "bag", learner = "ranger", 
-                        n.vars = NULL, n.learners = 100, cv.folds = 10,
-                        bypass.intra = FALSE, seed = 42, cached = FALSE, ...) {
+build_model <- function(views, target, method = method, learner = learner, 
+                        n.vars = n.vars, n.learners = n.learners, 
+                        cv.folds = cv.folds, bypass.intra = bypass.intra, 
+                        seed = seed, cached = cached, ...) {
   
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
@@ -326,9 +327,9 @@ build_model <- function(views, target, method = "bag", learner = "ranger",
           model.view <- do.call(build_bagged_model, algo.arguments)
           
         } else if (method == "cv") {
+          
           algo.arguments <- list(input = transformed.view.data, target = target, 
-                                 learner = learner, n.learners = n.learners,
-                                 cv.folds = cv.folds, n.vars = n.vars, 
+                                 learner = learner, cv.folds = cv.folds, 
                                  seed = seed)
           if (!(length(ellipsis.args) == 0)) {
             algo.arguments <- merge_2(algo.arguments, ellipsis.args)
