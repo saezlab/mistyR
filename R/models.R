@@ -293,12 +293,12 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   model.views <- views %>%
     rlist::list.remove(c("misty.uniqueid")) %>%
     purrr::map(function(view) {
-      # Adjustment needed here (TODO: Caching)
       model.view.cache.file <-
         paste0(
           cache.location, .Platform$file.sep,
-          "model.", view[["abbrev"]], ".", target,
-          ".par", ellipsis.args.text, ".rds"
+          "model.", method, ".", learner, ".", view[["abbrev"]], ".", target,
+          ".par", n.learners, ".", cv.folds, ".", n.vars, ".", 
+          ellipsis.args.text, ".rds"
         )
       
       if (file.exists(model.view.cache.file) & cached) {
