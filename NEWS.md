@@ -7,6 +7,7 @@
 - Added families of distances to calculate paraview.
 - Paraview can exlude measurements within a used defined zone of indifference around each spatial unit.
 - Improved plotting control.
+- Complete test coverage.
 
 # mistyR 1.0.3
 

@@ -1,5 +1,5 @@
 # MISTy runner
-# Copyright (c) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
+# Copyleft (ɔ) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
 #' Helper function to extract importances from different models
 #'

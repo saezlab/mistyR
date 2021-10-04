@@ -1,5 +1,5 @@
 # mistyR view composition functions
-# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' \strong{Start here:} create a basic view composition with an intraview
 #'

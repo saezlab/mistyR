@@ -1,5 +1,5 @@
 # mistyR plotting functions
-# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Plot observed performance and improvement per target
 #'
@@ -404,10 +404,12 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 
   C <- igraph::cluster_louvain(G)
 
-  layout <- igraph::layout.fruchterman.reingold(G)
+  layout <- igraph::layout_with_fr(G)
+    
   igraph::plot.igraph(G,
     layout = layout, mark.groups = C, main = view, vertex.size = 4,
-    vertex.color = "black", vertex.label.dist = 1
+    vertex.color = "black", vertex.label.dist = 1, 
+    vertex.label.color = "black", vertex.label.font = 2, vertex.label.cex = 0.66
   )
 
   invisible(misty.results)
