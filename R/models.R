@@ -104,6 +104,10 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
            
          }, "svmLinear" = {
            
+           assertthat::assert_that(requireNamespace("kernlab", quietly = TRUE),
+            msg = "The package kernlab is required to use linear SVM"
+           )
+           
            algo.arguments <- list(
              x = stats::as.formula(paste0(target, " ~ .")),
              data = input[subs$x.in, c(target, vars)],
@@ -123,6 +127,10 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
            list(model = model, prediction = pred)
            
          }, "earth" = {
+           
+           assertthat::assert_that(requireNamespace("earth", quietly = TRUE),
+            msg = "The package earth is required to use MARS."
+           )
            
            algo.arguments <- list(
              formula = stats::as.formula(paste0(target, " ~ .")),
