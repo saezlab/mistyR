@@ -127,12 +127,10 @@ dplyr::`%>%`
 #' run_misty(misty.views)
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
-                      # possible methods = c("bag", "cv")
-                      target.subset = NULL, method = "bag", 
-                      # possible learners = c("dt", "lm", "svm", "mars")
+                      target.subset = NULL, cv.folds = 10,
+                      cached = FALSE, append = FALSE, method = "bag",
                       learner = "ranger", n.vars = NULL, n.learners = 100,
-                      bypass.intra = FALSE, cv.folds = 10,
-                      cached = FALSE, append = FALSE, ...) {
+                      bypass.intra = FALSE, ...) {
   
   assertthat::assert_that(method %in% c("bag", "cv"),
     msg = "The selected method has to be bag (bagging) or cv
