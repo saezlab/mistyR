@@ -375,29 +375,18 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
         }
         
         if (method == "bag") {
-          algo.arguments <- list(input = transformed.view.data, target = target, 
-                                 learner = learner, n.bags = n.learners, 
-                                 n.vars = n.vars, 
-                                 seed = seed)
-          
-          if (!(length(ellipsis.args) == 0)) {
-            algo.arguments <- merge_2(algo.arguments, ellipsis.args)
-          }
-          
-          model.view <- do.call(build_bagged_model, algo.arguments)
+        
+          model.view <- build_bagged_model(input = transformed.view.data, target = target,
+                                           learner = learner, n.bags = n.learners,
+                                           n.vars = n.vars,
+                                           seed = seed, ... = ...)
           
         } else if (method == "cv") {
           
-          algo.arguments <- list(input = transformed.view.data, target = target, 
-                                 learner = learner, cv.folds = cv.folds, 
-                                 seed = seed)
-          if (!(length(ellipsis.args) == 0)) {
-            algo.arguments <- merge_2(algo.arguments, ellipsis.args)
-          }
-          model.view <- do.call(build_cv_model, algo.arguments)
-        }
+          model.view <- build_cv_model(input = transformed.view.data, target = target, 
+                                       learner = learner, cv.folds = cv.folds,
+                                       seed = seed, ... = ...)
         
-        # TODO: Caching
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
         }
