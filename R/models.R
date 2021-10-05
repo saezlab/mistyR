@@ -258,6 +258,60 @@ merge_2 <- function(l1, l2) {
   return(c(n1_list, n2_list))
 }
 
+#' Helper function to extract importances from different models
+#'
+#' Since different ML algorithms can be used to model the different views, 
+#' this function is needed to 
+#'
+#' @return Relative Importances
+#'
+#' @noRd
+imp_model <- function(models, learner) {
+  
+  switch(learner,
+         "ranger" = {
+           models[[1]]$variable.importance
+         },
+         "lm" = {
+           if (length(models) == 1) {
+             coefs <- models[[1]]$coefficients
+             coefs[names(coefs) != "(Intercept)"]
+           } else {
+             coefs <- purrr::map_dfr(models, function(model) {
+               model$coefficients }) %>%
+               colMeans(na.rm = TRUE)
+             coefs[names(coefs) != "(Intercept)"]
+           }
+         },
+         "svmLinear" = {
+           if (length(models) == 1) {
+             (t(models[[1]]@coef) %*% models[[1]]@xmatrix)[1,]
+           } else {
+             purrr::map_dfr(models, function(model) {
+               # scaling or no scaling?
+               # t(m@coef) %*% as.matrix(expr[bag$in.bag, -1][m@SVindex,])
+               coefs <- t(model@coef) %*% model@xmatrix
+               names(coefs) <- colnames(coefs)
+               coefs
+             } ) %>% colMeans(na.rm = TRUE)
+           }
+         },
+         "earth" = {
+           if (length(models) == 1) {
+             coefs <- earth::evimp(models[[1]], trim = FALSE, sqrt. = TRUE)[, 6]
+             names(coefs) <- stringr::str_remove(names(coefs), "-unused")
+             coefs
+           } else {
+             purrr::map_dfr(models, function(model) {
+               coefs <- earth::evimp(model, trim = FALSE, sqrt. = TRUE)[, 6] 
+               names(coefs) <- stringr::str_remove(names(coefs), "-unused")
+               coefs
+             }) %>% colMeans(na.rm = TRUE)
+           }
+         }
+  ) 
+}
+
 #' Train a multi-view model for a single target
 #'
 #' Trains individual Random Forest models for each view, a linear meta-model
@@ -407,7 +461,10 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   
   final.model <- list(
     meta.model = combined.views,
-    model.views = model.views,
+    # put importances here
+    #model.views = model.views,
+    model.importances = map(model.views, function(model.view) {
+      imp_model(models = model.view$model, learner = learner) }),
     performance.estimate = performance.estimate
   )
   

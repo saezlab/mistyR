@@ -1,60 +1,6 @@
 # MISTy runner
 # Copyleft (ɔ) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
-#' Helper function to extract importances from different models
-#'
-#' Since different ML algorithms can be used to model the different views, 
-#' this function is needed to 
-#'
-#' @return Relative Importances
-#'
-#' @noRd
-imp_model <- function(models, learner) {
-  
-  switch(learner,
-         "ranger" = {
-           models[[1]]$variable.importance
-         },
-         "lm" = {
-           if (length(models) == 1) {
-             coefs <- models[[1]]$coefficients
-             coefs[names(coefs) != "(Intercept)"]
-           } else {
-             coefs <- purrr::map_dfr(models, function(model) {
-               model$coefficients }) %>%
-               colMeans(na.rm = TRUE)
-             coefs[names(coefs) != "(Intercept)"]
-           }
-         },
-         "svmLinear" = {
-           if (length(models) == 1) {
-             (t(models[[1]]@coef) %*% models[[1]]@xmatrix)[1,]
-           } else {
-             purrr::map_dfr(models, function(model) {
-               # scaling or no scaling?
-               # t(m@coef) %*% as.matrix(expr[bag$in.bag, -1][m@SVindex,])
-               coefs <- t(model@coef) %*% model@xmatrix
-               names(coefs) <- colnames(coefs)
-               coefs
-             } ) %>% colMeans(na.rm = TRUE)
-           }
-         },
-         "earth" = {
-           if (length(models) == 1) {
-             coefs <- earth::evimp(models[[1]], trim = FALSE, sqrt. = TRUE)[, 6]
-             names(coefs) <- stringr::str_remove(names(coefs), "-unused")
-             coefs
-           } else {
-             purrr::map_dfr(models, function(model) {
-               coefs <- earth::evimp(model, trim = FALSE, sqrt. = TRUE)[, 6] 
-               names(coefs) <- stringr::str_remove(names(coefs), "-unused")
-               coefs
-             }) %>% colMeans(na.rm = TRUE)
-           }
-         }
-  ) 
-}
-
 #' @importFrom rlang !! := .data
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("mistyR is able to run computationally intensive functions
@@ -133,7 +79,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
                       bypass.intra = FALSE, ...) {
   
   assertthat::assert_that(method %in% c("bag", "cv"),
-    msg = "The selected method has to be bag (bagging) or cv
+    msg = "The selected method has to be 'bag' (bagging) or 'cv'
     (cross validation)")
   
   supported.models <- c("ranger", "lm", "svmLinear", "earth")
@@ -247,19 +193,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     filelock::unlock(current.lock)
 
     # raw importances
-    # I think we are only using the model.views here so I could 
-    # actually put this functionality to other places!
-    target.model[["model.views"]] %>% purrr::walk2(
+    target.model[["model.importances"]] %>% purrr::walk2(
       view.abbrev,
-      function(model.view, abbrev) {
-        # TODO: Implement proper importance extraction (is imp_model working?)
-        model.view.imps <- imp_model(models = model.view$models, 
-                                     learner = learner)
-        targets <- names(model.view.imps)
+      function(model.importance, abbrev) {
+        targets <- names(model.importance)
 
         imps <- tibble::tibble(
           target = targets,
-          imp = model.view.imps
+          imp = model.importance
         )
 
         readr::write_csv(
