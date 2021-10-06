@@ -99,9 +99,68 @@ test_that("warning raised if variance of variable is 0", {
   unlink("results", recursive = TRUE)
 })
 
+test_that("warning raised if n.vars is greater than (ncol(expr) - 1)", {
+  ncols <- 10
+  expr <- generate_random_tibble(100, ncols)
+  misty.views <- create_initial_view(expr)
+  expect_error(run_misty(misty.views, n.vars = ncols+1))
+  unlink("results", recursive = TRUE)
+})
 
+test_that("all bagging models produce correct output", {
+  ncols <- 6
+  expr <- generate_random_tibble(100, ncols)
+  misty.views <- create_initial_view(expr)
+  misty.tests <- c("ranger", "lm", "svmLinear", "earth") %>%
+    purrr::set_names() %>%
+    purrr::map(function(learner) {
+      suppressWarnings(
+        misty.results <- run_misty(misty.views, method = "bag", learner = learner)
+        )
+      expect_true(dir.exists("results"))
+      expect_length(list.files("results"), ncols + 2)
+      expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
+                         purrr::map_int(R.utils::countLines) == ncols)))
+      expect_true((all(list.files("results", "(coefficients|performance)",
+                                  full.names = TRUE
+      ) %>%
+        purrr::map_int(R.utils::countLines) == ncols + 1)))
+      unlink("results", recursive = TRUE)
+    })
+  })
 
+test_that("all cv models produce correct output", {
+  ncols <- 6
+  expr <- generate_random_tibble(100, ncols)
+  misty.views <- create_initial_view(expr)
+  misty.tests <- c("lm", "svmLinear", "earth") %>%
+    purrr::set_names() %>%
+    purrr::map(function(learner) {
+      suppressWarnings(
+        misty.results <- run_misty(misty.views, method = "cv", learner = learner)
+      )
+      expect_true(dir.exists("results"))
+      expect_length(list.files("results"), ncols + 2)
+      expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
+                         purrr::map_int(R.utils::countLines) == ncols)))
+      expect_true((all(list.files("results", "(coefficients|performance)",
+                                  full.names = TRUE
+      ) %>%
+        purrr::map_int(R.utils::countLines) == ncols + 1)))
+      unlink("results", recursive = TRUE)
+    })
+})
 
-
-
-
+test_that("ellipsis arguments can be passed to ML models", {
+  ncols <- 6
+  expr <- generate_random_tibble(100, ncols)
+  misty.views <- create_initial_view(expr)
+  suppressWarnings(run_misty(misty.views, method = "bag",
+                             learner = "ranger", splitrule = "extratrees"))
+  suppressWarnings(run_misty(misty.views, method = "bag",
+                             learner = "lm", singular.ok = TRUE))
+  suppressWarnings(run_misty(misty.views, method = "bag",
+                             learner = "svmLinear", nu = 0.5))
+  suppressWarnings(run_misty(misty.views, method = "bag",
+                             learner = "earth", degree = 2))
+})
