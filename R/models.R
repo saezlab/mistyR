@@ -15,13 +15,17 @@
 #'
 #' @noRd
 generate_bags <- function(input, n.bags, seed) {
-  set.seed(seed)
-  seq_len(n.bags) %>%
-    purrr::map(function(bag) {
-      in.bag <- sample.int(nrow(input), nrow(input), replace=TRUE)
-      out.bag <- dplyr::setdiff(seq_len(nrow(input)), in.bag)
-      list(x.in = in.bag, x.out = out.bag)
-    })
+  seq.input <- seq_len(nrow(input))
+  raw.bags <- withr::with_seed(
+    seed,
+    caret::createResample(seq.input, times = n.bags)
+  )
+  
+  purrr::map(raw.bags, function(bag) {
+    in.bag <- bag
+    out.bag <- dplyr::setdiff(seq.input, in.bag)
+    list(x.in = in.bag, x.out = out.bag)
+  })
 }
 
 #' Generate indices for k-fold cross validation (CV)
@@ -39,34 +43,21 @@ generate_bags <- function(input, n.bags, seed) {
 #' @noRd
 generate_folds <- function(input, n.folds, seed) {
   
-  n.rows <- nrow(input)
-  
-  assertthat::assert_that(n.rows >= n.folds,
+  assertthat::assert_that(nrow(input) >= n.folds,
     msg = "The data has less rows than the requested number of cv folds."
   )
   
-  set.seed(seed)
-  shuffled <- sample(seq_len(n.rows))
-  steps <- c(ceiling(n.rows/n.folds), floor(n.rows/n.folds))
-  corr <- n.folds * steps[1] - n.rows
+  seq.input <- seq_len(nrow(input))
+  raw.folds <- withr::with_seed(
+    seed,
+    caret::createFolds(seq.input, k = n.folds)
+  )
   
-  seq_len(n.folds) %>%
-    purrr::map(function(fold) {
-      
-      if (fold <= corr) { index <- seq.int(
-        (fold-1)*steps[1]+1, 
-        fold*steps[1]
-      ) 
-      } else { index <- seq.int(
-        corr*steps[1] + (fold-corr-1)*steps[2] + 1,
-        corr*steps[1] + (fold-corr)*steps[2]
-      ) }
-      
-      hold.out <- shuffled[index]
-      in.fold <- shuffled[!(shuffled %in% hold.out)]
-      
-      list(x.in = in.fold, x.out = hold.out)
-    })
+  purrr::map(raw.folds, function(fold) {
+    hold.out <- fold
+    in.fold <- dplyr::setdiff(seq.input, hold.out)
+    list(x.in = in.fold, x.out = hold.out)
+  })
 }
 
 #' Training a single model

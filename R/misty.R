@@ -25,8 +25,9 @@ dplyr::`%>%`
 #' target. If the intraview has only one variable this switch is automatically
 #' set to \code{TRUE}.
 #'
-#' Default values passed to \code{\link[ranger]{ranger}()} for training the
-#' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+#' Default ML model to train the view-specific views is 
+#' \code{\link[ranger]{ranger}()}. The following parameters are the default
+#' configuration: \code{num.trees = 100}, \code{importance = "impurity"},
 #' \code{num.threads = 1}, \code{seed = seed}.
 #'
 #' @param views view composition.
@@ -59,9 +60,8 @@ dplyr::`%>%`
 #' meaning the number of variables that are considered at each split.
 #' @param n.learners number indicating how many learners should be used for 
 #' the bagging model, only relevant if \code{method = "bag"}
-#' @param ... all additional parameters are passed to
-#'     \code{\link[ranger]{ranger}()} for training the view-specific models
-#'     (see Details for defaults).
+#' @param ... all additional parameters are passed to the chosen ML model for
+#' training the view-specific models 
 #'
 #' @return Path to the results folder that can be passed to
 #'     \code{\link{collect_results}()}.
@@ -193,7 +193,6 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
-    # TODO: Check if the call is correct.
     target.model <- build_model(views = views, target = target, method = method, 
                                 learner = learner, n.vars = n.vars, 
                                 n.learners = n.learners, cv.folds = cv.folds, 

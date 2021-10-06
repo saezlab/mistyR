@@ -9,10 +9,14 @@ run_misty(
   results.folder = "results",
   seed = 42,
   target.subset = NULL,
-  bypass.intra = FALSE,
   cv.folds = 10,
   cached = FALSE,
   append = FALSE,
+  method = "bag",
+  learner = "ranger",
+  n.vars = NULL,
+  n.learners = 100,
+  bypass.intra = FALSE,
   ...
 )
 }
@@ -26,11 +30,9 @@ run_misty(
 \item{target.subset}{subset of targets to train models for. If \code{NULL},
 models will be trained for markers in the intraview.}
 
-\item{bypass.intra}{a \code{logical} indicating whether to train a baseline
-model using the intraview data (see Details).}
-
 \item{cv.folds}{number of cross-validation folds to consider for estimating
-the performance of the multi-view models.}
+the performance of the multi-view models and the view-specific models
+if \code{method = "cv"}}
 
 \item{cached}{a \code{logical} indicating whether to cache the trained models
 and to reuse previously cached ones if they already exist for this sample.}
@@ -40,9 +42,29 @@ and coefficient files in the \code{results.folder}. Consider setting to
 \code{TRUE} when rerunning a workflow with different \code{target.subset}
 parameters.}
 
-\item{...}{all additional parameters are passed to
-\code{\link[ranger]{ranger}()} for training the view-specific models
-(see Details for defaults).}
+\item{method}{a string indicating whether to use bagging "bag" or cross-
+valdiation to train the view-specific models and to get unbiased predictions
+for the linear meta model}
+
+\item{learner}{a string indicating which ML model to use to model the 
+views, possible values are "ranger" for random forest, "lm" for linear
+model, "linearSVM" for support vector machine with linear kernel, and
+"earth" for multivariate adaptive regression splines.}
+
+\item{n.vars}{number indicating how many variables should be used for 
+training the view-specific models if \code{method = "bag"}. For each base
+learner a sample of size \code{n.vars} from the predictors is taken. 
+If \code{learner = "ranger"} \code{n.vars} corresponds to \code{mtry}, 
+meaning the number of variables that are considered at each split.}
+
+\item{n.learners}{number indicating how many learners should be used for 
+the bagging model, only relevant if \code{method = "bag"}}
+
+\item{bypass.intra}{a \code{logical} indicating whether to train a baseline
+model using the intraview data (see Details).}
+
+\item{...}{all additional parameters are passed to the chosen ML model for
+training the view-specific models}
 }
 \value{
 Path to the results folder that can be passed to
@@ -60,8 +82,9 @@ model in this case is a trivial model that predicts the average of each
 target. If the intraview has only one variable this switch is automatically
 set to \code{TRUE}.
 
-Default values passed to \code{\link[ranger]{ranger}()} for training the
-view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+Default ML model to train the view-specific views is 
+\code{\link[ranger]{ranger}()}. The following parameters are the default
+configuration: \code{num.trees = 100}, \code{importance = "impurity"},
 \code{num.threads = 1}, \code{seed = seed}.
 }
 \examples{
