@@ -1,9 +1,17 @@
 # mistyR model training functions
 # Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
-#' Helper function to generate bootstrap aggregation samples
+#' Generate indices for bootstrap samples (bags)
 #'
-#' @return Row indices for the bags
+#' Helper function
+#'
+#' @param input expression matrix, rows correspond to observations (spots, cells),
+#' columns correspond to features (genes).
+#' @param n.bags number of bootstrap samples to generate.
+#' @param seed seed
+#'
+#' @return list of length \item{\var{n.bags}} with indices for in bag
+#' and out of bag (OOB) samples
 #'
 #' @noRd
 generate_bags <- function(input, n.bags, seed) {
@@ -16,9 +24,17 @@ generate_bags <- function(input, n.bags, seed) {
     })
 }
 
-#' Helper function to generate folds for k-fold cross validation
+#' Generate indices for k-fold cross validation (CV)
 #'
-#' @return Row indices for the bags
+#' Helper function
+#'
+#' @param input expression matrix, rows correspond to observations (spots, cells),
+#' columns correspond to features (genes).
+#' @param n.folds k
+#' @param seed seed
+#'
+#' @return list of length \item{\var{n.bags}} with indices for within fold
+#' and holdout observations.
 #'
 #' @noRd
 generate_folds <- function(input, n.folds, seed) {
@@ -53,9 +69,31 @@ generate_folds <- function(input, n.folds, seed) {
     })
 }
 
-#' Helper function to build the ML models
+#' Training a single model
 #'
-#' @return model
+#' Helper function to train one (base) model, except for when random forest 
+#' (ranger) is the learner, then ranger is directly called (generation of
+#' bags and training of decision trees) is handled internally
+#'
+#' @param input expression matrix, rows correspond to observations (spots, cells),
+#' columns correspond to features (genes).
+#' @param target target, which must correspond to a column of the input.
+#' @param learner which ML model to use.
+#' @param n.bags how many bags to generate (and thus number of base learners).
+#' Only on this function to be able to call ranger with the right number
+#' of trees.
+#' @param subs indices of one bag or CV folds.
+#' @param n.vars how many variable to use for prediction (feature subspace
+#' selection). Only in this function to be able to call ranger with the 
+#' right number for mtry.
+#' @param vars which variable to use for prediction.
+#' @param seed seed.
+#' @param ... feed additional parameters for the chosen ML model, e.g. for 
+#' ranger splitrule = "extratrees".
+#'
+#' @return list containing the ML model (type of the object depending 
+#' on which model was used) and unbiased predictions (for bags, the out-of-bag
+#' predictions, and for CV, the prediction for the holdout set).
 #'
 #' @noRd
 model_wrapper <- function(input, target, learner, n.bags, subs,
@@ -63,7 +101,6 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
   ellipsis.args <- list(...)
   switch(learner,
          "ranger" = {
-           
            algo.arguments <- list(
              formula = stats::as.formula(paste0(target, " ~ .")),
              data = input,
@@ -87,7 +124,6 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
                 models = list(model = model))
            
          }, "lm" = {
-           
            algo.arguments <- list(
              formula = stats::as.formula(paste0(target, " ~ .")),
              data = input[subs$x.in, c(target, vars)]
@@ -103,7 +139,6 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
            list(model = model, prediction = pred)
            
          }, "svmLinear" = {
-           
            assertthat::assert_that(requireNamespace("kernlab", quietly = TRUE),
             msg = "The package kernlab is required to use linear SVM"
            )
@@ -127,7 +162,6 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
            list(model = model, prediction = pred)
            
          }, "earth" = {
-           
            assertthat::assert_that(requireNamespace("earth", quietly = TRUE),
             msg = "The package earth is required to use MARS."
            )
@@ -149,9 +183,28 @@ model_wrapper <- function(input, target, learner, n.bags, subs,
   )
 }
 
-#' Building ML model based on Bagging (Ensemble Model)
+#' Training a bagged model
 #'
-#' @return Relative Importances
+#' Helper function to train a bagged model
+#'
+#' @param input expression matrix, rows correspond to observations (spots, cells),
+#' columns correspond to features (genes).
+#' @param target target, which must correspond to a column of the input.
+#' @param learner which ML model to use.
+#' @param n.bags how many bags to generate (and thus number of base learners).
+#' Only on this function to be able to call ranger with the right number
+#' of trees.
+#' @param n.vars how many variable to use for prediction (feature subspace
+#' selection). Only in this function to be able to call ranger with the 
+#' right number for mtry.
+#' @param seed seed.
+#' @param ... feed additional parameters for the chosen ML model, e.g. for 
+#' ranger splitrule = "extratrees".
+#'
+#' @return Depending on the learner list contraining: 
+#' 1a) a single model (if \item{\var{learner}} == "ranger") or 
+#' 1b) a list of length \item{\var{n.bags}} of models, and
+#' 2) a tibble containing the unbiased predictions.
 #'
 #' @noRd
 build_bagged_model <- function(input, target, learner, n.bags, n.vars, 
@@ -191,7 +244,7 @@ build_bagged_model <- function(input, target, learner, n.bags, n.vars,
       dplyr::arrange(index)
     
     assertthat::assert_that(nrow(predictions) == nrow(input),
-                            msg = "There are too few bags to get OOB predictions for all observations.
+      msg = "There are too few bags to get OOB predictions for all observations.
       Consider increasing the number of bags or using CV.")
     
     return(list(unbiased.predictions = predictions, 
@@ -199,11 +252,22 @@ build_bagged_model <- function(input, target, learner, n.bags, n.vars,
   }
 }
 
-#' Building a CV Model
-#' 
-#' TODO
+#' Training a model based on cross validation (CV)
 #'
-#' @return Relative Importances
+#' Helper function to train a model based on k-fold cross validation
+#'
+#' @param input expression matrix, rows correspond to observations (spots, cells),
+#' columns correspond to features (genes).
+#' @param target target, which must correspond to a column of the input.
+#' @param learner which ML model to use.
+#' @param cv.folds k 
+#' @param seed seed.
+#' @param ... feed additional parameters for the chosen ML model, e.g. for 
+#' ranger splitrule = "extratrees".
+#'
+#' @return list containing the ML model (type of the object depending 
+#' on which model was used) and unbiased predictions (for bags, the out-of-bag
+#' predictions, and for CV, the prediction for the holdout set).
 #'
 #' @noRd
 build_cv_model <- function(input, target, learner, cv.folds, seed, ...) {
@@ -217,7 +281,7 @@ build_cv_model <- function(input, target, learner, cv.folds, seed, ...) {
     
     model_wrapper(input = input, target = target, learner = learner, 
                   n.bags = n.bags, subs = cv, vars = vars, n.vars = NULL, 
-                  seed = seed, ...)
+                  seed = seed, ... = ...)
   })
   
   predictions <- purrr::map2_dfr(cvs, models, function(fold, model) {
@@ -228,29 +292,30 @@ build_cv_model <- function(input, target, learner, cv.folds, seed, ...) {
                            n.vars = n.vars, seed = seed, 
                            subs = list(x.in = seq_len(nrow(input)), 
                                        x.out = seq_len(nrow(input))),
-                           vars = vars, ...)$model
+                           vars = vars, ... = ...)$model
   
   list(unbiased.predictions = predictions, 
        models = list(model = w.model))
 }
 
-#' Helper function to merge two names lists
+#' Merging two named lists
 #' 
 #' Helper function so we do not have to rely on rlist::list.merge which
 #' removes all list entries whose value is NULL
-#'
+#' 
+#' @param l1 list 1, whose values are potentially overwritten by \item{\var{l2}}
+#' @param l2 list 2
+#' 
 #' @noRd
 merge_2 <- function(l1, l2) {
   
   n1 <- names(l1)
   n2 <- names(l2)
-  # only in n1
   diff <- n1[!(n1 %in% n2)]
   n1_list <- diff %>%
     purrr::set_names() %>%
     purrr::map(function(name) l1[[name]])
   
-  # also in n2
   union <- n2[!(n2 %in% diff)]
   n2_list <- union %>%
     purrr::set_names() %>%
@@ -261,9 +326,14 @@ merge_2 <- function(l1, l2) {
 #' Helper function to extract importances from different models
 #'
 #' Since different ML algorithms can be used to model the different views, 
-#' this function is needed to 
+#' this function is needed to extract the importances from the model used.
+#' 
+#' @param models list containing the model (for ranger and CV based models) 
+#' or models (for bagged models)
+#' @param learner string corresponding to the ML models which ML model was used
 #'
-#' @return Relative Importances
+#' @return named vector containing the unnormalized importances for each
+#' predictor
 #'
 #' @noRd
 imp_model <- function(models, learner) {
@@ -314,20 +384,28 @@ imp_model <- function(models, learner) {
 
 #' Train a multi-view model for a single target
 #'
-#' Trains individual Random Forest models for each view, a linear meta-model
-#' using the out-of-bag predictions of the view specific models and estimates
-#' the overall performance by cross-validation.
+#' Trains individual models for each views. The models can either be 
+#' ensemble models based on bagging (\item{\var{method}} = "bag") with the following base learners: 
+#' decision trees ("ranger"), linear model ("lm"), support vector
+#' machine with linear kernel ("linearSVM"), or multivariate adaptive
+#' regression splines ("earth"). Or the models can be based on k-fold 
+#' cross validation (\item{\var{method}} = "cv"), at the moment the same
+#' models as for bagging are implemented.
+#' 
+#' The unbiased predictions from the view-specfic models, meaning the out-of-bag
+#' or holdout predictions are then used to train linear meta model whose
+#' overall performance is estimated by cross-validation.
 #'
-#' Default values passed to \code{\link[ranger]{ranger}()} for training the
-#' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
-#' \code{num.threads = 1}, \code{seed = seed}.
+#' Default model is \code{\link[ranger]{ranger}()} for training the
+#' view-specific models with the following parameters: \code{num.trees = 100}, 
+#' \code{importance = "impurity"}, \code{num.threads = 1}, \code{seed = seed}.
 #'
 #' @inheritParams run_misty
 #'
 #' @param target name of the target marker to train models for.
 #'
-#' @return A list containing the trained meta-model, a list of trained
-#' view-specific models and performance estimates.
+#' @return A list containing the trained meta-model, the view-specific 
+#' importances and performance estimates.
 #'
 #' @noRd
 build_model <- function(views, target, method, learner, n.vars, n.learners, 
@@ -376,16 +454,18 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
         
         if (method == "bag") {
         
-          model.view <- build_bagged_model(input = transformed.view.data, target = target,
-                                           learner = learner, n.bags = n.learners,
-                                           n.vars = n.vars,
-                                           seed = seed, ... = ...)
+          model.view <- build_bagged_model(
+            input = transformed.view.data, target = target, learner = learner, 
+            n.bags = n.learners, n.vars = n.vars, seed = seed, ... = ...
+            )
           
         } else if (method == "cv") {
           
-          model.view <- build_cv_model(input = transformed.view.data, target = target, 
-                                       learner = learner, cv.folds = cv.folds,
-                                       seed = seed, ... = ...)
+          model.view <- build_cv_model(
+            input = transformed.view.data, target = target, learner = learner,
+            cv.folds = cv.folds, seed = seed, ... = ...
+            )
+        }
         
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
@@ -450,8 +530,6 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   
   final.model <- list(
     meta.model = combined.views,
-    # put importances here
-    #model.views = model.views,
     model.importances = map(model.views, function(model.view) {
       imp_model(models = model.view$model, learner = learner) }),
     performance.estimate = performance.estimate

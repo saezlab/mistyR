@@ -37,13 +37,28 @@ dplyr::`%>%`
 #' @param bypass.intra a \code{logical} indicating whether to train a baseline
 #'     model using the intraview data (see Details).
 #' @param cv.folds number of cross-validation folds to consider for estimating
-#'     the performance of the multi-view models.
+#'     the performance of the multi-view models and the view-specific models
+#'     if \code{method = "cv"}
 #' @param cached a \code{logical} indicating whether to cache the trained models
 #'     and to reuse previously cached ones if they already exist for this sample.
 #' @param append a \code{logical} indicating whether to append the performance
 #'     and coefficient files in the \code{results.folder}. Consider setting to
 #'     \code{TRUE} when rerunning a workflow with different \code{target.subset}
 #'     parameters.
+#' @param method a string indicating whether to use bagging "bag" or cross-
+#' valdiation to train the view-specific models and to get unbiased predictions
+#' for the linear meta model
+#' @param learner a string indicating which ML model to use to model the 
+#' views, possible values are "ranger" for random forest, "lm" for linear
+#' model, "linearSVM" for support vector machine with linear kernel, and
+#' "earth" for multivariate adaptive regression splines.
+#' @param n.vars number indicating how many variables should be used for 
+#' training the view-specific models if \code{method = "bag"}. For each base
+#' learner a sample of size \code{n.vars} from the predictors is taken. 
+#' If \code{learner = "ranger"} \code{n.vars} corresponds to \code{mtry}, 
+#' meaning the number of variables that are considered at each split.
+#' @param n.learners number indicating how many learners should be used for 
+#' the bagging model, only relevant if \code{method = "bag"}
 #' @param ... all additional parameters are passed to
 #'     \code{\link[ranger]{ranger}()} for training the view-specific models
 #'     (see Details for defaults).
@@ -111,6 +126,13 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   assertthat::assert_that(nrow(expr) >= cv.folds,
     msg = "The data has less rows than the requested number of cv folds."
   )
+  
+  if (!(is.null(n.vars))) {
+    assertthat::assert_that(n.vars <= (ncol(expr)-1),
+      msg = "The number of variables selected must be smaller or equal than the 
+      number of column of the input minus 1 or NULL"
+    )
+  }
 
   if(ncol(expr) == 1) bypass.intra <- TRUE
   
