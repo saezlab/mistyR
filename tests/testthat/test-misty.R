@@ -83,8 +83,7 @@ test_that("run_misty handles tests of failures",{
 test_that("modeling of intraview is bypassed if only 1 var in intraview", {
   truncated_expr <- generate_random_tibble(100, 1)
   misty.views <- create_initial_view(truncated_expr)
-  capture_warnings(misty.views %>% run_misty())
-  misty.results <- collect_results("results")
+  expect_visible(suppressWarnings(misty.views %>% run_misty()))
   unlink("results", recursive = TRUE)
 })
 
