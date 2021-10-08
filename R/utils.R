@@ -143,7 +143,7 @@ collect_results <- function(folders) {
         dplyr::mutate(
           sample = sample,
           gain.RMSE = 100 * (.data$intra.RMSE - .data$multi.RMSE) / .data$intra.RMSE,
-          gain.R2 = 100 * (.data$multi.R2 - .data$intra.R2)
+          gain.R2 = .data$multi.R2 - .data$intra.R2
         )
     }, .progress = TRUE) %>%
     tidyr::pivot_longer(-c(.data$sample, .data$target), names_to = "measure")
