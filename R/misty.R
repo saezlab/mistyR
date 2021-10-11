@@ -186,7 +186,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     # coefficient values and p-values
     # WARNING: hardcoded column index
     coeff <- c(
-      if (bypass.intra) 0, coef(combined.views),
+      if (bypass.intra) 0, stats::coef(combined.views),
       if (bypass.intra) 1, model.summary$coefficients[, 4]
     )
 
