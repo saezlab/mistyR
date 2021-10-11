@@ -35,7 +35,6 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   target.vector <- expr %>% dplyr::pull(target)
 
-
   # merge ellipsis with default algorithm arguments
   algo.arguments <- list(
     num.trees = 100, importance = "impurity",
@@ -96,9 +95,12 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
     tibble::as_tibble(.name_repair = make.names) %>%
     dplyr::mutate(!!target := target.vector)
 
-  # train lm on above
+  # train lm on above, if bypass.intra set intercept to 0
+  formula <- stats::as.formula(
+    ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
+  )
   combined.views <- stats::lm(
-    stats::as.formula(paste0(target, "~.")),
+    formula,
     oob.predictions
   )
 
@@ -115,11 +117,11 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- stats::lm(
-      stats::as.formula(paste0(target, "~.")),
+      formula,
       intra.view.only %>% dplyr::slice(-test.fold)
     )
     meta.multi <- stats::lm(
-      stats::as.formula(paste0(target, "~.")),
+      formula,
       oob.predictions %>% dplyr::slice(-test.fold)
     )
 
