@@ -1,5 +1,5 @@
 # mistyR view manipulation functions
-# Copyright (c) 2021 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2021 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Filter spatial units
 #'

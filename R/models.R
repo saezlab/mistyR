@@ -1,5 +1,5 @@
 # mistyR model training functions
-# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Train a multi-view model for a single target
 #'
@@ -141,8 +141,8 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
     )
 
     tibble::tibble(
-      intra.RMSE = intra.RMSE, intra.R2 = intra.R2,
-      multi.RMSE = multi.RMSE, multi.R2 = multi.R2
+      intra.RMSE = intra.RMSE, intra.R2 = 100*intra.R2,
+      multi.RMSE = multi.RMSE, multi.R2 = 100*multi.R2
     )
   })
 
