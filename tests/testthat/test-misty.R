@@ -71,12 +71,13 @@ test_that("run_misty models are cached and retrieved", {
   clear_cache()
 })
 
-test_that("run_misty handles tests of failures",{
-  expr <- tibble::tibble(expr1 = c(rep(1,50), rep(2,50))) %>% 
+test_that("run_misty handles tests of failures", {
+  expr <- tibble::tibble(expr1 = c(rep(1, 50), rep(2, 50))) %>%
     dplyr::mutate(expr2 = rev(expr1))
   error.message <- capture_error(create_initial_view(expr) %>% run_misty())
   expect_true(grepl("have fewer unique values than cv.folds", error.message))
-  sig.warnings <- capture_warnings(create_initial_view(expr) %>% run_misty(cv.folds = 2))
+  sig.warnings <- capture_warnings(create_initial_view(expr) %>%
+    run_misty(cv.folds = 2))
   expect_true(any(grepl("RMSE", sig.warnings)))
   expect_true(any(grepl("R2", sig.warnings)))
   unlink("results", recursive = TRUE)
@@ -90,19 +91,16 @@ test_that("modeling of intraview is bypassed if only 1 var in intraview", {
 })
 
 test_that("warning raised if variance of variable is 0", {
-  expr <- tibble::tibble(expr1 = 10,
-                         expr2 = runif(100, 2, 5),
-                         expr3 = rnorm(100, 10, 2)) %>%
+  expr <- tibble::tibble(
+    expr1 = 10,
+    expr2 = runif(100, 2, 5),
+    expr3 = rnorm(100, 10, 2)
+  ) %>%
     dplyr::mutate(expr4 = 2 * expr2 + 0.5 * expr3)
   misty.views <- create_initial_view(expr)
-  expect_error(misty.views %>% run_misty(target.subset="expr4"),
-                 "have zero variance")
+  expect_error(
+    misty.views %>% run_misty(target.subset = "expr4"),
+    "have zero variance"
+  )
   unlink("results", recursive = TRUE)
 })
-
-
-
-
-
-
-
