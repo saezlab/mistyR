@@ -41,7 +41,7 @@ plot_improvement_stats <- function(misty.results,
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
 
-  inv <- sign((stringr::str_detect(measure, "gain") |
+  inv <- sign((stringr::str_detect(measure.type, "gain") |
     stringr::str_detect(measure.type, "RMSE", negate = TRUE)) - 0.5)
 
   plot.data <- misty.results$improvements.stats %>%
@@ -101,8 +101,8 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
                                       "gain.R2", "multi.R2", "intra.R2",
                                       "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                     )) {
-  trim.measure.type = match.arg(trim.measure)
-  
+  trim.measure.type <- match.arg(trim.measure)
+
   assertthat::assert_that(("contributions.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
@@ -173,8 +173,8 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
                                        "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                      ),
                                      clean = FALSE) {
-  trim.measure.type = match.arg(trim.measure)
-  
+  trim.measure.type <- match.arg(trim.measure)
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
@@ -284,8 +284,8 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
                                     "gain.R2", "multi.R2", "intra.R2",
                                     "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                   )) {
-  trim.measure.type = match.arg(trim.measure)
-  
+  trim.measure.type <- match.arg(trim.measure)
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
@@ -489,8 +489,8 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
                                     "gain.R2", "multi.R2", "intra.R2",
                                     "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                   )) {
-  trim.measure.type = match.arg(trim.measure)
-  
+  trim.measure.type <- match.arg(trim.measure)
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results.from)),
     msg = "The first provided result list is malformed. Consider using collect_results()."
   )
