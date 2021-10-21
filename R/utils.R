@@ -383,8 +383,13 @@ sweep_cache <- function() {
 extract_signature <- function(misty.results,
                               type = c(
                                 "performance", "contribution", "importance"
-                              ), trim = -Inf, trim.measure = "gain.R2") {
+                              ), trim = -Inf, trim.measure = c(
+                                "gain.R2", "multi.R2", "intra.R2",
+                                "gain.RMSE", "multi.RMSE", "intra.RMSE"
+                              )) {
   signature.type <- match.arg(type)
+
+  trim.measure.type <- match.arg(trim.measure)
 
   assertthat::assert_that(
     all(c(
@@ -395,13 +400,15 @@ extract_signature <- function(misty.results,
     msg = "The provided result list is malformed.
     Consider using collect_results()."
   )
-  
-  inv <- sign((stringr::str_detect(trim.measure, "gain") |
-                 stringr::str_detect(trim.measure, "RMSE", negate = TRUE)) - 0.5)
-  
+
+  inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
+    stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
+
   targets <- misty.results$improvements.stats %>%
-    dplyr::filter(.data$measure == trim.measure, 
-                  inv * .data$mean >= inv * trim) %>%
+    dplyr::filter(
+      .data$measure == trim.measure.type,
+      inv * .data$mean >= inv * trim
+    ) %>%
     dplyr::pull(.data$target)
 
   switch(signature.type,
@@ -410,7 +417,8 @@ extract_signature <- function(misty.results,
         dplyr::group_by(.data$sample) %>%
         dplyr::summarize(ts = list(unique(.data$target))) %>%
         dplyr::pull(.data$ts) %>%
-        purrr::reduce(intersect) %>% intersect(targets)
+        purrr::reduce(intersect) %>%
+        intersect(targets)
 
       misty.results$improvements %>%
         dplyr::filter(
@@ -429,7 +437,8 @@ extract_signature <- function(misty.results,
         dplyr::group_by(.data$sample) %>%
         dplyr::summarize(ts = list(unique(.data$target))) %>%
         dplyr::pull(.data$ts) %>%
-        purrr::reduce(intersect) %>% intersect(targets)
+        purrr::reduce(intersect) %>%
+        intersect(targets)
 
       misty.results$contributions %>%
         dplyr::filter(
@@ -456,7 +465,8 @@ extract_signature <- function(misty.results,
             dplyr::group_by(.data$sample) %>%
             dplyr::summarize(ts = list(unique(.data$Target))) %>%
             dplyr::pull(.data$ts) %>%
-            purrr::reduce(intersect) %>% intersect(targets)
+            purrr::reduce(intersect) %>%
+            intersect(targets)
           predictor.intersection <- view.importances %>%
             dplyr::group_by(.data$sample) %>%
             dplyr::summarize(ts = list(unique(.data$Predictor))) %>%
