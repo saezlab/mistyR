@@ -104,7 +104,6 @@ test_that("warning raised if variance of variable is 0", {
   )
   unlink("results", recursive = TRUE)
 })
-<<<<<<< HEAD
 
 test_that("warning raised if n.vars is greater than (ncol(expr) - 1)", {
   ncols <- 10
@@ -171,5 +170,3 @@ test_that("ellipsis arguments can be passed to ML models", {
   suppressWarnings(run_misty(misty.views, method = "bag",
                              learner = "earth", degree = 2))
 })
-=======
->>>>>>> daa1b6bbe08f15993fec46b52efef3b77273d180
