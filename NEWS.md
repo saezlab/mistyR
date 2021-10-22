@@ -1,3 +1,7 @@
+# mistyR 1.2.0
+
+- Release version for Bioconductor 3.14. See changes for 1.1.x.
+
 # mistyR 1.1.x
 
 - Added funtions for view manipulation, including view filtering and marker selection.
@@ -8,6 +12,8 @@
 - Paraview can exlude measurements within a used defined zone of indifference around each spatial unit.
 - Improved plotting control.
 - Complete test coverage.
+
+**IMPORTANT**: R2 is now reported in percentages for intra, multi and gain. Collecting results from running mistyR < 1.1.11 will lead to miscalcuation of gain.R2. Update the performance.txt files by multiplying the values in columns intra.R2 and multi.R2 by 100.
 
 # mistyR 1.0.3
 

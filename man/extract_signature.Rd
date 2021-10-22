@@ -8,7 +8,8 @@ extract_signature(
   misty.results,
   type = c("performance", "contribution", "importance"),
   trim = -Inf,
-  trim.measure = "gain.R2"
+  trim.measure = c("gain.R2", "multi.R2", "intra.R2", "gain.RMSE", "multi.RMSE",
+    "intra.RMSE")
 )
 }
 \arguments{

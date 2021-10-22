@@ -36,7 +36,7 @@ plot_improvement_stats <- function(misty.results,
                                    ),
                                    trim = -Inf) {
   measure.type <- match.arg(measure)
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
                           msg = "The provided result list is malformed. Consider using collect_results()."
   )
@@ -46,7 +46,13 @@ plot_improvement_stats <- function(misty.results,
   
   plot.data <- misty.results$improvements.stats %>%
     dplyr::filter(.data$measure == measure.type, inv * .data$mean >= inv * trim)
-  
+
+  inv <- sign((stringr::str_detect(measure.type, "gain") |
+    stringr::str_detect(measure.type, "RMSE", negate = TRUE)) - 0.5)
+
+  plot.data <- misty.results$improvements.stats %>%
+    dplyr::filter(.data$measure == measure.type, inv * .data$mean >= inv * trim)
+
   assertthat::assert_that(assertthat::not_empty(plot.data),
                           msg = "Invalid selection of measure and/or trim value."
   )
@@ -107,13 +113,10 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
                           msg = "The provided result list is malformed. Consider using collect_results()."
   )
   
-  assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
-                          msg = "The provided result list is malformed. Consider using collect_results()."
-  )
-  
+
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
-                 stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
-  
+    stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
+
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
       .data$measure == trim.measure.type,
@@ -176,10 +179,6 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
   trim.measure.type <- match.arg(trim.measure)
   
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
-                          msg = "The provided result list is malformed. Consider using collect_results()."
-  )
-  
-  assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
                           msg = "The provided result list is malformed. Consider using collect_results()."
   )
   
@@ -287,10 +286,6 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
   trim.measure.type <- match.arg(trim.measure)
   
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
-                          msg = "The provided result list is malformed. Consider using collect_results()."
-  )
-  
-  assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
                           msg = "The provided result list is malformed. Consider using collect_results()."
   )
   
@@ -490,22 +485,15 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
                                     "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                   )) {
   trim.measure.type <- match.arg(trim.measure)
-  
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results.from)),
                           msg = "The first provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results.from)),
                           msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
-  assertthat::assert_that(("importances.aggregated" %in% names(misty.results.to)),
-                          msg = "The second provided result list is malformed. Consider using collect_results()."
-  )
-  
-  assertthat::assert_that(("improvements.stats" %in% names(misty.results.to)),
-                          msg = "The provided result list is malformed. Consider using collect_results()."
-  )
+
   
   if (is.null(views)) {
     assertthat::assert_that(rlang::is_empty(setdiff(
@@ -567,8 +555,8 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
       inv * .data$mean >= inv * trim
     ) %>%
     dplyr::pull(.data$target)
-  
-  
+
+
   views %>% purrr::walk(function(current.view) {
     from.view.wide <- misty.results.from$importances.aggregated %>%
       dplyr::filter(.data$view == current.view, .data$Target %in% targets) %>%

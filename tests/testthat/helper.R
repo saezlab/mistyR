@@ -1,4 +1,4 @@
-# generate tille with normally distributed variables with random means on scale
+# generate tibble with normally distributed variables with random means on scale
 # [1, 10] and sd equal to the log of the mean
 generate_random_tibble <- function(rows, columns, seed = 42) {
   withr::with_seed(seed, {

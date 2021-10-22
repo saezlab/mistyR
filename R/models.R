@@ -414,7 +414,7 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   expr <- views[["intraview"]][["data"]]
   
   target.vector <- expr %>% dplyr::pull(target)
-  
+
   ellipsis.args <- list(...)
   ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args,
                               sep = ".", collapse = "."
@@ -470,10 +470,13 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   oob.predictions <- model.views %>%
     purrr::map_dfc(~ .x$unbiased.predictions$prediction) %>%
     dplyr::mutate(!!target := target.vector)
-  
-  # train lm on above
+
+  # train lm on above, if bypass.intra set intercept to 0
+  formula <- stats::as.formula(
+    ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
+  )
   combined.views <- stats::lm(
-    stats::as.formula(paste0(target, "~.")),
+    formula,
     oob.predictions
   )
   
@@ -490,11 +493,11 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- stats::lm(
-      stats::as.formula(paste0(target, "~.")),
+      formula,
       intra.view.only %>% dplyr::slice(-test.fold)
     )
     meta.multi <- stats::lm(
-      stats::as.formula(paste0(target, "~.")),
+      formula,
       oob.predictions %>% dplyr::slice(-test.fold)
     )
     
@@ -514,8 +517,8 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
     )
     
     tibble::tibble(
-      intra.RMSE = intra.RMSE, intra.R2 = intra.R2,
-      multi.RMSE = multi.RMSE, multi.R2 = multi.R2
+      intra.RMSE = intra.RMSE, intra.R2 = 100*intra.R2,
+      multi.RMSE = multi.RMSE, multi.R2 = 100*multi.R2
     )
   })
   

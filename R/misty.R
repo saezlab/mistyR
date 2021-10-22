@@ -134,8 +134,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     )
   }
 
-  if(ncol(expr) == 1) bypass.intra <- TRUE
-  
+  if (ncol(expr) == 1) bypass.intra <- TRUE
+
   target.var <- apply(expr, 2, stats::sd, na.rm = TRUE)
 
   assertthat::assert_that(!any(target.var == 0),
@@ -149,16 +149,17 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   
   target.unique <- colnames(expr) %>%
     purrr::set_names() %>%
-    purrr::map_int(~ length(unique(expr %>% pull(.x))))
-  
+    purrr::map_int(~ length(unique(expr %>% dplyr::pull(.x))))
+
   assertthat::assert_that(all(target.unique >= cv.folds),
     msg = paste(
       "Targets",
       paste(names(which(target.unique < cv.folds)),
-            collapse = ", "
+        collapse = ", "
       ),
       "have fewer unique values than cv.folds"
-    ) )
+    )
+  )
 
   coef.file <- paste0(
     normalized.results.folder, .Platform$file.sep,
