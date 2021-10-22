@@ -216,7 +216,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     # coefficient values and p-values
     # WARNING: hardcoded column index
-    coeff <- c(model.summary$coefficients[, 1], model.summary$coefficients[, 4])
+    coeff <- c(
+      if (bypass.intra) 0, stats::coef(combined.views),
+      if (bypass.intra) 1, model.summary$coefficients[, 4]
+    )
 
     current.lock <- filelock::lock(coef.lock)
     write(paste(target, paste(coeff, collapse = " ")),
