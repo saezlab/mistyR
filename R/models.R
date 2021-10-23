@@ -465,7 +465,7 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
       
       return(model.view)
     })
-  
+
   # make oob predictions
   oob.predictions <- model.views %>%
     purrr::map_dfc(~ .x$unbiased.predictions$prediction) %>%
@@ -503,6 +503,7 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
     
     intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
                                          dplyr::slice(test.fold))
+    
     multi.view.prediction <- stats::predict(meta.multi, oob.predictions %>%
                                               dplyr::slice(test.fold))
     

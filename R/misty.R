@@ -88,10 +88,9 @@ dplyr::`%>%`
 #' run_misty(misty.views)
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
-                      target.subset = NULL, cv.folds = 10,
+                      target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
                       cached = FALSE, append = FALSE, method = "bag",
-                      learner = "ranger", n.vars = NULL, n.learners = 100,
-                      bypass.intra = FALSE, ...) {
+                      learner = "ranger", n.vars = NULL, n.learners = 100, ...) {
   
   assertthat::assert_that(method %in% c("bag", "cv"),
     msg = "The selected method has to be 'bag' (bagging) or 'cv'
@@ -151,15 +150,20 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     purrr::set_names() %>%
     purrr::map_int(~ length(unique(expr %>% dplyr::pull(.x))))
 
-  assertthat::assert_that(all(target.unique >= cv.folds),
-    msg = paste(
-      "Targets",
-      paste(names(which(target.unique < cv.folds)),
-        collapse = ", "
-      ),
-      "have fewer unique values than cv.folds"
+  # shouldn't we only check for this requirement if we do not bypass intra?
+  # (otherwise if we do one-hot encoding of celltypes we can only use
+  # 2 CV folds which may be suboptimal)
+  if (!bypass.intra) {
+    assertthat::assert_that(all(target.unique >= cv.folds),
+                            msg = paste(
+                              "Targets",
+                              paste(names(which(target.unique < cv.folds)),
+                                    collapse = ", "
+                              ),
+                              "have fewer unique values than cv.folds"
+                            )
     )
-  )
+  }
 
   coef.file <- paste0(
     normalized.results.folder, .Platform$file.sep,

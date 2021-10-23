@@ -199,18 +199,18 @@ collect_results <- function(folders) {
           # and multiplied by 1-pval(view)
           all.importances %>%
             purrr::imap_dfc(~
-                              tibble::tibble(feature = features, zero.imp = 0) %>%
-                              dplyr::left_join(.x, by = "feature") %>%
-                              dplyr::arrange(.data$feature) %>%
-                              dplyr::mutate(
-                                imp = scale(.data$imp)[, 1],
-                                !!targets[.y] := .data$zero.imp + (.data$imp *
-                                                                     (pvalues %>%
-                                                                        dplyr::filter(target == targets[.y]) %>%
-                                                                        dplyr::pull(.data$value)))
-                              )
-                            %>%
-                              dplyr::select(targets[.y])) %>%
+              tibble::tibble(feature = features, zero.imp = 0) %>%
+              dplyr::left_join(.x, by = "feature") %>%
+              dplyr::arrange(.data$feature) %>%
+              dplyr::mutate(
+                imp = scale(.data$imp)[, 1],
+                !!targets[.y] := .data$zero.imp + (.data$imp *
+                   (pvalues %>%
+                      dplyr::filter(target == targets[.y]) %>%
+                      dplyr::pull(.data$value)))
+              )
+            %>%
+              dplyr::select(targets[.y])) %>%
             dplyr::mutate(Predictor = features) %>%
             tidyr::pivot_longer(
               names_to = "Target",
@@ -257,14 +257,14 @@ collect_results <- function(folders) {
 #' @noRd
 aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
-                          msg = "The provided result list is malformed. Consider using collect_results()."
+    msg = "The provided result list is malformed. Consider using collect_results()."
   )
   
   normalized.folders <- R.utils::getAbsolutePath(folders)
   # check if folders are in names of misty.results
   assertthat::assert_that(all(normalized.folders %in%
-                                (misty.results$importances %>% dplyr::pull(.data$sample))),
-                          msg = "The provided results list doesn't contain information about some of
+    (misty.results$importances %>% dplyr::pull(.data$sample))),
+    msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
   
@@ -402,7 +402,7 @@ extract_signature <- function(misty.results,
   )
   
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
-                 stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
+    stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
   
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
