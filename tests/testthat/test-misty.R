@@ -161,12 +161,20 @@ test_that("ellipsis arguments can be passed to ML models", {
   ncols <- 6
   expr <- generate_random_tibble(100, ncols)
   misty.views <- create_initial_view(expr)
+  expect_type(
   suppressWarnings(run_misty(misty.views, method = "bag",
-                             learner = "ranger", splitrule = "extratrees"))
+                             learner = "ranger", splitrule = "extratrees")),
+  "character")
+  expect_type(
   suppressWarnings(run_misty(misty.views, method = "bag",
-                             learner = "lm", singular.ok = TRUE))
+                             learner = "lm", singular.ok = TRUE)),
+  "character")
+  expect_type(
   suppressWarnings(run_misty(misty.views, method = "bag",
-                             learner = "svmLinear", nu = 0.5))
+                             learner = "svmLinear", nu = 0.5)),
+  "character")
+  expect_type(
   suppressWarnings(run_misty(misty.views, method = "bag",
-                             learner = "earth", degree = 2))
+                             learner = "earth", degree = 2)),
+  "character")
 })
