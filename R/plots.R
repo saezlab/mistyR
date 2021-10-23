@@ -122,7 +122,7 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
     dplyr::pull(.data$target)
   
   assertthat::assert_that(assertthat::not_empty(targets),
-                          msg = "Invalid selection of trim measure and/or value."
+    msg = "Invalid selection of trim measure and/or value."
   )
   
   plot.data <- misty.results$contributions.stats %>%
@@ -387,12 +387,12 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
 #' @export
 plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
-                          msg = "The provided result list is malformed. Consider using collect_results()."
+    msg = "The provided result list is malformed. Consider using collect_results()."
   )
   
   assertthat::assert_that((view %in%
-                             (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
-                          msg = "The selected view cannot be found in the results table."
+    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+    msg = "The selected view cannot be found in the results table."
   )
   
   view.wide <- misty.results$importances.aggregated %>%
@@ -412,7 +412,7 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
   
   assertthat::assert_that(requireNamespace("igraph", quietly = TRUE),
-                          msg = "The package igraph is required to calculate the interaction communities."
+    msg = "The package igraph is required to calculate the interaction communities."
   )
   
   A <- view.wide %>%

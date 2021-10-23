@@ -417,7 +417,7 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
 
   ellipsis.args <- list(...)
   ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args,
-                              sep = ".", collapse = "."
+    sep = ".", collapse = "."
   )
   
   # returns a list of models
@@ -502,19 +502,19 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
     )
     
     intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
-                                         dplyr::slice(test.fold))
+      dplyr::slice(test.fold))
     
     multi.view.prediction <- stats::predict(meta.multi, oob.predictions %>%
-                                              dplyr::slice(test.fold))
+      dplyr::slice(test.fold))
     
     intra.RMSE <- caret::RMSE(intra.prediction, target.vector[test.fold])
     intra.R2 <- caret::R2(intra.prediction, target.vector[test.fold],
-                          formula = "traditional"
+      formula = "traditional"
     )
     
     multi.RMSE <- caret::RMSE(multi.view.prediction, target.vector[test.fold])
     multi.R2 <- caret::R2(multi.view.prediction, target.vector[test.fold],
-                          formula = "traditional"
+      formula = "traditional"
     )
     
     tibble::tibble(
