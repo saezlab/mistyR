@@ -411,6 +411,7 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
   }
   
+  
   expr <- views[["intraview"]][["data"]]
   
   target.vector <- expr %>% dplyr::pull(target)
@@ -511,11 +512,15 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
     intra.R2 <- caret::R2(intra.prediction, target.vector[test.fold],
       formula = "traditional"
     )
+    # necessary? if target and prediction are all 0 we get NaN otherwise.
+    intra.R2 <- ifelse(intra.RMSE == 0, 1, intra.R2)
     
     multi.RMSE <- caret::RMSE(multi.view.prediction, target.vector[test.fold])
     multi.R2 <- caret::R2(multi.view.prediction, target.vector[test.fold],
       formula = "traditional"
     )
+    # necessary? if target and prediction are all 0 we get NaN otherwise.
+    multi.R2 <- ifelse(intra.RMSE == 0, 1, multi.R2)
     
     tibble::tibble(
       intra.RMSE = intra.RMSE, intra.R2 = 100*intra.R2,

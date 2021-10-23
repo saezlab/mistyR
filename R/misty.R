@@ -153,15 +153,15 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   # shouldn't we only check for this requirement if we do not bypass intra?
   # (otherwise if we do one-hot encoding of celltypes we can only use
   # 2 CV folds which may be suboptimal)
-  assertthat::assert_that(all(target.unique >= cv.folds),
-      msg = paste(
-        "Targets",
-        paste(names(which(target.unique < cv.folds)),
-              collapse = ", "
-        ),
-        "have fewer unique values than cv.folds"
-      )
-  )
+  # assertthat::assert_that(all(target.unique >= cv.folds),
+  #     msg = paste(
+  #       "Targets",
+  #       paste(names(which(target.unique < cv.folds)),
+  #             collapse = ", "
+  #       ),
+  #       "have fewer unique values than cv.folds"
+  #     )
+  # )
 
   coef.file <- paste0(
     normalized.results.folder, .Platform$file.sep,
