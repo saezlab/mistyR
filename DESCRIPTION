@@ -1,7 +1,7 @@
 Package: mistyR
 Type: Package
 Title: Multiview Intercellular SpaTial modeling framework
-Version: 1.0.3
+Version: 1.2.0
 Authors@R: c(
     person(given = "Jovan",
            family = "Tanevski",
@@ -11,7 +11,10 @@ Authors@R: c(
     person(given = "Ricardo Omar",
            family = "Ramirez Flores",
            role = "ctb",
-           comment = c(ORCID = "0000-0003-0087-371X")))
+           comment = c(ORCID = "0000-0003-0087-371X")),
+    person(given = "Philipp",
+           family = "Schäfer",
+           role = "ctb"))
 Description: mistyR is an implementation of the Multiview Intercellular 
     SpaTialmodeling framework (MISTy). MISTy is an explainable machine 
     learning framework  for knowledge extraction and analysis of single-cell, 
@@ -28,10 +31,10 @@ Description: mistyR is an implementation of the Multiview Intercellular
     marker expressions. Each MISTy view is then analyzed for its contribution 
     to the total expression of each marker and is explained in terms of the 
     interactions with other measurements that led to the observed contribution.
-URL: https://github.com/saezlab/mistyR
+URL: https://saezlab.github.io/mistyR/
 BugReports: https://github.com/saezlab/mistyR/issues
 biocViews: Software, BiomedicalInformatics, CellBiology, SystemsBiology, 
-    Regression, DecisionTree, SingleCell
+    Regression, DecisionTree, SingleCell, Spatial
 Depends: R (>= 4.0)
 License: GPL-3
 Encoding: UTF-8
@@ -42,5 +45,5 @@ Imports: assertthat, caret, deldir, digest, distances, dplyr, filelock,
 Suggests: BiocStyle, covr, future, igraph, knitr, Matrix, progeny, rmarkdown,
     sctransform, SingleCellExperiment, SpatialExperiment, SummarizedExperiment,
     testthat (>= 3.0.0)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Config/testthat/edition: 3

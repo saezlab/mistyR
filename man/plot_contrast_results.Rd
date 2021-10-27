@@ -9,7 +9,10 @@ plot_contrast_results(
   misty.results.to,
   views = NULL,
   cutoff.from = 1,
-  cutoff.to = 1
+  cutoff.to = 1,
+  trim = -Inf,
+  trim.measure = c("gain.R2", "multi.R2", "intra.R2", "gain.RMSE", "multi.RMSE",
+    "intra.RMSE")
 )
 }
 \arguments{
@@ -20,6 +23,11 @@ plot_contrast_results(
 
 \item{cutoff.from, cutoff.to}{importance thresholds respective to the result
 lists.}
+
+\item{trim}{display targets with performance value above (if R2 or gain) or
+below (otherwise) this value only.}
+
+\item{trim.measure}{the measure used for trimming.}
 }
 \value{
 The \code{misty.results.from} list (invisibly).

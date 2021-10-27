@@ -1,5 +1,5 @@
 # mistyR model training functions
-# Copyright (c) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
+# Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Train a multi-view model for a single target
 #'
@@ -19,8 +19,9 @@
 #' view-specific models and performance estimates.
 #'
 #' @noRd
-build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
-                        ...) {
+build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
+                        cv.folds = 10, cached = FALSE, ...) {
+  
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
@@ -34,7 +35,6 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
 
   target.vector <- expr %>% dplyr::pull(target)
 
-
   # merge ellipsis with default algorithm arguments
   algo.arguments <- list(
     num.trees = 100, importance = "impurity",
@@ -43,9 +43,10 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
   )
 
   ellipsis.args <- list(...)
-  ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args, 
-                              sep = ".", collapse = ".")
-  
+  ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args,
+    sep = ".", collapse = "."
+  )
+
   if (!(length(ellipsis.args) == 0)) {
     algo.arguments <- rlist::list.merge(algo.arguments, ellipsis.args)
   }
@@ -57,18 +58,25 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
       model.view.cache.file <-
         paste0(
           cache.location, .Platform$file.sep,
-          "model.", view[["abbrev"]], ".", target, 
+          "model.", view[["abbrev"]], ".", target,
           ".par", ellipsis.args.text, ".rds"
         )
 
       if (file.exists(model.view.cache.file) & cached) {
         model.view <- readr::read_rds(model.view.cache.file)
       } else {
+        if ((view[["abbrev"]] == "intra") & bypass.intra) {
+          transformed.view.data <-
+            tibble::tibble(!!target := target.vector, ".novar" := 0)
+        } else {
+          transformed.view.data <- view[["data"]] %>%
+            dplyr::mutate(!!target := target.vector)
+        }
+
         model.view <- do.call(
           ranger::ranger,
           c(
-            list(data = (view[["data"]] %>%
-              dplyr::mutate(!!target := target.vector))),
+            list(data = transformed.view.data),
             algo.arguments
           )
         )
@@ -87,9 +95,12 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
     tibble::as_tibble(.name_repair = make.names) %>%
     dplyr::mutate(!!target := target.vector)
 
-  # train lm on above
+  # train lm on above, if bypass.intra set intercept to 0
+  formula <- stats::as.formula(
+    ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
+  )
   combined.views <- stats::lm(
-    stats::as.formula(paste0(target, "~.")),
+    formula,
     oob.predictions
   )
 
@@ -106,11 +117,11 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
 
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- stats::lm(
-      stats::as.formula(paste0(target, "~.")),
+      formula,
       intra.view.only %>% dplyr::slice(-test.fold)
     )
     meta.multi <- stats::lm(
-      stats::as.formula(paste0(target, "~.")),
+      formula,
       oob.predictions %>% dplyr::slice(-test.fold)
     )
 
@@ -130,8 +141,8 @@ build_model <- function(views, target, seed = 42, cv.folds = 10, cached = FALSE,
     )
 
     tibble::tibble(
-      intra.RMSE = intra.RMSE, intra.R2 = intra.R2,
-      multi.RMSE = multi.RMSE, multi.R2 = multi.R2
+      intra.RMSE = intra.RMSE, intra.R2 = 100*intra.R2,
+      multi.RMSE = multi.RMSE, multi.R2 = 100*multi.R2
     )
   })
 

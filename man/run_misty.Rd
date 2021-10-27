@@ -9,6 +9,7 @@ run_misty(
   results.folder = "results",
   seed = 42,
   target.subset = NULL,
+  bypass.intra = FALSE,
   cv.folds = 10,
   cached = FALSE,
   append = FALSE,
@@ -24,6 +25,9 @@ run_misty(
 
 \item{target.subset}{subset of targets to train models for. If \code{NULL},
 models will be trained for markers in the intraview.}
+
+\item{bypass.intra}{a \code{logical} indicating whether to train a baseline
+model using the intraview data (see Details).}
 
 \item{cv.folds}{number of cross-validation folds to consider for estimating
 the performance of the multi-view models.}
@@ -50,6 +54,12 @@ the contributions of the view specific models and the importance of predictor
 markers for each target marker.
 }
 \details{
+If \code{bypass.intra} is set to \code{TRUE} all variable in the intraview
+the intraview data will be treated as targets only. The baseline intraview
+model in this case is a trivial model that predicts the average of each
+target. If the intraview has only one variable this switch is automatically
+set to \code{TRUE}.
+
 Default values passed to \code{\link[ranger]{ranger}()} for training the
 view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
 \code{num.threads = 1}, \code{seed = seed}.
