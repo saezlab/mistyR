@@ -91,7 +91,7 @@ markers for each target marker." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -176,6 +176,7 @@ markers for each target marker.</p>
   results.folder <span class='op'>=</span> <span class='st'>"results"</span>,
   seed <span class='op'>=</span> <span class='fl'>42</span>,
   target.subset <span class='op'>=</span> <span class='cn'>NULL</span>,
+  bypass.intra <span class='op'>=</span> <span class='cn'>FALSE</span>,
   cv.folds <span class='op'>=</span> <span class='fl'>10</span>,
   cached <span class='op'>=</span> <span class='cn'>FALSE</span>,
   append <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -201,6 +202,11 @@ markers for each target marker.</p>
       <th>target.subset</th>
       <td><p>subset of targets to train models for. If <code>NULL</code>,
 models will be trained for markers in the intraview.</p></td>
+    </tr>
+    <tr>
+      <th>bypass.intra</th>
+      <td><p>a <code>logical</code> indicating whether to train a baseline
+model using the intraview data (see Details).</p></td>
     </tr>
     <tr>
       <th>cv.folds</th>
@@ -233,7 +239,12 @@ parameters.</p></td>
     <code><a href='collect_results.html'>collect_results</a>()</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Default values passed to <code><a href='https://rdrr.io/pkg/ranger/man/ranger.html'>ranger</a>()</code> for training the
+    <p>If <code>bypass.intra</code> is set to <code>TRUE</code> all variable in the intraview
+the intraview data will be treated as targets only. The baseline intraview
+model in this case is a trivial model that predicts the average of each
+target. If the intraview has only one variable this switch is automatically
+set to <code>TRUE</code>.</p>
+<p>Default values passed to <code><a href='https://rdrr.io/pkg/ranger/man/ranger.html'>ranger</a>()</code> for training the
 view-specific models: <code>num.trees = 100</code>, <code>importance = "impurity"</code>,
 <code>num.threads = 1</code>, <code>seed = seed</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -259,7 +270,8 @@ view-specific models: <code>num.trees = 100</code>, <code>importance = "impurity
 #&gt; <span class='message'>Generating paraview</span></div><div class='input'>
 <span class='co'># run with default parameters</span>
 <span class='fu'>run_misty</span><span class='op'>(</span><span class='va'>misty.views</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Training models</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpbFkYsG/file58fc47eb2408/reference/results"</div></pre>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Training models</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpjvJCcI/filec1da1c37ad84/reference/results"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

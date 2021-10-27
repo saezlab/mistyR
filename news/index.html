@@ -88,7 +88,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -161,6 +161,28 @@
       <small>Source: <a href='https://github.com/saezlab/mistyR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="mistyr-120" class="section level1">
+<h1 class="page-header" data-toc-text="1.2.0">
+<a href="#mistyr-120" class="anchor"></a>mistyR 1.2.0</h1>
+<ul>
+<li>Release version for Bioconductor 3.14. See changes for 1.1.x.</li>
+</ul>
+</div>
+    <div id="mistyr-11x" class="section level1">
+<h1 class="page-header" data-toc-text="1.1">
+<a href="#mistyr-11x" class="anchor"></a>mistyR 1.1.x</h1>
+<ul>
+<li>Added funtions for view manipulation, including view filtering and marker selection.</li>
+<li>Added functions for performance, contribution and importance signature extraction from results.</li>
+<li>Aggregation and signature generation is generalized for samples with non-identical targets by working on the intersection.</li>
+<li>Modeling of intraview can be bypassed.</li>
+<li>Added families of distances to calculate paraview.</li>
+<li>Paraview can exlude measurements within a used defined zone of indifference around each spatial unit.</li>
+<li>Improved plotting control.</li>
+<li>Complete test coverage.</li>
+</ul>
+<p><strong>IMPORTANT</strong>: R2 is now reported in percentages for intra, multi and gain. Collecting results from running mistyR &lt; 1.1.11 will lead to miscalcuation of gain.R2. Update the performance.txt files by multiplying the values in columns intra.R2 and multi.R2 by 100.</p>
+</div>
     <div id="mistyr-103" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.3">
 <a href="#mistyr-103" class="anchor"></a>mistyR 1.0.3</h1>

@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-08-10</h4>
+            <h4 class="date">2021-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySpatialExperiment.Rmd"><code>vignettes/mistySpatialExperiment.Rmd</code></a></small>
       <div class="hidden name"><code>mistySpatialExperiment.Rmd</code></div>
@@ -137,8 +137,8 @@
 <p>The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> and object manipulation from <em><a href="https://bioconductor.org/packages/3.13/SpatialExperiment">SpatialExperiment</a></em> and <code><a href="https://rdrr.io/pkg/BiocStyle/man/macros.html">BiocStyle::Biocpkg("SingleCellExperiment")</a></code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># MISTy</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/mistyR">mistyR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/mistyR/">mistyR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
 
 <span class="co"># SpatialExperiment</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SpatialExperiment</span><span class="op">)</span>
@@ -161,7 +161,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
 <span class="co"># setup parallel execution</span>
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
 <div id="the-skeleton-of-mistyr-pipelines" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-skeleton-of-mistyr-pipelines" class="anchor"></a>The skeleton of mistyR pipelines</h2>
@@ -532,6 +532,7 @@
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Training models</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Collecting improvements</span>
@@ -562,21 +563,21 @@
 <span class="co">#&gt; # A tibble: 15 × 4</span>
 <span class="co">#&gt;    target  sample                                                measure   value</span>
 <span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                 &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.19e-4</span>
-<span class="co">#&gt;  2 ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.07e-3</span>
-<span class="co">#&gt;  3 FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.25e-2</span>
-<span class="co">#&gt;  4 NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.48e-2</span>
-<span class="co">#&gt;  5 PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.18e-2</span>
-<span class="co">#&gt;  6 INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    4.84e-2</span>
-<span class="co">#&gt;  7 FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    5.72e-2</span>
-<span class="co">#&gt;  8 EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.28e-2</span>
-<span class="co">#&gt;  9 PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.49e-2</span>
-<span class="co">#&gt; 10 HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.68e-2</span>
-<span class="co">#&gt; 11 ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.82e-2</span>
-<span class="co">#&gt; 12 BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.02e-1</span>
-<span class="co">#&gt; 13 ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.62e-1</span>
-<span class="co">#&gt; 14 KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.32e-1</span>
-<span class="co">#&gt; 15 GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    4.43e-1</span></code></pre></div>
+<span class="co">#&gt;  1 PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.02e-4</span>
+<span class="co">#&gt;  2 FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.23e-2</span>
+<span class="co">#&gt;  3 PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.35e-2</span>
+<span class="co">#&gt;  4 NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.90e-2</span>
+<span class="co">#&gt;  5 ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.52e-2</span>
+<span class="co">#&gt;  6 FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    5.16e-2</span>
+<span class="co">#&gt;  7 PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    7.56e-2</span>
+<span class="co">#&gt;  8 EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.58e-2</span>
+<span class="co">#&gt;  9 ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.90e-2</span>
+<span class="co">#&gt; 10 INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    9.00e-2</span>
+<span class="co">#&gt; 11 BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.43e-1</span>
+<span class="co">#&gt; 12 HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.72e-1</span>
+<span class="co">#&gt; 13 KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.76e-1</span>
+<span class="co">#&gt; 14 ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.02e-1</span>
+<span class="co">#&gt; 15 GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.74e-1</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -589,9 +590,9 @@
 <span class="co">#&gt; # A tibble: 3 × 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.498    0.373 1.21e-74    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.541    0.406 7.67e-43    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.295    0.221 6.67e-14    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.504    0.380 2.61e-75    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.593    0.447 1.59e-48    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.231    0.174 6.63e- 9    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (63%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -601,27 +602,27 @@
 <p><img src="mistySpatialExperiment_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <p>These importances are associated to the relationship between markers in the same spot. Let’s pick the best predictor of PGK1 to confirm this:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">importances.aggregated</span><span class="op">[[</span><span class="st">"intra"</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 15 × 2</span>
-<span class="co">#&gt;    Predictor    PGK1</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.62  </span>
-<span class="co">#&gt;  2 FAM162A    1.80  </span>
-<span class="co">#&gt;  3 HILPDA     0.232 </span>
-<span class="co">#&gt;  4 PFKFB4     0.228 </span>
-<span class="co">#&gt;  5 ENO2       0.0261</span>
-<span class="co">#&gt;  6 EGLN1     -0.360 </span>
-<span class="co">#&gt;  7 ANKRD37   -0.450 </span>
-<span class="co">#&gt;  8 GBE1      -0.473 </span>
-<span class="co">#&gt;  9 KDM3A     -0.496 </span>
-<span class="co">#&gt; 10 INSIG2    -0.517 </span>
-<span class="co">#&gt; 11 BNIP3L    -0.535 </span>
-<span class="co">#&gt; 12 ANKZF1    -0.606 </span>
-<span class="co">#&gt; 13 FUT11     -0.710 </span>
-<span class="co">#&gt; 14 PDK1      -0.757 </span>
-<span class="co">#&gt; 15 PGK1      NA</span></code></pre></div>
+<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">importances.aggregated</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">view</span> <span class="op">==</span> <span class="st">"intra"</span>, <span class="va">Target</span> <span class="op">==</span> <span class="st">"PGK1"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">Importance</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 15 × 5</span>
+<span class="co">#&gt;    view  Predictor Target Importance nsamples</span>
+<span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;    &lt;int&gt;</span>
+<span class="co">#&gt;  1 intra NDRG1     PGK1       2.55          1</span>
+<span class="co">#&gt;  2 intra FAM162A   PGK1       1.87          1</span>
+<span class="co">#&gt;  3 intra PFKFB4    PGK1       0.324         1</span>
+<span class="co">#&gt;  4 intra HILPDA    PGK1       0.164         1</span>
+<span class="co">#&gt;  5 intra ENO2      PGK1       0.0490        1</span>
+<span class="co">#&gt;  6 intra EGLN1     PGK1      -0.268         1</span>
+<span class="co">#&gt;  7 intra ANKRD37   PGK1      -0.447         1</span>
+<span class="co">#&gt;  8 intra GBE1      PGK1      -0.466         1</span>
+<span class="co">#&gt;  9 intra BNIP3L    PGK1      -0.502         1</span>
+<span class="co">#&gt; 10 intra KDM3A     PGK1      -0.564         1</span>
+<span class="co">#&gt; 11 intra INSIG2    PGK1      -0.575         1</span>
+<span class="co">#&gt; 12 intra ANKZF1    PGK1      -0.631         1</span>
+<span class="co">#&gt; 13 intra FUT11     PGK1      -0.723         1</span>
+<span class="co">#&gt; 14 intra PDK1      PGK1      -0.772         1</span>
+<span class="co">#&gt; 15 intra PGK1      PGK1      NA             1</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotMolecules_adapted</span><span class="op">(</span><span class="va">spe</span>,
   molecule <span class="op">=</span> <span class="st">"PGK1"</span>,
@@ -722,9 +723,9 @@
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code> at the point when this document was compiled:</p>
-<pre><code>#&gt; R version 4.1.0 (2021-05-18)
+<pre><code>#&gt; R version 4.1.1 (2021-08-10)
 #&gt; Platform: x86_64-pc-linux-gnu (64-bit)
-#&gt; Running under: Ubuntu 20.04.2 LTS
+#&gt; Running under: Ubuntu 20.04.3 LTS
 #&gt; 
 #&gt; Matrix products: default
 #&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
@@ -743,14 +744,14 @@
 #&gt; other attached packages:
 #&gt;  [1] ggplot2_3.3.5               progeny_1.14.0             
 #&gt;  [3] sctransform_0.3.2           purrr_0.3.4                
-#&gt;  [5] dplyr_1.0.7                 tibble_3.1.3               
-#&gt;  [7] Matrix_1.3-3                SpatialExperiment_1.2.1    
+#&gt;  [5] dplyr_1.0.7                 tibble_3.1.5               
+#&gt;  [7] Matrix_1.3-4                SpatialExperiment_1.2.1    
 #&gt;  [9] SingleCellExperiment_1.14.1 SummarizedExperiment_1.22.0
 #&gt; [11] Biobase_2.52.0              GenomicRanges_1.44.0       
-#&gt; [13] GenomeInfoDb_1.28.1         IRanges_2.26.0             
-#&gt; [15] S4Vectors_0.30.0            BiocGenerics_0.38.0        
-#&gt; [17] MatrixGenerics_1.4.2        matrixStats_0.60.0         
-#&gt; [19] future_1.21.0               mistyR_1.0.3               
+#&gt; [13] GenomeInfoDb_1.28.4         IRanges_2.26.0             
+#&gt; [15] S4Vectors_0.30.2            BiocGenerics_0.38.0        
+#&gt; [17] MatrixGenerics_1.4.3        matrixStats_0.61.0         
+#&gt; [19] future_1.22.1               mistyR_1.2.0               
 #&gt; [21] BiocStyle_2.20.2           
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
@@ -761,48 +762,48 @@
 #&gt;  [9] listenv_0.8.0             furrr_0.2.3              
 #&gt; [11] ggrepel_0.9.1             fansi_0.5.0              
 #&gt; [13] codetools_0.2-18          R.methodsS3_1.8.1        
-#&gt; [15] sparseMatrixStats_1.4.2   cachem_1.0.5             
-#&gt; [17] knitr_1.33                rlist_0.4.6.1            
+#&gt; [15] sparseMatrixStats_1.4.2   cachem_1.0.6             
+#&gt; [17] knitr_1.36                rlist_0.4.6.2            
 #&gt; [19] jsonlite_1.7.2            R.oo_1.24.0              
 #&gt; [21] HDF5Array_1.20.0          BiocManager_1.30.16      
-#&gt; [23] compiler_4.1.0            dqrng_0.3.0              
+#&gt; [23] compiler_4.1.1            dqrng_0.3.0              
 #&gt; [25] assertthat_0.2.1          fastmap_1.1.0            
-#&gt; [27] cli_3.0.1                 limma_3.48.2             
-#&gt; [29] htmltools_0.5.1.1         tools_4.1.0              
+#&gt; [27] cli_3.0.1                 limma_3.48.3             
+#&gt; [29] htmltools_0.5.2           tools_4.1.1              
 #&gt; [31] gtable_0.3.0              glue_1.4.2               
 #&gt; [33] GenomeInfoDbData_1.2.6    reshape2_1.4.4           
 #&gt; [35] Rcpp_1.0.7                jquerylib_0.1.4          
 #&gt; [37] pkgdown_1.6.1             vctrs_0.3.8              
-#&gt; [39] rhdf5filters_1.4.0        DelayedMatrixStats_1.14.2
-#&gt; [41] xfun_0.25                 stringr_1.4.0            
-#&gt; [43] globals_0.14.0            beachmat_2.8.0           
-#&gt; [45] lifecycle_1.0.0           edgeR_3.34.0             
+#&gt; [39] rhdf5filters_1.4.0        DelayedMatrixStats_1.14.3
+#&gt; [41] xfun_0.27                 stringr_1.4.0            
+#&gt; [43] globals_0.14.0            beachmat_2.8.1           
+#&gt; [45] lifecycle_1.0.1           edgeR_3.34.1             
 #&gt; [47] zlibbioc_1.38.0           MASS_7.3-54              
 #&gt; [49] scales_1.1.1              ragg_1.1.3               
 #&gt; [51] rhdf5_2.36.0              RColorBrewer_1.1-2       
 #&gt; [53] yaml_2.2.1                memoise_2.0.0            
 #&gt; [55] gridExtra_2.3             sass_0.4.0               
-#&gt; [57] stringi_1.7.3             highr_0.9                
-#&gt; [59] distances_0.1.8           desc_1.3.0               
-#&gt; [61] filelock_1.0.2            BiocParallel_1.26.1      
-#&gt; [63] rlang_0.4.11              pkgconfig_2.0.3          
-#&gt; [65] systemfonts_1.0.2         bitops_1.0-7             
+#&gt; [57] stringi_1.7.5             highr_0.9                
+#&gt; [59] distances_0.1.8           desc_1.4.0               
+#&gt; [61] filelock_1.0.2            BiocParallel_1.26.2      
+#&gt; [63] rlang_0.4.12              pkgconfig_2.0.3          
+#&gt; [65] systemfonts_1.0.3         bitops_1.0-7             
 #&gt; [67] evaluate_0.14             lattice_0.20-44          
 #&gt; [69] Rhdf5lib_1.14.2           labeling_0.4.2           
-#&gt; [71] tidyselect_1.1.1          parallelly_1.27.0        
+#&gt; [71] tidyselect_1.1.1          parallelly_1.28.1        
 #&gt; [73] plyr_1.8.6                magrittr_2.0.1           
-#&gt; [75] bookdown_0.22             R6_2.5.0                 
-#&gt; [77] magick_2.7.2              generics_0.1.0           
+#&gt; [75] bookdown_0.24             R6_2.5.1                 
+#&gt; [77] magick_2.7.3              generics_0.1.1           
 #&gt; [79] DelayedArray_0.18.0       DBI_1.1.1                
-#&gt; [81] pillar_1.6.2              withr_2.4.2              
-#&gt; [83] RCurl_1.98-1.3            future.apply_1.7.0       
-#&gt; [85] crayon_1.4.1              DropletUtils_1.12.2      
-#&gt; [87] utf8_1.2.2                rmarkdown_2.10           
-#&gt; [89] locfit_1.5-9.4            grid_4.1.0               
-#&gt; [91] data.table_1.14.0         digest_0.6.27            
-#&gt; [93] tidyr_1.1.3               R.utils_2.10.1           
-#&gt; [95] textshaping_0.3.5         munsell_0.5.0            
-#&gt; [97] bslib_0.2.5.1</code></pre>
+#&gt; [81] pillar_1.6.4              withr_2.4.2              
+#&gt; [83] RCurl_1.98-1.5            future.apply_1.8.1       
+#&gt; [85] crayon_1.4.1              DropletUtils_1.12.3      
+#&gt; [87] utf8_1.2.2                rmarkdown_2.11           
+#&gt; [89] locfit_1.5-9.4            grid_4.1.1               
+#&gt; [91] data.table_1.14.2         digest_0.6.28            
+#&gt; [93] tidyr_1.1.4               R.utils_2.11.0           
+#&gt; [95] textshaping_0.3.6         munsell_0.5.0            
+#&gt; [97] bslib_0.3.1</code></pre>
 </div>
   </div>
 

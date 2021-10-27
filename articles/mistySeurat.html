@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 class="date">2021-08-10</h4>
+            <h4 class="date">2021-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/master/vignettes/mistySeurat.Rmd"><code>vignettes/mistySeurat.Rmd</code></a></small>
       <div class="hidden name"><code>mistySeurat.Rmd</code></div>
@@ -137,8 +137,8 @@
 <p>In principle <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> can be used with data extracted from a <em><a href="https://CRAN.R-project.org/package=SeuratObject">SeuratObject</a></em> only. For the sake of completeness of the process of modeling with <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> we demonstrate a complete workflow, including data preprocessing with <em><a href="https://CRAN.R-project.org/package=Seurat">Seurat</a></em>. The functions provided in this notebook can be adapted to the user preference but the main objective is to exploit as much as possible the flexibility of workflow creation from <em><a href="https://github.com/saezlab/mistyR">mistyR</a></em> and object manipulation from <em><a href="https://CRAN.R-project.org/package=Seurat">Seurat</a></em>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># MISTy</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/mistyR">mistyR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/mistyR/">mistyR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
 
 <span class="co"># Seurat</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
@@ -157,7 +157,7 @@
 
 <span class="co"># setup parallel execution</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>future.globals.maxSize <span class="op">=</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
 <div id="the-skeleton-of-mistyr-pipelines" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-skeleton-of-mistyr-pipelines" class="anchor"></a>The skeleton of mistyR pipelines</h2>
@@ -463,6 +463,7 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt; Generating paraview</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Generating paraview</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; Training models</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Collecting improvements</span>
@@ -494,23 +495,23 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt;   method     from         </span>
 <span class="co">#&gt;   print.boxx spatstat.geom</span>
 <span class="co">#&gt; # A tibble: 15 × 4</span>
-<span class="co">#&gt;    target  sample                                                measure   value</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                 &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.11e-4</span>
-<span class="co">#&gt;  2 ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    4.42e-3</span>
-<span class="co">#&gt;  3 INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.26e-3</span>
-<span class="co">#&gt;  4 FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.50e-2</span>
-<span class="co">#&gt;  5 NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.20e-2</span>
-<span class="co">#&gt;  6 PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.66e-2</span>
-<span class="co">#&gt;  7 EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.89e-2</span>
-<span class="co">#&gt;  8 HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.68e-2</span>
-<span class="co">#&gt;  9 ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.05e-1</span>
-<span class="co">#&gt; 10 PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.07e-1</span>
-<span class="co">#&gt; 11 FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.12e-1</span>
-<span class="co">#&gt; 12 BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.19e-1</span>
-<span class="co">#&gt; 13 ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.57e-1</span>
-<span class="co">#&gt; 14 KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.89e-1</span>
-<span class="co">#&gt; 15 GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.89e-1</span></code></pre></div>
+<span class="co">#&gt;    target  sample                                               measure    value</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                &lt;chr&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     4.76e-5</span>
+<span class="co">#&gt;  2 FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     3.46e-3</span>
+<span class="co">#&gt;  3 ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     6.75e-3</span>
+<span class="co">#&gt;  4 INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.44e-2</span>
+<span class="co">#&gt;  5 PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     3.83e-2</span>
+<span class="co">#&gt;  6 EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.00e-2</span>
+<span class="co">#&gt;  7 NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.73e-2</span>
+<span class="co">#&gt;  8 ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     6.49e-2</span>
+<span class="co">#&gt;  9 FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     8.15e-2</span>
+<span class="co">#&gt; 10 PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     8.17e-2</span>
+<span class="co">#&gt; 11 BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     1.01e-1</span>
+<span class="co">#&gt; 12 ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.00e-1</span>
+<span class="co">#&gt; 13 KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.16e-1</span>
+<span class="co">#&gt; 14 HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     2.21e-1</span>
+<span class="co">#&gt; 15 GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_… p.R2     5.45e-1</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -523,9 +524,9 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <span class="co">#&gt; # A tibble: 3 × 6</span>
 <span class="co">#&gt;   target view              mean fraction   p.mean  p.sd</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 PGK1   intra            0.485    0.369 9.10e-70    NA</span>
-<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.623    0.475 8.41e-58    NA</span>
-<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.204    0.156 1.55e- 7    NA</span></code></pre></div>
+<span class="co">#&gt; 1 PGK1   intra            0.483    0.364 4.19e-69    NA</span>
+<span class="co">#&gt; 2 PGK1   para.estrogen_10 0.590    0.445 8.91e-48    NA</span>
+<span class="co">#&gt; 3 PGK1   para.hypoxia_10  0.252    0.190 2.95e-10    NA</span></code></pre></div>
 <p>In the case of PGK1, we observe that around 50% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest comes from the expression of estrogen responsive genes from the broader tissue structure.</p>
 <p><strong>3.What are the specific relations that can explain the contributions?</strong></p>
 <p>To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.</p>
@@ -535,27 +536,27 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <p><img src="mistySeurat_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>These importances are associated to the relationship between markers in the same spot. Let’s pick the best predictor of PGK1 to confirm this:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">importances.aggregated</span><span class="op">[[</span><span class="st">"intra"</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Predictor</span>, <span class="va">PGK1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">PGK1</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 15 × 2</span>
-<span class="co">#&gt;    Predictor    PGK1</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 NDRG1      2.62  </span>
-<span class="co">#&gt;  2 FAM162A    1.82  </span>
-<span class="co">#&gt;  3 HILPDA     0.207 </span>
-<span class="co">#&gt;  4 PFKFB4     0.198 </span>
-<span class="co">#&gt;  5 ENO2       0.0514</span>
-<span class="co">#&gt;  6 EGLN1     -0.327 </span>
-<span class="co">#&gt;  7 ANKRD37   -0.449 </span>
-<span class="co">#&gt;  8 BNIP3L    -0.477 </span>
-<span class="co">#&gt;  9 GBE1      -0.501 </span>
-<span class="co">#&gt; 10 INSIG2    -0.542 </span>
-<span class="co">#&gt; 11 KDM3A     -0.577 </span>
-<span class="co">#&gt; 12 ANKZF1    -0.604 </span>
-<span class="co">#&gt; 13 PDK1      -0.699 </span>
-<span class="co">#&gt; 14 FUT11     -0.711 </span>
-<span class="co">#&gt; 15 PGK1      NA</span>
+<code class="sourceCode R"><span class="va">misty.results</span><span class="op">$</span><span class="va">importances.aggregated</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">view</span> <span class="op">==</span> <span class="st">"intra"</span>, <span class="va">Target</span> <span class="op">==</span> <span class="st">"PGK1"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">Importance</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 15 × 5</span>
+<span class="co">#&gt;    view  Predictor Target Importance nsamples</span>
+<span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;    &lt;int&gt;</span>
+<span class="co">#&gt;  1 intra NDRG1     PGK1       2.65          1</span>
+<span class="co">#&gt;  2 intra FAM162A   PGK1       1.79          1</span>
+<span class="co">#&gt;  3 intra PFKFB4    PGK1       0.204         1</span>
+<span class="co">#&gt;  4 intra HILPDA    PGK1       0.131         1</span>
+<span class="co">#&gt;  5 intra ENO2      PGK1       0.0415        1</span>
+<span class="co">#&gt;  6 intra EGLN1     PGK1      -0.323         1</span>
+<span class="co">#&gt;  7 intra ANKRD37   PGK1      -0.390         1</span>
+<span class="co">#&gt;  8 intra KDM3A     PGK1      -0.502         1</span>
+<span class="co">#&gt;  9 intra INSIG2    PGK1      -0.512         1</span>
+<span class="co">#&gt; 10 intra BNIP3L    PGK1      -0.515         1</span>
+<span class="co">#&gt; 11 intra GBE1      PGK1      -0.547         1</span>
+<span class="co">#&gt; 12 intra ANKZF1    PGK1      -0.606         1</span>
+<span class="co">#&gt; 13 intra FUT11     PGK1      -0.692         1</span>
+<span class="co">#&gt; 14 intra PDK1      PGK1      -0.731         1</span>
+<span class="co">#&gt; 15 intra PGK1      PGK1      NA             1</span>
 
 <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat.vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PGK1"</span>, <span class="st">"NDRG1"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =</span>
@@ -632,9 +633,9 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code> at the point when this document was compiled:</p>
-<pre><code>#&gt; R version 4.1.0 (2021-05-18)
+<pre><code>#&gt; R version 4.1.1 (2021-08-10)
 #&gt; Platform: x86_64-pc-linux-gnu (64-bit)
-#&gt; Running under: Ubuntu 20.04.2 LTS
+#&gt; Running under: Ubuntu 20.04.3 LTS
 #&gt; 
 #&gt; Matrix products: default
 #&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
@@ -651,53 +652,53 @@ verbosity <span class="op">=</span> <span class="fl">0</span>
 #&gt; 
 #&gt; other attached packages:
 #&gt;  [1] progeny_1.14.0     sctransform_0.3.2  purrr_0.3.4        dplyr_1.0.7       
-#&gt;  [5] tibble_3.1.3       Matrix_1.3-3       SeuratObject_4.0.2 Seurat_4.0.3      
-#&gt;  [9] future_1.21.0      mistyR_1.0.3       BiocStyle_2.20.2  
+#&gt;  [5] tibble_3.1.5       Matrix_1.3-4       SeuratObject_4.0.2 Seurat_4.0.5      
+#&gt;  [9] future_1.22.1      mistyR_1.2.0       BiocStyle_2.20.2  
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
-#&gt;   [1] systemfonts_1.0.2     plyr_1.8.6            igraph_1.2.6         
-#&gt;   [4] lazyeval_0.2.2        splines_4.1.0         listenv_0.8.0        
-#&gt;   [7] scattermore_0.7       ggplot2_3.3.5         digest_0.6.27        
-#&gt;  [10] htmltools_0.5.1.1     fansi_0.5.0           magrittr_2.0.1       
+#&gt;   [1] systemfonts_1.0.3     plyr_1.8.6            igraph_1.2.7         
+#&gt;   [4] lazyeval_0.2.2        splines_4.1.1         listenv_0.8.0        
+#&gt;   [7] scattermore_0.7       ggplot2_3.3.5         digest_0.6.28        
+#&gt;  [10] htmltools_0.5.2       fansi_0.5.0           magrittr_2.0.1       
 #&gt;  [13] memoise_2.0.0         tensor_1.5            cluster_2.1.2        
-#&gt;  [16] ROCR_1.0-11           globals_0.14.0        matrixStats_0.60.0   
-#&gt;  [19] R.utils_2.10.1        pkgdown_1.6.1         spatstat.sparse_2.0-0
-#&gt;  [22] colorspace_2.0-2      ggrepel_0.9.1         textshaping_0.3.5    
-#&gt;  [25] xfun_0.25             crayon_1.4.1          jsonlite_1.7.2       
+#&gt;  [16] ROCR_1.0-11           globals_0.14.0        matrixStats_0.61.0   
+#&gt;  [19] R.utils_2.11.0        pkgdown_1.6.1         spatstat.sparse_2.0-0
+#&gt;  [22] colorspace_2.0-2      ggrepel_0.9.1         textshaping_0.3.6    
+#&gt;  [25] xfun_0.27             crayon_1.4.1          jsonlite_1.7.2       
 #&gt;  [28] spatstat.data_2.1-0   survival_3.2-11       zoo_1.8-9            
 #&gt;  [31] glue_1.4.2            polyclip_1.10-0       gtable_0.3.0         
-#&gt;  [34] leiden_0.3.9          future.apply_1.7.0    abind_1.4-5          
+#&gt;  [34] leiden_0.3.9          future.apply_1.8.1    abind_1.4-5          
 #&gt;  [37] scales_1.1.1          DBI_1.1.1             miniUI_0.1.1.1       
 #&gt;  [40] Rcpp_1.0.7            viridisLite_0.4.0     xtable_1.8-4         
-#&gt;  [43] reticulate_1.20       spatstat.core_2.3-0   bit_4.0.4            
-#&gt;  [46] htmlwidgets_1.5.3     httr_1.4.2            RColorBrewer_1.1-2   
+#&gt;  [43] reticulate_1.22       spatstat.core_2.3-0   bit_4.0.4            
+#&gt;  [46] htmlwidgets_1.5.4     httr_1.4.2            RColorBrewer_1.1-2   
 #&gt;  [49] ellipsis_0.3.2        ica_1.0-2             pkgconfig_2.0.3      
 #&gt;  [52] R.methodsS3_1.8.1     farver_2.1.0          sass_0.4.0           
-#&gt;  [55] uwot_0.1.10           deldir_0.2-10         utf8_1.2.2           
-#&gt;  [58] tidyselect_1.1.1      labeling_0.4.2        rlang_0.4.11         
-#&gt;  [61] reshape2_1.4.4        later_1.2.0           munsell_0.5.0        
-#&gt;  [64] tools_4.1.0           cachem_1.0.5          cli_3.0.1            
-#&gt;  [67] generics_0.1.0        ggridges_0.5.3        evaluate_0.14        
+#&gt;  [55] uwot_0.1.10           deldir_1.0-6          utf8_1.2.2           
+#&gt;  [58] tidyselect_1.1.1      labeling_0.4.2        rlang_0.4.12         
+#&gt;  [61] reshape2_1.4.4        later_1.3.0           munsell_0.5.0        
+#&gt;  [64] tools_4.1.1           cachem_1.0.6          cli_3.0.1            
+#&gt;  [67] generics_0.1.1        ggridges_0.5.3        evaluate_0.14        
 #&gt;  [70] stringr_1.4.0         fastmap_1.1.0         yaml_2.2.1           
-#&gt;  [73] ragg_1.1.3            goftest_1.2-2         knitr_1.33           
-#&gt;  [76] bit64_4.0.5           fs_1.5.0              fitdistrplus_1.1-5   
-#&gt;  [79] RANN_2.6.1            pbapply_1.4-3         nlme_3.1-152         
-#&gt;  [82] mime_0.11             R.oo_1.24.0           hdf5r_1.3.3          
-#&gt;  [85] compiler_4.1.0        plotly_4.9.4.1        filelock_1.0.2       
-#&gt;  [88] png_0.1-7             spatstat.utils_2.2-0  bslib_0.2.5.1        
-#&gt;  [91] stringi_1.7.3         highr_0.9             desc_1.3.0           
-#&gt;  [94] lattice_0.20-44       vctrs_0.3.8           pillar_1.6.2         
-#&gt;  [97] lifecycle_1.0.0       furrr_0.2.3           BiocManager_1.30.16  
-#&gt; [100] spatstat.geom_2.2-2   lmtest_0.9-38         jquerylib_0.1.4      
-#&gt; [103] RcppAnnoy_0.0.19      data.table_1.14.0     cowplot_1.1.1        
-#&gt; [106] irlba_2.3.3           httpuv_1.6.1          patchwork_1.1.1      
-#&gt; [109] R6_2.5.0              bookdown_0.22         promises_1.2.0.1     
-#&gt; [112] KernSmooth_2.23-20    gridExtra_2.3         parallelly_1.27.0    
+#&gt;  [73] ragg_1.1.3            goftest_1.2-3         knitr_1.36           
+#&gt;  [76] bit64_4.0.5           fs_1.5.0              fitdistrplus_1.1-6   
+#&gt;  [79] RANN_2.6.1            pbapply_1.5-0         nlme_3.1-152         
+#&gt;  [82] mime_0.12             R.oo_1.24.0           hdf5r_1.3.4          
+#&gt;  [85] compiler_4.1.1        plotly_4.10.0         filelock_1.0.2       
+#&gt;  [88] png_0.1-7             spatstat.utils_2.2-0  bslib_0.3.1          
+#&gt;  [91] stringi_1.7.5         highr_0.9             desc_1.4.0           
+#&gt;  [94] lattice_0.20-44       vctrs_0.3.8           pillar_1.6.4         
+#&gt;  [97] lifecycle_1.0.1       furrr_0.2.3           BiocManager_1.30.16  
+#&gt; [100] spatstat.geom_2.3-0   lmtest_0.9-38         jquerylib_0.1.4      
+#&gt; [103] RcppAnnoy_0.0.19      data.table_1.14.2     cowplot_1.1.1        
+#&gt; [106] irlba_2.3.3           httpuv_1.6.3          patchwork_1.1.1      
+#&gt; [109] R6_2.5.1              bookdown_0.24         promises_1.2.0.1     
+#&gt; [112] KernSmooth_2.23-20    gridExtra_2.3         parallelly_1.28.1    
 #&gt; [115] codetools_0.2-18      MASS_7.3-54           assertthat_0.2.1     
-#&gt; [118] rprojroot_2.0.2       rlist_0.4.6.1         mgcv_1.8-35          
-#&gt; [121] parallel_4.1.0        grid_4.1.0            rpart_4.1-15         
-#&gt; [124] tidyr_1.1.3           rmarkdown_2.10        distances_0.1.8      
-#&gt; [127] Rtsne_0.15            shiny_1.6.0</code></pre>
+#&gt; [118] rprojroot_2.0.2       rlist_0.4.6.2         mgcv_1.8-36          
+#&gt; [121] parallel_4.1.1        grid_4.1.1            rpart_4.1-15         
+#&gt; [124] tidyr_1.1.4           rmarkdown_2.11        distances_0.1.8      
+#&gt; [127] Rtsne_0.15            shiny_1.7.1</code></pre>
 </div>
   </div>
 

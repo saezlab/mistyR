@@ -25,6 +25,12 @@
     <loc>https://saezlab.github.io/mistyR/reference/create_view.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/mistyR/reference/extract_signature.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/reference/filter_views.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/mistyR/reference/plot_contrast_heatmap.html</loc>
   </url>
   <url>
@@ -49,7 +55,13 @@
     <loc>https://saezlab.github.io/mistyR/reference/remove_views.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/mistyR/reference/rename_view.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/mistyR/reference/run_misty.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/mistyR/reference/select_markers.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/mistyR/reference/synthetic.html</loc>

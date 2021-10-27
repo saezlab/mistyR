@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot importance heatmap for a view — plot_interaction_heatmap • mistyR</title>
+<title>Extract signatures from the results — extract_signature • mistyR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Plot importance heatmap for a view — plot_interaction_heatmap" />
-<meta property="og:description" content="Generate a heatmap with importances of predictor-target interaction." />
+<meta property="og:title" content="Extract signatures from the results — extract_signature" />
+<meta property="og:description" content="Signature is a representation of each sample in the space of mistyR results." />
 
 
 
@@ -158,23 +158,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot importance heatmap for a view</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/mistyR/blob/master/R/plots.R'><code>R/plots.R</code></a></small>
-    <div class="hidden name"><code>plot_interaction_heatmap.Rd</code></div>
+    <h1>Extract signatures from the results</h1>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/mistyR/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>extract_signature.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a heatmap with importances of predictor-target interaction.</p>
+    <p>Signature is a representation of each sample in the space of mistyR results.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_interaction_heatmap</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>extract_signature</span><span class='op'>(</span>
   <span class='va'>misty.results</span>,
-  <span class='va'>view</span>,
-  cutoff <span class='op'>=</span> <span class='fl'>1</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"performance"</span>, <span class='st'>"contribution"</span>, <span class='st'>"importance"</span><span class='op'>)</span>,
   trim <span class='op'>=</span> <span class='op'>-</span><span class='cn'>Inf</span>,
   trim.measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gain.R2"</span>, <span class='st'>"multi.R2"</span>, <span class='st'>"intra.R2"</span>, <span class='st'>"gain.RMSE"</span>, <span class='st'>"multi.RMSE"</span>,
-    <span class='st'>"intra.RMSE"</span><span class='op'>)</span>,
-  clean <span class='op'>=</span> <span class='cn'>FALSE</span>
+    <span class='st'>"intra.RMSE"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -186,13 +184,8 @@
 <code><a href='collect_results.html'>collect_results</a>()</code>.</p></td>
     </tr>
     <tr>
-      <th>view</th>
-      <td><p>abbreviated name of the view.</p></td>
-    </tr>
-    <tr>
-      <th>cutoff</th>
-      <td><p>importance threshold. Importances below this value will
-be colored white in the heatmap and considered as not relevant.</p></td>
+      <th>type</th>
+      <td><p>type of signature to extract from the results.</p></td>
     </tr>
     <tr>
       <th>trim</th>
@@ -203,38 +196,58 @@ below (otherwise) this value only.</p></td>
       <th>trim.measure</th>
       <td><p>the measure used for trimming.</p></td>
     </tr>
-    <tr>
-      <th>clean</th>
-      <td><p>a <code>logical</code> indicating whether to remove rows and columns
-with all importances are below <code>cutoff</code> from the heatmap.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The <code>misty.results</code> list (invisibly).</p>
+    <p>A table with one row per sample from <code>misty.results</code> representing
+its signature.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The performance signature of each sample is a concatenation of the estimated
+values of variance explained using only the intraview, the variance explained
+by the multiview model and the gain in variance explained for each marker.
+The performance signature vector for each sample available in
+<code>misty.results</code> is of length \(\textrm{markers} \cdot 3\).</p>
+<p>The contribution signature of each sample is a concatenation of the estimated
+fraction of contribution of each view for each marker.
+The contribution signature vector for each sample available in
+<code>misty.results</code> is of length
+\(\textrm{markers} \cdot \textrm{views}\).</p>
+<p>The importance signature of each sample is a concatenation of the estimated
+and weighted importances for each predictor-target marker pair from all views.
+The importance signature vector for each sample available in
+<code>misty.results</code> is of length
+\(\textrm{markers}^2 \cdot \textrm{views}\).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='collect_results.html'>collect_results</a>()</code> to generate
-    a results list from raw results.</p>
-<p>Other plotting functions: 
-<code><a href='plot_contrast_heatmap.html'>plot_contrast_heatmap</a>()</code>,
-<code><a href='plot_contrast_results.html'>plot_contrast_results</a>()</code>,
-<code><a href='plot_improvement_stats.html'>plot_improvement_stats</a>()</code>,
-<code><a href='plot_interaction_communities.html'>plot_interaction_communities</a>()</code>,
-<code><a href='plot_view_contributions.html'>plot_view_contributions</a>()</code></p></div>
+    <div class='dont-index'><p><code><a href='collect_results.html'>collect_results</a>()</code> to generate a
+    results list from raw results.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>all.samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.dirs</a></span><span class='op'>(</span><span class='st'>"results"</span>, recursive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 
-<span class='fu'><a href='collect_results.html'>collect_results</a></span><span class='op'>(</span><span class='va'>all.samples</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>plot_interaction_heatmap</span><span class='op'>(</span><span class='st'>"intra"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>plot_interaction_heatmap</span><span class='op'>(</span><span class='st'>"para.10"</span>, cutoff <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
+<span class='va'>misty.results</span> <span class='op'>&lt;-</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span><span class='op'>(</span><span class='st'>"results"</span>, full.names <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='collect_results.html'>collect_results</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Collecting improvements</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Collecting contributions</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Collecting importances</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Aggregating</span></div><div class='img'><img src='plot_interaction_heatmap-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='plot_interaction_heatmap-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; <span class='message'>Aggregating</span></div><div class='input'>
+<span class='fu'>extract_signature</span><span class='op'>(</span><span class='va'>misty.results</span>, <span class='st'>"performance"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 × 34</span>
+#&gt;   sample       ECM_intra.R2 ECM_multi.R2 ECM_gain.R2 ligA_intra.R2 ligA_multi.R2
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> /tmp/Rtmpjv…         92.5         93.5       0.964          98.6          98.7
+#&gt; <span style='color: #BCBCBC;'>2</span> /tmp/Rtmpjv…         93.2         94.1       0.882          98.7          98.7
+#&gt; <span style='color: #BCBCBC;'>3</span> /tmp/Rtmpjv…         92.8         93.5       0.734          98.6          98.6
+#&gt; <span style='color: #949494;'># … with 28 more variables: ligA_gain.R2 &lt;dbl&gt;, ligB_intra.R2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   ligB_multi.R2 &lt;dbl&gt;, ligB_gain.R2 &lt;dbl&gt;, ligC_intra.R2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   ligC_multi.R2 &lt;dbl&gt;, ligC_gain.R2 &lt;dbl&gt;, ligD_intra.R2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   ligD_multi.R2 &lt;dbl&gt;, ligD_gain.R2 &lt;dbl&gt;, protE_intra.R2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   protE_multi.R2 &lt;dbl&gt;, protE_gain.R2 &lt;dbl&gt;, protF_intra.R2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   protF_multi.R2 &lt;dbl&gt;, protF_gain.R2 &lt;dbl&gt;, prodA_intra.R2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   prodA_multi.R2 &lt;dbl&gt;, prodA_gain.R2 &lt;dbl&gt;, prodB_intra.R2 &lt;dbl&gt;, …</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
