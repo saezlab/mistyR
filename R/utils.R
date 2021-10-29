@@ -49,13 +49,13 @@ aggregate_results <- function(improvements, contributions, importances) {
   )
 
   importances.aggregated <- importances %>%
-    tidyr::unite("PT", "Predictor", "Target") %>%
-    dplyr::group_by(.data$view, .data$PT) %>%
+    tidyr::unite(".PT", "Predictor", "Target", sep = "&") %>%
+    dplyr::group_by(.data$view, .data$.PT) %>%
     dplyr::summarise(
       Importance = mean(.data$Importance),
       nsamples = dplyr::n(), .groups = "drop"
     ) %>%
-    tidyr::separate("PT", c("Predictor", "Target"), sep = "[^(\\.|[:alnum:])]+")
+    tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
 
   return(list(
     improvements.stats = improvements.stats,
@@ -271,13 +271,13 @@ aggregate_results_subset <- function(misty.results, folders) {
   message("Aggregating subset")
   importances.aggregated.subset <- misty.results$importances %>%
     dplyr::filter(.data$sample %in% normalized.folders) %>%
-    tidyr::unite("PT", "Predictor", "Target") %>%
-    dplyr::group_by(.data$view, .data$PT) %>%
+    tidyr::unite(".PT", "Predictor", "Target", sep = "&") %>%
+    dplyr::group_by(.data$view, .data$.PT) %>%
     dplyr::summarise(
       Importance = mean(.data$Importance),
       nsamples = dplyr::n(), .groups = "drop"
     ) %>%
-    tidyr::separate("PT", c("Predictor", "Target"))
+    tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
 
   misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
 
@@ -426,10 +426,10 @@ extract_signature <- function(misty.results,
           stringr::str_ends(.data$measure, "R2"),
           !stringr::str_ends(.data$measure, "p.R2")
         ) %>%
-        tidyr::unite("Feature", .data$target, .data$measure) %>%
+        tidyr::unite(".Feature", .data$target, .data$measure) %>%
         # grouping necessary?
         dplyr::group_by(.data$sample) %>%
-        tidyr::pivot_wider(names_from = "Feature", values_from = "value") %>%
+        tidyr::pivot_wider(names_from = ".Feature", values_from = "value") %>%
         dplyr::ungroup()
     },
     "contribution" = {
@@ -448,8 +448,8 @@ extract_signature <- function(misty.results,
         ) %>%
         dplyr::group_by(.data$sample, .data$target) %>%
         dplyr::mutate(frac = abs(.data$value) / sum(abs(.data$value)), value = NULL) %>%
-        tidyr::unite("Feature", .data$view, .data$target) %>%
-        tidyr::pivot_wider(names_from = "Feature", values_from = "frac") %>%
+        tidyr::unite(".Feature", .data$view, .data$target) %>%
+        tidyr::pivot_wider(names_from = ".Feature", values_from = "frac") %>%
         dplyr::ungroup()
     },
     "importance" = {
@@ -478,8 +478,8 @@ extract_signature <- function(misty.results,
               .data$Predictor %in% predictor.intersection,
               .data$Target %in% target.intersection
             ) %>%
-            tidyr::unite("vPT", .data$view, .data$Predictor, .data$Target) %>%
-            tidyr::pivot_wider(names_from = "vPT", values_from = "Importance")
+            tidyr::unite(".vPT", .data$view, .data$Predictor, .data$Target) %>%
+            tidyr::pivot_wider(names_from = ".vPT", values_from = "Importance")
         }) %>%
         purrr::reduce(dplyr::full_join, by = "sample")
     }
