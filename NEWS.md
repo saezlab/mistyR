@@ -1,3 +1,7 @@
+# mistyR 1.2.1
+
+- Fixed a separator issue in results aggregation and signature generation that might cause issues with variable names containing "_".
+
 # mistyR 1.2.0
 
 - Release version for Bioconductor 3.14. See changes for 1.1.x.
