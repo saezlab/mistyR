@@ -9,7 +9,7 @@ add_paraview(
   positions,
   l,
   zoi = 0,
-  family = "gaussian",
+  family = c("gaussian", "exponential", "linear", "constant"),
   approx = 1,
   nn = NULL,
   cached = FALSE,

@@ -49,14 +49,13 @@ aggregate_results <- function(improvements, contributions, importances) {
   )
   
   importances.aggregated <- importances %>%
-    tidyr::unite("PT", "Predictor", "Target") %>%
-    dplyr::group_by(.data$view, .data$PT) %>%
+    tidyr::unite(".PT", "Predictor", "Target", sep = "&") %>%
+    dplyr::group_by(.data$view, .data$.PT) %>%
     dplyr::summarise(
       Importance = mean(.data$Importance),
       nsamples = dplyr::n(), .groups = "drop"
     ) %>%
-    tidyr::separate("PT", c("Predictor", "Target"), sep = "[^(\\.|[:alnum:])]+")
-  
+    tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
   return(list(
     improvements.stats = improvements.stats,
     contributions.stats = contributions.stats,
@@ -271,14 +270,14 @@ aggregate_results_subset <- function(misty.results, folders) {
   message("Aggregating subset")
   importances.aggregated.subset <- misty.results$importances %>%
     dplyr::filter(.data$sample %in% normalized.folders) %>%
-    tidyr::unite("PT", "Predictor", "Target") %>%
-    dplyr::group_by(.data$view, .data$PT) %>%
+    tidyr::unite(".PT", "Predictor", "Target", sep = "&") %>%
+    dplyr::group_by(.data$view, .data$.PT) %>%
     dplyr::summarise(
       Importance = mean(.data$Importance),
       nsamples = dplyr::n(), .groups = "drop"
     ) %>%
-    tidyr::separate("PT", c("Predictor", "Target"))
-  
+    tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
+
   misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
   
   return(misty.results)
@@ -412,76 +411,76 @@ extract_signature <- function(misty.results,
     dplyr::pull(.data$target)
   
   switch(signature.type,
-     "performance" = {
-       target.intersection <- misty.results$improvements %>%
-         dplyr::group_by(.data$sample) %>%
-         dplyr::summarize(ts = list(unique(.data$target))) %>%
-         dplyr::pull(.data$ts) %>%
-         purrr::reduce(intersect) %>%
-         intersect(targets)
-       
-       misty.results$improvements %>%
-         dplyr::filter(
-           .data$target %in% target.intersection,
-           stringr::str_ends(.data$measure, "R2"),
-           !stringr::str_ends(.data$measure, "p.R2")
-         ) %>%
-         tidyr::unite("Feature", .data$target, .data$measure) %>%
-         # grouping necessary?
-         dplyr::group_by(.data$sample) %>%
-         tidyr::pivot_wider(names_from = "Feature", values_from = "value") %>%
-         dplyr::ungroup()
-     },
-     "contribution" = {
-       target.intersection <- misty.results$contributions %>%
-         dplyr::group_by(.data$sample) %>%
-         dplyr::summarize(ts = list(unique(.data$target))) %>%
-         dplyr::pull(.data$ts) %>%
-         purrr::reduce(intersect) %>%
-         intersect(targets)
-       
-       misty.results$contributions %>%
-         dplyr::filter(
-           .data$target %in% target.intersection,
-           !stringr::str_starts(.data$view, "p\\."),
-           !stringr::str_detect(.data$view, "intercept")
-         ) %>%
-         dplyr::group_by(.data$sample, .data$target) %>%
-         dplyr::mutate(frac = abs(.data$value) / sum(abs(.data$value)), value = NULL) %>%
-         tidyr::unite("Feature", .data$view, .data$target) %>%
-         tidyr::pivot_wider(names_from = "Feature", values_from = "frac") %>%
-         dplyr::ungroup()
-     },
-     "importance" = {
-       views <- misty.results$importances %>%
-         dplyr::pull(.data$view) %>%
-         unique()
-       
-       views %>%
-         purrr::map(function(view) {
-           view.importances <- misty.results$importances %>%
-             dplyr::filter(.data$view == !!view, !is.na(.data$Importance))
-           target.intersection <- view.importances %>%
-             dplyr::group_by(.data$sample) %>%
-             dplyr::summarize(ts = list(unique(.data$Target))) %>%
-             dplyr::pull(.data$ts) %>%
-             purrr::reduce(intersect) %>%
-             intersect(targets)
-           predictor.intersection <- view.importances %>%
-             dplyr::group_by(.data$sample) %>%
-             dplyr::summarize(ts = list(unique(.data$Predictor))) %>%
-             dplyr::pull(.data$ts) %>%
-             purrr::reduce(intersect)
-           
-           view.importances %>%
-             dplyr::filter(
-               .data$Predictor %in% predictor.intersection,
-               .data$Target %in% target.intersection
-             ) %>%
-             tidyr::unite("vPT", .data$view, .data$Predictor, .data$Target) %>%
-             tidyr::pivot_wider(names_from = "vPT", values_from = "Importance")
-         }) %>%
-         purrr::reduce(dplyr::full_join, by = "sample")
-     }
+    "performance" = {
+      target.intersection <- misty.results$improvements %>%
+        dplyr::group_by(.data$sample) %>%
+        dplyr::summarize(ts = list(unique(.data$target))) %>%
+        dplyr::pull(.data$ts) %>%
+        purrr::reduce(intersect) %>%
+        intersect(targets)
+
+      misty.results$improvements %>%
+        dplyr::filter(
+          .data$target %in% target.intersection,
+          stringr::str_ends(.data$measure, "R2"),
+          !stringr::str_ends(.data$measure, "p.R2")
+        ) %>%
+        tidyr::unite(".Feature", .data$target, .data$measure) %>%
+        # grouping necessary?
+        dplyr::group_by(.data$sample) %>%
+        tidyr::pivot_wider(names_from = ".Feature", values_from = "value") %>%
+        dplyr::ungroup()
+    },
+    "contribution" = {
+      target.intersection <- misty.results$contributions %>%
+        dplyr::group_by(.data$sample) %>%
+        dplyr::summarize(ts = list(unique(.data$target))) %>%
+        dplyr::pull(.data$ts) %>%
+        purrr::reduce(intersect) %>%
+        intersect(targets)
+
+      misty.results$contributions %>%
+        dplyr::filter(
+          .data$target %in% target.intersection,
+          !stringr::str_starts(.data$view, "p\\."),
+          !stringr::str_detect(.data$view, "intercept")
+        ) %>%
+        dplyr::group_by(.data$sample, .data$target) %>%
+        dplyr::mutate(frac = abs(.data$value) / sum(abs(.data$value)), value = NULL) %>%
+        tidyr::unite(".Feature", .data$view, .data$target) %>%
+        tidyr::pivot_wider(names_from = ".Feature", values_from = "frac") %>%
+        dplyr::ungroup()
+    },
+    "importance" = {
+      views <- misty.results$importances %>%
+        dplyr::pull(.data$view) %>%
+        unique()
+
+      views %>%
+        purrr::map(function(view) {
+          view.importances <- misty.results$importances %>%
+            dplyr::filter(.data$view == !!view, !is.na(.data$Importance))
+          target.intersection <- view.importances %>%
+            dplyr::group_by(.data$sample) %>%
+            dplyr::summarize(ts = list(unique(.data$Target))) %>%
+            dplyr::pull(.data$ts) %>%
+            purrr::reduce(intersect) %>%
+            intersect(targets)
+          predictor.intersection <- view.importances %>%
+            dplyr::group_by(.data$sample) %>%
+            dplyr::summarize(ts = list(unique(.data$Predictor))) %>%
+            dplyr::pull(.data$ts) %>%
+            purrr::reduce(intersect)
+
+          view.importances %>%
+            dplyr::filter(
+              .data$Predictor %in% predictor.intersection,
+              .data$Target %in% target.intersection
+            ) %>%
+            tidyr::unite(".vPT", .data$view, .data$Predictor, .data$Target) %>%
+            tidyr::pivot_wider(names_from = ".vPT", values_from = "Importance")
+        }) %>%
+        purrr::reduce(dplyr::full_join, by = "sample")
+    }
   )
 }

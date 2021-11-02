@@ -331,13 +331,16 @@ sample_nystrom_row <- function(K.approx, k) {
 #' @return calculated weights with the same shape as \code{distances}.
 #'
 #' @noRd
-get_weight <- function(family = c("gaussian", "exponential", "linear", "constant"),
+get_weight <- function(family = c(
+                         "gaussian", "exponential",
+                         "linear", "constant"
+                       ),
                        distances, parameter, zoi) {
   expr.family <- match.arg(family)
-  
+
   distances[distances < zoi] <- Inf
   dim.orig <- dim(distances)
-  
+
   switch(expr.family,
     "gaussian" = {
       exp(-distances^2 / parameter^2)
@@ -445,8 +448,12 @@ get_weight <- function(family = c("gaussian", "exponential", "linear", "constant
 #' # preview
 #' str(misty.views[["paraview.10"]])
 #' @export
-add_paraview <- function(current.views, positions, l, zoi = 0, 
-                         family = "gaussian", approx = 1, nn = NULL, 
+add_paraview <- function(current.views, positions, l, zoi = 0,
+                         family = c(
+                           "gaussian", "exponential",
+                           "linear", "constant"
+                         ),
+                         approx = 1, nn = NULL,
                          cached = FALSE, verbose = TRUE) {
   dists <- distances::distances(as.data.frame(positions))
   expr <- current.views[["intraview"]][["data"]]
@@ -465,8 +472,7 @@ add_paraview <- function(current.views, positions, l, zoi = 0,
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
   }
 
-  if (match.arg(family, c("gaussian", "exponential", "linear", "constant"))
-  == "constant" & is.numeric(l) & is.null(nn)) {
+  if (match.arg(family) == "constant" & is.numeric(l) & is.null(nn)) {
     nn <- round(l)
   }
 
