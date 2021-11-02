@@ -422,6 +422,8 @@ build_model <- function(views, target, method, learner, n.vars, n.learners,
   )
   
   # returns a list of models
+  # so we are actually returning a model for each view by mapping over the
+  # views
   model.views <- views %>%
     rlist::list.remove(c("misty.uniqueid")) %>%
     purrr::map(function(view) {
