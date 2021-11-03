@@ -1,9 +1,6 @@
 
-library(mistyR)
-data("synthetic")
-library(tidyverse)
-
 # function to merge arguments
+#' @export
 merge_2 <- function(l1, l2) {
   
   n1 <- names(l1)
@@ -23,6 +20,7 @@ merge_2 <- function(l1, l2) {
 #####
 
 # keep the ellipsis to pass some parameters to ranger
+#' @export
 ranger_model <- function(view_data, target, seed, ...) {
   
   ellipsis.args <- list(...)
@@ -51,18 +49,8 @@ ranger_model <- function(view_data, target, seed, ...) {
        importances = model$variable.importance)
 }
 
-#####
-
-expr <- synthetic$synthetic1 %>% select(-c(row, col, type))
-test <- ranger_model(expr, "ECM", splitrule = "extratrees", 42)
-test$unbiased.predictions
-test$importances
-
-view_data <- expr
-
-#####
-
-bagged_earth_model <- function(view_data, target, seed, n.vars...) {
+#' @export
+bagged_earth_model <- function(view_data, target, seed, n.vars, ...) {
   
   ellipsis.args <- list(...)
   
@@ -124,13 +112,7 @@ bagged_earth_model <- function(view_data, target, seed, n.vars...) {
 
 #####
 
-expr <- synthetic$synthetic1 %>% select(-c(row, col, type))
-test <- bagged_earth_model(expr, "ECM", 42, NULL)
-test$unbiased.predictions
-test$importances
-
-#####
-
+#' @export
 bagged_linear_model = function(view_data, target, seed, n.vars, ...) {
   
   ellipsis.args <- list(...)
@@ -164,7 +146,7 @@ bagged_linear_model = function(view_data, target, seed, n.vars, ...) {
     oob <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% bag)]
     
     pred <- predict.lm(model, view_data[oob, vars])
-
+    
     list(model = model, 
          prediction = tibble::tibble(index = oob, prediction = as.vector(pred)))
   })
@@ -178,7 +160,7 @@ bagged_linear_model = function(view_data, target, seed, n.vars, ...) {
     dplyr::arrange(index)
   
   assertthat::assert_that(nrow(predictions) == nrow(view_data),
-      msg = "There are too few bags to get OOB predictions for all observations.
+                          msg = "There are too few bags to get OOB predictions for all observations.
       Consider increasing the number of bags or using CV.")
   
   importances <- purrr::map_dfr(models, function(model) {
@@ -195,15 +177,9 @@ bagged_linear_model = function(view_data, target, seed, n.vars, ...) {
 
 #####
 
-expr <- synthetic$synthetic1 %>% select(-c(row, col, type))
-test <- bagged_linear_model(expr, "ECM", 42, NULL)
-test$unbiased.predictions
-test$importances
-
-#####
-
+#' @export
 cv_linear_model = function(view_data, target, seed, ...) {
-
+  
   ellipsis.args <- list(...)
   
   folds <- withr::with_seed(
@@ -248,15 +224,10 @@ cv_linear_model = function(view_data, target, seed, ...) {
        importances = importances)
 }
 
-#####
-
-expr <- synthetic$synthetic1 %>% select(-c(row, col, type))
-test <- cv_linear_model(expr, "ECM", 42)
-test$unbiased.predictions
-test$importances
 
 #####
 
+#' @export
 cv_svm_model = function(view_data, target, seed, ...) {
   
   ellipsis.args <- list(...)
@@ -313,13 +284,7 @@ cv_svm_model = function(view_data, target, seed, ...) {
 
 #####
 
-expr <- synthetic$synthetic1 %>% select(-c(row, col, type))
-test <- cv_svm_model(expr, "ECM", 42)
-test$unbiased.predictions
-test$importances
-
-#####
-
+#' @export
 cv_boosted_trees_model = function(view_data, target, seed, ...) {
   
   ellipsis.args <- list(...)
@@ -336,8 +301,8 @@ cv_boosted_trees_model = function(view_data, target, seed, ...) {
     train <- expr[in.fold, ]
     test <- expr[holdout, ]
     
-    pred.train <- train %>% select(-all_of(target)) %>% as.matrix
-    label.train <- train %>% pull(all_of(target))
+    pred.train <- train %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
+    label.train <- train %>% dplyr::pull(tidyselect::all_of(target))
     
     algo.arguments <- list(
       params = list(booster = "gbtree", eta = 0.3, objective = "reg:squarederror",
@@ -353,88 +318,32 @@ cv_boosted_trees_model = function(view_data, target, seed, ...) {
     }
     
     model <- do.call(xgboost::xgboost, algo.arguments)
-
-    pred.test <- test %>% select(-all_of(target)) %>% as.matrix
+    
+    pred.test <- test %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
     
     label.hat <- predict(model, pred.test)
     
     tibble::tibble(index = holdout, prediction = label.hat)
   }) %>% dplyr::arrange(index)
   
-
+  predictors <- expr %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
+  labels <- expr %>% dplyr::pull(tidyselect::all_of(target))
   
-  whole.model <- do.call(kernlab::ksvm, algo.arguments.wm)
-  
-  importances <- (t(whole.model@coef) %*% whole.model@xmatrix)[1,]
-  
-  list(unbiased.predictions = holdout.predictions, 
-       importances = importances)
-}
-
-#####
-
-# Learning about xgboost
-
-predictors <- expr %>% select(-ECM) %>% as.matrix
-labels <- expr %>% pull(ECM)
-
-test <- xgboost::xgboost(
-  params = list(booster = "gbtree", eta = 0.3, objective = "reg:squarederror",
-                max.depth = 2, nthread = 1),
-  data = predictors,
-  label = labels,
-  nrounds = 10
-)
-
-pred <- predict(test, predictors)
-
-importance_matrix <- xgboost::xgb.importance(model = test)
-importance_matrix
-
-importance <- unlist(importance_matrix[, "Gain"])
-names(importance) <- unlist(importance_matrix[, "Feature"])
-importance
-
-#####
-
-# Hyperparameter Tuning
-
-folds <- withr::with_seed(
-  seed,
-  caret::createFolds(seq.int(1, nrow(view_data)), k = 10)
-)
-
-hyper.test <- imap_dfr(folds, function(holdout, i) {
-  
-  in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
-  
-  train <- expr[in.fold, ]
-  test <- expr[holdout, ]
-  
-  pred.train <- train %>% select(-ECM) %>% as.matrix
-  label.train <- train %>% pull(ECM)
-  
-  model <- xgboost::xgboost(
+  algo.arguments.wm <- list(
     params = list(booster = "gbtree", eta = 0.3, objective = "reg:squarederror",
                   max.depth = 6, nthread = 1),
-    data = pred.train,
-    label = label.train,
+    data = predictors,
+    label = labels,
     nrounds = 10,
     verbose = 0
   )
   
-  pred.test <- test %>% select(-ECM) %>% as.matrix
-  label.test <- test %>% pull(ECM)
-  label.hat <- predict(model, pred.test)
+  whole.model <- do.call(xgboost::xgboost, algo.arguments.wm)
   
-  RMSE <- caret::RMSE(label.hat, label.test)
-  R2 <- caret::R2(label.hat, label.test)
+  importance_matrix <- xgboost::xgb.importance(model = whole.model)
+  importances <- unlist(importance_matrix[, "Gain"])
+  names(importances) <- unlist(importance_matrix[, "Feature"])
   
-  tibble::tibble(cv = i, r2 = R2, rmse = RMSE)
-  
-}) %>%
-  rbind(., tibble::tibble(cv = "Summary", r2 = mean(.$r2), rmse = mean(.$rmse))) 
-
-hyper.test
-
-
+  list(unbiased.predictions = holdout.predictions, 
+       importances = importances)
+}

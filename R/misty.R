@@ -89,17 +89,9 @@ dplyr::`%>%`
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
-                      cached = FALSE, append = FALSE, method = "bag",
-                      learner = "ranger", n.vars = NULL, n.learners = 100, ...) {
-  
-  assertthat::assert_that(method %in% c("bag", "cv"),
-    msg = "The selected method has to be 'bag' (bagging) or 'cv'
-    (cross validation)")
-  
-  supported.models <- c("ranger", "lm", "svmLinear", "earth")
-  assertthat::assert_that(learner %in% supported.models,
-    msg = paste0("The selected learner (model) is not supported. Currently, the 
-                 following models are supported: ", toString(supported.models)))
+                      cached = FALSE, append = FALSE, 
+                      model.function = ranger_model, model.name = "ranger_model", 
+                      ...) {
   
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
@@ -125,13 +117,6 @@ run_misty <- function(views, results.folder = "results", seed = 42,
   assertthat::assert_that(nrow(expr) >= cv.folds,
     msg = "The data has less rows than the requested number of cv folds."
   )
-  
-  if (!(is.null(n.vars))) {
-    assertthat::assert_that(n.vars <= (ncol(expr)-1),
-      msg = "The number of variables selected must be smaller or equal than the 
-      number of column of the input minus 1 or NULL"
-    )
-  }
 
   if (ncol(expr) == 1) bypass.intra <- TRUE
 
@@ -207,12 +192,13 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
-    target.model <- build_model(views = views, target = target, method = method, 
-                                learner = learner, n.vars = n.vars, 
-                                n.learners = n.learners, cv.folds = cv.folds, 
-                                bypass.intra = bypass.intra, seed = seed, 
-                                cached = cached, ...)
-
+    target.model <- build_model(views = views, target = target, 
+                                model.function = model.function,
+                                model.name = model.name,
+                                cv.folds = cv.folds,
+                                bypass.intra = bypass.intra,
+                                seed = seed, cached = cached, ...)
+    
     combined.views <- target.model[["meta.model"]]
 
     model.summary <- summary(combined.views)
