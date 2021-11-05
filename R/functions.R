@@ -1,5 +1,8 @@
+# MISTy view-specific functions
+# Copyleft (ɔ) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
-# function to merge arguments
+#' function to merge named arguments from two lists
+#' 
 #' @export
 merge_2 <- function(l1, l2) {
   
@@ -19,7 +22,8 @@ merge_2 <- function(l1, l2) {
 
 #####
 
-# keep the ellipsis to pass some parameters to ranger
+#' RF implementation
+#' 
 #' @export
 ranger_model <- function(view_data, target, seed, ...) {
   
@@ -49,10 +53,15 @@ ranger_model <- function(view_data, target, seed, ...) {
        importances = model$variable.importance)
 }
 
+#' Bagged MARS
+#' 
 #' @export
 bagged_earth_model <- function(view_data, target, seed, n.vars, ...) {
   
   ellipsis.args <- list(...)
+  
+  # get ellipsis arguments
+  if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
   
   # how many predictors and how many variables to consider for each bag
   n.vars <- ifelse(is.null(n.vars), ncol(view_data)-1, n.vars)
@@ -110,12 +119,15 @@ bagged_earth_model <- function(view_data, target, seed, n.vars, ...) {
        importances = importances)
 }
 
-#####
-
+#' Bagged Linear Model
+#' 
 #' @export
-bagged_linear_model = function(view_data, target, seed, n.vars, ...) {
+bagged_linear_model = function(view_data, target, seed, n.vars = NULL, ...) {
   
   ellipsis.args <- list(...)
+  
+  # get ellipsis arguments
+  if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
   
   # how many predictors and how many variables to consider for each bag
   n.vars <- ifelse(is.null(n.vars), ncol(view_data)-1, n.vars)
@@ -175,8 +187,8 @@ bagged_linear_model = function(view_data, target, seed, n.vars, ...) {
        importances = importances)
 }
 
-#####
-
+#' Simple Linear Model
+#' 
 #' @export
 cv_linear_model = function(view_data, target, seed, ...) {
   
@@ -225,12 +237,17 @@ cv_linear_model = function(view_data, target, seed, ...) {
 }
 
 
-#####
-
+#' SVM Implementation
+#' 
 #' @export
-cv_svm_model = function(view_data, target, seed, ...) {
+cv_svm_model = function(view_data, target, seed, approx = TRUE, 
+                        approx.frac = 0.2, ...) {
   
   ellipsis.args <- list(...)
+  
+  # get these parameters from the ellipsis
+  if ("approx.frac" %in% ellipsis.args) approx.frac <- ellipsis.args$approx.frac
+  if ("frac" %in% ellipsis.args) frac <- ellipsis.args$frac
   
   folds <- withr::with_seed(
     seed,
@@ -240,6 +257,10 @@ cv_svm_model = function(view_data, target, seed, ...) {
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
     
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
+    
+    # subsampling to reduce the computational cost
+    if (approx) in.fold <- in.fold[sample(1:length(in.fold), 
+                                          length(in.fold)*approx.frac)]
     
     algo.arguments <- list(
       x = stats::as.formula(paste0(target, " ~ .")),
@@ -282,8 +303,9 @@ cv_svm_model = function(view_data, target, seed, ...) {
        importances = importances)
 }
 
-#####
 
+#' Boosted Trees Implementation
+#' 
 #' @export
 cv_boosted_trees_model = function(view_data, target, seed, ...) {
   
@@ -298,19 +320,22 @@ cv_boosted_trees_model = function(view_data, target, seed, ...) {
     
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
     
-    train <- expr[in.fold, ]
-    test <- expr[holdout, ]
+    train <- view_data[in.fold, ]
+    test <- view_data[holdout, ]
     
     pred.train <- train %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
     label.train <- train %>% dplyr::pull(tidyselect::all_of(target))
     
     algo.arguments <- list(
-      params = list(booster = "gbtree", eta = 0.3, objective = "reg:squarederror",
-                    max.depth = 6, nthread = 1),
       data = pred.train,
       label = label.train,
       nrounds = 10,
-      verbose = 0
+      verbose = 0,
+      booster = "gbtree", 
+      eta = 0.3, 
+      objective = "reg:squarederror",
+      max_depth = 6, 
+      nthread = 1
     )
     
     if (!(length(ellipsis.args) == 0)) {
@@ -326,17 +351,24 @@ cv_boosted_trees_model = function(view_data, target, seed, ...) {
     tibble::tibble(index = holdout, prediction = label.hat)
   }) %>% dplyr::arrange(index)
   
-  predictors <- expr %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
-  labels <- expr %>% dplyr::pull(tidyselect::all_of(target))
+  predictors <- view_data %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
+  labels <- view_data %>% dplyr::pull(tidyselect::all_of(target))
   
   algo.arguments.wm <- list(
-    params = list(booster = "gbtree", eta = 0.3, objective = "reg:squarederror",
-                  max.depth = 6, nthread = 1),
     data = predictors,
     label = labels,
     nrounds = 10,
-    verbose = 0
+    verbose = 0, 
+    booster = "gbtree", 
+    eta = 0.3, 
+    objective = "reg:squarederror",
+    max_depth = 6, 
+    nthread = 1
   )
+  
+  if (!(length(ellipsis.args) == 0)) {
+    algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
+  }
   
   whole.model <- do.call(xgboost::xgboost, algo.arguments.wm)
   
@@ -347,3 +379,75 @@ cv_boosted_trees_model = function(view_data, target, seed, ...) {
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
 }
+
+
+#' Neural Network Implementation
+#' 
+#' @export
+cv_nn_model = function(view_data, target, seed, ...) {
+  
+  ellipsis.args <- list(...)
+  
+  folds <- withr::with_seed(
+    seed,
+    caret::createFolds(seq.int(1, nrow(view_data)), k = 10)
+  )
+  
+  holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
+    
+    in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
+    
+    train <- view_data[in.fold, ]
+    test <- view_data[holdout, ]
+    
+    algo.arguments <- list(
+      as.formula(paste0(target, "~ .")),
+      data = train,
+      hidden = c(10),
+      linear.output = FALSE,
+      lifesign = "none",
+      rep = 1,
+      stepmax = 1e4
+    )
+    
+    if (!(length(ellipsis.args) == 0)) {
+      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+    }
+    
+    model <- do.call(neuralnet::neuralnet, algo.arguments)
+    
+    label.hat <- predict(model, test)
+    
+    tibble::tibble(index = holdout, prediction = label.hat)
+  }) %>% dplyr::arrange(index)
+  
+  algo.arguments.wm <- list(
+    as.formula(paste0(target, "~ .")),
+    data = view_data,
+    hidden = c(10),
+    linear.output = FALSE,
+    lifesign = "none",
+    rep = 1,
+    stepmax = 1e4
+  )
+  
+  if (!(length(ellipsis.args) == 0)) {
+    algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
+  }
+  
+  whole.model <- do.call(neuralnet::neuralnet, algo.arguments.wm)
+  
+  predictor <- Predictor$new(whole.model, 
+                             data = view_data %>% dplyr::select(-tidyselect::all_of(target)) , 
+                             y = view_data %>% dplyr::pull(tidyselect::all_of(target)))
+  imp <- FeatureImp$new(predictor, loss = "mse")$results
+  importances <- imp$importance
+  names(importances) <- imp$feature
+  
+  list(unbiased.predictions = holdout.predictions, 
+       importances = importances)
+}
+
+
+
+
