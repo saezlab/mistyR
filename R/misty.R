@@ -91,8 +91,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
                       cached = FALSE, append = FALSE, 
                       model.function = ranger_model, 
-                      # check if this works!
-                      model.name = as.character(quote(model.function)), 
+                      model.name = "ranger_model", 
                       ...) {
   
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)

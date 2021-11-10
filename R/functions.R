@@ -196,13 +196,13 @@ bagged_linear_model = function(view_data, target, seed, n.vars = NULL,
 #' Simple Linear Model
 #' 
 #' @export
-cv_linear_model = function(view_data, target, seed, ...) {
+linear_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
   folds <- withr::with_seed(
     seed,
-    caret::createFolds(seq.int(1, nrow(view_data)), k = 10)
+    caret::createFolds(seq.int(1, nrow(view_data)), k = k)
   )
   
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
@@ -246,8 +246,8 @@ cv_linear_model = function(view_data, target, seed, ...) {
 #' SVM Implementation
 #' 
 #' @export
-cv_svm_model = function(view_data, target, seed, approx = TRUE, 
-                        approx.frac = 0.2, ...) {
+svm_model = function(view_data, target, seed, approx = TRUE, 
+                        approx.frac = 0.2, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
@@ -257,7 +257,7 @@ cv_svm_model = function(view_data, target, seed, approx = TRUE,
   
   folds <- withr::with_seed(
     seed,
-    caret::createFolds(seq.int(1, nrow(view_data)), k = 10)
+    caret::createFolds(seq.int(1, nrow(view_data)), k = k)
   )
   
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
@@ -313,13 +313,13 @@ cv_svm_model = function(view_data, target, seed, approx = TRUE,
 #' Boosted Trees Implementation
 #' 
 #' @export
-cv_boosted_trees_model = function(view_data, target, seed, ...) {
+boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
   folds <- withr::with_seed(
     seed,
-    caret::createFolds(seq.int(1, nrow(view_data)), k = 10)
+    caret::createFolds(seq.int(1, nrow(view_data)), k = k)
   )
   
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
@@ -390,13 +390,13 @@ cv_boosted_trees_model = function(view_data, target, seed, ...) {
 #' Neural Network Implementation
 #' 
 #' @export
-cv_nn_model = function(view_data, target, seed, ...) {
+nn_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
   folds <- withr::with_seed(
     seed,
-    caret::createFolds(seq.int(1, nrow(view_data)), k = 10)
+    caret::createFolds(seq.int(1, nrow(view_data)), k = k)
   )
   
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
@@ -446,6 +446,7 @@ cv_nn_model = function(view_data, target, seed, ...) {
   predictor <- Predictor$new(whole.model, 
                              data = view_data %>% dplyr::select(-tidyselect::all_of(target)) , 
                              y = view_data %>% dplyr::pull(tidyselect::all_of(target)))
+  
   imp <- FeatureImp$new(predictor, loss = "mse")$results
   importances <- imp$importance
   names(importances) <- imp$feature
