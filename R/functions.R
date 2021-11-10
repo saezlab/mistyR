@@ -56,12 +56,15 @@ ranger_model <- function(view_data, target, seed, ...) {
 #' Bagged MARS
 #' 
 #' @export
-bagged_earth_model <- function(view_data, target, seed, n.vars, ...) {
+bagged_earth_model <- function(view_data, target, seed, n.vars = NULL, 
+                               n.learners = 100, ...) {
   
   ellipsis.args <- list(...)
   
   # get ellipsis arguments
   if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
+  
+  if ("n.learners" %in% ellipsis.args) n.learners <- ellipsis.args$n.learners
   
   # how many predictors and how many variables to consider for each bag
   n.vars <- ifelse(is.null(n.vars), ncol(view_data)-1, n.vars)
@@ -70,7 +73,7 @@ bagged_earth_model <- function(view_data, target, seed, n.vars, ...) {
   # generate the bags
   bags <- withr::with_seed(
     seed,
-    caret::createResample(1:nrow(view_data), times = 100)
+    caret::createResample(1:nrow(view_data), times = n.learners)
   )
   
   # build one model for each bag, return oob predictions and importances
@@ -122,12 +125,15 @@ bagged_earth_model <- function(view_data, target, seed, n.vars, ...) {
 #' Bagged Linear Model
 #' 
 #' @export
-bagged_linear_model = function(view_data, target, seed, n.vars = NULL, ...) {
+bagged_linear_model = function(view_data, target, seed, n.vars = NULL, 
+                               n.learners = 100, ...) {
   
   ellipsis.args <- list(...)
   
   # get ellipsis arguments
   if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
+  
+  if ("n.learners" %in% ellipsis.args) n.learners <- ellipsis.args$n.learners
   
   # how many predictors and how many variables to consider for each bag
   n.vars <- ifelse(is.null(n.vars), ncol(view_data)-1, n.vars)
@@ -136,7 +142,7 @@ bagged_linear_model = function(view_data, target, seed, n.vars = NULL, ...) {
   # generate the bags
   bags <- withr::with_seed(
     seed,
-    caret::createResample(1:nrow(view_data), times = 100)
+    caret::createResample(1:nrow(view_data), times = n.learners)
   )
   
   # build one model for each bag, return oob predictions and importances
@@ -172,7 +178,7 @@ bagged_linear_model = function(view_data, target, seed, n.vars = NULL, ...) {
     dplyr::arrange(index)
   
   assertthat::assert_that(nrow(predictions) == nrow(view_data),
-                          msg = "There are too few bags to get OOB predictions for all observations.
+      msg = "There are too few bags to get OOB predictions for all observations.
       Consider increasing the number of bags or using CV.")
   
   importances <- purrr::map_dfr(models, function(model) {
