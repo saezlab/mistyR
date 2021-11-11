@@ -190,9 +190,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     "NULL" = colnames(expr),
     NULL
   )
-
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
+    
     target.model <- build_model(views = views, target = target, 
                                 model.function = model.function,
                                 model.name = model.name,
@@ -288,6 +288,5 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     return(target)
   }, ..., .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
-
   return(normalized.results.folder)
 }

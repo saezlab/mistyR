@@ -149,7 +149,7 @@ build_model <- function(views, target, model.function, model.name,
   final.model <- list(
     meta.model = combined.views,
     # not sure whether this is implemented the right way
-    model.importances = map(model.views, ~ .x$importances),
+    model.importances = purrr::map(model.views, ~ .x$importances),
     performance.estimate = performance.estimate
   )
   

@@ -132,7 +132,6 @@ bagged_linear_model = function(view_data, target, seed, n.vars = NULL,
   
   # get ellipsis arguments
   if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
-  
   if ("n.learners" %in% ellipsis.args) n.learners <- ellipsis.args$n.learners
   
   # how many predictors and how many variables to consider for each bag
@@ -200,6 +199,8 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
+  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
+  
   folds <- withr::with_seed(
     seed,
     caret::createFolds(seq.int(1, nrow(view_data)), k = k)
@@ -252,6 +253,7 @@ svm_model = function(view_data, target, seed, approx = TRUE,
   ellipsis.args <- list(...)
   
   # get these parameters from the ellipsis
+  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
   if ("approx.frac" %in% ellipsis.args) approx.frac <- ellipsis.args$approx.frac
   if ("frac" %in% ellipsis.args) frac <- ellipsis.args$frac
   
@@ -316,6 +318,8 @@ svm_model = function(view_data, target, seed, approx = TRUE,
 boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
+  
+  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
   
   folds <- withr::with_seed(
     seed,
@@ -386,75 +390,80 @@ boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
        importances = importances)
 }
 
-
-#' Neural Network Implementation
-#' 
 #' @export
-nn_model = function(view_data, target, seed, k = 10, ...) {
+nn_model = function(view_data, target, seed, approx = TRUE, 
+                         approx.frac = 0.2, k = 10, ...) {
   
   ellipsis.args <- list(...)
+  
+  if ("k" %in% ellipsis.args) k <- ellipsis.args["k"]
+  if ("approx" %in% ellipsis.args) frac <- ellipsis.args["approx"]
+  if ("approx.frac" %in% ellipsis.args) approx.frac <- ellipsis.args["approx.frac"]
+  
+  #print(paste(k, approx, approx.frac))
   
   folds <- withr::with_seed(
     seed,
     caret::createFolds(seq.int(1, nrow(view_data)), k = k)
   )
   
+  predictors <- colnames(view_data)[colnames(view_data) != target]
+  X <- view_data %>% dplyr::select(tidyselect::all_of(predictors)) %>% as.matrix()
+  Y <- view_data %>% dplyr::pull(target)
+  
+  # made this an imap to track the folds!
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
     
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
     
-    train <- view_data[in.fold, ]
-    test <- view_data[holdout, ]
+    # subsampling to reduce the computational cost
+    if (approx) in.fold <- in.fold[sample(1:length(in.fold), 
+                                          length(in.fold)*approx.frac)]
+    
+    X_train <- X[in.fold, ]
+    Y_train <- Y[in.fold]
+    
+    X_test <- X[holdout, ]
+    Y_test <- Y[holdout]
     
     algo.arguments <- list(
-      as.formula(paste0(target, "~ .")),
-      data = train,
-      hidden = c(10),
-      linear.output = FALSE,
-      lifesign = "none",
-      rep = 1,
-      stepmax = 1e4
+      x = X_train,
+      y = Y_train,
+      size = c(10)
     )
     
     if (!(length(ellipsis.args) == 0)) {
       algo.arguments <- merge_2(algo.arguments, ellipsis.args)
     }
     
-    model <- do.call(neuralnet::neuralnet, algo.arguments)
+    model <- do.call(RSNNS::mlp, algo.arguments)
     
-    label.hat <- predict(model, test)
+    label.hat <- predict(model, X_test)
     
     tibble::tibble(index = holdout, prediction = label.hat)
   }) %>% dplyr::arrange(index)
   
   algo.arguments.wm <- list(
-    as.formula(paste0(target, "~ .")),
-    data = view_data,
-    hidden = c(10),
-    linear.output = FALSE,
-    lifesign = "none",
-    rep = 1,
-    stepmax = 1e4
+    x = X,
+    y = Y,
+    size = c(10)
   )
   
   if (!(length(ellipsis.args) == 0)) {
     algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
   }
   
-  whole.model <- do.call(neuralnet::neuralnet, algo.arguments.wm)
+  whole.model <- do.call(RSNNS::mlp, algo.arguments.wm)
   
-  predictor <- Predictor$new(whole.model, 
-                             data = view_data %>% dplyr::select(-tidyselect::all_of(target)) , 
-                             y = view_data %>% dplyr::pull(tidyselect::all_of(target)))
+  predictor <- iml::Predictor$new(
+    model = whole.model, 
+    data = as.data.frame(X), 
+    y = Y)
   
-  imp <- FeatureImp$new(predictor, loss = "mse")$results
+  imp <- iml::FeatureImp$new(predictor, loss = "mse")$results
   importances <- imp$importance
   names(importances) <- imp$feature
   
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
 }
-
-
-
-
