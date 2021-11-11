@@ -20,8 +20,6 @@ merge_2 <- function(l1, l2) {
   return(c(n1_list, n2_list))
 }
 
-#####
-
 #' RF implementation
 #' 
 #' @export
@@ -467,3 +465,4 @@ nn_model = function(view_data, target, seed, approx = TRUE,
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
 }
+

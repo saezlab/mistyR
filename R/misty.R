@@ -90,9 +90,10 @@ dplyr::`%>%`
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
                       cached = FALSE, append = FALSE, 
-                      model.function = ranger_model, 
-                      model.name = "ranger_model", 
+                      model.function = ranger_model,
                       ...) {
+  
+  model.name <- as.character(rlang::enexpr(model.function))
   
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
