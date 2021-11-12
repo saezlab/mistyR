@@ -81,7 +81,8 @@ bagged_earth_model <- function(view_data, target, seed, n.vars = NULL,
     
     algo.arguments <- list(
       formula = stats::as.formula(paste0(target, " ~ .")),
-      data = view_data[bag, c(target, vars)]
+      data = view_data[bag, c(target, vars)],
+      degree = 2
     )
     
     if (!(length(ellipsis.args) == 0)) {
@@ -185,7 +186,6 @@ bagged_linear_model = function(view_data, target, seed, n.vars = NULL,
     coefs[names(coefs) != "(Intercept)"]
   }) %>% colMeans(na.rm = TRUE)
   
-  
   list(unbiased.predictions = predictions, 
        importances = importances)
 }
@@ -246,7 +246,7 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
 #' 
 #' @export
 svm_model = function(view_data, target, seed, approx = TRUE, 
-                        approx.frac = 0.2, k = 10, ...) {
+                        approx.frac = 0.4, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
@@ -390,7 +390,7 @@ boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
 
 #' @export
 nn_model = function(view_data, target, seed, approx = TRUE, 
-                         approx.frac = 0.2, k = 10, ...) {
+                         approx.frac = 0.6, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
