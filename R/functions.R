@@ -55,7 +55,7 @@ ranger_model <- function(view_data, target, seed, ...) {
 #' 
 #' @export
 bagged_earth_model <- function(view_data, target, seed, n.vars = NULL, 
-                               n.learners = 100, ...) {
+                               n.learners = 50, ...) {
   
   ellipsis.args <- list(...)
   
