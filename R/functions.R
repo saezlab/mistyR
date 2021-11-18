@@ -61,7 +61,6 @@ bagged_earth_model <- function(view_data, target, seed, n.vars = NULL,
   
   # get ellipsis arguments
   if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
-  
   if ("n.learners" %in% ellipsis.args) n.learners <- ellipsis.args$n.learners
   
   # how many predictors and how many variables to consider for each bag
