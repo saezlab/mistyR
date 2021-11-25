@@ -4,7 +4,7 @@
 #' function to merge named arguments from two lists
 #' 
 #' @export
-merge_2 <- function(l1, l2) {
+merge_two <- function(l1, l2) {
   
   n1 <- names(l1)
   n2 <- names(l2)
@@ -23,7 +23,7 @@ merge_2 <- function(l1, l2) {
 #' RF implementation
 #' 
 #' @export
-ranger_model <- function(view_data, target, seed, ...) {
+random_forest_model <- function(view_data, target, seed, ...) {
   
   ellipsis.args <- list(...)
   
@@ -39,7 +39,7 @@ ranger_model <- function(view_data, target, seed, ...) {
     seed = seed)
   
   if (!(length(ellipsis.args) == 0)) {
-    algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+    algo.arguments <- merge_two(algo.arguments, ellipsis.args)
   }
   
   model <- do.call(ranger::ranger, algo.arguments)
@@ -54,45 +54,42 @@ ranger_model <- function(view_data, target, seed, ...) {
 #' Bagged MARS
 #' 
 #' @export
-bagged_earth_model <- function(view_data, target, seed, n.vars = NULL, 
-                               n.learners = 50, ...) {
+bagged_mars_model <- function(view_data, target, seed, 
+                               n.bags = 50, ...) {
   
   ellipsis.args <- list(...)
+  print(ellipsis.args)
   
   # get ellipsis arguments
-  if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
-  if ("n.learners" %in% ellipsis.args) n.learners <- ellipsis.args$n.learners
+  if ("n.bags" %in% ellipsis.args) n.bags <- ellipsis.args$n.bags
   
   # how many predictors and how many variables to consider for each bag
-  n.vars <- ifelse(is.null(n.vars), ncol(view_data)-1, n.vars)
   predictors <- colnames(view_data)[colnames(view_data) != target]
   
   # generate the bags
   bags <- withr::with_seed(
     seed,
-    caret::createResample(1:nrow(view_data), times = n.learners)
+    caret::createResample(1:nrow(view_data), times = n.bags)
   )
   
   # build one model for each bag, return oob predictions and importances
   models <- purrr::map(bags, function(bag) {
     
-    vars <- sample(predictors, n.vars)
-    
     algo.arguments <- list(
       formula = stats::as.formula(paste0(target, " ~ .")),
-      data = view_data[bag, c(target, vars)],
+      data = view_data[bag, ],
       degree = 2
     )
     
     if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
     
     model <- do.call(earth::earth, algo.arguments)
     
     oob <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% bag)]
     
-    pred <- predict(model, view_data[oob, vars])
+    pred <- predict(model, view_data[oob, ])
     list(model = model, 
          prediction = tibble::tibble(index = oob, prediction = as.vector(pred)))
   })
@@ -120,72 +117,63 @@ bagged_earth_model <- function(view_data, target, seed, n.vars = NULL,
        importances = importances)
 }
 
-#' Bagged Linear Model
+#' Bagged MARS
 #' 
 #' @export
-bagged_linear_model = function(view_data, target, seed, n.vars = NULL, 
-                               n.learners = 100, ...) {
+mars_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
-  # get ellipsis arguments
-  if ("n.vars" %in% ellipsis.args) n.vars <- ellipsis.args$n.vars
-  if ("n.learners" %in% ellipsis.args) n.learners <- ellipsis.args$n.learners
+  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
   
-  # how many predictors and how many variables to consider for each bag
-  n.vars <- ifelse(is.null(n.vars), ncol(view_data)-1, n.vars)
-  predictors <- colnames(view_data)[colnames(view_data) != target]
-  
-  # generate the bags
-  bags <- withr::with_seed(
+  folds <- withr::with_seed(
     seed,
-    caret::createResample(1:nrow(view_data), times = n.learners)
+    caret::createFolds(seq.int(1, nrow(view_data)), k = k)
   )
   
-  # build one model for each bag, return oob predictions and importances
-  models <- purrr::map(bags, function(bag) {
+  holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
     
-    vars <- sample(predictors, n.vars)
+    in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
+    
+    train <- view_data[in.fold, ]
+    test <- view_data[holdout, ]
     
     algo.arguments <- list(
       formula = stats::as.formula(paste0(target, " ~ .")),
-      data = view_data[bag, c(target, vars)]
+      data = train,
+      degree = 2
     )
     
     if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
     
-    model <- do.call(stats::lm, algo.arguments)
+    model <- do.call(earth::earth, algo.arguments)
     
-    oob <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% bag)]
+    label.hat <- predict(model, test)
     
-    pred <- predict.lm(model, view_data[oob, vars])
-    
-    list(model = model, 
-         prediction = tibble::tibble(index = oob, prediction = as.vector(pred)))
-  })
+    tibble::tibble(index = holdout, prediction = label.hat)
+  }) %>% dplyr::arrange(index)
   
-  # Generate the OOB predictions, using the average for each sample
-  predictions <- purrr::map_dfr(models, function(model) {
-    tibble::tibble(model$prediction)
-  }) %>% 
-    dplyr::group_by(index) %>%
-    dplyr::summarise(prediction = mean(prediction)) %>%
-    dplyr::arrange(index)
+  predictors <- view_data %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
+  labels <- view_data %>% dplyr::pull(tidyselect::all_of(target))
   
-  assertthat::assert_that(nrow(predictions) == nrow(view_data),
-      msg = "There are too few bags to get OOB predictions for all observations.
-      Consider increasing the number of bags or using CV.")
+  algo.arguments.wm <- list(
+    formula = stats::as.formula(paste0(target, " ~ .")),
+    data = view_data,
+    degree = 2
+  )
   
-  importances <- purrr::map_dfr(models, function(model) {
-    coefs <- purrr::map_dfr(models, function(model) {
-      model$model$coefficients }) %>%
-      colMeans(na.rm = TRUE)
-    coefs[names(coefs) != "(Intercept)"]
-  }) %>% colMeans(na.rm = TRUE)
+  if (!(length(ellipsis.args) == 0)) {
+    algo.arguments.wm <- merge_two(algo.arguments.wm, ellipsis.args)
+  }
   
-  list(unbiased.predictions = predictions, 
+  whole.model <- do.call(earth::earth, algo.arguments.wm)
+  
+  importances <- earth::evimp(whole.model, trim = FALSE, sqrt. = TRUE)[, 6] 
+  names(importances) <- stringr::str_remove(names(importances), "-unused")
+  
+  list(unbiased.predictions = holdout.predictions, 
        importances = importances)
 }
 
@@ -213,7 +201,7 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
     )
     
     if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
     
     model <- do.call(stats::lm, algo.arguments)
@@ -229,7 +217,7 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
   )
   
   if (!(length(ellipsis.args) == 0)) {
-    algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
+    algo.arguments.wm <- merge_two(algo.arguments.wm, ellipsis.args)
   }
   
   whole.model <- do.call(stats::lm, algo.arguments.wm)
@@ -277,7 +265,7 @@ svm_model = function(view_data, target, seed, approx = TRUE,
     )
     
     if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
     
     model <- do.call(kernlab::ksvm, algo.arguments)
@@ -297,7 +285,7 @@ svm_model = function(view_data, target, seed, approx = TRUE,
   )
   
   if (!(length(ellipsis.args) == 0)) {
-    algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
+    algo.arguments.wm <- merge_two(algo.arguments.wm, ellipsis.args)
   }
   
   whole.model <- do.call(kernlab::ksvm, algo.arguments.wm)
@@ -309,10 +297,10 @@ svm_model = function(view_data, target, seed, approx = TRUE,
 }
 
 
-#' Boosted Trees Implementation
+#' Linear Gradient Boosting Implementation
 #' 
 #' @export
-boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
+gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
   
@@ -336,9 +324,9 @@ boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
     algo.arguments <- list(
       data = pred.train,
       label = label.train,
+      booster = "gbtree",
       nrounds = 10,
       verbose = 0,
-      booster = "gbtree", 
       eta = 0.3, 
       objective = "reg:squarederror",
       max_depth = 6, 
@@ -346,7 +334,7 @@ boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
     )
     
     if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
     
     model <- do.call(xgboost::xgboost, algo.arguments)
@@ -364,9 +352,9 @@ boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
   algo.arguments.wm <- list(
     data = predictors,
     label = labels,
+    booster = "gbtree",
     nrounds = 10,
     verbose = 0, 
-    booster = "gbtree", 
     eta = 0.3, 
     objective = "reg:squarederror",
     max_depth = 6, 
@@ -374,14 +362,22 @@ boosted_trees_model = function(view_data, target, seed, k = 10, ...) {
   )
   
   if (!(length(ellipsis.args) == 0)) {
-    algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
+    algo.arguments.wm <- merge_two(algo.arguments.wm, ellipsis.args)
   }
   
   whole.model <- do.call(xgboost::xgboost, algo.arguments.wm)
   
-  importance_matrix <- xgboost::xgb.importance(model = whole.model)
-  importances <- unlist(importance_matrix[, "Gain"])
-  names(importances) <- unlist(importance_matrix[, "Feature"])
+  # if bypass intra is true, we need to catch the error
+  importances <- tryCatch({
+    importance_matrix <- xgboost::xgb.importance(model = whole.model)
+    importances <- unlist(importance_matrix[, "Gain"])
+    names(importances) <- unlist(importance_matrix[, "Feature"])
+    importances
+  }, error = function(cond){
+    importances <- rep(0, ncol(predictors))
+    names(importances) <- colnames(predictors)
+    importances
+  })
   
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
@@ -430,7 +426,7 @@ nn_model = function(view_data, target, seed, approx = TRUE,
     )
     
     if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_2(algo.arguments, ellipsis.args)
+      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
     
     model <- do.call(RSNNS::mlp, algo.arguments)
@@ -447,7 +443,7 @@ nn_model = function(view_data, target, seed, approx = TRUE,
   )
   
   if (!(length(ellipsis.args) == 0)) {
-    algo.arguments.wm <- merge_2(algo.arguments.wm, ellipsis.args)
+    algo.arguments.wm <- merge_two(algo.arguments.wm, ellipsis.args)
   }
   
   whole.model <- do.call(RSNNS::mlp, algo.arguments.wm)
