@@ -58,14 +58,7 @@ bagged_mars_model <- function(view_data, target, seed,
                                n.bags = 50, ...) {
   
   ellipsis.args <- list(...)
-  print(ellipsis.args)
-  
-  # get ellipsis arguments
-  if ("n.bags" %in% ellipsis.args) n.bags <- ellipsis.args$n.bags
-  
-  # how many predictors and how many variables to consider for each bag
-  predictors <- colnames(view_data)[colnames(view_data) != target]
-  
+
   # generate the bags
   bags <- withr::with_seed(
     seed,
@@ -107,10 +100,13 @@ bagged_mars_model <- function(view_data, target, seed,
       Consider increasing the number of bags or using CV.")
   
   importances <- purrr::map_dfr(models, function(model) {
-    coefs <- earth::evimp(model$model, trim = FALSE, sqrt. = TRUE)[, 6] 
+    coefs <- earth::evimp(model$model, trim = FALSE, sqrt. = TRUE)[, 6]
     names(coefs) <- stringr::str_remove(names(coefs), "-unused")
+    # fix for bypass intra
+    names(coefs) <- ifelse(is.na(names(coefs)), "no.var", names(coefs))
     coefs
   }) %>% colMeans(na.rm = TRUE)
+  
   
   
   list(unbiased.predictions = predictions, 
@@ -123,8 +119,6 @@ bagged_mars_model <- function(view_data, target, seed,
 mars_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
-  
-  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
   
   folds <- withr::with_seed(
     seed,
@@ -155,9 +149,6 @@ mars_model = function(view_data, target, seed, k = 10, ...) {
     tibble::tibble(index = holdout, prediction = label.hat)
   }) %>% dplyr::arrange(index)
   
-  predictors <- view_data %>% dplyr::select(-tidyselect::all_of(target)) %>% as.matrix
-  labels <- view_data %>% dplyr::pull(tidyselect::all_of(target))
-  
   algo.arguments.wm <- list(
     formula = stats::as.formula(paste0(target, " ~ .")),
     data = view_data,
@@ -170,8 +161,10 @@ mars_model = function(view_data, target, seed, k = 10, ...) {
   
   whole.model <- do.call(earth::earth, algo.arguments.wm)
   
-  importances <- earth::evimp(whole.model, trim = FALSE, sqrt. = TRUE)[, 6] 
+  importances <- earth::evimp(whole.model, trim = FALSE, sqrt. = TRUE)[, 6]
   names(importances) <- stringr::str_remove(names(importances), "-unused")
+  # fix for bypass intra
+  if (is.na(names(importances))) importances <- c("no.var" = 0)
   
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
@@ -181,10 +174,6 @@ mars_model = function(view_data, target, seed, k = 10, ...) {
 #' 
 #' @export
 linear_model = function(view_data, target, seed, k = 10, ...) {
-  
-  ellipsis.args <- list(...)
-  
-  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
   
   folds <- withr::with_seed(
     seed,
@@ -200,10 +189,6 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
       data = view_data[in.fold, ]
     )
     
-    if (!(length(ellipsis.args) == 0)) {
-      algo.arguments <- merge_two(algo.arguments, ellipsis.args)
-    }
-    
     model <- do.call(stats::lm, algo.arguments)
     
     pred <- predict.lm(model, view_data[holdout, ])
@@ -216,13 +201,11 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
     data = view_data
   )
   
-  if (!(length(ellipsis.args) == 0)) {
-    algo.arguments.wm <- merge_two(algo.arguments.wm, ellipsis.args)
-  }
-  
   whole.model <- do.call(stats::lm, algo.arguments.wm)
   
   importances <- whole.model$coefficients[names(whole.model$coefficients) != "(Intercept)"]
+  # fix for bypass intra (replace NA with 0 for consistent behavior)
+  importances <- ifelse(is.na(importances), 0, importances)
   
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
@@ -232,15 +215,9 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
 #' SVM Implementation
 #' 
 #' @export
-svm_model = function(view_data, target, seed, approx = TRUE, 
-                        approx.frac = 0.4, k = 10, ...) {
+svm_model = function(view_data, target, seed, approx = 0.4, k = 10, ...) {
   
   ellipsis.args <- list(...)
-  
-  # get these parameters from the ellipsis
-  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
-  if ("approx.frac" %in% ellipsis.args) approx.frac <- ellipsis.args$approx.frac
-  if ("frac" %in% ellipsis.args) frac <- ellipsis.args$frac
   
   folds <- withr::with_seed(
     seed,
@@ -253,7 +230,7 @@ svm_model = function(view_data, target, seed, approx = TRUE,
     
     # subsampling to reduce the computational cost
     if (approx) in.fold <- in.fold[sample(1:length(in.fold), 
-                                          length(in.fold)*approx.frac)]
+                                          length(in.fold)*approx)]
     
     algo.arguments <- list(
       x = stats::as.formula(paste0(target, " ~ .")),
@@ -267,7 +244,7 @@ svm_model = function(view_data, target, seed, approx = TRUE,
     if (!(length(ellipsis.args) == 0)) {
       algo.arguments <- merge_two(algo.arguments, ellipsis.args)
     }
-    
+
     model <- do.call(kernlab::ksvm, algo.arguments)
     
     pred <- kernlab::predict(model, view_data[holdout, ])
@@ -291,6 +268,8 @@ svm_model = function(view_data, target, seed, approx = TRUE,
   whole.model <- do.call(kernlab::ksvm, algo.arguments.wm)
   
   importances <- (t(whole.model@coef) %*% whole.model@xmatrix)[1,]
+  # fix for bypass intra
+  if (is.null(names(importances))) importances <- c("no.var" = 0)
   
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)
@@ -303,8 +282,6 @@ svm_model = function(view_data, target, seed, approx = TRUE,
 gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
   
   ellipsis.args <- list(...)
-  
-  if ("k" %in% ellipsis.args) k <- ellipsis.args$k
   
   folds <- withr::with_seed(
     seed,
@@ -384,16 +361,9 @@ gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
 }
 
 #' @export
-nn_model = function(view_data, target, seed, approx = TRUE, 
-                         approx.frac = 0.6, k = 10, ...) {
+mlp_model = function(view_data, target, seed, approx = 0.6, k = 10, ...) {
   
   ellipsis.args <- list(...)
-  
-  if ("k" %in% ellipsis.args) k <- ellipsis.args["k"]
-  if ("approx" %in% ellipsis.args) frac <- ellipsis.args["approx"]
-  if ("approx.frac" %in% ellipsis.args) approx.frac <- ellipsis.args["approx.frac"]
-  
-  #print(paste(k, approx, approx.frac))
   
   folds <- withr::with_seed(
     seed,
@@ -410,13 +380,12 @@ nn_model = function(view_data, target, seed, approx = TRUE,
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
     
     # subsampling to reduce the computational cost
-    if (approx) in.fold <- in.fold[sample(1:length(in.fold), 
-                                          length(in.fold)*approx.frac)]
+    in.fold <- in.fold[sample(1:length(in.fold), length(in.fold)*approx)]
     
-    X_train <- X[in.fold, ]
+    X_train <- X[in.fold, ] %>% as.matrix
     Y_train <- Y[in.fold]
     
-    X_test <- X[holdout, ]
+    X_test <- X[holdout, ] %>% as.matrix
     Y_test <- Y[holdout]
     
     algo.arguments <- list(
@@ -448,14 +417,18 @@ nn_model = function(view_data, target, seed, approx = TRUE,
   
   whole.model <- do.call(RSNNS::mlp, algo.arguments.wm)
   
-  predictor <- iml::Predictor$new(
-    model = whole.model, 
-    data = as.data.frame(X), 
-    y = Y)
-  
-  imp <- iml::FeatureImp$new(predictor, loss = "mse")$results
-  importances <- imp$importance
-  names(importances) <- imp$feature
+  # fix for bypass intra (or in general if there is only a single predictor)
+  if (ncol(X) == 1) {importances <- c("no.var" = 0)
+  } else {
+    predictor <- iml::Predictor$new(
+      model = whole.model, 
+      data = as.data.frame(X), 
+      y = Y)
+    
+    imp <- iml::FeatureImp$new(predictor, loss = "mse")$results
+    importances <- imp$importance
+    names(importances) <- imp$feature
+  }
   
   list(unbiased.predictions = holdout.predictions, 
        importances = importances)

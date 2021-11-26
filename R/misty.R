@@ -46,20 +46,7 @@ dplyr::`%>%`
 #'     and coefficient files in the \code{results.folder}. Consider setting to
 #'     \code{TRUE} when rerunning a workflow with different \code{target.subset}
 #'     parameters.
-#' @param method a string indicating whether to use bagging "bag" or cross-
-#' valdiation to train the view-specific models and to get unbiased predictions
-#' for the linear meta model
-#' @param learner a string indicating which ML model to use to model the 
-#' views, possible values are "ranger" for random forest, "lm" for linear
-#' model, "linearSVM" for support vector machine with linear kernel, and
-#' "earth" for multivariate adaptive regression splines.
-#' @param n.vars number indicating how many variables should be used for 
-#' training the view-specific models if \code{method = "bag"}. For each base
-#' learner a sample of size \code{n.vars} from the predictors is taken. 
-#' If \code{learner = "ranger"} \code{n.vars} corresponds to \code{mtry}, 
-#' meaning the number of variables that are considered at each split.
-#' @param n.learners number indicating how many learners should be used for 
-#' the bagging model, only relevant if \code{method = "bag"}
+#' @param model.function a function which is used to model each view
 #' @param ... all additional parameters are passed to the chosen ML model for
 #' training the view-specific models 
 #'
@@ -90,13 +77,13 @@ dplyr::`%>%`
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
                       cached = FALSE, append = FALSE, 
-                      model.function = ranger_model,
+                      model.function = random_forest_model,
                       ...) {
   
   model.name <- as.character(rlang::enexpr(model.function))
   
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
-
+  
   if (!dir.exists(normalized.results.folder)) {
     dir.create(normalized.results.folder, recursive = TRUE)
   }
