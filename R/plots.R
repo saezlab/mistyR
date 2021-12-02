@@ -413,8 +413,11 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
     msg = "The predictor and target markers in the view must match."
   )
 
-  assertthat::assert_that(requireNamespace("igraph", quietly = TRUE),
-    msg = "The package igraph is required to calculate the interaction communities."
+  assertthat::assert_that(requireNamespace("igraph",
+    versionCheck = list(op = ">=", version = "1.2.7"),
+    quietly = TRUE
+  ),
+  msg = "The package igraph (>= 1.2.7) is required to calculate the interaction communities."
   )
 
   A <- view.wide %>%
@@ -430,7 +433,7 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
     igraph::set.vertex.attribute("name", value = names(igraph::V(.))) %>%
     igraph::delete.vertices(which(igraph::degree(.) == 0))
 
-  C <- igraph::cluster_louvain(G)
+  C <- igraph::cluster_leiden(G)
 
   layout <- igraph::layout_with_fr(G)
 
