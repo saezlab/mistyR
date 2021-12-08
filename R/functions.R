@@ -57,6 +57,10 @@ random_forest_model <- function(view_data, target, seed, ...) {
 bagged_mars_model <- function(view_data, target, seed, 
                                n.bags = 50, ...) {
   
+  assertthat::assert_that(requireNamespace("earth", quietly = TRUE),
+    msg = "The package earth is required to use mars"
+  )
+  
   ellipsis.args <- list(...)
 
   # generate the bags
@@ -117,6 +121,10 @@ bagged_mars_model <- function(view_data, target, seed,
 #' 
 #' @export
 mars_model = function(view_data, target, seed, k = 10, ...) {
+  
+  assertthat::assert_that(requireNamespace("earth", quietly = TRUE),
+    msg = "The package earth is required to use mars"
+  )
   
   ellipsis.args <- list(...)
   
@@ -217,6 +225,10 @@ linear_model = function(view_data, target, seed, k = 10, ...) {
 #' @export
 svm_model = function(view_data, target, seed, approx = 0.4, k = 10, ...) {
   
+  assertthat::assert_that(requireNamespace("kernlab", quietly = TRUE),
+    msg = "The package kernlab is required to use linear SVM"
+  )
+  
   ellipsis.args <- list(...)
   
   folds <- withr::with_seed(
@@ -280,6 +292,10 @@ svm_model = function(view_data, target, seed, approx = 0.4, k = 10, ...) {
 #' 
 #' @export
 gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
+  
+  assertthat::assert_that(requireNamespace("xgboost", quietly = TRUE),
+    msg = "The package xgboost is required to use gradient boosting"
+  )
   
   ellipsis.args <- list(...)
   
@@ -362,6 +378,10 @@ gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
 
 #' @export
 mlp_model = function(view_data, target, seed, approx = 0.6, k = 10, ...) {
+  
+  assertthat::assert_that(requireNamespace("RSNNS", quietly = TRUE),
+    msg = "The package RSNNS is required to use mlp"
+  )
   
   ellipsis.args <- list(...)
   
