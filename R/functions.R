@@ -120,7 +120,7 @@ bagged_mars_model <- function(view_data, target, seed,
 #' Bagged MARS
 #' 
 #' @export
-mars_model = function(view_data, target, seed, k = 10, ...) {
+mars_model = function(view_data, target, seed, approx = 1.0, k = 10, ...) {
   
   assertthat::assert_that(requireNamespace("earth", quietly = TRUE),
     msg = "The package earth is required to use mars"
@@ -136,6 +136,9 @@ mars_model = function(view_data, target, seed, k = 10, ...) {
   holdout.predictions <- purrr::map_dfr(folds, function(holdout) {
     
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
+    
+    # subsampling to reduce the computational cost
+    if (approx != 1) in.fold <- in.fold[sample(1:length(in.fold), length(in.fold)*approx)]
     
     train <- view_data[in.fold, ]
     test <- view_data[holdout, ]
@@ -241,8 +244,7 @@ svm_model = function(view_data, target, seed, approx = 0.4, k = 10, ...) {
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
     
     # subsampling to reduce the computational cost
-    if (approx) in.fold <- in.fold[sample(1:length(in.fold), 
-                                          length(in.fold)*approx)]
+    if (approx != 1) in.fold <- in.fold[sample(1:length(in.fold), length(in.fold)*approx)]
     
     algo.arguments <- list(
       x = stats::as.formula(paste0(target, " ~ .")),
@@ -400,7 +402,7 @@ mlp_model = function(view_data, target, seed, approx = 0.6, k = 10, ...) {
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
     
     # subsampling to reduce the computational cost
-    in.fold <- in.fold[sample(1:length(in.fold), length(in.fold)*approx)]
+    if (approx != 1) in.fold <- in.fold[sample(1:length(in.fold), length(in.fold)*approx)]
     
     X_train <- X[in.fold, ] %>% as.matrix
     Y_train <- Y[in.fold]
