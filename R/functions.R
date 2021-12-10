@@ -322,9 +322,7 @@ gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
       booster = "gbtree",
       nrounds = 10,
       verbose = 0,
-      eta = 0.3, 
       objective = "reg:squarederror",
-      max_depth = 6, 
       nthread = 1
     )
     
@@ -350,9 +348,7 @@ gradient_boosting_model = function(view_data, target, seed, k = 10, ...) {
     booster = "gbtree",
     nrounds = 10,
     verbose = 0, 
-    eta = 0.3, 
     objective = "reg:squarederror",
-    max_depth = 6, 
     nthread = 1
   )
   
