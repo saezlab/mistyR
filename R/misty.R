@@ -181,13 +181,18 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     combined.views <- target.model[["meta.model"]]
 
-    model.summary <- summary(combined.views)
+    model.lm <- is(combined.views, "lm")
 
     # coefficient values and p-values
-    # WARNING: hardcoded column index
     coeff <- c(
-      if (bypass.intra) 0, stats::coef(combined.views),
-      if (bypass.intra) 1, model.summary$coefficients[, 4]
+      if (bypass.intra) 0,
+      stats::coef(combined.views),
+      if (bypass.intra) 1 else if (!model.lm) NA,
+      if (model.lm) {
+        summary(combined.views)$coefficients[, 4]
+      } else {
+        ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+      }
     )
 
     current.lock <- filelock::lock(coef.lock)
