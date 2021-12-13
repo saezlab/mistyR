@@ -75,7 +75,8 @@ build_model <- function(views, target, model.function, model.name,
         
         # Build model
         model.view <- model.function(view_data = transformed.view.data,
-                                     target = target, seed = seed, ...)
+                                     target = target, seed = seed#, ...
+                                     )
         
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)

@@ -246,7 +246,7 @@ test_that("k for cv , n.bags for bagging can be changed and approx works", {
   start <- Sys.time()
   suppressWarnings(
     misty.test <- run_misty(misty.views, model.function = mars_model,
-                            k = 10)
+                            k = 10, approx = 0.8)
   )
   end <- Sys.time()
   first.run = end - start
@@ -254,7 +254,7 @@ test_that("k for cv , n.bags for bagging can be changed and approx works", {
   start <- Sys.time()
   suppressWarnings(
     misty.test <- run_misty(misty.views, model.function = mars_model, 
-                            k = 25)
+                            k = 25, approx = 1)
   )
   end <- Sys.time()
   second.run = end - start
