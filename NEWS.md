@@ -1,3 +1,8 @@
+# mistyR 1.3.x
+
+- Switched from Louvain to Leiden algorithm for community detection (requires igraph >= 1.2.7)
+- The metamodel is now build by ridge regression. Intercept p-values are not calculated, the values are set to NA for backwards compatibility.
+
 # mistyR 1.2.1
 
 - Fixed a separator issue in results aggregation and signature generation that might cause issues with variable names containing "_".
