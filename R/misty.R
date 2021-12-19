@@ -200,6 +200,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       all_views <- views %>% rlist::list.remove(c("misty.uniqueid")) %>% names
       not_included_views <- all_views[!(all_views %in% included_views)]
       names(not_included_views) <- not_included_views
+    } else {
+      not_included_views <- c()
     }
     
     # coefficient values and p-values
