@@ -75,8 +75,7 @@ build_model <- function(views, target, model.function, model.name,
         
         # Build model
         model.view <- model.function(view_data = transformed.view.data,
-                                     target = target, seed = seed#, ...
-                                     )
+                                     target = target, seed = seed, ...)
         
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
@@ -95,11 +94,20 @@ build_model <- function(views, target, model.function, model.name,
   formula <- stats::as.formula(
     ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
   )
-  combined.views <- stats::lm(
-    formula,
-    oob.predictions
-  )
-  
+
+  if (ncol(oob.predictions) <= 2) {
+    combined.views <- stats::lm(
+      formula,
+      oob.predictions
+    )
+  } else {
+    combined.views <- ridge::linearRidge(formula,
+      oob.predictions,
+      lambda = "automatic",
+      scaling = "corrForm"
+    )
+  }
+
   # cv performance estimate
   test.folds <- withr::with_seed(
     seed,
@@ -108,19 +116,26 @@ build_model <- function(views, target, model.function, model.name,
   
   intra.view.only <-
     model.views[["intraview"]]$unbiased.predictions$prediction %>%
-    tibble::enframe(name = NULL) %>%
+    tibble::enframe(name = NULL, value = "intraview") %>%
     dplyr::mutate(!!target := target.vector)
   
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- stats::lm(
       formula,
-      intra.view.only %>% dplyr::slice(-test.fold)
+      intra.view.only %>% dplyr::slice(-test.fold),
     )
-    meta.multi <- stats::lm(
-      formula,
-      oob.predictions %>% dplyr::slice(-test.fold)
-    )
-    
+
+    if (identical(oob.predictions, intra.view.only)) {
+      meta.multi <- meta.intra
+    } else {
+      meta.multi <- ridge::linearRidge(
+        formula,
+        oob.predictions %>% dplyr::slice(-test.fold),
+        lambda = "automatic",
+        scaling = "corrForm"
+      )
+    }
+
     intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
       dplyr::slice(test.fold))
     
@@ -142,8 +157,8 @@ build_model <- function(views, target, model.function, model.name,
     multi.R2 <- ifelse(multi.R2 == 0, 1, multi.R2)
     
     tibble::tibble(
-      intra.RMSE = intra.RMSE, intra.R2 = 100*intra.R2,
-      multi.RMSE = multi.RMSE, multi.R2 = 100*multi.R2
+      intra.RMSE = intra.RMSE, intra.R2 = 100 * intra.R2,
+      multi.RMSE = multi.RMSE, multi.R2 = 100 * multi.R2
     )
   })
   
