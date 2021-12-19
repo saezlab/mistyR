@@ -179,26 +179,37 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     NULL
   )
   message("\nTraining models")
-  targets %>% furrr::future_map_chr(function(target, ...) {
+  targets %>% furrr::future_map_chr(function(target, ...
+                                             ) {
     
-    target.model <- build_model(views = views, target = target, 
+    target.model <- mistyR:::build_model(views = views, target = target, 
                                 model.function = model.function,
                                 model.name = model.name,
                                 cv.folds = cv.folds,
                                 bypass.intra = bypass.intra,
-                                seed = seed, cached = cached, ...)
+                                seed = seed, cached = cached, ...
+                                )
     
     combined.views <- target.model[["meta.model"]]
-
+    
     model.lm <- is(combined.views, "lm")
 
+    # bulky solution for the colinearity problem
+    if (model.lm) {
+      included_views <- model.summary$coefficients %>% rownames
+      all_views <- views %>% rlist::list.remove(c("misty.uniqueid")) %>% names
+      not_included_views <- all_views[!(all_views %in% included_views)]
+      names(not_included_views) <- not_included_views
+    }
+    
     # coefficient values and p-values
     coeff <- c(
       if (bypass.intra) 0,
-      stats::coef(combined.views),
+      # replace NA coefficients with 0
+      c(stats::coef(combined.views, complete=FALSE), map_dbl(not_included_views, ~ 0)),
       if (bypass.intra) 1 else if (!model.lm) NA,
       if (model.lm) {
-        summary(combined.views)$coefficients[, 4]
+        c(summary(combined.views)$coefficients[, 4], map_dbl(not_included_views, ~ 1))
       } else {
         ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
       }
@@ -274,7 +285,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     )
 
     current.lock <- filelock::lock(perf.lock)
-    write(paste(target, paste(performance.summary, collapse = " ")),
+    # replace NaN p values with 1 (necessary?)
+    write(paste(target, paste(performance.summary %>% replace_na(1), collapse = " ")),
       file = perf.file, append = TRUE
     )
     filelock::unlock(current.lock)

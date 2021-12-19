@@ -75,7 +75,8 @@ build_model <- function(views, target, model.function, model.name,
         
         # Build model
         model.view <- model.function(view_data = transformed.view.data,
-                                     target = target, seed = seed, ...)
+                                     target = target, seed = seed, ...
+                                     )
         
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
@@ -94,13 +95,17 @@ build_model <- function(views, target, model.function, model.name,
   formula <- stats::as.formula(
     ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
   )
-
-  if (ncol(oob.predictions) <= 2) {
+  
+  # added 2. line to prevent "Error in svd(X) : infinite or missing values in 'x'"
+  # occuring in ridge::linearRidge if one column has only 1 unique value
+  if (ncol(oob.predictions) <= 2 | 
+      sum(map_lgl(oob.predictions, ~ length(unique(.x)) < 2)) > 0) {
     combined.views <- stats::lm(
       formula,
       oob.predictions
     )
   } else {
+    
     combined.views <- ridge::linearRidge(formula,
       oob.predictions,
       lambda = "automatic",
@@ -127,7 +132,12 @@ build_model <- function(views, target, model.function, model.name,
 
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
-    } else {
+      } else if (sum(map_lgl(oob.predictions, ~ length(unique(.x)) < 2)) > 0) { 
+        meta.multi <- stats::lm(
+          formula,
+          oob.predictions %>% dplyr::slice(-test.fold),
+        )
+      } else {
       meta.multi <- ridge::linearRidge(
         formula,
         oob.predictions %>% dplyr::slice(-test.fold),
