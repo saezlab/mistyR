@@ -186,10 +186,19 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     # coefficient values and p-values
     coeff <- c(
       if (bypass.intra) 0,
-      stats::coef(combined.views),
+      stats::coef(combined.views) %>% tidyr::replace_na(0),
       if (bypass.intra) 1 else if (!model.lm) NA,
       if (model.lm) {
-        summary(combined.views)$coefficients[, 4]
+        #fix for missing pvals
+        combined.views.summary <- summary(combined.views)
+        data.frame(c = stats::coef(combined.views)) %>% 
+          tibble::rownames_to_column("views") %>% 
+          dplyr::left_join(
+            data.frame(p = stats::coef(combined.views.summary)[,4]) %>% 
+              tibble::rownames_to_column("views"), 
+            by = "views") %>% 
+          dplyr::pull(p) %>% 
+          tidyr::replace_na(0)
       } else {
         ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
       }

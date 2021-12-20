@@ -87,12 +87,20 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
       return(model.view)
     })
 
+  jit <- withr::with_seed(
+    seed,
+    rnorm(length(target.vector), 0, .Machine$double.eps)
+  )
+
   # make oob predictions
   oob.predictions <- model.views %>%
     purrr::map(~ .x$predictions) %>%
     rlist::list.cbind() %>%
     tibble::as_tibble(.name_repair = make.names) %>%
-    dplyr::mutate(!!target := target.vector)
+    dplyr::mutate(
+      dplyr::across(where(~ sd(.x) == 0), ~ .x + jit),
+      !!target := target.vector
+    )
 
   # train lm on above, if bypass.intra set intercept to 0
   formula <- stats::as.formula(
