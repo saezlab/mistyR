@@ -193,25 +193,23 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     combined.views <- target.model[["meta.model"]]
     
     model.lm <- is(combined.views, "lm")
-
-    # bulky solution for the colinearity problem
-    if (model.lm) {
-      included_views <- model.summary$coefficients %>% rownames
-      all_views <- views %>% rlist::list.remove(c("misty.uniqueid")) %>% names
-      not_included_views <- all_views[!(all_views %in% included_views)]
-      names(not_included_views) <- not_included_views
-    } else {
-      not_included_views <- c()
-    }
     
     # coefficient values and p-values
     coeff <- c(
       if (bypass.intra) 0,
-      # replace NA coefficients with 0
-      c(stats::coef(combined.views, complete=FALSE), map_dbl(not_included_views, ~ 0)),
+      stats::coef(combined.views) %>% tidyr::replace_na(0),
       if (bypass.intra) 1 else if (!model.lm) NA,
       if (model.lm) {
-        c(summary(combined.views)$coefficients[, 4], map_dbl(not_included_views, ~ 1))
+        #fix for missing pvals
+        combined.views.summary <- summary(combined.views)
+        data.frame(c = stats::coef(combined.views)) %>% 
+          tibble::rownames_to_column("views") %>% 
+          dplyr::left_join(
+            data.frame(p = stats::coef(combined.views.summary)[,4]) %>% 
+              tibble::rownames_to_column("views"), 
+            by = "views") %>% 
+          dplyr::pull(p) %>% 
+          tidyr::replace_na(0)
       } else {
         ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
       }
@@ -244,8 +242,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       }
     )
 
-    # performance
-    if (sum(target.model[["performance.estimate"]] < 0) > 0) {
+    # performance, warning added na.rm here!
+    if (sum(target.model[["performance.estimate"]] < 0, na.rm = TRUE) > 0) {
       warning.message <-
         paste(
           "Negative performance detected and replaced with 0 for target",
@@ -255,7 +253,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     }
 
     performance.estimate <- target.model[["performance.estimate"]] %>%
-      dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0))
+      dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0)) 
+    # added this line because of NA issue
+    #%>% replace(is.na(.), 0)
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(stats::t.test(performance.estimate %>%
@@ -294,6 +294,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     filelock::unlock(current.lock)
 
     return(target)
-  }, ..., .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
+  }, ..., 
+  .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
   return(normalized.results.folder)
 }

@@ -85,11 +85,21 @@ build_model <- function(views, target, model.function, model.name,
       
       return(model.view)
     })
-  
-  # get oob predictions
+
+  jit <- withr::with_seed(
+    seed,
+    rnorm(length(target.vector), 0, .Machine$double.eps)
+  )
+
+  # make oob predictions
   oob.predictions <- model.views %>%
-    purrr::map_dfc(~ .x$unbiased.predictions$prediction) %>%
-    dplyr::mutate(!!target := target.vector)
+    purrr::map(~ .x$unbiased.predictions$prediction)%>%
+    rlist::list.cbind() %>%
+    tibble::as_tibble(.name_repair = make.names) %>%
+    dplyr::mutate(
+      dplyr::across(where(~ sd(.x) == 0), ~ .x + jit),
+      !!target := target.vector
+    )
 
   # train lm on above, if bypass.intra set intercept to 0
   formula <- stats::as.formula(
@@ -98,18 +108,18 @@ build_model <- function(views, target, model.function, model.name,
   
   # added 2. line to prevent "Error in svd(X) : infinite or missing values in 'x'"
   # occuring in ridge::linearRidge if one column has only 1 unique value
-  if (ncol(oob.predictions) <= 2 | 
-      sum(map_lgl(oob.predictions, ~ length(unique(.x)) < 2)) > 0) {
+  #if (ncol(oob.predictions) <= 2 | 
+  #    sum(map_lgl(oob.predictions, ~ length(unique(.x)) < 2)) > 0) {
+  if (ncol(oob.predictions) <= 2) {
     combined.views <- stats::lm(
       formula,
       oob.predictions
     )
   } else {
-    
     combined.views <- ridge::linearRidge(formula,
-      oob.predictions,
-      lambda = "automatic",
-      scaling = "corrForm"
+       oob.predictions,
+       lambda = "automatic",
+       scaling = "corrForm"
     )
   }
 
@@ -129,15 +139,10 @@ build_model <- function(views, target, model.function, model.name,
       formula,
       intra.view.only %>% dplyr::slice(-test.fold),
     )
-
+    
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
-      } else if (sum(map_lgl(oob.predictions, ~ length(unique(.x)) < 2)) > 0) { 
-        meta.multi <- stats::lm(
-          formula,
-          oob.predictions %>% dplyr::slice(-test.fold),
-        )
-      } else {
+    } else {
       meta.multi <- ridge::linearRidge(
         formula,
         oob.predictions %>% dplyr::slice(-test.fold),
@@ -145,26 +150,21 @@ build_model <- function(views, target, model.function, model.name,
         scaling = "corrForm"
       )
     }
-
-    intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
-      dplyr::slice(test.fold))
     
+    intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
+                                         dplyr::slice(test.fold))
     multi.view.prediction <- stats::predict(meta.multi, oob.predictions %>%
-      dplyr::slice(test.fold))
+                                              dplyr::slice(test.fold))
     
     intra.RMSE <- caret::RMSE(intra.prediction, target.vector[test.fold])
     intra.R2 <- caret::R2(intra.prediction, target.vector[test.fold],
-      formula = "traditional"
+                          formula = "traditional"
     )
-    # necessary? if target and prediction are all 0 we get NaN otherwise.
-    intra.R2 <- ifelse(intra.R2 == 0, 1, intra.R2)
     
     multi.RMSE <- caret::RMSE(multi.view.prediction, target.vector[test.fold])
     multi.R2 <- caret::R2(multi.view.prediction, target.vector[test.fold],
-      formula = "traditional"
+                          formula = "traditional"
     )
-    # necessary? if target and prediction are all 0 we get NaN otherwise.
-    multi.R2 <- ifelse(multi.R2 == 0, 1, multi.R2)
     
     tibble::tibble(
       intra.RMSE = intra.RMSE, intra.R2 = 100 * intra.R2,
@@ -174,7 +174,6 @@ build_model <- function(views, target, model.function, model.name,
   
   final.model <- list(
     meta.model = combined.views,
-    # not sure whether this is implemented the right way
     model.importances = purrr::map(model.views, ~ .x$importances),
     performance.estimate = performance.estimate
   )
