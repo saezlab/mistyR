@@ -495,6 +495,11 @@ add_paraview <- function(current.views, positions, l, zoi = 0,
           message("\nApproximating RBF matrix using the Nystrom method")
         }
 
+        assertthat::assert_that(requireNamespace("MASS", quietly = TRUE),
+          msg = "The package MASS is required to approximate the paraview using
+          the Nystrom method."
+        )
+
         # single Nystrom approximation expert, given RBF with parameter l
         s <- sort(sample.int(n = ncol(dists), size = approx))
         C <- get_weight(family, dists[, s], l, zoi)

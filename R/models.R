@@ -89,7 +89,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   jit <- withr::with_seed(
     seed,
-    rnorm(length(target.vector), 0, .Machine$double.eps)
+    stats::rnorm(length(target.vector), 0, .Machine$double.eps)
   )
 
   # make oob predictions

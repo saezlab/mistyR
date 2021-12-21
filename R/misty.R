@@ -14,6 +14,9 @@
 #' @export
 dplyr::`%>%`
 
+# allow using tidyselect where
+utils::globalVariables("where")
+
 #' Train MISTy models
 #'
 #' Trains multi-view models for all target markers, estimates the performance,
@@ -181,7 +184,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     combined.views <- target.model[["meta.model"]]
 
-    model.lm <- is(combined.views, "lm")
+    model.lm <- methods::is(combined.views, "lm")
 
     # coefficient values and p-values
     coeff <- c(
@@ -189,16 +192,17 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       stats::coef(combined.views) %>% tidyr::replace_na(0),
       if (bypass.intra) 1 else if (!model.lm) NA,
       if (model.lm) {
-        #fix for missing pvals
+        # fix for missing pvals
         combined.views.summary <- summary(combined.views)
-        data.frame(c = stats::coef(combined.views)) %>% 
-          tibble::rownames_to_column("views") %>% 
+        data.frame(c = stats::coef(combined.views)) %>%
+          tibble::rownames_to_column("views") %>%
           dplyr::left_join(
-            data.frame(p = stats::coef(combined.views.summary)[,4]) %>% 
-              tibble::rownames_to_column("views"), 
-            by = "views") %>% 
-          dplyr::pull(p) %>% 
-          tidyr::replace_na(0)
+            data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
+              tibble::rownames_to_column("views"),
+            by = "views"
+          ) %>%
+          dplyr::pull(.data$p) %>%
+          tidyr::replace_na(1)
       } else {
         ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
       }
