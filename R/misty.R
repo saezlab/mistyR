@@ -292,7 +292,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     current.lock <- filelock::lock(perf.lock)
     # replace NaN p values with 1 (necessary?)
-    write(paste(target, paste(performance.summary %>% replace_na(1), collapse = " ")),
+    write(paste(target, paste(performance.summary %>% tidyr::replace_na(1), collapse = " ")),
       file = perf.file, append = TRUE
     )
     filelock::unlock(current.lock)

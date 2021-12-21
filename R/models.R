@@ -4,19 +4,11 @@
 
 #' Train a multi-view model for a single target
 #'
-#' Trains individual models for each views. The models can either be 
-#' ensemble models based on bagging (\item{\var{method}} = "bag") with the following base learners: 
-#' decision trees ("ranger"), linear model ("lm"), support vector
-#' machine with linear kernel ("linearSVM"), or multivariate adaptive
-#' regression splines ("earth"). Or the models can be based on k-fold 
-#' cross validation (\item{\var{method}} = "cv"), at the moment the same
-#' models as for bagging are implemented.
-#' 
-#' The unbiased predictions from the view-specfic models, meaning the out-of-bag
-#' or holdout predictions are then used to train linear meta model whose
-#' overall performance is estimated by cross-validation.
+#' Trains individual models for each views. Each view is modelled by the 
+#' function supplied via \code{mode.function} which is passed down by
+#' \code{run_misty()}.
 #'
-#' Default model is \code{\link[ranger]{ranger}()} for training the
+#' The dfault model is based on \code{\link[ranger]{ranger}()} for training the
 #' view-specific models with the following parameters: \code{num.trees = 100}, 
 #' \code{importance = "impurity"}, \code{num.threads = 1}, \code{seed = seed}.
 #'

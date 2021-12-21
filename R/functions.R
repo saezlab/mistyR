@@ -305,7 +305,7 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
 
     # subsampling to reduce the computational cost
-    if (approx != 1) in.fold <- in.fold[sample(1:length(in.fold), length(in.fold) * approx)]
+    if (approx != 1) in.fold <- sample(in.fold, length(in.fold) * approx)
 
     train <- view_data[in.fold, ]
     test <- view_data[holdout, ]
@@ -324,7 +324,7 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
 
     label.hat <- predict(model, test)
 
-    tibble::tibble(index = holdout, prediction = label.hat)
+    tibble::tibble(index = holdout, prediction = label.hat[,1])
   }) %>% dplyr::arrange(index)
 
   algo.arguments.wm <- list(
@@ -342,7 +342,7 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
   importances <- earth::evimp(whole.model, trim = FALSE, sqrt. = TRUE)[, 6]
   names(importances) <- stringr::str_remove(names(importances), "-unused")
   # fix for bypass intra
-  if (is.na(names(importances))) importances <- c("no.var" = 0)
+  if (all(is.na(names(importances)))) importances <- c("no.var" = 0)
 
   list(
     unbiased.predictions = holdout.predictions,
@@ -438,7 +438,7 @@ svm_model <- function(view_data, target, seed, approx = 0.4, k = 10, ...) {
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
 
     # subsampling to reduce the computational cost
-    if (approx != 1) in.fold <- in.fold[sample(1:length(in.fold), length(in.fold) * approx)]
+    if (approx != 1) in.fold <- sample(in.fold, length(in.fold) * approx)
 
     algo.arguments <- list(
       x = stats::as.formula(paste0(target, " ~ .")),
@@ -527,7 +527,7 @@ mlp_model <- function(view_data, target, seed, approx = 0.6, k = 10, ...) {
     in.fold <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% holdout)]
 
     # subsampling to reduce the computational cost
-    if (approx != 1) in.fold <- in.fold[sample(1:length(in.fold), length(in.fold) * approx)]
+    if (approx != 1) in.fold <- sample(in.fold, length(in.fold) * approx)
 
     X_train <- X[in.fold, ] %>% as.matrix()
     Y_train <- Y[in.fold]
@@ -549,7 +549,7 @@ mlp_model <- function(view_data, target, seed, approx = 0.6, k = 10, ...) {
 
     label.hat <- predict(model, X_test)
 
-    tibble::tibble(index = holdout, prediction = label.hat)
+    tibble::tibble(index = holdout, prediction = label.hat[,1])
   }) %>% dplyr::arrange(index)
 
   algo.arguments.wm <- list(
