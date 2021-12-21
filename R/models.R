@@ -93,14 +93,18 @@ build_model <- function(views, target, model.function, model.name,
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    purrr::map(~ .x$unbiased.predictions$prediction)%>%
+    purrr::map(~ .x$unbiased.predictions$prediction) %>%
     rlist::list.cbind() %>%
     tibble::as_tibble(.name_repair = make.names) %>%
     dplyr::mutate(
-      dplyr::across(where(~ sd(.x) == 0), ~ .x + jit),
+      # add jitter term not only if sd(.x) == 0, but also if there are fewer 
+      # unique values than cv.folds (more strict)
+      # added this in case sd != 0, but there mostly 0, and say ten 1s, 
+      # then chances are hight than one cv folds below will only contain 0s
+      dplyr::across(where(~ length(unique(.x)) < cv.folds), ~ .x + jit),
       !!target := target.vector
     )
-
+  
   # train lm on above, if bypass.intra set intercept to 0
   formula <- stats::as.formula(
     ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
@@ -143,6 +147,7 @@ build_model <- function(views, target, model.function, model.name,
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
     } else {
+      
       meta.multi <- ridge::linearRidge(
         formula,
         oob.predictions %>% dplyr::slice(-test.fold),
