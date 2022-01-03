@@ -222,7 +222,9 @@ bagged_mars_model <- function(view_data, target, seed,
     algo.arguments <- list(
       formula = stats::as.formula(paste0(target, " ~ .")),
       data = view_data[bag, ],
-      degree = 2
+      degree = 2,
+      fast.k = 5,
+      thresh = 0.01
     )
 
     if (!(length(ellipsis.args) == 0)) {
@@ -313,7 +315,9 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
     algo.arguments <- list(
       formula = stats::as.formula(paste0(target, " ~ .")),
       data = train,
-      degree = 2
+      degree = 2,
+      fast.k = 5,   # reducing fast.k and
+      thresh = 0.01 # increasing thresh to increase the performance
     )
 
     if (!(length(ellipsis.args) == 0)) {
@@ -330,7 +334,9 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
   algo.arguments.wm <- list(
     formula = stats::as.formula(paste0(target, " ~ .")),
     data = view_data,
-    degree = 2
+    degree = 2,
+    fast.k = 5,
+    thresh = 0.01
   )
 
   if (!(length(ellipsis.args) == 0)) {
@@ -538,7 +544,8 @@ mlp_model <- function(view_data, target, seed, approx = 0.6, k = 10, ...) {
     algo.arguments <- list(
       x = X_train,
       y = Y_train,
-      size = c(10)
+      size = c(10),
+      learnFunc = "BackpropBatch"
     )
 
     if (!(length(ellipsis.args) == 0)) {
@@ -555,7 +562,8 @@ mlp_model <- function(view_data, target, seed, approx = 0.6, k = 10, ...) {
   algo.arguments.wm <- list(
     x = X,
     y = Y,
-    size = c(10)
+    size = c(10),
+    learnFunc = "BackpropBatch"
   )
 
   if (!(length(ellipsis.args) == 0)) {
