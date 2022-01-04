@@ -161,12 +161,12 @@ gradient_boosting_model <- function(view_data, target, seed, k = 10, ...) {
 
   whole.model <- do.call(xgboost::xgboost, algo.arguments.wm)
 
-  # if bypass intra is true, we need to catch the error
+  # if bypass intra is true, we need to catch the error due to "no.var" = 0
   importances <- tryCatch(
     {
       importance_matrix <- xgboost::xgb.importance(model = whole.model)
-      importances <- unlist(importance_matrix[, "Gain"])
-      names(importances) <- unlist(importance_matrix[, "Feature"])
+      importances <- unlist(importance_matrix[, 2])
+      names(importances) <- unlist(importance_matrix[, 1])
       importances
     },
     error = function(cond) {
