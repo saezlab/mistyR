@@ -198,7 +198,7 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
     ) %>%
     dplyr::pull(.data$target)
 
-  
+
   plot.data <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == !!view, .data$Target %in% targets)
 

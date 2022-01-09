@@ -31,8 +31,7 @@ models will be trained for markers in the intraview.}
 model using the intraview data (see Details).}
 
 \item{cv.folds}{number of cross-validation folds to consider for estimating
-the performance of the multi-view models and the view-specific models
-if \code{method = "cv"}}
+the performance of the multi-view models}
 
 \item{cached}{a \code{logical} indicating whether to cache the trained models
 and to reuse previously cached ones if they already exist for this sample.}
@@ -42,7 +41,11 @@ and coefficient files in the \code{results.folder}. Consider setting to
 \code{TRUE} when rerunning a workflow with different \code{target.subset}
 parameters.}
 
-\item{model.function}{a function which is used to model each view}
+\item{model.function}{a function which is used to model each view, default
+model is \code{random_forest_model}. Other models included in MISTy are
+\code{gradient_boosting_model}, \code{bagged_mars_model},
+\code{mars_model}, \code{linear_model},
+\code{svm_model}, \code{mlp_model}}
 
 \item{...}{all additional parameters are passed to the chosen ML model for
 training the view-specific models}

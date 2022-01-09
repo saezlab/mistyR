@@ -133,7 +133,6 @@ build_model <- function(views, target, model.function, model.name,
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
     } else {
-
       meta.multi <- ridge::linearRidge(
         formula,
         oob.predictions %>% dplyr::slice(-test.fold),
