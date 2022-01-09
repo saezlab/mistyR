@@ -1,6 +1,7 @@
 # MISTy runner
 # Copyleft (ɔ) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
+
 #' @importFrom rlang !! := .data
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("mistyR is able to run computationally intensive functions
@@ -120,12 +121,12 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     msg = paste(
       "Targets",
       paste(names(which(target.var == 0)),
-            collapse = ", "
+        collapse = ", "
       ),
       "have zero variance."
-    ) 
+    )
   )
-  
+
   target.unique <- colnames(expr) %>%
     purrr::set_names() %>%
     purrr::map_int(~ length(unique(expr %>% dplyr::pull(.x))))
@@ -182,6 +183,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     "NULL" = colnames(expr),
     NULL
   )
+
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
     
@@ -298,5 +300,6 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     return(target)
   }, ..., .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
+
   return(normalized.results.folder)
 }

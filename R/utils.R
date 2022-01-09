@@ -56,7 +56,7 @@ aggregate_results <- function(improvements, contributions, importances) {
       nsamples = dplyr::n(), .groups = "drop"
     ) %>%
     tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
-  
+
   return(list(
     improvements.stats = improvements.stats,
     contributions.stats = contributions.stats,
@@ -152,9 +152,9 @@ collect_results <- function(folders) {
   message("\nCollecting contributions")
   contributions <- samples %>% furrr::future_map_dfr(function(sample) {
     coefficients <- readr::read_table(paste0(sample, .Platform$file.sep, "coefficients.txt"),
-                                      na = c("", "NA", "NaN"), col_types = readr::cols()
+      na = c("", "NA", "NaN"), col_types = readr::cols()
     ) %>% dplyr::distinct()
-    
+
     coefficients %>%
       dplyr::mutate(sample = sample, .after = "target") %>%
       tidyr::pivot_longer(cols = -c(.data$sample, .data$target), names_to = "view")
@@ -184,7 +184,7 @@ collect_results <- function(folders) {
           ) %>%
             dplyr::distinct() %>%
             dplyr::rename(feature = target))
-          
+
           features <- all.importances %>%
             purrr::map(~ .x$feature) %>%
             unlist() %>%
@@ -264,7 +264,7 @@ aggregate_results_subset <- function(misty.results, folders) {
   # check if folders are in names of misty.results
   assertthat::assert_that(all(normalized.folders %in%
     (misty.results$importances %>% dplyr::pull(.data$sample))),
-    msg = "The provided results list doesn't contain information about some of
+  msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
 
