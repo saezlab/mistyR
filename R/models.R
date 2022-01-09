@@ -4,11 +4,11 @@
 
 #' Train a multi-view model for a single target
 #'
-#' Trains individual models for each views. Each view is modelled by the 
-#' function supplied via \code{mode.function} which is passed down by
+#' Trains individual models for each view. Each view is modeled by the 
+#' function supplied via \code{model.function} which is passed down by
 #' \code{run_misty()}.
 #'
-#' The dfault model is based on \code{\link[ranger]{ranger}()} for training the
+#' The default model is based on \code{\link[ranger]{ranger}()} for training the
 #' view-specific models with the following parameters: \code{num.trees = 100}, 
 #' \code{importance = "impurity"}, \code{num.threads = 1}, \code{seed = seed}.
 #'
@@ -27,13 +27,13 @@ build_model <- function(views, target, model.function, model.name,
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
   ))
-  
+
   if (cached && !dir.exists(cache.location)) {
     dir.create(cache.location, recursive = TRUE, showWarnings = TRUE)
   }
-  
+
   expr <- views[["intraview"]][["data"]]
-  
+
   target.vector <- expr %>% dplyr::pull(target)
 
   ellipsis.args <- list(...)
@@ -67,8 +67,7 @@ build_model <- function(views, target, model.function, model.name,
         
         # Build model
         model.view <- model.function(view_data = transformed.view.data,
-                                     target = target, seed = seed, ...
-                                     )
+                                     target = target, seed = seed, ...)
         
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
@@ -91,8 +90,8 @@ build_model <- function(views, target, model.function, model.name,
     dplyr::mutate(
       # add jitter term not only if sd(.x) == 0, but also if there are fewer 
       # unique values than cv.folds (more strict)
-      # added this in case sd != 0, but there mostly 0, and say ten 1s, 
-      # then chances are hight than one cv folds below will only contain 0s
+      # added this in case sd != 0, but there are mostly 0, and say ten 1s, 
+      # then chances are high that one cv fold will only contain 0s
       dplyr::across(where(~ length(unique(.x)) < cv.folds), ~ .x + jit),
       !!target := target.vector
     )
@@ -102,10 +101,6 @@ build_model <- function(views, target, model.function, model.name,
     ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
   )
   
-  # added 2. line to prevent "Error in svd(X) : infinite or missing values in 'x'"
-  # occuring in ridge::linearRidge if one column has only 1 unique value
-  #if (ncol(oob.predictions) <= 2 | 
-  #    sum(map_lgl(oob.predictions, ~ length(unique(.x)) < 2)) > 0) {
   if (ncol(oob.predictions) <= 2) {
     combined.views <- stats::lm(
       formula,
@@ -113,9 +108,9 @@ build_model <- function(views, target, model.function, model.name,
     )
   } else {
     combined.views <- ridge::linearRidge(formula,
-       oob.predictions,
-       lambda = "automatic",
-       scaling = "corrForm"
+      oob.predictions,
+      lambda = "automatic",
+      scaling = "corrForm"
     )
   }
 
@@ -124,22 +119,22 @@ build_model <- function(views, target, model.function, model.name,
     seed,
     caret::createFolds(target.vector, k = cv.folds)
   )
-  
+
   intra.view.only <-
     model.views[["intraview"]]$unbiased.predictions$prediction %>%
     tibble::enframe(name = NULL, value = "intraview") %>%
     dplyr::mutate(!!target := target.vector)
-  
+
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- stats::lm(
       formula,
       intra.view.only %>% dplyr::slice(-test.fold),
     )
-    
+  
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
     } else {
-      
+  
       meta.multi <- ridge::linearRidge(
         formula,
         oob.predictions %>% dplyr::slice(-test.fold),
@@ -147,28 +142,28 @@ build_model <- function(views, target, model.function, model.name,
         scaling = "corrForm"
       )
     }
-    
+
     intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
-                                         dplyr::slice(test.fold))
+      dplyr::slice(test.fold))
     multi.view.prediction <- stats::predict(meta.multi, oob.predictions %>%
-                                              dplyr::slice(test.fold))
-    
+      dplyr::slice(test.fold))
+
     intra.RMSE <- caret::RMSE(intra.prediction, target.vector[test.fold])
     intra.R2 <- caret::R2(intra.prediction, target.vector[test.fold],
-                          formula = "traditional"
+      formula = "traditional"
     )
-    
+
     multi.RMSE <- caret::RMSE(multi.view.prediction, target.vector[test.fold])
     multi.R2 <- caret::R2(multi.view.prediction, target.vector[test.fold],
                           formula = "traditional"
     )
-    
+
     tibble::tibble(
       intra.RMSE = intra.RMSE, intra.R2 = 100 * intra.R2,
       multi.RMSE = multi.RMSE, multi.R2 = 100 * multi.R2
     )
   })
-  
+
   final.model <- list(
     meta.model = combined.views,
     model.importances = purrr::map(model.views, ~ .x$importances),

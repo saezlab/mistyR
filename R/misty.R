@@ -41,15 +41,18 @@ utils::globalVariables("where")
 #' @param bypass.intra a \code{logical} indicating whether to train a baseline
 #'     model using the intraview data (see Details).
 #' @param cv.folds number of cross-validation folds to consider for estimating
-#'     the performance of the multi-view models and the view-specific models
-#'     if \code{method = "cv"}
+#'     the performance of the multi-view models
 #' @param cached a \code{logical} indicating whether to cache the trained models
 #'     and to reuse previously cached ones if they already exist for this sample.
 #' @param append a \code{logical} indicating whether to append the performance
 #'     and coefficient files in the \code{results.folder}. Consider setting to
 #'     \code{TRUE} when rerunning a workflow with different \code{target.subset}
 #'     parameters.
-#' @param model.function a function which is used to model each view
+#' @param model.function a function which is used to model each view, default
+#'     model is \code{random_forest_model}. Other models included in MISTy are
+#'     \code{gradient_boosting_model}, \code{bagged_mars_model},
+#'     \code{mars_model}, \code{linear_model},
+#'     \code{svm_model}, \code{mlp_model}
 #' @param ... all additional parameters are passed to the chosen ML model for
 #' training the view-specific models 
 #'
@@ -80,13 +83,12 @@ utils::globalVariables("where")
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
                       cached = FALSE, append = FALSE, 
-                      model.function = random_forest_model,
-                      ...) {
-  
+                      model.function = random_forest_model, ...) {
+
   model.name <- as.character(rlang::enexpr(model.function))
-  
+
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
-  
+
   if (!dir.exists(normalized.results.folder)) {
     dir.create(normalized.results.folder, recursive = TRUE)
   }
@@ -121,15 +123,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
             collapse = ", "
       ),
       "have zero variance."
-    ) )
+    ) 
+  )
   
   target.unique <- colnames(expr) %>%
     purrr::set_names() %>%
     purrr::map_int(~ length(unique(expr %>% dplyr::pull(.x))))
 
-  # shouldn't we only check for this requirement if we do not bypass intra?
-  # (otherwise if we do one-hot encoding of celltypes we can only use
-  # 2 CV folds which may be suboptimal)
+  # is this check necessary or not?
   # assertthat::assert_that(all(target.unique >= cv.folds),
   #     msg = paste(
   #       "Targets",
@@ -182,16 +183,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     NULL
   )
   message("\nTraining models")
-  targets %>% furrr::future_map_chr(function(target, ...
-                                             ) {
+  targets %>% furrr::future_map_chr(function(target, ...) {
     
-    target.model <- mistyR:::build_model(views = views, target = target, 
+    target.model <- build_model(views = views, target = target, 
                                 model.function = model.function,
                                 model.name = model.name,
                                 cv.folds = cv.folds,
                                 bypass.intra = bypass.intra,
-                                seed = seed, cached = cached, ...
-                                )
+                                seed = seed, cached = cached, ...)
     
     combined.views <- target.model[["meta.model"]]
 
@@ -246,7 +245,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       }
     )
 
-    # performance, warning added na.rm here!
+    # performance, warning added na.rm = TRUE here!
     if (sum(target.model[["performance.estimate"]] < 0, na.rm = TRUE) > 0) {
       warning.message <-
         paste(
@@ -258,7 +257,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     performance.estimate <- target.model[["performance.estimate"]] %>%
       dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0)) 
-    # added this line because of NA issue
+    # helpful to guard against NA issues?
     #%>% replace(is.na(.), 0)
     performance.summary <- c(
       performance.estimate %>% colMeans(),
@@ -291,14 +290,13 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     )
 
     current.lock <- filelock::lock(perf.lock)
-    # replace NaN p values with 1 (necessary?)
+    # replace NaN p values with 1
     write(paste(target, paste(performance.summary %>% tidyr::replace_na(1), collapse = " ")),
       file = perf.file, append = TRUE
     )
     filelock::unlock(current.lock)
 
     return(target)
-  }, ..., 
-  .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
+  }, ..., .progress = TRUE, .options = furrr::furrr_options(seed = TRUE))
   return(normalized.results.folder)
 }

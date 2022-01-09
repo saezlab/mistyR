@@ -50,9 +50,9 @@ plot_improvement_stats <- function(misty.results,
   assertthat::assert_that(assertthat::not_empty(plot.data),
     msg = "Invalid selection of measure and/or trim value."
   )
-  
+
   set2.orange <- "#FC8D62"
-  
+
   results.plot <- ggplot2::ggplot(
     plot.data,
     ggplot2::aes(
@@ -69,9 +69,9 @@ plot_improvement_stats <- function(misty.results,
     ggplot2::ylab(measure) +
     ggplot2::xlab("Target") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
-  
+
   print(results.plot)
-  
+
   invisible(misty.results)
 }
 
@@ -102,11 +102,11 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
                                       "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                     )) {
   trim.measure.type <- match.arg(trim.measure)
-  
+
   assertthat::assert_that(("contributions.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
@@ -120,14 +120,14 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
       inv * .data$mean >= inv * trim
     ) %>%
     dplyr::pull(.data$target)
-  
+
   assertthat::assert_that(assertthat::not_empty(targets),
     msg = "Invalid selection of trim measure and/or value."
   )
-  
+
   plot.data <- misty.results$contributions.stats %>%
     dplyr::filter(.data$target %in% targets)
-  
+
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$target, y = .data$fraction)) +
     ggplot2::geom_col(ggplot2::aes(group = .data$view, fill = .data$view)) +
     ggplot2::scale_fill_brewer(palette = "Set2") +
@@ -135,9 +135,9 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
     ggplot2::ylab("Contribution") +
     ggplot2::xlab("Target") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
-  
+
   print(results.plot)
-  
+
   invisible(misty.results)
 }
 
@@ -174,33 +174,33 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
                                      ),
                                      clean = FALSE) {
   trim.measure.type <- match.arg(trim.measure)
-  
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that((view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
     msg = "The selected view cannot be found in the results table."
   )
-  
+
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
     stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
-  
+
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
       .data$measure == trim.measure.type,
       inv * .data$mean >= inv * trim
     ) %>%
     dplyr::pull(.data$target)
-  
+
   plot.data <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == !!view, .data$Target %in% targets)
-  
+
   if (clean) {
     clean.predictors <- plot.data %>%
       dplyr::mutate(Importance = .data$Importance * (.data$Importance >= cutoff)) %>%
@@ -222,9 +222,9 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
   } else {
     plot.data.clean <- plot.data
   }
-  
+
   set2.blue <- "#8DA0CB"
-  
+
   results.plot <- ggplot2::ggplot(
     plot.data.clean,
     ggplot2::aes(
@@ -243,9 +243,9 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::coord_equal() +
     ggplot2::ggtitle(view)
-  
+
   print(results.plot)
-  
+
   invisible(misty.results)
 }
 
@@ -282,36 +282,35 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
                                     "gain.RMSE", "multi.RMSE", "intra.RMSE"
                                   )) {
   trim.measure.type <- match.arg(trim.measure)
-  
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that((from.view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
     msg = "The selected from.view cannot be found in the results table."
   )
-  
+
   assertthat::assert_that((to.view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
     msg = "The selected to.view cannot be found in the results table."
   )
-  
+
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
     stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
-  
-  
+
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
       .data$measure == trim.measure.type,
       inv * .data$mean >= inv * trim
     ) %>%
     dplyr::pull(.data$target)
-  
+
   from.view.wide <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == from.view, .data$Target %in% targets) %>%
     tidyr::pivot_wider(
@@ -319,7 +318,7 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
       values_from = "Importance",
       -c(.data$view, .data$nsamples)
     )
-  
+
   to.view.wide <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == to.view, .data$Target %in% targets) %>%
     tidyr::pivot_wider(
@@ -327,23 +326,23 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
       values_from = "Importance",
       -c(.data$view, .data$nsamples)
     )
-  
+
   mask <- ((from.view.wide %>%
               dplyr::select(-.data$Predictor)) < cutoff) &
     ((to.view.wide %>%
         dplyr::select(-.data$Predictor)) >= cutoff)
-  
+
   masked <- ((to.view.wide %>%
                 tibble::column_to_rownames("Predictor")) * mask)
-  
+
   plot.data <- masked %>%
     dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
     dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
     tibble::rownames_to_column("Predictor") %>%
     tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
-  
+
   set2.blue <- "#8DA0CB"
-  
+
   results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
     ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
@@ -351,9 +350,9 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::coord_equal() +
     ggplot2::ggtitle(paste0(to.view, " - ", from.view))
-  
+
   print(results.plot)
-  
+
   invisible(misty.results)
 }
 
@@ -389,20 +388,19 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that((view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
     msg = "The selected view cannot be found in the results table."
   )
-  
+
   view.wide <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == !!view) %>%
     tidyr::pivot_wider(
       names_from = "Target", values_from = "Importance",
       -c(.data$view, .data$nsamples)
     )
-  
-  
+
   assertthat::assert_that(
     all((view.wide %>%
            dplyr::select(-.data$Predictor) %>% colnames() %>% sort()) ==
@@ -417,16 +415,16 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   ),
   msg = "The package igraph (>= 1.2.7) is required to calculate the interaction communities."
   )
-  
+
   A <- view.wide %>%
     dplyr::select(-.data$Predictor) %>%
     as.matrix()
   A[A < cutoff | is.na(A)] <- 0
-  
+
   # Workaround: fix binding check for variable . in this function context.
   # The reference to . below works just fine in its own scope
   . <- NULL
-  
+
   G <- igraph::graph.adjacency(A, mode = "plus", weighted = TRUE) %>%
     igraph::set.vertex.attribute("name", value = names(igraph::V(.))) %>%
     igraph::delete.vertices(which(igraph::degree(.) == 0))
@@ -434,13 +432,13 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   C <- igraph::cluster_leiden(G)
 
   layout <- igraph::layout_with_fr(G)
-  
+
   igraph::plot.igraph(G,
     layout = layout, mark.groups = C, main = view, vertex.size = 4,
     vertex.color = "black", vertex.label.dist = 1,
     vertex.label.color = "black", vertex.label.font = 2, vertex.label.cex = 0.66
   )
-  
+
   invisible(misty.results)
 }
 
@@ -495,19 +493,19 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results.from)),
     msg = "The first provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results.from)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("importances.aggregated" %in% names(misty.results.to)),
     msg = "The second provided result list is malformed. Consider using collect_results()."
   )
-  
+
   assertthat::assert_that(("improvements.stats" %in% names(misty.results.to)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   if (is.null(views)) {
     assertthat::assert_that(rlang::is_empty(setdiff(
       misty.results.from$importances.aggregated %>%
@@ -532,7 +530,7 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     msg = "The requested views do not exist in both result lists."
     )
   }
-  
+
   assertthat::assert_that(
     all(views %>% purrr::map_lgl(function(current.view) {
       rlang::is_empty(setdiff(
@@ -558,17 +556,16 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     })),
     msg = "Incompatible predictors and targets."
   )
-  
+
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
     stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
-  
+
   targets <- misty.results.from$improvements.stats %>%
     dplyr::filter(
       .data$measure == trim.measure.type,
       inv * .data$mean >= inv * trim
     ) %>%
     dplyr::pull(.data$target)
-
 
   views %>% purrr::walk(function(current.view) {
     from.view.wide <- misty.results.from$importances.aggregated %>%
@@ -585,7 +582,7 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
         values_from = "Importance",
         -c(.data$view, .data$nsamples)
       )
-    
+
     mask <- ((from.view.wide %>%
       dplyr::select(-.data$Predictor)) < cutoff.from) &
       ((to.view.wide %>%
@@ -594,18 +591,18 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     assertthat::assert_that(sum(mask, na.rm = TRUE) > 0,
       msg = paste0("All values are cut off while contrasting.")
     )
-    
+
     masked <- ((to.view.wide %>%
       tibble::column_to_rownames("Predictor")) * mask)
-    
+
     plot.data <- masked %>%
       dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
       dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
       tibble::rownames_to_column("Predictor") %>%
       tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
-    
+
     set2.blue <- "#8DA0CB"
-    
+
     results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
       ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
       ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff.to) +
@@ -613,9 +610,9 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
       ggplot2::coord_equal() +
       ggplot2::ggtitle(current.view)
-    
+
     print(results.plot)
   })
-  
+
   invisible(misty.results.from)
 }
