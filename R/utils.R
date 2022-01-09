@@ -23,31 +23,31 @@ aggregate_results <- function(improvements, contributions, importances) {
       mean = mean(.data$value), sd = stats::sd(.data$value),
       cv = .data$sd / .data$mean, .groups = "drop"
     )
-  
-  
+
+
   contributions.stats <- dplyr::inner_join(
     # mean coefficients
     (contributions %>%
-       dplyr::filter(!stringr::str_starts(.data$view, "p\\.") &
-                       .data$view != "intercept") %>%
-       dplyr::group_by(.data$target, .data$view) %>%
-       dplyr::summarise(mean = mean(.data$value), .groups = "drop_last") %>%
-       dplyr::mutate(fraction = abs(.data$mean) / sum(abs(.data$mean))) %>%
-       dplyr::ungroup()),
+      dplyr::filter(!stringr::str_starts(.data$view, "p\\.") &
+        .data$view != "intercept") %>%
+      dplyr::group_by(.data$target, .data$view) %>%
+      dplyr::summarise(mean = mean(.data$value), .groups = "drop_last") %>%
+      dplyr::mutate(fraction = abs(.data$mean) / sum(abs(.data$mean))) %>%
+      dplyr::ungroup()),
     # p values
     (contributions %>%
-       dplyr::filter(stringr::str_starts(.data$view, "p\\.") &
-                       !stringr::str_detect(.data$view, "intercept")) %>%
-       dplyr::group_by(.data$target, .data$view) %>%
-       dplyr::mutate(view = stringr::str_remove(.data$view, "^p\\.")) %>%
-       dplyr::summarise(
-         p.mean = mean(.data$value),
-         p.sd = stats::sd(.data$value),
-         .groups = "drop"
-       )),
+      dplyr::filter(stringr::str_starts(.data$view, "p\\.") &
+        !stringr::str_detect(.data$view, "intercept")) %>%
+      dplyr::group_by(.data$target, .data$view) %>%
+      dplyr::mutate(view = stringr::str_remove(.data$view, "^p\\.")) %>%
+      dplyr::summarise(
+        p.mean = mean(.data$value),
+        p.sd = stats::sd(.data$value),
+        .groups = "drop"
+      )),
     by = c("target", "view")
   )
-  
+
   importances.aggregated <- importances %>%
     tidyr::unite(".PT", "Predictor", "Target", sep = "&") %>%
     dplyr::group_by(.data$view, .data$.PT) %>%
@@ -56,6 +56,7 @@ aggregate_results <- function(improvements, contributions, importances) {
       nsamples = dplyr::n(), .groups = "drop"
     ) %>%
     tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
+  
   return(list(
     improvements.stats = improvements.stats,
     contributions.stats = contributions.stats,
@@ -130,14 +131,14 @@ aggregate_results <- function(improvements, contributions, importances) {
 #' @export
 collect_results <- function(folders) {
   samples <- R.utils::getAbsolutePath(folders)
-  
+
   message("\nCollecting improvements")
   improvements <- samples %>%
     furrr::future_map_dfr(function(sample) {
       performance <- readr::read_table(paste0(sample, .Platform$file.sep, "performance.txt"),
         na = c("", "NA", "NaN"), col_types = readr::cols()
       ) %>% dplyr::distinct()
-      
+
       performance %>%
         dplyr::mutate(
           sample = sample,
@@ -146,8 +147,8 @@ collect_results <- function(folders) {
         )
     }, .progress = TRUE) %>%
     tidyr::pivot_longer(-c(.data$sample, .data$target), names_to = "measure")
-  
-  
+
+
   message("\nCollecting contributions")
   contributions <- samples %>% furrr::future_map_dfr(function(sample) {
     coefficients <- readr::read_table(paste0(sample, .Platform$file.sep, "coefficients.txt"),
@@ -158,7 +159,7 @@ collect_results <- function(folders) {
       dplyr::mutate(sample = sample, .after = "target") %>%
       tidyr::pivot_longer(cols = -c(.data$sample, .data$target), names_to = "view")
   }, .progress = TRUE)
-  
+
   message("\nCollecting importances")
   importances <- samples %>%
     furrr::future_map_dfr(function(sample) {
@@ -172,7 +173,7 @@ collect_results <- function(folders) {
         unique() %>%
         stringr::str_subset("^p\\.", negate = TRUE) %>%
         stringr::str_subset("^intercept$", negate = TRUE)
-      
+
       # one heatmap per view
       maps <- views %>%
         furrr::future_map_dfr(function(view) {
@@ -189,26 +190,26 @@ collect_results <- function(folders) {
             unlist() %>%
             unique() %>%
             sort()
-          
+
           pvalues <- contributions %>%
             dplyr::filter(.data$sample == !!sample, view == paste0("p.", !!view)) %>%
             dplyr::mutate(value = 1 - .data$value)
-          
+
           # importances are standardized for each target
           # and multiplied by 1-pval(view)
           all.importances %>%
             purrr::imap_dfc(~
-              tibble::tibble(feature = features, zero.imp = 0) %>%
+            tibble::tibble(feature = features, zero.imp = 0) %>%
               dplyr::left_join(.x, by = "feature") %>%
               dplyr::arrange(.data$feature) %>%
               dplyr::mutate(
                 imp = scale(.data$imp)[, 1],
                 !!targets[.y] := .data$zero.imp + (.data$imp *
-                   (pvalues %>%
-                      dplyr::filter(target == targets[.y]) %>%
-                      dplyr::pull(.data$value)))
+                  (pvalues %>%
+                    dplyr::filter(target == targets[.y]) %>%
+                    dplyr::pull(.data$value)))
               )
-            %>%
+              %>%
               dplyr::select(targets[.y])) %>%
             dplyr::mutate(Predictor = features) %>%
             tidyr::pivot_longer(
@@ -224,9 +225,9 @@ collect_results <- function(folders) {
         }) %>%
         dplyr::mutate(sample = sample, .before = 1)
     }, .progress = TRUE)
-  
+
   message("\nAggregating")
-  
+
   misty.results <- c(
     list(
       improvements = improvements,
@@ -235,7 +236,7 @@ collect_results <- function(folders) {
     ),
     aggregate_results(improvements, contributions, importances)
   )
-  
+
   return(misty.results)
 }
 
@@ -258,7 +259,7 @@ aggregate_results_subset <- function(misty.results, folders) {
   assertthat::assert_that(("importances" %in% names(misty.results)),
     msg = "The provided result list is malformed. Consider using collect_results()."
   )
-  
+
   normalized.folders <- R.utils::getAbsolutePath(folders)
   # check if folders are in names of misty.results
   assertthat::assert_that(all(normalized.folders %in%
@@ -266,7 +267,7 @@ aggregate_results_subset <- function(misty.results, folders) {
     msg = "The provided results list doesn't contain information about some of
     the requested result folders. Consider using collect_results()."
   )
-  
+
   message("Aggregating subset")
   importances.aggregated.subset <- misty.results$importances %>%
     dplyr::filter(.data$sample %in% normalized.folders) %>%
@@ -279,7 +280,7 @@ aggregate_results_subset <- function(misty.results, folders) {
     tidyr::separate(".PT", c("Predictor", "Target"), sep = "&")
 
   misty.results[["importances.aggregated.subset"]] <- importances.aggregated.subset
-  
+
   return(misty.results)
 }
 
@@ -332,7 +333,7 @@ sweep_cache <- function() {
           unlink(path, recursive = TRUE)
         }
       })
-    
+
     if (length(list.files(cache.folder, full.names = TRUE)) == 0) {
       clear_cache()
     }
@@ -387,9 +388,9 @@ extract_signature <- function(misty.results,
                                 "gain.RMSE", "multi.RMSE", "intra.RMSE"
                               )) {
   signature.type <- match.arg(type)
-  
+
   trim.measure.type <- match.arg(trim.measure)
-  
+
   assertthat::assert_that(
     all(c(
       "improvements", "contributions",
@@ -399,17 +400,17 @@ extract_signature <- function(misty.results,
     msg = "The provided result list is malformed.
     Consider using collect_results()."
   )
-  
+
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
     stringr::str_detect(trim.measure.type, "RMSE", negate = TRUE)) - 0.5)
-  
+
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
       .data$measure == trim.measure.type,
       inv * .data$mean >= inv * trim
     ) %>%
     dplyr::pull(.data$target)
-  
+
   switch(signature.type,
     "performance" = {
       target.intersection <- misty.results$improvements %>%

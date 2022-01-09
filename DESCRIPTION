@@ -40,10 +40,10 @@ License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr
 Imports: assertthat, caret, deldir, digest, distances, dplyr, filelock, 
-    furrr (>= 0.2.0), ggplot2, MASS, purrr, ranger, readr, ridge, rlang, rlist, 
+    furrr (>= 0.2.0), ggplot2, MASS, purrr, ranger, readr, rlang, rlist, 
     R.utils, stats, stringr, tibble, tidyr, withr
-Suggests: BiocStyle, covr, future, igraph (>= 1.2.7), knitr, Matrix, progeny, 
-    rmarkdown, sctransform, SingleCellExperiment, SpatialExperiment, 
-    SummarizedExperiment, testthat (>= 3.0.0), xgboost, earth, kernlab, RSNNS
+Suggests: BiocStyle, covr, future, igraph, knitr, Matrix, progeny, rmarkdown,
+    sctransform, SingleCellExperiment, SpatialExperiment, SummarizedExperiment,
+    testthat (>= 3.0.0), xgboost, earth, kernlab, RSNNS
 RoxygenNote: 7.1.2
 Config/testthat/edition: 3

@@ -185,7 +185,7 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
 
   assertthat::assert_that((view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
-    msg = "The selected view cannot be found in the results table."
+  msg = "The selected view cannot be found in the results table."
   )
 
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
@@ -198,6 +198,7 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
     ) %>%
     dplyr::pull(.data$target)
 
+  
   plot.data <- misty.results$importances.aggregated %>%
     dplyr::filter(.data$view == !!view, .data$Target %in% targets)
 
@@ -243,6 +244,8 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::coord_equal() +
     ggplot2::ggtitle(view)
+
+
 
   print(results.plot)
 
@@ -293,12 +296,12 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
 
   assertthat::assert_that((from.view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
-    msg = "The selected from.view cannot be found in the results table."
+  msg = "The selected from.view cannot be found in the results table."
   )
 
   assertthat::assert_that((to.view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
-    msg = "The selected to.view cannot be found in the results table."
+  msg = "The selected to.view cannot be found in the results table."
   )
 
   inv <- sign((stringr::str_detect(trim.measure.type, "gain") |
@@ -328,12 +331,12 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
     )
 
   mask <- ((from.view.wide %>%
-              dplyr::select(-.data$Predictor)) < cutoff) &
+    dplyr::select(-.data$Predictor)) < cutoff) &
     ((to.view.wide %>%
-        dplyr::select(-.data$Predictor)) >= cutoff)
+      dplyr::select(-.data$Predictor)) >= cutoff)
 
   masked <- ((to.view.wide %>%
-                tibble::column_to_rownames("Predictor")) * mask)
+    tibble::column_to_rownames("Predictor")) * mask)
 
   plot.data <- masked %>%
     dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
@@ -391,7 +394,7 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
 
   assertthat::assert_that((view %in%
     (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
-    msg = "The selected view cannot be found in the results table."
+  msg = "The selected view cannot be found in the results table."
   )
 
   view.wide <- misty.results$importances.aggregated %>%
@@ -401,11 +404,12 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
       -c(.data$view, .data$nsamples)
     )
 
+
   assertthat::assert_that(
     all((view.wide %>%
-           dplyr::select(-.data$Predictor) %>% colnames() %>% sort()) ==
-          (view.wide %>%
-             dplyr::pull(.data$Predictor)) %>% sort()),
+      dplyr::select(-.data$Predictor) %>% colnames() %>% sort()) ==
+      (view.wide %>%
+        dplyr::pull(.data$Predictor)) %>% sort()),
     msg = "The predictor and target markers in the view must match."
   )
 
@@ -523,7 +527,7 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
   } else {
     assertthat::assert_that(all(views %in%
       (misty.results.from$importances.aggregated %>%
-        dplyr::pull(.data$view))) & 
+        dplyr::pull(.data$view))) &
       all(views %in%
         (misty.results.to$importances.aggregated %>%
           dplyr::pull(.data$view))),
@@ -567,6 +571,7 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     ) %>%
     dplyr::pull(.data$target)
 
+
   views %>% purrr::walk(function(current.view) {
     from.view.wide <- misty.results.from$importances.aggregated %>%
       dplyr::filter(.data$view == current.view, .data$Target %in% targets) %>%
@@ -586,8 +591,8 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     mask <- ((from.view.wide %>%
       dplyr::select(-.data$Predictor)) < cutoff.from) &
       ((to.view.wide %>%
-          dplyr::select(-.data$Predictor)) >= cutoff.to)
-    
+        dplyr::select(-.data$Predictor)) >= cutoff.to)
+
     assertthat::assert_that(sum(mask, na.rm = TRUE) > 0,
       msg = paste0("All values are cut off while contrasting.")
     )

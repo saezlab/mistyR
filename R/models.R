@@ -1,7 +1,6 @@
 # mistyR model training functions
 # Copyleft (ɔ) 2020 Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
-
 #' Train a multi-view model for a single target
 #'
 #' Trains individual models for each view. Each view is modeled by the 
@@ -53,7 +52,7 @@ build_model <- function(views, target, model.function, model.name,
           ".par.", cv.folds, ".", 
           ellipsis.args.text, ".rds"
         )
-      
+
       if (file.exists(model.view.cache.file) & cached) {
         model.view <- readr::read_rds(model.view.cache.file)
       } else {
@@ -73,7 +72,7 @@ build_model <- function(views, target, model.function, model.name,
           readr::write_rds(model.view, model.view.cache.file)
         }
       }
-      
+
       return(model.view)
     })
 
@@ -95,12 +94,12 @@ build_model <- function(views, target, model.function, model.name,
       dplyr::across(where(~ length(unique(.x)) < cv.folds), ~ .x + jit),
       !!target := target.vector
     )
-  
+
   # train lm on above, if bypass.intra set intercept to 0
   formula <- stats::as.formula(
     ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
   )
-  
+
   if (ncol(oob.predictions) <= 2) {
     combined.views <- stats::lm(
       formula,
@@ -130,11 +129,11 @@ build_model <- function(views, target, model.function, model.name,
       formula,
       intra.view.only %>% dplyr::slice(-test.fold),
     )
-  
+
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
     } else {
-  
+
       meta.multi <- ridge::linearRidge(
         formula,
         oob.predictions %>% dplyr::slice(-test.fold),
@@ -155,7 +154,7 @@ build_model <- function(views, target, model.function, model.name,
 
     multi.RMSE <- caret::RMSE(multi.view.prediction, target.vector[test.fold])
     multi.R2 <- caret::R2(multi.view.prediction, target.vector[test.fold],
-                          formula = "traditional"
+      formula = "traditional"
     )
 
     tibble::tibble(
@@ -169,6 +168,6 @@ build_model <- function(views, target, model.function, model.name,
     model.importances = purrr::map(model.views, ~ .x$importances),
     performance.estimate = performance.estimate
   )
-  
+
   return(final.model)
 }
