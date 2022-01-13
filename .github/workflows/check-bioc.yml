@@ -134,7 +134,7 @@ jobs:
           remotes::install_deps(dependencies = TRUE, repos = BiocManager::repositories(), upgrade = "always")
           
           ## For producing vignette pdf output
-          remotes::install_cran("tinytex")
+          remotes::install_cran(c("tinytex", "igraph", "magick"))
           tinytex::install_tinytex()
           tinytex::tlmgr_update()
           tinytex::tlmgr_install("pdfcrop")

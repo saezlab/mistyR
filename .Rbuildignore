@@ -6,6 +6,7 @@
 (^|/)\.misty\.temp$
 (^|/)results$
 ^vignettes/mistySeurat.Rmd$
+^vignettes/mistySpatialExperiment.Rmd$
 ^LICENSE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
