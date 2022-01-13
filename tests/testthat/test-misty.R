@@ -74,8 +74,8 @@ test_that("run_misty models are cached and retrieved", {
 test_that("run_misty handles tests of failures", {
   expr <- tibble::tibble(expr1 = c(rep(1, 50), rep(2, 50))) %>%
     dplyr::mutate(expr2 = rev(expr1))
-  error.message <- capture_error(create_initial_view(expr) %>% run_misty())
-  expect_true(grepl("have fewer unique values than cv.folds", error.message))
+  warning.message <- capture_warnings(create_initial_view(expr) %>% run_misty())
+  expect_true(any(grepl("have fewer unique values than cv.folds", warning.message)))
   sig.warnings <- capture_warnings(create_initial_view(expr) %>%
     run_misty(cv.folds = 2))
   expect_true(any(grepl("RMSE", sig.warnings)))

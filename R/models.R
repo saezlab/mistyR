@@ -66,7 +66,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
       } else {
         if ((view[["abbrev"]] == "intra") & bypass.intra) {
           transformed.view.data <-
-            tibble::tibble(!!target := target.vector, ".novar" := 0)
+            tibble::tibble(!!target := target.vector, ".novar" := 1)
         } else {
           transformed.view.data <- view[["data"]] %>%
             dplyr::mutate(!!target := target.vector)
@@ -87,27 +87,20 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
       return(model.view)
     })
 
-  jit <- withr::with_seed(
-    seed,
-    stats::rnorm(length(target.vector), 0, .Machine$double.eps)
-  )
-
   # make oob predictions
   oob.predictions <- model.views %>%
     purrr::map(~ .x$predictions) %>%
     rlist::list.cbind() %>%
     tibble::as_tibble(.name_repair = make.names) %>%
-    dplyr::mutate(
-      dplyr::across(where(~ sd(.x) == 0), ~ .x + jit),
-      !!target := target.vector
-    )
+    dplyr::mutate(!!target := target.vector)
 
-  # train lm on above, if bypass.intra set intercept to 0
+  # train lm on above, if bypass.intra remove it from the model
   formula <- stats::as.formula(
-    ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
+    ifelse(bypass.intra, paste0(target, " ~ . - intraview"), paste0(target, " ~ ."))
   )
 
-  if (ncol(oob.predictions) <= 2) {
+
+  if (ncol(oob.predictions) <= (2 + bypass.intra)) {
     combined.views <- stats::lm(
       formula,
       oob.predictions
@@ -139,6 +132,11 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
     if (identical(oob.predictions, intra.view.only)) {
       meta.multi <- meta.intra
+    } else if (ncol(oob.predictions) <= (2 + bypass.intra)) {
+      meta.multi <- stats::lm(
+        formula,
+        oob.predictions %>% dplyr::slice(-test.fold)
+      )
     } else {
       meta.multi <- ridge::linearRidge(
         formula,

@@ -114,7 +114,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       paste(names(which(target.var == 0)),
         collapse = ", "
       ),
-      "have zero variance."
+      "have zero variance (they are noninformative). Remove them to proceed."
     )
   )
 
@@ -122,15 +122,16 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     purrr::set_names() %>%
     purrr::map_int(~ length(unique(expr %>% dplyr::pull(.x))))
 
-  assertthat::assert_that(all(target.unique >= cv.folds),
-    msg = paste(
+  if (any(target.unique < cv.folds)) {
+    msg <- paste(
       "Targets",
       paste(names(which(target.unique < cv.folds)),
         collapse = ", "
       ),
-      "have fewer unique values than cv.folds"
+      "have fewer unique values than cv.folds. This might result in errors during modeling."
     )
-  )
+    warning(msg)
+  }
 
 
   coef.file <- paste0(
@@ -186,26 +187,29 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     model.lm <- methods::is(combined.views, "lm")
 
+    coefs <- stats::coef(combined.views) %>% tidyr::replace_na(0)
+
+    pvals <- if (model.lm) {
+      # fix for missing pvals
+      combined.views.summary <- summary(combined.views)
+      data.frame(c = stats::coef(combined.views)) %>%
+        tibble::rownames_to_column("views") %>%
+        dplyr::left_join(
+          data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
+            tibble::rownames_to_column("views"),
+          by = "views"
+        ) %>%
+        dplyr::pull(.data$p) %>%
+        tidyr::replace_na(1)
+    } else {
+      ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+    }
+
+
     # coefficient values and p-values
     coeff <- c(
-      if (bypass.intra) 0,
-      stats::coef(combined.views) %>% tidyr::replace_na(0),
-      if (bypass.intra) 1 else if (!model.lm) NA,
-      if (model.lm) {
-        # fix for missing pvals
-        combined.views.summary <- summary(combined.views)
-        data.frame(c = stats::coef(combined.views)) %>%
-          tibble::rownames_to_column("views") %>%
-          dplyr::left_join(
-            data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
-              tibble::rownames_to_column("views"),
-            by = "views"
-          ) %>%
-          dplyr::pull(.data$p) %>%
-          tidyr::replace_na(1)
-      } else {
-        ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
-      }
+      if (bypass.intra) append(coefs, 0, 1) else coefs,
+      if (bypass.intra) append(pvals, 1, 1) else c(NA, pvals)
     )
 
     current.lock <- filelock::lock(coef.lock)
