@@ -2,6 +2,7 @@
 
 - Switched from Louvain to Leiden algorithm for community detection (requires igraph >= 1.2.7)
 - The metamodel is now build by ridge regression. Intercept p-values are not calculated, the values are set to NA for backwards compatibility.
+- Unique value error for cv folds is downgraded to warning.
 
 # mistyR 1.2.1
 
