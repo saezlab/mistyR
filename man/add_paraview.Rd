@@ -12,6 +12,7 @@ add_paraview(
   family = c("gaussian", "exponential", "linear", "constant"),
   approx = 1,
   nn = NULL,
+  prefix = "",
   cached = FALSE,
   verbose = TRUE
 )
@@ -35,6 +36,8 @@ will not be taken into account when generating the paraview.}
 
 \item{nn}{the number of spatial units to be used for approximating the
 paraview using a fast nearest neighbor search. (see Details)}
+
+\item{prefix}{a prefix to add to the column names.}
 
 \item{cached}{a \code{logical} indicating whether to cache the calculated view
 after the first calculation and to reuse a previously cached view if it
