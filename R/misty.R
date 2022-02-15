@@ -188,29 +188,32 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     model.lm <- methods::is(combined.views, "lm")
 
     coefs <- stats::coef(combined.views) %>% tidyr::replace_na(0)
-
+    
     pvals <- if (model.lm) {
       # fix for missing pvals
       combined.views.summary <- summary(combined.views)
-      data.frame(c = stats::coef(combined.views)) %>%
-        tibble::rownames_to_column("views") %>%
-        dplyr::left_join(
-          data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
-            tibble::rownames_to_column("views"),
-          by = "views"
-        ) %>%
-        dplyr::pull(.data$p) %>%
-        tidyr::replace_na(1)
+      pvals <- data.frame(c = stats::coef(combined.views)) %>%
+                  tibble::rownames_to_column("views") %>%
+                  dplyr::left_join(
+                    data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
+                      tibble::rownames_to_column("views"),
+                    by = "views"
+                  ) %>%
+                  dplyr::pull(.data$p) %>%
+                  tidyr::replace_na(1)
+      
+      if (bypass.intra) append(pvals[-1], c(NA, 1), 0) else c(NA, pvals)
+      
     } else {
-      ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+      pvals <- ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+      if (bypass.intra) append(pvals, c(NA, 1), 0) else c(NA, pvals)
     }
 
 
     # coefficient values and p-values
     coeff <- c(
       if (bypass.intra) append(coefs, 0, 1) else coefs,
-      if (bypass.intra) append(pvals, 1, 1) else c(NA, pvals)
-    )
+      pvals)
 
     current.lock <- filelock::lock(coef.lock)
     write(paste(target, paste(coeff, collapse = " ")),

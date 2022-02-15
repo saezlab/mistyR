@@ -3,16 +3,31 @@ pos <- sample_grid_geometry(100, 10, 10)
 misty.views <- create_initial_view(expr) %>% add_paraview(pos, l = 2)
 
 test_that("run_misty produces correct files on output", {
-  suppressWarnings(run_misty(misty.views))
-  expect_true(dir.exists("results"))
-  expect_length(list.files("results"), 12)
-  expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
-    purrr::map_int(R.utils::countLines) == 5)))
-  expect_true((all(list.files("results", "(coefficients|performance)",
-    full.names = TRUE
-  ) %>%
-    purrr::map_int(R.utils::countLines) == 6)))
-  unlink("results", recursive = TRUE)
+  purrr::map( c(TRUE, FALSE), function(bypass.intra) {
+    suppressWarnings(run_misty(misty.views, bypass.intra = bypass.intra))
+    expect_true(dir.exists("results"))
+    expect_length(list.files("results"), 12)
+    if (bypass.intra) {
+      expect_true((all(list.files("results", "intra", full.names = TRUE) %>%
+                         purrr::map_int(R.utils::countLines) == 2)))
+      expect_true((all(list.files("results", "para", full.names = TRUE) %>%
+                         purrr::map_int(R.utils::countLines) == 5)))    
+    } else {
+      expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
+                         purrr::map_int(R.utils::countLines) == 5)))    
+    }
+    expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
+                       purrr::map(utils::count.fields, sep = ",") %>% 
+                       unlist() == 2)))
+    expect_true((all(list.files("results", "(coefficients|performance)",
+                                full.names = TRUE) %>%
+                       purrr::map_int(R.utils::countLines) == 6)))
+    expect_true((all(list.files("results", "(coefficients|performance)",
+                                full.names = TRUE) %>% 
+                       purrr::map(utils::count.fields) %>% 
+                       unlist() == 7)))
+    unlink("results", recursive = TRUE)    
+  })
 })
 
 test_that("run_misty is reproducible", {
