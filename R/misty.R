@@ -244,7 +244,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     )
 
     # performance
-    if (sum(target.model[["performance.estimate"]] < 0) > 0) {
+    if (sum(target.model[["performance.estimate"]] < 0 |
+      is.na(target.model[["performance.estimate"]])) > 0) {
       warning.message <-
         paste(
           "Negative performance detected and replaced with 0 for target",
@@ -254,7 +255,15 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     }
 
     performance.estimate <- target.model[["performance.estimate"]] %>%
-      dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0))
+      dplyr::mutate(dplyr::across(
+        dplyr::ends_with("R2"),
+        ~ pmax(., 0, na.rm = TRUE)
+      )) %>%
+      dplyr::mutate(dplyr::across(
+        dplyr::ends_with("RMSE"),
+        ~ pmin(., max(.), na.rm = TRUE)
+      ))
+
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(stats::t.test(performance.estimate %>%
