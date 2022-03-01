@@ -61,13 +61,14 @@ test_that("run_misty handles evaluation parameters correctly", {
     subset.time <- system.time(
       run_misty(misty.views, "results3", target.subset = c("expr1", "expr2"))
     )["user.self"] * 1000
-    ntrees.time <- system.time(
-      run_misty(misty.views, "results4", num.trees = 500)
-    )["user.self"] * 1000
+    run_misty(misty.views, "results4", num.trees = 500)
   })
+  default.results <- collect_results("results1")
+  ntrees.results <- collect_results("results4")
   expect_lt(cv.time, default.time)
   expect_lt(subset.time, default.time)
-  expect_gt(ntrees.time, default.time)
+  expect_gt(mean(ntrees.results$improvements.stats$mean), 
+            mean(default.results$improvements.stats$mean))
   expect_length(list.files("results3"), 6)
   unlink(paste0("results", seq_len(4)), recursive = TRUE)
 })
