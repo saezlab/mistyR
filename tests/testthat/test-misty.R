@@ -3,30 +3,32 @@ pos <- sample_grid_geometry(100, 10, 10)
 misty.views <- create_initial_view(expr) %>% add_paraview(pos, l = 2)
 
 test_that("run_misty produces correct files on output", {
-  purrr::map( c(TRUE, FALSE), function(bypass.intra) {
+  purrr::map(c(TRUE, FALSE), function(bypass.intra) {
     suppressWarnings(run_misty(misty.views, bypass.intra = bypass.intra))
     expect_true(dir.exists("results"))
     expect_length(list.files("results"), 12)
     if (bypass.intra) {
       expect_true((all(list.files("results", "intra", full.names = TRUE) %>%
-                         purrr::map_int(R.utils::countLines) == 2)))
+        purrr::map_int(R.utils::countLines) == 2)))
       expect_true((all(list.files("results", "para", full.names = TRUE) %>%
-                         purrr::map_int(R.utils::countLines) == 5)))    
+        purrr::map_int(R.utils::countLines) == 5)))
     } else {
       expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
-                         purrr::map_int(R.utils::countLines) == 5)))    
+        purrr::map_int(R.utils::countLines) == 5)))
     }
     expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
-                       purrr::map(utils::count.fields, sep = ",") %>% 
-                       unlist() == 2)))
+      purrr::map(utils::count.fields, sep = ",") %>%
+      unlist() == 2)))
     expect_true((all(list.files("results", "(coefficients|performance)",
-                                full.names = TRUE) %>%
-                       purrr::map_int(R.utils::countLines) == 6)))
+      full.names = TRUE
+    ) %>%
+      purrr::map_int(R.utils::countLines) == 6)))
     expect_true((all(list.files("results", "(coefficients|performance)",
-                                full.names = TRUE) %>% 
-                       purrr::map(utils::count.fields) %>% 
-                       unlist() == 7)))
-    unlink("results", recursive = TRUE)    
+      full.names = TRUE
+    ) %>%
+      purrr::map(utils::count.fields) %>%
+      unlist() == 7)))
+    unlink("results", recursive = TRUE)
   })
 })
 
@@ -67,8 +69,16 @@ test_that("run_misty handles evaluation parameters correctly", {
   ntrees.results <- collect_results("results4")
   expect_lt(cv.time, default.time)
   expect_lt(subset.time, default.time)
-  expect_gt(mean(ntrees.results$improvements.stats$mean), 
-            mean(default.results$improvements.stats$mean))
+  expect_gt(
+    ntrees.results$improvements.stats %>% 
+      dplyr::filter(measure == "gain.R2") %>% 
+      dplyr::pull(mean) %>% 
+      mean(),
+    default.results$improvements.stats %>% 
+      dplyr::filter(measure == "gain.R2") %>% 
+      dplyr::pull(mean) %>% 
+      mean()
+  )
   expect_length(list.files("results3"), 6)
   unlink(paste0("results", seq_len(4)), recursive = TRUE)
 })
