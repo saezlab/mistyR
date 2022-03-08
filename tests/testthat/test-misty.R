@@ -69,15 +69,16 @@ test_that("run_misty handles evaluation parameters correctly", {
   ntrees.results <- collect_results("results4")
   expect_lt(cv.time, default.time)
   expect_lt(subset.time, default.time)
-  expect_gt(
-    ntrees.results$improvements.stats %>% 
-      dplyr::filter(measure == "gain.R2") %>% 
-      dplyr::pull(mean) %>% 
-      mean(),
+  expect_true(
+    all(ntrees.results$improvements.stats %>% 
+      dplyr::filter(measure == "gain.R2") %>%
+      dplyr::arrange(target) %>%
+      dplyr::pull(mean) !=
     default.results$improvements.stats %>% 
-      dplyr::filter(measure == "gain.R2") %>% 
-      dplyr::pull(mean) %>% 
-      mean()
+      dplyr::filter(measure == "gain.R2") %>%
+      dplyr::arrange(target) %>%
+      dplyr::pull(mean)
+    )
   )
   expect_length(list.files("results3"), 6)
   unlink(paste0("results", seq_len(4)), recursive = TRUE)
