@@ -1,15 +1,16 @@
 citEntry(
     entry="article",
     author = c(person("Jovan", "Tanevski"),
+           person("Ricardo Omar", "Ramirez Flores"),
     		   person("Attila", "Gabor"),
-    		   person("Ricardo Omar", "Ramirez Flores"),
     		   person("Denis", "Schapiro"),
-               person("Julio", "Saez-Rodriguez")),
-    title = "Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data.",
-    journal = "bioRxiv",
-    number = "2020.05.08.084145",
-    year = 2020,
-    url = "https://doi.org/10.1101/2020.05.08.084145",
+           person("Julio", "Saez-Rodriguez")),
+    title = "Explainable multiview framework for dissecting spatial relationships from highly multiplexed data",
+    journal = "Genome Biology",
+    volume = "23",
+    number = "97",
+    year = 2022,
+    url = "https://doi.org/10.1186/s13059-022-02663-5",
     
-    textVersion = "Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. bioRxiv. doi: 10.1101/2020.05.08.084145"
+    textVersion = "Jovan Tanevski, Ricardo Omar Ramirez Flores, Attila Gabor, Denis Schapiro, Julio Saez-Rodriguez. Explainable multiview framework for dissecting spatial relationships from highly multiplexed data. Genome Biology 23, 97 (2022). https://doi.org/10.1186/s13059-022-02663-5"
 )
