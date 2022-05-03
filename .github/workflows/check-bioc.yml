@@ -4,7 +4,7 @@ on:
       - master
       - devel
 
-name: check-bioc3.14
+name: check-bioc3.15
 
 ## If you need to clear the cache of packages, update the number inside
 ## cache-version as discussed at https://github.com/r-lib/actions/issues/86.
@@ -23,9 +23,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: '4.1', bioc: '3.14', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
-          - { os: macOS-latest, r: '4.1', bioc: '3.14'}
-          - { os: windows-latest, r: '4.1', bioc: '3.14'}
+          - { os: ubuntu-latest, r: '4.2', bioc: '3.15', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: macOS-latest, r: '4.2', bioc: '3.15'}
+          - { os: windows-latest, r: '4.2', bioc: '3.15'}
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
@@ -194,7 +194,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           # For Seurat only
-          sudo apt-get install -y libhdf5-dev
+          sudo apt-get install -y libhdf5-dev libgeos-c1v5
         shell: bash {0}
         
       ## Changing package deployment to make the necessary changes to the vignette files
