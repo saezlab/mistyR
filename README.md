@@ -68,6 +68,6 @@ Start by reading `vignette("mistyR")` to learn how to run **mistyR**. To learn h
 Example pipelines and synthetic data for **mistyR** are also available from [this repository](https://github.com/saezlab/misty_pipelines). To run **mistyR** on the provided synthetic data run the script *synthetic_pipeline.R*.
 
 ## Citation
-If you use **mistyR** for your research please cite the [following publication](https://doi.org/10.1101/2020.05.08.084145): 
+If you use **mistyR** for your research please cite the [following publication](https://doi.org/10.1186/s13059-022-02663-5): 
 
-> Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. *bioRxiv*. doi: [10.1101/2020.05.08.084145](https://doi.org/10.1101/2020.05.08.084145)
+> Jovan Tanevski, Ricardo Omar Ramirez Flores, Attila Gabor, Denis Schapiro, Julio Saez-Rodriguez. Explainable multiview framework for dissecting spatial relationships from highly multiplexed data. Genome Biology 23, 97 (2022). https://doi.org/10.1186/s13059-022-02663-5

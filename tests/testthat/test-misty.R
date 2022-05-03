@@ -3,16 +3,33 @@ pos <- sample_grid_geometry(100, 10, 10)
 misty.views <- create_initial_view(expr) %>% add_paraview(pos, l = 2)
 
 test_that("run_misty produces correct files on output", {
-  suppressWarnings(run_misty(misty.views))
-  expect_true(dir.exists("results"))
-  expect_length(list.files("results"), 12)
-  expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
-    purrr::map_int(R.utils::countLines) == 5)))
-  expect_true((all(list.files("results", "(coefficients|performance)",
-    full.names = TRUE
-  ) %>%
-    purrr::map_int(R.utils::countLines) == 6)))
-  unlink("results", recursive = TRUE)
+  purrr::map(c(TRUE, FALSE), function(bypass.intra) {
+    suppressWarnings(run_misty(misty.views, bypass.intra = bypass.intra))
+    expect_true(dir.exists("results"))
+    expect_length(list.files("results"), 12)
+    if (bypass.intra) {
+      expect_true((all(list.files("results", "intra", full.names = TRUE) %>%
+        purrr::map_int(R.utils::countLines) == 2)))
+      expect_true((all(list.files("results", "para", full.names = TRUE) %>%
+        purrr::map_int(R.utils::countLines) == 5)))
+    } else {
+      expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
+        purrr::map_int(R.utils::countLines) == 5)))
+    }
+    expect_true((all(list.files("results", "importance*", full.names = TRUE) %>%
+      purrr::map(utils::count.fields, sep = ",") %>%
+      unlist() == 2)))
+    expect_true((all(list.files("results", "(coefficients|performance)",
+      full.names = TRUE
+    ) %>%
+      purrr::map_int(R.utils::countLines) == 6)))
+    expect_true((all(list.files("results", "(coefficients|performance)",
+      full.names = TRUE
+    ) %>%
+      purrr::map(utils::count.fields) %>%
+      unlist() == 7)))
+    unlink("results", recursive = TRUE)
+  })
 })
 
 test_that("run_misty is reproducible", {
@@ -46,13 +63,23 @@ test_that("run_misty handles evaluation parameters correctly", {
     subset.time <- system.time(
       run_misty(misty.views, "results3", target.subset = c("expr1", "expr2"))
     )["user.self"] * 1000
-    ntrees.time <- system.time(
-      run_misty(misty.views, "results4", num.trees = 500)
-    )["user.self"] * 1000
+    run_misty(misty.views, "results4", num.trees = 500)
   })
+  default.results <- collect_results("results1")
+  ntrees.results <- collect_results("results4")
   expect_lt(cv.time, default.time)
   expect_lt(subset.time, default.time)
-  expect_gt(ntrees.time, default.time)
+  expect_true(
+    all(ntrees.results$improvements.stats %>% 
+      dplyr::filter(measure == "gain.R2") %>%
+      dplyr::arrange(target) %>%
+      dplyr::pull(mean) !=
+    default.results$improvements.stats %>% 
+      dplyr::filter(measure == "gain.R2") %>%
+      dplyr::arrange(target) %>%
+      dplyr::pull(mean)
+    )
+  )
   expect_length(list.files("results3"), 6)
   unlink(paste0("results", seq_len(4)), recursive = TRUE)
 })
@@ -74,8 +101,8 @@ test_that("run_misty models are cached and retrieved", {
 test_that("run_misty handles tests of failures", {
   expr <- tibble::tibble(expr1 = c(rep(1, 50), rep(2, 50))) %>%
     dplyr::mutate(expr2 = rev(expr1))
-  error.message <- capture_error(create_initial_view(expr) %>% run_misty())
-  expect_true(grepl("have fewer unique values than cv.folds", error.message))
+  warning.message <- capture_warnings(create_initial_view(expr) %>% run_misty())
+  expect_true(any(grepl("have fewer unique values than cv.folds", warning.message)))
   sig.warnings <- capture_warnings(create_initial_view(expr) %>%
     run_misty(cv.folds = 2))
   expect_true(any(grepl("RMSE", sig.warnings)))

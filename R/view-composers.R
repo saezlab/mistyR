@@ -218,6 +218,7 @@ get_neighbors <- function(ddobj, id) {
 #'     as in the intraview.
 #' @param neighbor.thr a threshold value used to indicate the largest distance
 #'     between two spatial units that can be considered as neighboring.
+#' @param prefix a prefix to add to the column names.
 #' @param cached a \code{logical} indicating whether to cache the calculated view
 #'     after the first calculation and to reuse a previously cached view if it
 #'     already exists for this sample.
@@ -249,7 +250,7 @@ get_neighbors <- function(ddobj, id) {
 #' str(misty.views[["juxtaview.1.5"]])
 #' @export
 add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
-                          cached = FALSE, verbose = TRUE) {
+                          prefix = "", cached = FALSE, verbose = TRUE) {
   expr <- current.views[["intraview"]][["data"]]
 
   cache.location <- R.utils::getAbsolutePath(paste0(
@@ -287,7 +288,7 @@ add_juxtaview <- function(current.views, positions, neighbor.thr = 15,
 
   return(current.views %>% add_views(create_view(
     paste0("juxtaview.", neighbor.thr),
-    juxta.view,
+    juxta.view %>% dplyr::rename_with(~paste0(prefix, .x)),
     paste0("juxta.", neighbor.thr)
   )))
 }
@@ -453,7 +454,7 @@ add_paraview <- function(current.views, positions, l, zoi = 0,
                            "gaussian", "exponential",
                            "linear", "constant"
                          ),
-                         approx = 1, nn = NULL,
+                         approx = 1, nn = NULL, prefix = "",
                          cached = FALSE, verbose = TRUE) {
   dists <- distances::distances(as.data.frame(positions))
   expr <- current.views[["intraview"]][["data"]]
@@ -495,6 +496,11 @@ add_paraview <- function(current.views, positions, l, zoi = 0,
           message("\nApproximating RBF matrix using the Nystrom method")
         }
 
+        assertthat::assert_that(requireNamespace("MASS", quietly = TRUE),
+          msg = "The package MASS is required to approximate the paraview using
+          the Nystrom method."
+        )
+
         # single Nystrom approximation expert, given RBF with parameter l
         s <- sort(sample.int(n = ncol(dists), size = approx))
         C <- get_weight(family, dists[, s], l, zoi)
@@ -529,10 +535,10 @@ add_paraview <- function(current.views, positions, l, zoi = 0,
     }
     if (cached) readr::write_rds(para.view, para.cache.file)
   }
-
+  
   return(current.views %>% add_views(create_view(
     paste0("paraview.", l),
-    para.view,
+    para.view %>% dplyr::rename_with(~paste0(prefix, .x)),
     paste0("para.", l)
   )))
 }

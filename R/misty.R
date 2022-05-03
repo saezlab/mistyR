@@ -14,6 +14,9 @@
 #' @export
 dplyr::`%>%`
 
+# allow using tidyselect where
+utils::globalVariables("where")
+
 #' Train MISTy models
 #'
 #' Trains multi-view models for all target markers, estimates the performance,
@@ -111,7 +114,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       paste(names(which(target.var == 0)),
         collapse = ", "
       ),
-      "have zero variance."
+      "have zero variance (they are noninformative). Remove them to proceed."
     )
   )
 
@@ -119,15 +122,16 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     purrr::set_names() %>%
     purrr::map_int(~ length(unique(expr %>% dplyr::pull(.x))))
 
-  assertthat::assert_that(all(target.unique >= cv.folds),
-    msg = paste(
+  if (any(target.unique < cv.folds)) {
+    msg <- paste(
       "Targets",
       paste(names(which(target.unique < cv.folds)),
         collapse = ", "
       ),
-      "have fewer unique values than cv.folds"
+      "have fewer unique values than cv.folds. This might result in errors during modeling."
     )
-  )
+    warning(msg)
+  }
 
 
   coef.file <- paste0(
@@ -181,13 +185,34 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
     combined.views <- target.model[["meta.model"]]
 
-    model.summary <- summary(combined.views)
+    model.lm <- methods::is(combined.views, "lm")
+
+    coefs <- stats::coef(combined.views) %>% tidyr::replace_na(0)
+
+    pvals <- if (model.lm) {
+      # fix for missing pvals
+      combined.views.summary <- summary(combined.views)
+      pvals <- data.frame(c = stats::coef(combined.views)) %>%
+        tibble::rownames_to_column("views") %>%
+        dplyr::left_join(
+          data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
+            tibble::rownames_to_column("views"),
+          by = "views"
+        ) %>%
+        dplyr::pull(.data$p) %>%
+        tidyr::replace_na(1)
+
+      if (bypass.intra) append(pvals[-1], c(NA, 1), 0) else c(NA, pvals)
+    } else {
+      pvals <- ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+      if (bypass.intra) append(pvals, c(NA, 1), 0) else c(NA, pvals)
+    }
+
 
     # coefficient values and p-values
-    # WARNING: hardcoded column index
     coeff <- c(
-      if (bypass.intra) 0, stats::coef(combined.views),
-      if (bypass.intra) 1, model.summary$coefficients[, 4]
+      if (bypass.intra) append(coefs, 0, 1) else coefs,
+      pvals
     )
 
     current.lock <- filelock::lock(coef.lock)
@@ -219,7 +244,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     )
 
     # performance
-    if (sum(target.model[["performance.estimate"]] < 0) > 0) {
+    if (sum(target.model[["performance.estimate"]] < 0 |
+      is.na(target.model[["performance.estimate"]])) > 0) {
       warning.message <-
         paste(
           "Negative performance detected and replaced with 0 for target",
@@ -229,7 +255,15 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     }
 
     performance.estimate <- target.model[["performance.estimate"]] %>%
-      dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0))
+      dplyr::mutate(dplyr::across(
+        dplyr::ends_with("R2"),
+        ~ pmax(., 0, na.rm = TRUE)
+      )) %>%
+      dplyr::mutate(dplyr::across(
+        dplyr::ends_with("RMSE"),
+        ~ pmin(., max(.), na.rm = TRUE)
+      ))
+
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(stats::t.test(performance.estimate %>%

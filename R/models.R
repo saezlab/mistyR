@@ -21,7 +21,6 @@
 #' @noRd
 build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
                         cv.folds = 10, cached = FALSE, ...) {
-  
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
@@ -67,7 +66,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
       } else {
         if ((view[["abbrev"]] == "intra") & bypass.intra) {
           transformed.view.data <-
-            tibble::tibble(!!target := target.vector, ".novar" := 0)
+            tibble::tibble(!!target := target.vector, ".novar" := 1)
         } else {
           transformed.view.data <- view[["data"]] %>%
             dplyr::mutate(!!target := target.vector)
@@ -95,14 +94,24 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
     tibble::as_tibble(.name_repair = make.names) %>%
     dplyr::mutate(!!target := target.vector)
 
-  # train lm on above, if bypass.intra set intercept to 0
+  # train lm on above, if bypass.intra remove it from the model
   formula <- stats::as.formula(
-    ifelse(bypass.intra, paste0(target, " ~ 0 + ."), paste0(target, " ~ ."))
+    ifelse(bypass.intra, paste0(target, " ~ . - intraview"), paste0(target, " ~ ."))
   )
-  combined.views <- stats::lm(
-    formula,
-    oob.predictions
-  )
+
+
+  if (ncol(oob.predictions) <= (2 + bypass.intra)) {
+    combined.views <- stats::lm(
+      formula,
+      oob.predictions
+    )
+  } else {
+    combined.views <- ridge::linearRidge(formula,
+      oob.predictions,
+      lambda = "automatic",
+      scaling = "corrForm"
+    )
+  }
 
   # cv performance estimate
   test.folds <- withr::with_seed(
@@ -112,18 +121,30 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   intra.view.only <-
     model.views[["intraview"]]$predictions %>%
-    tibble::enframe(name = NULL) %>%
+    tibble::enframe(name = NULL, value = "intraview") %>%
     dplyr::mutate(!!target := target.vector)
 
   performance.estimate <- test.folds %>% purrr::map_dfr(function(test.fold) {
     meta.intra <- stats::lm(
       formula,
-      intra.view.only %>% dplyr::slice(-test.fold)
+      intra.view.only %>% dplyr::slice(-test.fold),
     )
-    meta.multi <- stats::lm(
-      formula,
-      oob.predictions %>% dplyr::slice(-test.fold)
-    )
+
+    if (identical(oob.predictions, intra.view.only)) {
+      meta.multi <- meta.intra
+    } else if (ncol(oob.predictions) <= (2 + bypass.intra)) {
+      meta.multi <- stats::lm(
+        formula,
+        oob.predictions %>% dplyr::slice(-test.fold)
+      )
+    } else {
+      meta.multi <- ridge::linearRidge(
+        formula,
+        oob.predictions %>% dplyr::slice(-test.fold),
+        lambda = "automatic",
+        scaling = "corrForm"
+      )
+    }
 
     intra.prediction <- stats::predict(meta.intra, intra.view.only %>%
       dplyr::slice(test.fold))
@@ -141,8 +162,8 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
     )
 
     tibble::tibble(
-      intra.RMSE = intra.RMSE, intra.R2 = 100*intra.R2,
-      multi.RMSE = multi.RMSE, multi.R2 = 100*multi.R2
+      intra.RMSE = intra.RMSE, intra.R2 = 100 * intra.R2,
+      multi.RMSE = multi.RMSE, multi.R2 = 100 * multi.R2
     )
   })
 
