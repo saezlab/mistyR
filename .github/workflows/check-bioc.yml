@@ -202,6 +202,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && runner.os == 'Linux'
         run: |
           remotes::install_cran(c("pkgdown", "Seurat", "hdf5r"), upgrade = TRUE)
+          BiocManager::install(c("progeny", "SpatialExperiment"), ask = FALSE)
 
           ## modified from pkgdown::deploy_to_branch
           deploy_to_branch_mod <- function(pkg = ".", commit_message = pkgdown:::construct_commit_message(pkg), 
