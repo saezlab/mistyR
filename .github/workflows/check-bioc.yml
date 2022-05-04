@@ -194,7 +194,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           # For Seurat only
-          sudo apt-get install -y libhdf5-dev libgeos-c1v5
+          sudo apt-get install -y libhdf5-dev libgeos++-dev libgeos-3.8.0 libgeos-c1v5 libgeos-dev libgeos-doc
         shell: bash {0}
         
       ## Changing package deployment to make the necessary changes to the vignette files
