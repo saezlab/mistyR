@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -86,13 +86,15 @@
     <p>Signature is a representation of each sample in the space of mistyR results.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">extract_signature</span><span class="op">(</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">extract_signature</span><span class="op">(</span>
   <span class="va">misty.results</span>,
   type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"performance"</span>, <span class="st">"contribution"</span>, <span class="st">"importance"</span><span class="op">)</span>,
   trim <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>,
   trim.measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gain.R2"</span>, <span class="st">"multi.R2"</span>, <span class="st">"intra.R2"</span>, <span class="st">"gain.RMSE"</span>, <span class="st">"multi.RMSE"</span>,
     <span class="st">"intra.RMSE"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div></div>
+<span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -155,9 +157,9 @@ The importance signature vector for each sample available in
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 34</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sample       ECM_intra.R2 ECM_multi.R2 ECM_gain.R2 ligA_intra.R2 ligA_multi.R2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/Rtmpiv…         92.5         93.5       0.964          98.6          98.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/Rtmpiv…         93.2         94.1       0.882          98.7          98.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/Rtmpiv…         92.8         93.5       0.734          98.6          98.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/RtmpTz…         92.5         93.4       0.958          98.6          98.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/RtmpTz…         93.2         94.1       0.882          98.7          98.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/RtmpTz…         92.7         93.5       0.743          98.6          98.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 28 more variables: ligA_gain.R2 &lt;dbl&gt;, ligB_intra.R2 &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ligB_multi.R2 &lt;dbl&gt;, ligB_gain.R2 &lt;dbl&gt;, ligC_intra.R2 &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ligC_multi.R2 &lt;dbl&gt;, ligC_gain.R2 &lt;dbl&gt;, ligD_intra.R2 &lt;dbl&gt;,</span></span>
@@ -179,7 +181,7 @@ The importance signature vector for each sample available in
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

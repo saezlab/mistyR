@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -58,7 +58,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -114,7 +114,7 @@
       Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana, Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2022-05-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/mistyR.Rmd" class="external-link"><code>vignettes/mistyR.Rmd</code></a></small>
       <div class="hidden name"><code>mistyR.Rmd</code></div>
@@ -123,9 +123,9 @@
 
     
     
-<div class="section level1">
-<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h1>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>The use of mistyR is conceptualized around building a workflow for analysis of spatial omics data by four classes of functions:</p>
 <ul>
 <li><p><a href="#view-composition">View composition</a></p></li>
@@ -180,9 +180,9 @@
 <span class="co">#&gt;  $ type : chr [1:4205] "CT1" "CT2" "CT1" "CT2" ...</span></code></pre></div>
 <p>For more information about the underlying model and data generation see <code><a href="../reference/synthetic.html">help(synthetic)</a></code> or the <a href="#publication">publication</a>.</p>
 </div>
-<div class="section level1">
-<h1 id="view-composition">View composition<a class="anchor" aria-label="anchor" href="#view-composition"></a>
-</h1>
+<div class="section level2">
+<h2 id="view-composition">View composition<a class="anchor" aria-label="anchor" href="#view-composition"></a>
+</h2>
 <p>The <em><a href="https://github.com/saezlab/mistyR" class="external-link">mistyR</a></em> workflow always starts by defining an intraview (<code><a href="../reference/create_initial_view.html">create_initial_view()</a></code>) containing measurements of the markers that are the target of the modeling at each cell of interest. For the first sample from the <code>synthetic</code> dataset we select all markers except for the ligands for all available cells.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">expr</span> <span class="op">&lt;-</span> <span class="va">synthetic</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">row</span>, <span class="va">col</span>, <span class="va">type</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"lig"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
@@ -275,9 +275,9 @@
 <span class="co">#&gt; paraview.10    2      -none- list     </span>
 <span class="co">#&gt; nearest        2      -none- list</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="model-training">Model training<a class="anchor" aria-label="anchor" href="#model-training"></a>
-</h1>
+<div class="section level2">
+<h2 id="model-training">Model training<a class="anchor" aria-label="anchor" href="#model-training"></a>
+</h2>
 <p>Once the view composition is created, the model training is managed by the function <code><a href="../reference/run_misty.html">run_misty()</a></code>. By default, models are trained for each marker available in the <em>intraview</em> for each view independently. The results of the model training will be stored in a folder named “results”.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/run_misty.html">run_misty</a></span><span class="op">(</span><span class="op">)</span>
@@ -357,9 +357,9 @@
 <span class="co">#&gt;  "/home/runner/work/mistyR/mistyR/vignettes/results/synthetic9"</span></code></pre></div>
 <p>Note that by default, <em><a href="https://github.com/saezlab/mistyR" class="external-link">mistyR</a></em> caches calculated views<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> and trained models, such that in case of repeated running of the workflow they will be retrieved instead of recalculated, thus saving significant computational time. However, the size of the generated cache files can be large. Therefore, the functions that can work with cached files, such as <code><a href="../reference/run_misty.html">run_misty()</a></code>, have parameter named <code>cached</code> that can be set to <code>FALSE</code>. Additionally the function <code><a href="../reference/clear_cache.html">clear_cache()</a></code> provides means to remove cache files.</p>
 </div>
-<div class="section level1">
-<h1 id="result-processing">Result processing<a class="anchor" aria-label="anchor" href="#result-processing"></a>
-</h1>
+<div class="section level2">
+<h2 id="result-processing">Result processing<a class="anchor" aria-label="anchor" href="#result-processing"></a>
+</h2>
 <p>The raw <em><a href="https://github.com/saezlab/mistyR" class="external-link">mistyR</a></em> results are stored in several text files in the output folder for each analyzed sample. The results from one or more samples can be collected, aggregated and coverted to an R object with the function <code><a href="../reference/collect_results.html">collect_results()</a></code>, by providing path(s) to folder(s) containing results generated by <code><a href="../reference/run_misty.html">run_misty()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">misty.results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collect_results.html">collect_results</a></span><span class="op">(</span><span class="va">result.folders</span><span class="op">)</span>
@@ -382,9 +382,9 @@
 <span class="co">#&gt; importances.aggregated 5      tbl_df list</span></code></pre></div>
 <p>See <code><a href="../reference/collect_results.html">help(collect_results)</a></code> for more information on the structure of <code>misty.results</code>.</p>
 </div>
-<div class="section level1">
-<h1 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
-</h1>
+<div class="section level2">
+<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+</h2>
 <p>MISTy gives explanatory answers to three general questions. Each question can be answered by looking at the corresponding plot.</p>
 <p><strong>1. How much can the broader spatial context explain the expression of markers (in contrast to the intraview)?</strong></p>
 <p>This can be observed in the gain in R2 (absolute percentage) (or relative percentage of decrease RMSE) of using the multiview model in contrast to the single <em>intraview</em> only model.</p>
@@ -403,13 +403,13 @@
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 2</span></span>
 <span class="co">#&gt;   target mean.p</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ECM    0.011<span style="text-decoration: underline;">4</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> protF  0.082<span style="text-decoration: underline;">9</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ECM    0.018<span style="text-decoration: underline;">4</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> protF  0.049<span style="text-decoration: underline;">6</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> protE  0.421 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> prodA  0.463 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> prodB  0.500 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> prodD  0.503 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> prodC  0.505</span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> prodA  0.460 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> prodB  0.499 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> prodC  0.503 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> prodD  0.505</span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the following:</p>
 <p>“We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view.”</p>
 <p><strong>2.How much do different view components contribute to explaining the expression?</strong></p>
@@ -444,28 +444,28 @@
 <p>When interpreting the results and the plots it is important to note that the relationships captured in the importances are not to assumed or interpreted as linear or casual. Furthermore, the estimated importance of a single predictor - marker pair should not be interpredes in isolation but in the context of the other predictors, since training MISTy models is multivariate predictive task.</p>
 <hr>
 </div>
-<div class="section level1 unnumbered">
-<h1 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
-</h1>
-<div class="section level2 unnumbered">
-<h2 id="more-examples">More examples<a class="anchor" aria-label="anchor" href="#more-examples"></a>
+<div class="section level2">
+<h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
 </h2>
+<div class="section level3">
+<h3 id="more-examples">More examples<a class="anchor" aria-label="anchor" href="#more-examples"></a>
+</h3>
 <p><code>browseVignettes("mistyR")</code></p>
 <p><a href="https://saezlab.github.io/mistyR/articles/">Online articles</a></p>
 </div>
-<div class="section level2 unnumbered">
-<h2 id="publication">Publication<a class="anchor" aria-label="anchor" href="#publication"></a>
+<div class="section level3">
+<h3 id="publication">Publication<a class="anchor" aria-label="anchor" href="#publication"></a>
+</h3>
+<p><em>Jovan Tanevski, Ricardo Omar Ramirez Flores, Attila Gabor, Denis Schapiro, Julio Saez-Rodriguez. Explainable multiview framework for dissecting spatial relationships from highly multiplexed data. Genome Biology 23, 97 (2022). <a href="https://doi.org/10.1186/s13059-022-02663-5" class="external-link uri">https://doi.org/10.1186/s13059-022-02663-5</a></em></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<p><em>Jovan Tanevski, Attila Gabor, Ricardo Omar Ramirez Flores, Denis Schapiro, Julio Saez-Rodriguez (2020). Explainable multi-view framework for dissecting inter-cellular signaling from highly multiplexed spatial data. bioRxiv. doi: 10.1101/2020.05.08.084145</em></p>
-</div>
-</div>
-<div class="section level1 unnumbered">
-<h1 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
-</h1>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> at the point when this document was compiled:</p>
-<pre><code><span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<pre><code><span class="co">#&gt; R version 4.2.0 (2022-04-22)</span>
 <span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
+<span class="co">#&gt; Running under: Ubuntu 20.04.4 LTS</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span>
@@ -486,33 +486,33 @@
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] ggplot2_3.3.5    distances_0.1.8  purrr_0.3.4      dplyr_1.0.7     </span>
-<span class="co">#&gt; [5] future_1.23.0    mistyR_1.2.1     BiocStyle_2.22.0</span>
+<span class="co">#&gt; [1] ggplot2_3.3.6    distances_0.1.8  purrr_0.3.4      dplyr_1.0.9     </span>
+<span class="co">#&gt; [5] future_1.25.0    mistyR_1.4.0     BiocStyle_2.24.0</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;  [1] tidyr_1.1.4         listenv_0.8.0       assertthat_0.2.1   </span>
-<span class="co">#&gt;  [4] rprojroot_2.0.2     digest_0.6.29       utf8_1.2.2         </span>
-<span class="co">#&gt;  [7] parallelly_1.29.0   R6_2.5.1            evaluate_0.14      </span>
-<span class="co">#&gt; [10] highr_0.9           pillar_1.6.4        rlang_0.4.12       </span>
-<span class="co">#&gt; [13] data.table_1.14.2   furrr_0.2.3         jquerylib_0.1.4    </span>
-<span class="co">#&gt; [16] R.utils_2.11.0      R.oo_1.24.0         rmarkdown_2.11     </span>
-<span class="co">#&gt; [19] pkgdown_2.0.0       textshaping_0.3.6   desc_1.4.0         </span>
-<span class="co">#&gt; [22] labeling_0.4.2      stringr_1.4.0       igraph_1.2.9       </span>
-<span class="co">#&gt; [25] munsell_0.5.0       compiler_4.1.2      xfun_0.28          </span>
-<span class="co">#&gt; [28] pkgconfig_2.0.3     systemfonts_1.0.3   globals_0.14.0     </span>
-<span class="co">#&gt; [31] htmltools_0.5.2     tidyselect_1.1.1    tibble_3.1.6       </span>
-<span class="co">#&gt; [34] bookdown_0.24       codetools_0.2-18    fansi_0.5.0        </span>
-<span class="co">#&gt; [37] crayon_1.4.2        withr_2.4.3         R.methodsS3_1.8.1  </span>
-<span class="co">#&gt; [40] grid_4.1.2          jsonlite_1.7.2      gtable_0.3.0       </span>
-<span class="co">#&gt; [43] lifecycle_1.0.1     DBI_1.1.1           magrittr_2.0.1     </span>
-<span class="co">#&gt; [46] scales_1.1.1        rlist_0.4.6.2       cli_3.1.0          </span>
+<span class="co">#&gt;  [1] tidyr_1.2.0         listenv_0.8.0       assertthat_0.2.1   </span>
+<span class="co">#&gt;  [4] rprojroot_2.0.3     digest_0.6.29       utf8_1.2.2         </span>
+<span class="co">#&gt;  [7] parallelly_1.31.1   R6_2.5.1            evaluate_0.15      </span>
+<span class="co">#&gt; [10] highr_0.9           pillar_1.7.0        rlang_1.0.2        </span>
+<span class="co">#&gt; [13] data.table_1.14.2   furrr_0.3.0         jquerylib_0.1.4    </span>
+<span class="co">#&gt; [16] R.oo_1.24.0         R.utils_2.11.0      rmarkdown_2.14     </span>
+<span class="co">#&gt; [19] pkgdown_2.0.3       textshaping_0.3.6   desc_1.4.1         </span>
+<span class="co">#&gt; [22] labeling_0.4.2      stringr_1.4.0       igraph_1.3.1       </span>
+<span class="co">#&gt; [25] munsell_0.5.0       compiler_4.2.0      xfun_0.30          </span>
+<span class="co">#&gt; [28] pkgconfig_2.0.3     systemfonts_1.0.4   globals_0.14.0     </span>
+<span class="co">#&gt; [31] htmltools_0.5.2     tidyselect_1.1.2    tibble_3.1.7       </span>
+<span class="co">#&gt; [34] bookdown_0.26       codetools_0.2-18    fansi_1.0.3        </span>
+<span class="co">#&gt; [37] crayon_1.5.1        withr_2.5.0         R.methodsS3_1.8.1  </span>
+<span class="co">#&gt; [40] grid_4.2.0          jsonlite_1.8.0      gtable_0.3.0       </span>
+<span class="co">#&gt; [43] lifecycle_1.0.1     DBI_1.1.2           magrittr_2.0.3     </span>
+<span class="co">#&gt; [46] scales_1.2.0        rlist_0.4.6.2       cli_3.3.0          </span>
 <span class="co">#&gt; [49] stringi_1.7.6       cachem_1.0.6        farver_2.1.0       </span>
-<span class="co">#&gt; [52] fs_1.5.1            bslib_0.3.1         filelock_1.0.2     </span>
-<span class="co">#&gt; [55] ellipsis_0.3.2      ragg_1.2.0          generics_0.1.1     </span>
-<span class="co">#&gt; [58] vctrs_0.3.8         RColorBrewer_1.1-2  tools_4.1.2        </span>
-<span class="co">#&gt; [61] glue_1.5.1          parallel_4.1.2      fastmap_1.1.0      </span>
-<span class="co">#&gt; [64] yaml_2.2.1          colorspace_2.0-2    BiocManager_1.30.16</span>
-<span class="co">#&gt; [67] memoise_2.0.1       knitr_1.36          sass_0.4.0</span></code></pre>
+<span class="co">#&gt; [52] fs_1.5.2            bslib_0.3.1         filelock_1.0.2     </span>
+<span class="co">#&gt; [55] ellipsis_0.3.2      ragg_1.2.2          generics_0.1.2     </span>
+<span class="co">#&gt; [58] vctrs_0.4.1         RColorBrewer_1.1-3  tools_4.2.0        </span>
+<span class="co">#&gt; [61] glue_1.6.2          parallel_4.2.0      fastmap_1.1.0      </span>
+<span class="co">#&gt; [64] yaml_2.3.5          colorspace_2.0-3    BiocManager_1.30.17</span>
+<span class="co">#&gt; [67] memoise_2.0.1       knitr_1.39          sass_0.4.1</span></code></pre>
 </div>
 <div class="footnotes">
 <hr>
@@ -540,7 +540,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

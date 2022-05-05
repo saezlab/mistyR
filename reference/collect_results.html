@@ -24,7 +24,7 @@ of a set of raw results produced by run_misty()."><!-- mathjax --><script src="h
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mistyR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -36,7 +36,7 @@ of a set of raw results produced by run_misty()."><!-- mathjax --><script src="h
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,7 +88,9 @@ of a set of raw results produced by run_misty()."><!-- mathjax --><script src="h
 of a set of raw results produced by <code><a href="run_misty.html">run_misty</a>()</code>.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">collect_results</span><span class="op">(</span><span class="va">folders</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">collect_results</span><span class="op">(</span><span class="va">folders</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -190,16 +192,16 @@ of a set of raw results produced by <code><a href="run_misty.html">run_misty</a>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ improvements          : tibble [264 × 4] (S3: tbl_df/tbl/data.frame)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ target : chr [1:264] "ECM" "ECM" "ECM" "ECM" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sample : chr [1:264] "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sample : chr [1:264] "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ measure: chr [1:264] "intra.RMSE" "intra.R2" "multi.RMSE" "multi.R2" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ value  : num [1:264] 0.1056 92.5215 0.0985 93.4856 0.0274 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ value  : num [1:264] 0.1058 92.4635 0.0988 93.4217 0.0101 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ contributions         : tibble [198 × 4] (S3: tbl_df/tbl/data.frame)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ target: chr [1:198] "ECM" "ECM" "ECM" "ECM" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sample: chr [1:198] "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sample: chr [1:198] "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ view  : chr [1:198] "intercept" "intra" "para.10" "p.intercept" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ value : num [1:198] -7.41e-02 9.92e-01 2.59e-01 2.80e-106 0.00 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ value : num [1:198] -0.074 0.991 0.259 NA 0 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ importances           : tibble [726 × 5] (S3: tbl_df/tbl/data.frame)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sample    : chr [1:726] "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" "/tmp/Rtmpiv82LD/filec2a0773041f5/reference/results/synthetic1" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sample    : chr [1:726] "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" "/tmp/RtmpTz6MNR/file634642890009/reference/results/synthetic1" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ view      : chr [1:726] "intra" "intra" "intra" "intra" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Predictor : chr [1:726] "ECM" "ECM" "ECM" "ECM" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Target    : chr [1:726] "ECM" "ligA" "ligB" "ligC" ...</span>
@@ -207,16 +209,16 @@ of a set of raw results produced by <code><a href="run_misty.html">run_misty</a>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ improvements.stats    : tibble [66 × 5] (S3: tbl_df/tbl/data.frame)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ target : chr [1:66] "ECM" "ECM" "ECM" "ECM" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ measure: chr [1:66] "gain.R2" "gain.RMSE" "intra.R2" "intra.RMSE" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mean   : num [1:66] 0.86 6.188 92.836 0.101 93.696 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sd     : num [1:66] 0.11674 0.8589 0.33867 0.00577 0.33033 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ cv     : num [1:66] 0.13572 0.1388 0.00365 0.05744 0.00353 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mean   : num [1:66] 0.861 6.202 92.807 0.101 93.668 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sd     : num [1:66] 0.10931 0.77475 0.38239 0.00582 0.37607 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ cv     : num [1:66] 0.12699 0.12491 0.00412 0.05781 0.00401 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ contributions.stats   : tibble [22 × 6] (S3: tbl_df/tbl/data.frame)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ target  : chr [1:22] "ECM" "ECM" "ligA" "ligA" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ view    : chr [1:22] "intra" "para.10" "intra" "para.10" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mean    : num [1:22] 0.989 0.245 0.996 0.066 0.985 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ fraction: num [1:22] 0.8012 0.1988 0.9379 0.0621 0.7747 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ p.mean  : num [1:22] 0.00 1.27e-101 0.00 1.26e-44 0.00 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ p.sd    : num [1:22] 0.00 2.20e-101 0.00 2.12e-44 0.00 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ p.mean  : num [1:22] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ p.sd    : num [1:22] 0 0 0 0 0 0 0 0 0 0 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ importances.aggregated: tibble [242 × 5] (S3: tbl_df/tbl/data.frame)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ view      : chr [1:242] "intra" "intra" "intra" "intra" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Predictor : chr [1:242] "ECM" "ECM" "ECM" "ECM" ...</span>
@@ -237,7 +239,7 @@ of a set of raw results produced by <code><a href="run_misty.html">run_misty</a>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
