@@ -1,4 +1,4 @@
-FROM rocker/r-base:latest
+FROM rocker/r-ver:4.2
 
 WORKDIR /home/docker
 RUN mkdir mistyR
