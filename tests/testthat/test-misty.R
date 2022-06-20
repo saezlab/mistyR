@@ -99,20 +99,20 @@ test_that("warning raised if variance of variable is 0", {
 })
 
 test_that("all models work and produce the correct output", {
-  functions <- list("rf" = random_forest_model, 
-                    "bag_mars" = bagged_mars_model, 
-                    "mars" = mars_model,
-                    "linear" = linear_model,
-                    "svm" = svm_model,
-                    "boosting" = gradient_boosting_model,
-                    "mpl" = mlp_model)
+  functions <- list("rf" = rlang::expr(random_forest_model), 
+                    "bag_mars" = rlang::expr(bagged_mars_model), 
+                    "mars" = rlang::expr(mars_model),
+                    "linear" = rlang::expr(linear_model),
+                    "svm" = rlang::expr(svm_model),
+                    "boosting" = rlang::expr(gradient_boosting_model),
+                    "mpl" = rlang::expr(mlp_model))
   
   ncols <- 5
   expr <- generate_random_tibble(100, ncols)
   misty.views <- create_initial_view(expr)
   
-  misty.test <- purrr::map(functions, function(fun) {
-    suppressWarnings(misty.results <- run_misty(misty.views, model.function = fun) %>%
+  misty.test <- purrr::walk(functions, function(fun) {
+    suppressWarnings(misty.results <- run_misty(misty.views, model.function = !!fun) %>%
       collect_results()
     )
     expect_true(dir.exists("results"))
@@ -135,114 +135,18 @@ test_that("ellipsis arguments can be passed to the provided ML models", {
   misty.views <- create_initial_view(expr) %>%
     add_paraview(positions = pos, l = 10)
   
-  # random forest
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = random_forest_model)
+  suppressWarnings(misty.test <- run_misty(misty.views, model.function = mars_model, 
+                                        degree = 3, nk = 30, cached = TRUE)
   )
-  end <- Sys.time()
-  first.run = end - start
   
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = random_forest_model, 
-                          num.trees = 2000)
-  )
-  end <- Sys.time()
-  second.run = end - start
-  testthat::expect_true(first.run < second.run)
-  
-  # bagged mars
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = bagged_mars_model,
-                          degree = 1)
-  )
-  end <- Sys.time()
-  first.run = end - start
-  
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = bagged_mars_model, 
-                          n.bags = 50)
-  )
-  end <- Sys.time()
-  second.run = end - start
-  testthat::expect_true(first.run < second.run)
-  
-  # mars
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = mars_model,
-                          degree = 3, nk = 30)
-  )
-  end <- Sys.time()
-  first.run = end - start
-  
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = mars_model, 
-                          degree = 3, nk = 30)
-  )
-  end <- Sys.time()
-  second.run = end - start
-  testthat::expect_true(first.run < second.run)
-  
-  # svm
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = svm_model,
-                          C = 1)
-  )
-  end <- Sys.time()
-  first.run = end - start
-  
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = svm_model, 
-                          C = 100)
-  )
-  end <- Sys.time()
-  second.run = end - start
-  testthat::expect_true(first.run < second.run)
-  
-  # gradient boosting
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = gradient_boosting_model,
-                          booster = "gbtree", nrounds = 10)
-  )
-  end <- Sys.time()
-  first.run = end - start
-  
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = gradient_boosting_model, 
-                          booster = "gbtree", nrounds = 20)
-  )
-  end <- Sys.time()
-  second.run = end - start
-  testthat::expect_true(first.run < second.run)
-
-  # multi-layer perceptron
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = mlp_model,
-                          size = c(1), maxit = 1)
-  )
-  end <- Sys.time()
-  first.run = end - start
-  
-  start <- Sys.time()
-  suppressWarnings(
-  misty.test <- run_misty(misty.views, model.function = mlp_model, 
-                          size = c(10), maxit = 100)
-  )
-  end <- Sys.time()
-  second.run = end - start
-  testthat::expect_true(first.run < second.run)
-  
-  unlink("results", recursive = TRUE)
+ cache.folder <- paste0(".misty.temp/", misty.views[["misty.uniqueid"]])
+ cached.files <- list.files(cache.folder)
+ 
+ expect_true(all(stringr::str_detect(cached.files, "mars_model")) & 
+               all(stringr::str_detect(cached.files, "degree.3.nk.30")))
+ 
+ clear_cache()
+ unlink("results", recursive = TRUE)
 })
 
 test_that("k for cv , n.bags for bagging can be changed and approx works", {

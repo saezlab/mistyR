@@ -114,10 +114,10 @@ gradient_boosting_model <- function(view_data, target, seed, k = 10, ...) {
       dplyr::select(-tidyselect::all_of(target)) %>%
       as.matrix()
 
-    label.hat <- predict(model, pred.test)
+    label.hat <- stats::predict(model, pred.test)
 
     tibble::tibble(index = holdout, prediction = label.hat)
-  }) %>% dplyr::arrange(index)
+  }) %>% dplyr::arrange(.data$index)
 
   predictors <- view_data %>%
     dplyr::select(-tidyselect::all_of(target)) %>%
@@ -214,7 +214,7 @@ bagged_mars_model <- function(view_data, target, seed,
 
     oob <- seq.int(1, nrow(view_data))[!(seq.int(1, nrow(view_data)) %in% bag)]
 
-    pred <- predict(model, view_data[oob, ])
+    pred <- stats::predict(model, view_data[oob, ])
     list(
       model = model,
       prediction = tibble::tibble(index = oob, prediction = as.vector(pred))
@@ -225,9 +225,9 @@ bagged_mars_model <- function(view_data, target, seed,
   predictions <- purrr::map_dfr(models, function(model) {
     tibble::tibble(model$prediction)
   }) %>%
-    dplyr::group_by(index) %>%
-    dplyr::summarise(prediction = mean(prediction)) %>%
-    dplyr::arrange(index)
+    dplyr::group_by(.data$index) %>%
+    dplyr::summarise(prediction = mean(.data$prediction)) %>%
+    dplyr::arrange(.data$index)
 
   assertthat::assert_that(nrow(predictions) == nrow(view_data),
     msg = "There are too few bags to get OOB predictions for all observations.
@@ -305,10 +305,10 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
 
     model <- do.call(earth::earth, algo.arguments)
 
-    label.hat <- predict(model, test)
+    label.hat <- stats::predict(model, test)
 
     tibble::tibble(index = holdout, prediction = label.hat[,1])
-  }) %>% dplyr::arrange(index)
+  }) %>% dplyr::arrange(.data$index)
 
   algo.arguments.wm <- list(
     formula = stats::as.formula(paste0(target, " ~ .")),
@@ -365,10 +365,10 @@ linear_model <- function(view_data, target, seed, k = 10, ...) {
 
     model <- do.call(stats::lm, algo.arguments)
 
-    pred <- predict.lm(model, view_data[holdout, ])
+    pred <- stats::predict(model, view_data[holdout, ])
 
     tibble::tibble(index = holdout, prediction = as.vector(pred))
-  }) %>% dplyr::arrange(index)
+  }) %>% dplyr::arrange(.data$index)
 
   algo.arguments.wm <- list(
     formula = stats::as.formula(paste0(target, " ~ .")),
@@ -443,7 +443,7 @@ svm_model <- function(view_data, target, seed, approx = 0.4, k = 10, ...) {
     pred <- kernlab::predict(model, view_data[holdout, ])
 
     tibble::tibble(index = holdout, prediction = as.vector(pred))
-  }) %>% dplyr::arrange(index)
+  }) %>% dplyr::arrange(.data$index)
 
   algo.arguments.wm <- list(
     x = stats::as.formula(paste0(target, " ~ .")),
@@ -533,10 +533,10 @@ mlp_model <- function(view_data, target, seed, approx = 0.6, k = 10, ...) {
 
     model <- do.call(RSNNS::mlp, algo.arguments)
 
-    label.hat <- predict(model, X_test)
+    label.hat <- stats::predict(model, X_test)
 
     tibble::tibble(index = holdout, prediction = label.hat[,1])
-  }) %>% dplyr::arrange(index)
+  }) %>% dplyr::arrange(.data$index)
 
   algo.arguments.wm <- list(
     x = X,

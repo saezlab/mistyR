@@ -134,6 +134,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
                       model.function = random_forest_model, ...) {
 
   model.name <- as.character(rlang::enexpr(model.function))
+  
+  if(!exists(model.name, envir = globalenv()))
+    model.function <- utils::getFromNamespace(model.name, "mistyR")
 
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
