@@ -94,7 +94,7 @@ run_misty_spe <- function(slide,
 ) {
 
   # Extracting geometry
-  geometry <- as.data.frame(spatialData(slide)) %>%
+  geometry <- as.data.frame(colData(slide)) %>%
     select(array_row, array_col)
 
   # Extracting data
@@ -281,7 +281,7 @@ plotMolecules_adapted <- function(spe,
   if (!is.null(palette) && length(palette) == 1) {
     palette <- c("black", palette)
   }
-  df_plot <- spatialData(spe)[, c(x_coord, y_coord), drop = FALSE]
+  df_plot <- colData(spe)[, c(x_coord, y_coord), drop = FALSE]
   mRNA_counts <-
     as.numeric(assay(altExp(spe, alt_assay))[molecule, , drop = FALSE])
   stopifnot(length(mRNA_counts) == nrow(df_plot))
@@ -331,11 +331,15 @@ Please note that the `r BiocStyle::Biocpkg("SpatialExperiment")` function `read1
 # Load and normalize using SCT
 folder <- "breast_A_1"
 
-# rename to create the required file structure
+#create the required file structure
+dir.create(paste0(folder,"/outs"))
 file.rename(
-  "breast_A_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5",
-  "breast_A_1/filtered_feature_bc_matrix.h5"
+  from = "breast_A_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5",
+  to = "breast_A_1/outs/filtered_feature_bc_matrix.h5"
 )
+file.rename(from = "breast_A_1/spatial", to ="breast_A_1/outs/spatial")
+
+
 
 spe <- read10xVisium(folder, type = "HDF5", data = "filtered", 
                      images = "lowres")
@@ -357,11 +361,6 @@ gene.dict <- as_tibble(rowData(spe), rownames = NA) %>%
 sct.data <- sct.data[gene.dict %>% pull("ENSEMBL"), colnames(spe)]
 rownames(sct.data) <- gene.dict %>% pull(symbol)
 
-# undo file rename
-file.rename(
-  "breast_A_1/filtered_feature_bc_matrix.h5",
-  "breast_A_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5"
-)
 ```
 
 ## Filtering genes that are expressed in at least 5% of the spots

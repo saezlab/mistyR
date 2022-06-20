@@ -203,7 +203,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     pvals <- if (model.lm) {
       # fix for missing pvals
       combined.views.summary <- summary(combined.views)
-      data.frame(c = stats::coef(combined.views)) %>%
+      pvals <- data.frame(c = stats::coef(combined.views)) %>%
         tibble::rownames_to_column("views") %>%
         dplyr::left_join(
           data.frame(p = stats::coef(combined.views.summary)[, 4]) %>%
@@ -212,15 +212,18 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         ) %>%
         dplyr::pull(.data$p) %>%
         tidyr::replace_na(1)
+
+      if (bypass.intra) append(pvals[-1], c(NA, 1), 0) else c(NA, pvals)
     } else {
-      ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+      pvals <- ridge::pvals(combined.views)$pval[, combined.views$chosen.nPCs]
+      if (bypass.intra) append(pvals, c(NA, 1), 0) else c(NA, pvals)
     }
 
 
     # coefficient values and p-values
     coeff <- c(
       if (bypass.intra) append(coefs, 0, 1) else coefs,
-      if (bypass.intra) append(pvals, 1, 1) else c(NA, pvals)
+      pvals
     )
 
     current.lock <- filelock::lock(coef.lock)
@@ -250,8 +253,10 @@ run_misty <- function(views, results.folder = "results", seed = 42,
       }
     )
 
-    # performance, warning added na.rm = TRUE here!
-    if (sum(target.model[["performance.estimate"]] < 0, na.rm = TRUE) > 0) {
+
+    # performance
+    if (sum(target.model[["performance.estimate"]] < 0 |
+      is.na(target.model[["performance.estimate"]])) > 0) {
       warning.message <-
         paste(
           "Negative performance detected and replaced with 0 for target",
@@ -261,9 +266,15 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     }
 
     performance.estimate <- target.model[["performance.estimate"]] %>%
-      dplyr::mutate_if(~ sum(. < 0) > 0, ~ pmax(., 0)) 
-    # helpful to guard against NA issues?
-    #%>% replace(is.na(.), 0)
+      dplyr::mutate(dplyr::across(
+        dplyr::ends_with("R2"),
+        ~ pmax(., 0, na.rm = TRUE)
+      )) %>%
+      dplyr::mutate(dplyr::across(
+        dplyr::ends_with("RMSE"),
+        ~ pmin(., max(.), na.rm = TRUE)
+      ))
+
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(stats::t.test(performance.estimate %>%

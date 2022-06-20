@@ -8,6 +8,7 @@ add_juxtaview(
   current.views,
   positions,
   neighbor.thr = 15,
+  prefix = "",
   cached = FALSE,
   verbose = TRUE
 )
@@ -21,6 +22,8 @@ as in the intraview.}
 
 \item{neighbor.thr}{a threshold value used to indicate the largest distance
 between two spatial units that can be considered as neighboring.}
+
+\item{prefix}{a prefix to add to the column names.}
 
 \item{cached}{a \code{logical} indicating whether to cache the calculated view
 after the first calculation and to reuse a previously cached view if it
