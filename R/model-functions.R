@@ -1,26 +1,5 @@
-# MISTy view-specific functions
-# Copyleft (ɔ) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
-
-#' Function to merge named arguments from two lists without removing NULL entries
-#'
-#' @param l1 list 1
-#' @param l2 list 2
-#'
-#' @export
-merge_two <- function(l1, l2) {
-  n1 <- names(l1)
-  n2 <- names(l2)
-  diff <- n1[!(n1 %in% n2)]
-  n1_list <- diff %>%
-    purrr::set_names() %>%
-    purrr::map(function(name) l1[[name]])
-
-  union <- n2[!(n2 %in% diff)]
-  n2_list <- union %>%
-    purrr::set_names() %>%
-    purrr::map(function(name) l2[[name]])
-  return(c(n1_list, n2_list))
-}
+# MISTy view-specific modeling functions
+# Copyleft (ɔ) 2021 Philipp Schäfer, Jovan Tanevski <jovan.tanevski@uni-heidelberg.de>
 
 #' Random Forest Implementation
 #' 
@@ -359,7 +338,7 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
 #' Simple Linear Model
 #'
 #' Function that can be passed to \code{run_misty()} via \code{run_misty(views, 
-#' model.function = linear_model)} to model each view using gradient boosting 
+#' model.function = linear_model)} to model each view using a simple linear model
 #' 
 #' @param view_data \code{tibble} containing the expression of the markers for
 #' each cell (rows = cells, cols = markers)

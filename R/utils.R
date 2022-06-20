@@ -485,3 +485,24 @@ extract_signature <- function(misty.results,
     }
   )
 }
+
+#' Function to merge named arguments from two lists without removing NULL entries
+#'
+#' @param l1 list 1
+#' @param l2 list 2
+#'
+#' @noRd
+merge_two <- function(l1, l2) {
+  n1 <- names(l1)
+  n2 <- names(l2)
+  diff <- n1[!(n1 %in% n2)]
+  n1_list <- diff %>%
+    purrr::set_names() %>%
+    purrr::map(function(name) l1[[name]])
+  
+  union <- n2[!(n2 %in% diff)]
+  n2_list <- union %>%
+    purrr::set_names() %>%
+    purrr::map(function(name) l2[[name]])
+  return(c(n1_list, n2_list))
+}
