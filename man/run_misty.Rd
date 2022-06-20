@@ -42,7 +42,7 @@ and coefficient files in the \code{results.folder}. Consider setting to
 parameters.}
 
 \item{model.function}{a function which is used to model each view, default
-model is \code{random_forest_model}. Other models included in MISTy are
+model is \code{random_forest_model}. Other models included in mistyR are
 \code{gradient_boosting_model}, \code{bagged_mars_model},
 \code{mars_model}, \code{linear_model},
 \code{svm_model}, \code{mlp_model}}
@@ -66,10 +66,56 @@ model in this case is a trivial model that predicts the average of each
 target. If the intraview has only one variable this switch is automatically
 set to \code{TRUE}.
 
-Default ML model to train the view-specific views is 
-\code{\link[ranger]{ranger}()}. The following parameters are the default
+\emph{Default} model to train the view-specific views is a Random Forest model
+based on \code{\link[ranger]{ranger}()} --  
+\code{run_misty(views, model.function = random_forest_model)}
+  
+The following parameters are the default
 configuration: \code{num.trees = 100}, \code{importance = "impurity"},
 \code{num.threads = 1}, \code{seed = seed}.
+
+\emph{Gradient boosting} is an alternative to model each view using gradient 
+boosting. The algorithm is based on \code{\link[xgboost]{xgb.train}()} --
+ \code{run_misty(views, model.function = gradient_boosting_model)} 
+
+The following parameters are the default configuration: \code{booster = "gbtree"},
+\code{rounds = 10}, \code{objective = "reg:squarederror"}. Set \code{booster}
+to \code{"gblinear"} for linear boosting.
+
+\emph{Bagged MARS} is an alternative to model each view using bagged MARS,
+(multivariate adaptive spline regression models) trained with 
+bootstrap aggregation samples. The algorithm is based on 
+\code{\link[earth]{earth}()} --
+\code{run_misty(views, model.function = bagged_mars_model)}
+
+The following parameters are the default configuration: \code{degree = 2}.
+Furthermore 50 base learners are used by default (pass \code{n.bags} as
+parameter via \code{...} to change this value).
+
+\emph{MARS} is an alternative to model each view using 
+multivariate adaptive spline regression model. The algorithm is based on 
+\code{\link[earth]{earth}()} --
+\code{run_misty(views, model.function = mars_model)}
+
+The following parameters are the default configuration: \code{degree = 2}.
+
+\emph{Linear model} is an alternative to model each view using a simple linear
+model. The algorithm is based on \code{\link[stats]{lm}()} --
+\code{run_misty(views, model.function = linear_model)}
+
+\emph{SVM} is an alternative to model each view using a support vector 
+machines. The algorithm is based on \code{\link[kernlab]{ksvm}()} --
+\code{run_misty(views, model.function = svm_model)}
+
+The following parameters are the default configuration: \code{kernel = "vanilladot"} 
+(linear kernel), \code{C = 1}, \code{type = "eps-svr"}.
+
+\emph{MLP} is an alternative to model each view using a multi-layer perceptron.
+The alogorithm is based on \code{\link[RSNNS]{mlp}()} --
+\code{run_misty(views, model.function = mlp_model)}
+
+The following parameters are the default configuration: \code{size = c(10)} 
+(meaning we have 1 hidden layer with 10 units).
 }
 \examples{
 # Create a view composition of an intraview and a paraview with radius 10 then

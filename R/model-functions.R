@@ -3,8 +3,8 @@
 
 #' Random Forest Implementation
 #' 
-#' The default function to model each view based on random forest. The 
-#' algorithm is implemented in the \code{ranger} R package.
+#' The default function to model each view based on random forest as implemented 
+#' in \code{\link[ranger]{ranger}()}.
 #' 
 #' The following parameters are the default configuration: \code{num.trees = 100},
 #'  \code{importance = "impurity"}, \code{num.threads = 1}, \code{seed = seed}.
@@ -18,7 +18,7 @@
 #' @param seed \code{integer} passed by run_misty()
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 random_forest_model <- function(view_data, target, seed, ...) {
   ellipsis.args <- list(...)
 
@@ -69,7 +69,7 @@ random_forest_model <- function(view_data, target, seed, ...) {
 #' compute the unbiased estimates
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 gradient_boosting_model <- function(view_data, target, seed, k = 10, ...) {
   
   assertthat::assert_that(requireNamespace("xgboost", quietly = TRUE),
@@ -180,7 +180,7 @@ gradient_boosting_model <- function(view_data, target, seed, k = 10, ...) {
 #' (bootstrap aggregation samples) used for bagging
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 bagged_mars_model <- function(view_data, target, seed,
                               n.bags = 50, ...) {
   
@@ -268,7 +268,7 @@ bagged_mars_model <- function(view_data, target, seed,
 #' for training in each fold
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
   
   assertthat::assert_that(requireNamespace("earth", quietly = TRUE),
@@ -348,7 +348,7 @@ mars_model <- function(view_data, target, seed, approx = 1.0, k = 10, ...) {
 #' unbiased estimates
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 linear_model <- function(view_data, target, seed, k = 10, ...) {
   folds <- withr::with_seed(
     seed,
@@ -391,7 +391,7 @@ linear_model <- function(view_data, target, seed, k = 10, ...) {
 #' SVM Implementation
 #'
 #' Function that can be passed to \code{run_misty()} via \code{run_misty(views, 
-#' model.function = gradient_boosting_model)} to model each view using a linear
+#' model.function = gradient_boosting_model)} to model each view using a 
 #' support vector machine. The algorithm is implemented in the \code{kernlab} R package.
 #' 
 #' The following parameters are the default configuration: \code{kernel = "vanilladot"} 
@@ -405,11 +405,11 @@ linear_model <- function(view_data, target, seed, k = 10, ...) {
 #' unbiased estimates
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 svm_model <- function(view_data, target, seed, approx = 0.4, k = 10, ...) {
   
   assertthat::assert_that(requireNamespace("kernlab", quietly = TRUE),
-    msg = "The package kernlab is required to use linear SVM"
+    msg = "The package kernlab is required to use SVM"
   )
 
   ellipsis.args <- list(...)
@@ -487,7 +487,7 @@ svm_model <- function(view_data, target, seed, approx = 0.4, k = 10, ...) {
 #' unbiased estimates
 #' @param ... all additional parameters are passed to the chosen ML model
 #'
-#' @export
+#' @noRd
 mlp_model <- function(view_data, target, seed, approx = 0.6, k = 10, ...) {
   
   assertthat::assert_that(requireNamespace("RSNNS", quietly = TRUE),
