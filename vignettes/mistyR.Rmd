@@ -257,7 +257,7 @@ and the *paraview*.
 misty.results %>% plot_interaction_communities("para.10", cutoff = 0.5)
 ```
 
-When interpreting the results and the plots it is important to note that the relationships captured in the importances are not to assumed or interpreted as linear or casual. Furthermore, the estimated importance of a single predictor - marker pair should not be interpredes in isolation but in the context of the other predictors, since training MISTy models is multivariate predictive task.
+When interpreting the results and the plots it is important to note that the relationships captured in the importances are not to assumed or interpreted as linear or casual. Furthermore, the estimated importance of a single predictor - marker pair should not be interpreted in isolation but in the context of the other predictors, since training MISTy models is multivariate predictive task.
 
 ---
 

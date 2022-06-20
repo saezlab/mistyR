@@ -13,6 +13,7 @@ run_misty(
   cv.folds = 10,
   cached = FALSE,
   append = FALSE,
+  model.function = random_forest_model,
   ...
 )
 }
@@ -30,7 +31,7 @@ models will be trained for markers in the intraview.}
 model using the intraview data (see Details).}
 
 \item{cv.folds}{number of cross-validation folds to consider for estimating
-the performance of the multi-view models.}
+the performance of the multi-view models}
 
 \item{cached}{a \code{logical} indicating whether to cache the trained models
 and to reuse previously cached ones if they already exist for this sample.}
@@ -40,9 +41,14 @@ and coefficient files in the \code{results.folder}. Consider setting to
 \code{TRUE} when rerunning a workflow with different \code{target.subset}
 parameters.}
 
-\item{...}{all additional parameters are passed to
-\code{\link[ranger]{ranger}()} for training the view-specific models
-(see Details for defaults).}
+\item{model.function}{a function which is used to model each view, default
+model is \code{random_forest_model}. Other models included in MISTy are
+\code{gradient_boosting_model}, \code{bagged_mars_model},
+\code{mars_model}, \code{linear_model},
+\code{svm_model}, \code{mlp_model}}
+
+\item{...}{all additional parameters are passed to the chosen ML model for
+training the view-specific models}
 }
 \value{
 Path to the results folder that can be passed to
@@ -60,8 +66,9 @@ model in this case is a trivial model that predicts the average of each
 target. If the intraview has only one variable this switch is automatically
 set to \code{TRUE}.
 
-Default values passed to \code{\link[ranger]{ranger}()} for training the
-view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+Default ML model to train the view-specific views is 
+\code{\link[ranger]{ranger}()}. The following parameters are the default
+configuration: \code{num.trees = 100}, \code{importance = "impurity"},
 \code{num.threads = 1}, \code{seed = seed}.
 }
 \examples{

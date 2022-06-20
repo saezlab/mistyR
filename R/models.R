@@ -3,24 +3,25 @@
 
 #' Train a multi-view model for a single target
 #'
-#' Trains individual Random Forest models for each view, a linear meta-model
-#' using the out-of-bag predictions of the view specific models and estimates
-#' the overall performance by cross-validation.
+#' Trains individual models for each view. Each view is modeled by the 
+#' function supplied via \code{model.function} which is passed down by
+#' \code{run_misty()}.
 #'
-#' Default values passed to \code{\link[ranger]{ranger}()} for training the
-#' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
-#' \code{num.threads = 1}, \code{seed = seed}.
+#' The default model is based on \code{\link[ranger]{ranger}()} for training the
+#' view-specific models with the following parameters: \code{num.trees = 100}, 
+#' \code{importance = "impurity"}, \code{num.threads = 1}, \code{seed = seed}.
 #'
 #' @inheritParams run_misty
 #'
 #' @param target name of the target marker to train models for.
 #'
-#' @return A list containing the trained meta-model, a list of trained
-#' view-specific models and performance estimates.
+#' @return A list containing the trained meta-model, the view-specific 
+#' importances and performance estimates.
 #'
 #' @noRd
-build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
-                        cv.folds = 10, cached = FALSE, ...) {
+build_model <- function(views, target, model.function, model.name,
+                        cv.folds, bypass.intra, seed, cached, ...) {
+  
   cache.location <- R.utils::getAbsolutePath(paste0(
     ".misty.temp", .Platform$file.sep,
     views[["misty.uniqueid"]]
@@ -34,31 +35,22 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   target.vector <- expr %>% dplyr::pull(target)
 
-  # merge ellipsis with default algorithm arguments
-  algo.arguments <- list(
-    num.trees = 100, importance = "impurity",
-    verbose = FALSE, num.threads = 1, seed = seed,
-    dependent.variable.name = target
-  )
-
   ellipsis.args <- list(...)
   ellipsis.args.text <- paste(names(ellipsis.args), ellipsis.args,
     sep = ".", collapse = "."
   )
-
-  if (!(length(ellipsis.args) == 0)) {
-    algo.arguments <- rlist::list.merge(algo.arguments, ellipsis.args)
-  }
-
+  
   # returns a list of models
   model.views <- views %>%
     rlist::list.remove(c("misty.uniqueid")) %>%
     purrr::map(function(view) {
+      
       model.view.cache.file <-
         paste0(
           cache.location, .Platform$file.sep,
-          "model.", view[["abbrev"]], ".", target,
-          ".par", ellipsis.args.text, ".rds"
+          "model.", model.name, ".", view[["abbrev"]], ".", target,
+          ".par.", cv.folds, ".", 
+          ellipsis.args.text, ".rds"
         )
 
       if (file.exists(model.view.cache.file) & cached) {
@@ -71,14 +63,11 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
           transformed.view.data <- view[["data"]] %>%
             dplyr::mutate(!!target := target.vector)
         }
-
-        model.view <- do.call(
-          ranger::ranger,
-          c(
-            list(data = transformed.view.data),
-            algo.arguments
-          )
-        )
+        
+        # Build model
+        model.view <- model.function(view_data = transformed.view.data,
+                                     target = target, seed = seed, ...)
+        
         if (cached) {
           readr::write_rds(model.view, model.view.cache.file)
         }
@@ -89,7 +78,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   # make oob predictions
   oob.predictions <- model.views %>%
-    purrr::map(~ .x$predictions) %>%
+    purrr::map(~ .x$unbiased.predictions$prediction) %>%
     rlist::list.cbind() %>%
     tibble::as_tibble(.name_repair = make.names) %>%
     dplyr::mutate(!!target := target.vector)
@@ -120,7 +109,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
   )
 
   intra.view.only <-
-    model.views[["intraview"]]$predictions %>%
+    model.views[["intraview"]]$unbiased.predictions$prediction %>%
     tibble::enframe(name = NULL, value = "intraview") %>%
     dplyr::mutate(!!target := target.vector)
 
@@ -169,7 +158,7 @@ build_model <- function(views, target, bypass.intra = FALSE, seed = 42,
 
   final.model <- list(
     meta.model = combined.views,
-    model.views = model.views,
+    model.importances = purrr::map(model.views, ~ .x$importances),
     performance.estimate = performance.estimate
   )
 

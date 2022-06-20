@@ -29,8 +29,9 @@ utils::globalVariables("where")
 #' target. If the intraview has only one variable this switch is automatically
 #' set to \code{TRUE}.
 #'
-#' Default values passed to \code{\link[ranger]{ranger}()} for training the
-#' view-specific models: \code{num.trees = 100}, \code{importance = "impurity"},
+#' Default ML model to train the view-specific views is 
+#' \code{\link[ranger]{ranger}()}. The following parameters are the default
+#' configuration: \code{num.trees = 100}, \code{importance = "impurity"},
 #' \code{num.threads = 1}, \code{seed = seed}.
 #'
 #' @param views view composition.
@@ -41,16 +42,20 @@ utils::globalVariables("where")
 #' @param bypass.intra a \code{logical} indicating whether to train a baseline
 #'     model using the intraview data (see Details).
 #' @param cv.folds number of cross-validation folds to consider for estimating
-#'     the performance of the multi-view models.
+#'     the performance of the multi-view models
 #' @param cached a \code{logical} indicating whether to cache the trained models
 #'     and to reuse previously cached ones if they already exist for this sample.
 #' @param append a \code{logical} indicating whether to append the performance
 #'     and coefficient files in the \code{results.folder}. Consider setting to
 #'     \code{TRUE} when rerunning a workflow with different \code{target.subset}
 #'     parameters.
-#' @param ... all additional parameters are passed to
-#'     \code{\link[ranger]{ranger}()} for training the view-specific models
-#'     (see Details for defaults).
+#' @param model.function a function which is used to model each view, default
+#'     model is \code{random_forest_model}. Other models included in MISTy are
+#'     \code{gradient_boosting_model}, \code{bagged_mars_model},
+#'     \code{mars_model}, \code{linear_model},
+#'     \code{svm_model}, \code{mlp_model}
+#' @param ... all additional parameters are passed to the chosen ML model for
+#' training the view-specific models 
 #'
 #' @return Path to the results folder that can be passed to
 #'     \code{\link{collect_results}()}.
@@ -78,7 +83,11 @@ utils::globalVariables("where")
 #' @export
 run_misty <- function(views, results.folder = "results", seed = 42,
                       target.subset = NULL, bypass.intra = FALSE, cv.folds = 10,
-                      cached = FALSE, append = FALSE, ...) {
+                      cached = FALSE, append = FALSE, 
+                      model.function = random_forest_model, ...) {
+
+  model.name <- as.character(rlang::enexpr(model.function))
+
   normalized.results.folder <- R.utils::getAbsolutePath(results.folder)
 
   if (!dir.exists(normalized.results.folder)) {
@@ -133,7 +142,6 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     warning(msg)
   }
 
-
   coef.file <- paste0(
     normalized.results.folder, .Platform$file.sep,
     "coefficients.txt"
@@ -178,11 +186,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
 
   message("\nTraining models")
   targets %>% furrr::future_map_chr(function(target, ...) {
-    target.model <- build_model(
-      views, target, bypass.intra,
-      seed, cv.folds, cached, ...
-    )
-
+    
+    target.model <- build_model(views = views, target = target, 
+                                model.function = model.function,
+                                model.name = model.name,
+                                cv.folds = cv.folds,
+                                bypass.intra = bypass.intra,
+                                seed = seed, cached = cached, ...)
+    
     combined.views <- target.model[["meta.model"]]
 
     model.lm <- methods::is(combined.views, "lm")
@@ -222,15 +233,14 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     filelock::unlock(current.lock)
 
     # raw importances
-    target.model[["model.views"]] %>% purrr::walk2(
+    target.model[["model.importances"]] %>% purrr::walk2(
       view.abbrev,
-      function(model.view, abbrev) {
-        model.view.imps <- model.view$variable.importance
-        targets <- names(model.view.imps)
+      function(model.importance, abbrev) {
+        targets <- names(model.importance)
 
         imps <- tibble::tibble(
           target = targets,
-          imp = model.view.imps
+          imp = model.importance
         )
 
         readr::write_csv(
@@ -242,6 +252,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         )
       }
     )
+
 
     # performance
     if (sum(target.model[["performance.estimate"]] < 0 |
@@ -295,7 +306,8 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     )
 
     current.lock <- filelock::lock(perf.lock)
-    write(paste(target, paste(performance.summary, collapse = " ")),
+    # replace NaN p values with 1
+    write(paste(target, paste(performance.summary %>% tidyr::replace_na(1), collapse = " ")),
       file = perf.file, append = TRUE
     )
     filelock::unlock(current.lock)
