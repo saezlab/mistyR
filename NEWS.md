@@ -1,8 +1,11 @@
+# mistyR 1.7.x
+
 # mistyR 1.6.0
 
 - Release version for Bioconductor 3.16. See changes for 1.5.x.
 
 # mistyR 1.5.x
+
 - Added different modeling functions. Might not be completely backwards compatible!
 
 # mistyR 1.4.0
