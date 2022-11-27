@@ -12,11 +12,18 @@ navbar:
        href: https://twitter.com/saezlab
      homepage:
        icon: "fas fa-university"
-       href: http://www.saezlab.org
-       
-development: 
-  mode: auto
+       href: https://saezlab.org/
+  type: dark
+  bg: primary
 
 template:
   params:
     ganalytics: UA-119440867-9
+    highlightcss: false
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#ED2424"
+
+development:
+  mode: auto
