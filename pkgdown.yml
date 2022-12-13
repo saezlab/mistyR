@@ -1,11 +1,11 @@
-pandoc: 2.7.3
-pkgdown: 2.0.3
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   mistyR: mistyR.html
   mistySeurat: mistySeurat.html
   mistySpatialExperiment: mistySpatialExperiment.html
-last_built: 2022-05-06T08:54Z
+last_built: 2022-12-13T16:37Z
 urls:
   reference: https://saezlab.github.io/mistyR/reference
   article: https://saezlab.github.io/mistyR/articles
