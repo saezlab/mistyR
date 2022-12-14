@@ -260,7 +260,7 @@ run_misty <- function(views, results.folder = "results", seed = 42,
             tibble::rownames_to_column("views"),
           by = "views"
         ) %>%
-        dplyr::pull(.data$p) %>%
+        dplyr::pull(p) %>%
         tidyr::replace_na(1)
 
       if (bypass.intra) append(pvals[-1], c(NA, 1), 0) else c(NA, pvals)
@@ -328,9 +328,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
     performance.summary <- c(
       performance.estimate %>% colMeans(),
       tryCatch(stats::t.test(performance.estimate %>%
-        dplyr::pull(.data$intra.RMSE),
+        dplyr::pull(intra.RMSE),
       performance.estimate %>%
-        dplyr::pull(.data$multi.RMSE),
+        dplyr::pull(multi.RMSE),
       alternative = "greater"
       )$p.value, error = function(e) {
         warning.message <- paste(
@@ -341,9 +341,9 @@ run_misty <- function(views, results.folder = "results", seed = 42,
         1
       }),
       tryCatch(stats::t.test(performance.estimate %>%
-        dplyr::pull(.data$intra.R2),
+        dplyr::pull(intra.R2),
       performance.estimate %>%
-        dplyr::pull(.data$multi.R2),
+        dplyr::pull(multi.R2),
       alternative = "less"
       )$p.value, error = function(e) {
         warning.message <- paste(

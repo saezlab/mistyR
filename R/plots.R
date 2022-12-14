@@ -45,7 +45,7 @@ plot_improvement_stats <- function(misty.results,
     stringr::str_detect(measure.type, "RMSE", negate = TRUE)) - 0.5)
 
   plot.data <- misty.results$improvements.stats %>%
-    dplyr::filter(.data$measure == measure.type, inv * .data$mean >= inv * trim)
+    dplyr::filter(measure == measure.type, inv * mean >= inv * trim)
 
   assertthat::assert_that(assertthat::not_empty(plot.data),
     msg = "Invalid selection of measure and/or trim value."
@@ -56,13 +56,13 @@ plot_improvement_stats <- function(misty.results,
   results.plot <- ggplot2::ggplot(
     plot.data,
     ggplot2::aes(
-      x = stats::reorder(.data$target, -.data$mean),
-      y = .data$mean
+      x = stats::reorder(target, -mean),
+      y = mean
     )
   ) +
     ggplot2::geom_pointrange(ggplot2::aes(
-      ymin = .data$mean - .data$sd,
-      ymax = .data$mean + .data$sd
+      ymin = mean - sd,
+      ymax = mean + sd
     )) +
     ggplot2::geom_point(color = set2.orange) +
     ggplot2::theme_classic() +
@@ -116,20 +116,20 @@ plot_view_contributions <- function(misty.results, trim = -Inf,
 
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
-      .data$measure == trim.measure.type,
-      inv * .data$mean >= inv * trim
+      measure == trim.measure.type,
+      inv * mean >= inv * trim
     ) %>%
-    dplyr::pull(.data$target)
+    dplyr::pull(target)
 
   assertthat::assert_that(assertthat::not_empty(targets),
     msg = "Invalid selection of trim measure and/or value."
   )
 
   plot.data <- misty.results$contributions.stats %>%
-    dplyr::filter(.data$target %in% targets)
+    dplyr::filter(target %in% targets)
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$target, y = .data$fraction)) +
-    ggplot2::geom_col(ggplot2::aes(group = .data$view, fill = .data$view)) +
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = target, y = fraction)) +
+    ggplot2::geom_col(ggplot2::aes(group = view, fill = view)) +
     ggplot2::scale_fill_brewer(palette = "Set2") +
     ggplot2::theme_classic() +
     ggplot2::ylab("Contribution") +
@@ -184,7 +184,7 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
   )
 
   assertthat::assert_that((view %in%
-    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+    (misty.results$importances.aggregated %>% dplyr::pull(view))),
   msg = "The selected view cannot be found in the results table."
   )
 
@@ -193,32 +193,32 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
 
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
-      .data$measure == trim.measure.type,
-      inv * .data$mean >= inv * trim
+      measure == trim.measure.type,
+      inv * mean >= inv * trim
     ) %>%
-    dplyr::pull(.data$target)
+    dplyr::pull(target)
 
 
   plot.data <- misty.results$importances.aggregated %>%
-    dplyr::filter(.data$view == !!view, .data$Target %in% targets)
+    dplyr::filter(view == !!view, Target %in% targets)
 
   if (clean) {
     clean.predictors <- plot.data %>%
-      dplyr::mutate(Importance = .data$Importance * (.data$Importance >= cutoff)) %>%
-      dplyr::group_by(.data$Predictor) %>%
-      dplyr::summarize(total = sum(.data$Importance, na.rm = TRUE)) %>%
-      dplyr::filter(.data$total > 0) %>%
-      dplyr::pull(.data$Predictor)
+      dplyr::mutate(Importance = Importance * (Importance >= cutoff)) %>%
+      dplyr::group_by(Predictor) %>%
+      dplyr::summarize(total = sum(Importance, na.rm = TRUE)) %>%
+      dplyr::filter(total > 0) %>%
+      dplyr::pull(Predictor)
     clean.targets <- plot.data %>%
-      dplyr::mutate(Importance = .data$Importance * (.data$Importance >= cutoff)) %>%
-      dplyr::group_by(.data$Target) %>%
-      dplyr::summarize(total = sum(.data$Importance, na.rm = TRUE)) %>%
-      dplyr::filter(.data$total > 0) %>%
-      dplyr::pull(.data$Target)
+      dplyr::mutate(Importance = Importance * (Importance >= cutoff)) %>%
+      dplyr::group_by(Target) %>%
+      dplyr::summarize(total = sum(Importance, na.rm = TRUE)) %>%
+      dplyr::filter(total > 0) %>%
+      dplyr::pull(Target)
     plot.data.clean <- plot.data %>%
       dplyr::filter(
-        .data$Predictor %in% clean.predictors,
-        .data$Target %in% clean.targets
+        Predictor %in% clean.predictors,
+        Target %in% clean.targets
       )
   } else {
     plot.data.clean <- plot.data
@@ -229,11 +229,11 @@ plot_interaction_heatmap <- function(misty.results, view, cutoff = 1,
   results.plot <- ggplot2::ggplot(
     plot.data.clean,
     ggplot2::aes(
-      x = .data$Predictor,
-      y = .data$Target
+      x = Predictor,
+      y = Target
     )
   ) +
-    ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
     ggplot2::scale_fill_gradient2(
       low = "white",
       mid = "white",
@@ -295,12 +295,12 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
   )
 
   assertthat::assert_that((from.view %in%
-    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+    (misty.results$importances.aggregated %>% dplyr::pull(view))),
   msg = "The selected from.view cannot be found in the results table."
   )
 
   assertthat::assert_that((to.view %in%
-    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+    (misty.results$importances.aggregated %>% dplyr::pull(view))),
   msg = "The selected to.view cannot be found in the results table."
   )
 
@@ -309,31 +309,31 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
 
   targets <- misty.results$improvements.stats %>%
     dplyr::filter(
-      .data$measure == trim.measure.type,
-      inv * .data$mean >= inv * trim
+      measure == trim.measure.type,
+      inv * mean >= inv * trim
     ) %>%
-    dplyr::pull(.data$target)
+    dplyr::pull(target)
 
   from.view.wide <- misty.results$importances.aggregated %>%
-    dplyr::filter(.data$view == from.view, .data$Target %in% targets) %>%
+    dplyr::filter(view == from.view, Target %in% targets) %>%
     tidyr::pivot_wider(
       names_from = "Target",
       values_from = "Importance",
-      -c(.data$view, .data$nsamples)
+      -c(view, nsamples)
     )
 
   to.view.wide <- misty.results$importances.aggregated %>%
-    dplyr::filter(.data$view == to.view, .data$Target %in% targets) %>%
+    dplyr::filter(view == to.view, Target %in% targets) %>%
     tidyr::pivot_wider(
       names_from = "Target",
       values_from = "Importance",
-      -c(.data$view, .data$nsamples)
+      -c(view, nsamples)
     )
 
   mask <- ((from.view.wide %>%
-    dplyr::select(-.data$Predictor)) < cutoff) &
+    dplyr::select(-Predictor)) < cutoff) &
     ((to.view.wide %>%
-      dplyr::select(-.data$Predictor)) >= cutoff)
+      dplyr::select(-Predictor)) >= cutoff)
 
   masked <- ((to.view.wide %>%
     tibble::column_to_rownames("Predictor")) * mask)
@@ -342,12 +342,12 @@ plot_contrast_heatmap <- function(misty.results, from.view, to.view, cutoff = 1,
     dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
     dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
     tibble::rownames_to_column("Predictor") %>%
-    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
+    tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
 
   set2.blue <- "#8DA0CB"
 
-  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
+  results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
     ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff) +
     ggplot2::theme_classic() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
@@ -393,23 +393,23 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
 
   assertthat::assert_that((view %in%
-    (misty.results$importances.aggregated %>% dplyr::pull(.data$view))),
+    (misty.results$importances.aggregated %>% dplyr::pull(view))),
   msg = "The selected view cannot be found in the results table."
   )
 
   view.wide <- misty.results$importances.aggregated %>%
-    dplyr::filter(.data$view == !!view) %>%
+    dplyr::filter(view == !!view) %>%
     tidyr::pivot_wider(
       names_from = "Target", values_from = "Importance",
-      -c(.data$view, .data$nsamples)
+      -c(view, nsamples)
     )
 
 
   assertthat::assert_that(
     all((view.wide %>%
-      dplyr::select(-.data$Predictor) %>% colnames() %>% sort()) ==
+      dplyr::select(-Predictor) %>% colnames() %>% sort()) ==
       (view.wide %>%
-        dplyr::pull(.data$Predictor)) %>% sort()),
+        dplyr::pull(Predictor)) %>% sort()),
     msg = "The predictor and target markers in the view must match."
   )
 
@@ -421,7 +421,7 @@ plot_interaction_communities <- function(misty.results, view, cutoff = 1) {
   )
 
   A <- view.wide %>%
-    dplyr::select(-.data$Predictor) %>%
+    dplyr::select(-Predictor) %>%
     as.matrix()
   A[A < cutoff | is.na(A)] <- 0
 
@@ -513,24 +513,24 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
   if (is.null(views)) {
     assertthat::assert_that(rlang::is_empty(setdiff(
       misty.results.from$importances.aggregated %>%
-        dplyr::pull(.data$view) %>%
+        dplyr::pull(view) %>%
         unique(),
       misty.results.to$importances.aggregated %>%
-        dplyr::pull(.data$view) %>%
+        dplyr::pull(view) %>%
         unique()
     )),
     msg = "The requested views do not exist in both result lists."
     )
     views <- misty.results.from$importances.aggregated %>%
-      dplyr::pull(.data$view) %>%
+      dplyr::pull(view) %>%
       unique()
   } else {
     assertthat::assert_that(all(views %in%
       (misty.results.from$importances.aggregated %>%
-        dplyr::pull(.data$view))) &
+        dplyr::pull(view))) &
       all(views %in%
         (misty.results.to$importances.aggregated %>%
-          dplyr::pull(.data$view))),
+          dplyr::pull(view))),
     msg = "The requested views do not exist in both result lists."
     )
   }
@@ -539,22 +539,22 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
     all(views %>% purrr::map_lgl(function(current.view) {
       rlang::is_empty(setdiff(
         misty.results.from$importances.aggregated %>%
-          dplyr::filter(.data$view == current.view) %>%
-          dplyr::pull(.data$Predictor) %>%
+          dplyr::filter(view == current.view) %>%
+          dplyr::pull(Predictor) %>%
           unique(),
         misty.results.to$importances.aggregated %>%
-          dplyr::filter(.data$view == current.view) %>%
-          dplyr::pull(.data$Predictor) %>%
+          dplyr::filter(view == current.view) %>%
+          dplyr::pull(Predictor) %>%
           unique()
       )) &
         rlang::is_empty(setdiff(
           misty.results.from$importances.aggregated %>%
-            dplyr::filter(.data$view == current.view) %>%
-            dplyr::pull(.data$Target) %>%
+            dplyr::filter(view == current.view) %>%
+            dplyr::pull(Target) %>%
             unique(),
           misty.results.to$importances.aggregated %>%
-            dplyr::filter(.data$view == current.view) %>%
-            dplyr::pull(.data$Target) %>%
+            dplyr::filter(view == current.view) %>%
+            dplyr::pull(Target) %>%
             unique()
         ))
     })),
@@ -566,32 +566,32 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
 
   targets <- misty.results.from$improvements.stats %>%
     dplyr::filter(
-      .data$measure == trim.measure.type,
-      inv * .data$mean >= inv * trim
+      measure == trim.measure.type,
+      inv * mean >= inv * trim
     ) %>%
-    dplyr::pull(.data$target)
+    dplyr::pull(target)
 
 
   views %>% purrr::walk(function(current.view) {
     from.view.wide <- misty.results.from$importances.aggregated %>%
-      dplyr::filter(.data$view == current.view, .data$Target %in% targets) %>%
+      dplyr::filter(view == current.view, Target %in% targets) %>%
       tidyr::pivot_wider(
         names_from = "Target",
         values_from = "Importance",
-        -c(.data$view, .data$nsamples)
+        -c(view, nsamples)
       )
     to.view.wide <- misty.results.to$importances.aggregated %>%
-      dplyr::filter(.data$view == current.view, .data$Target %in% targets) %>%
+      dplyr::filter(view == current.view, Target %in% targets) %>%
       tidyr::pivot_wider(
         names_from = "Target",
         values_from = "Importance",
-        -c(.data$view, .data$nsamples)
+        -c(view, nsamples)
       )
 
     mask <- ((from.view.wide %>%
-      dplyr::select(-.data$Predictor)) < cutoff.from) &
+      dplyr::select(-Predictor)) < cutoff.from) &
       ((to.view.wide %>%
-        dplyr::select(-.data$Predictor)) >= cutoff.to)
+        dplyr::select(-Predictor)) >= cutoff.to)
 
     assertthat::assert_that(sum(mask, na.rm = TRUE) > 0,
       msg = paste0("All values are cut off while contrasting.")
@@ -604,12 +604,12 @@ plot_contrast_results <- function(misty.results.from, misty.results.to,
       dplyr::slice(which(masked %>% rowSums(na.rm = TRUE) > 0)) %>%
       dplyr::select(which(masked %>% colSums(na.rm = TRUE) > 0)) %>%
       tibble::rownames_to_column("Predictor") %>%
-      tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -.data$Predictor)
+      tidyr::pivot_longer(names_to = "Target", values_to = "Importance", -Predictor)
 
     set2.blue <- "#8DA0CB"
 
-    results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = .data$Predictor, y = .data$Target)) +
-      ggplot2::geom_tile(ggplot2::aes(fill = .data$Importance)) +
+    results.plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = Predictor, y = Target)) +
+      ggplot2::geom_tile(ggplot2::aes(fill = Importance)) +
       ggplot2::scale_fill_gradient2(low = "white", mid = "white", high = set2.blue, midpoint = cutoff.to) +
       ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
