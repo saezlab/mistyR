@@ -2,7 +2,7 @@
 # Copyleft (ɔ) 2020 Jovan Tanevski [jovan.tanevski@uni-heidelberg.de]
 
 
-#' @importFrom rlang !! := .data
+#' @importFrom rlang !! :=
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("mistyR is able to run computationally intensive functions
   in parallel. Please consider specifying a future::plan(). For example by running
