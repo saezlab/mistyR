@@ -1,3 +1,8 @@
+# mistyR 1.7.x
+
+- Discontinue the use of .data due to its deprecation since tidyselect 1.2.0.
+- Update minimum required versions for some tidyverse related packages due to function deprecation.
+
 # mistyR 1.6.0
 
 - Release version for Bioconductor 3.16. See changes for 1.5.x.
