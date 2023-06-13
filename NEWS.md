@@ -1,4 +1,12 @@
-# mistyR 1.7.x
+# mistyR 1.9.x
+
+# mistyR 1.8.1
+
+- Requires dplyr >=1.1.0 due to change of sorting order in arrange()
+
+# mistyR 1.8.0
+
+- Release version for Bioconductor 3.17.
 
 # mistyR 1.6.1
 
