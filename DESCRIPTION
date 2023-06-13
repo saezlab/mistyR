@@ -39,7 +39,7 @@ Depends: R (>= 4.0)
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr
-Imports: assertthat, caret, deldir, digest, distances, dplyr, filelock, 
+Imports: assertthat, caret, deldir, digest, distances, dplyr (>= 1.1.0), filelock, 
     furrr (>= 0.2.0), ggplot2, methods, purrr, ranger, readr (>= 2.0.0), ridge, 
     rlang, rlist, R.utils, stats, stringr, tibble, tidyr, tidyselect (>= 1.2.0), 
     utils, withr
