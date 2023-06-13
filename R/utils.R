@@ -167,7 +167,7 @@ collect_results <- function(folders) {
         dplyr::filter(sample == !!sample) %>%
         dplyr::pull(target) %>%
         unique() %>%
-        sort()
+        sort(method = "radix")
       views <- contributions %>%
         dplyr::pull(view) %>%
         unique() %>%
@@ -189,7 +189,7 @@ collect_results <- function(folders) {
             purrr::map(~ .x$feature) %>%
             unlist() %>%
             unique() %>%
-            sort()
+            sort(method = "radix")
 
           pvalues <- contributions %>%
             dplyr::filter(sample == !!sample, view == paste0("p.", !!view)) %>%
