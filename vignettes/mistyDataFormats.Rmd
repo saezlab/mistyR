@@ -95,7 +95,7 @@ spe.vs <- readRDS("visium_spe.rds")
 expression <- counts(spe.vs)
 
 # deal with duplicate names
-symbols <- rowData(spe)$symbol
+symbols <- rowData(spe.vs)$symbol
 d.index <- which(duplicated(symbols))
 symbols[d.index] <- paste0(symbols[d.index],".1")
 rownames(expression) <- symbols
