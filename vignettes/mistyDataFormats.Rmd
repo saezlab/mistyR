@@ -1,0 +1,403 @@
+---
+title: "mistyR and data formats"
+author:
+- name: Ricardo Omar Ramirez Flores
+  affiliation:
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de
+date: "`r Sys.Date()`"
+package: mistyR
+output:
+  rmarkdown::pdf_document:
+    df_print: kable
+    extra_dependencies:
+      nowidow: ["defaultlines=3", "all"]
+vignette: >
+  %\VignetteIndexEntry{mistyR and data formats}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+`r BiocStyle::Biocpkg("mistyR")` can be used to analyze spatial omics data sets stored in `r BiocStyle::Biocpkg("SpatialExperiment")`, `r BiocStyle::CRANpkg("SeuratObject")` or `r BiocStyle::CRANpkg("anndata")` object with just a couple of functions. In this vignette we demonstrate how to build a user friendly workflow starting from data preprocessing, through running `r BiocStyle::Biocpkg("mistyR")`, to analysis of results, focusing on functional representation of 10x Visium data.
+
+
+First load packages needed for the analysis.
+
+```{r setup, message = FALSE}
+# MISTy
+library(mistyR)
+library(future)
+
+# data manipulation
+library(Matrix)
+library(tibble)
+library(dplyr)
+library(purrr)
+
+# normalization
+library(sctransform)
+
+# resource
+library(decoupleR)
+
+# plotting
+library(ggplot2)
+
+# setup parallel execution
+plan(multisession)
+```
+
+
+As an example, we will analyze a 10X Visium spatial gene expression dataset of one breast cancer section (Block A Section 1) available here [<https://support.10xgenomics.com/spatial-gene-expression/datasets>]. For convenience, we make this dataset available as object in several popular formats including `r BiocStyle::Biocpkg("SpatialExperiment")`, `r BiocStyle::CRANpkg("SeuratObject")` or `r BiocStyle::CRANpkg("anndata")` and demonstrate how to extract the data needed for further analysis from these objects.
+
+We will explore the spatial interactions of the Hypoxia pathway responsive genes with the Estrogen pathway responsive genes. To this end we will convert the count based representation of the data to a representation based on pathway specific genes and/or estimated pathway activities. To this end we will use the package `r BiocStyle::Biocpkg("decoupleR")`.
+
+# Get the data
+
+## SpatialExperiment
+
+To load the packages needed to work with `r BiocStyle::Biocpkg("SpatialExperiment")` data and download the object.
+
+```{r}
+# SpatialExperiment
+library(SpatialExperiment)
+library(SingleCellExperiment)
+library(SummarizedExperiment)
+
+
+download.file("https://www.dropbox.com/scl/fi/7mdmz6vk10ib55qn7w3fw/visium_spe.rds?rlkey=j03qamdm9zcin577chlabms0m&dl=1",
+    destfile = "visium_spe.rds", mode ="wb", quiet = TRUE
+  )
+
+```
+
+
+Next, read the object and extract the expression and location data.
+
+```{r}
+spe.vs <- readRDS("visium_spe.rds")
+
+
+# Expression data
+expression <- counts(spe.vs)
+
+# deal with duplicate names
+symbols <- rowData(spe)$symbol
+d.index <- which(duplicated(symbols))
+symbols[d.index] <- paste0(symbols[d.index],".1")
+rownames(expression) <- symbols
+
+# Location data
+geometry <- as.data.frame(colData(spe.vs)) %>%
+  select(array_row, array_col)
+
+colnames(geometry) <- c("row", "col")
+
+```
+
+
+## Seurat
+
+To load the packages needed to work with `r BiocStyle::CRANpkg("SeuratObject")` data and download the object.
+
+```{r eval=FALSE}
+# Seurat
+library(Seurat)
+
+download.file("https://www.dropbox.com/scl/fi/44zf4le1xcq7ichjp11bg/visium_seurat.rds?rlkey=ikrrsp2rncqde0nnsbdte1joa&dl=1",
+    destfile = "visium_seurat.rds", mode ="wb", quiet = TRUE
+  )
+
+```
+
+Next, read the object and extract the expression and location data.
+
+```{r eval=FALSE}
+seurat.vs <- readRDS("visium_seurat.rds")
+
+
+# Expression data
+expression <- GetAssayData(
+  object = seurat.vs,
+  slot = "counts",
+  assay = "Spatial"
+)
+
+# Seurat deals with duplicates internally in similar way as above
+
+# Location data
+geometry <- GetTissueCoordinates(seurat.vs,
+    cols = c("row", "col"), scale = NULL
+  )
+```
+
+
+
+## AnnData
+
+To load the packages needed to work with `r BiocStyle::CRANpkg("SeuratObject")` data and download the object.
+
+```{r eval=FALSE}
+# AnnData
+library(anndata)
+
+download.file("https://www.dropbox.com/scl/fi/jubijl0pr8rhka8mfjpcn/visium_anndata.h5ad?rlkey=xmhmfl5oz61dgngmackkklp32&dl=1",
+    destfile = "visium_anndata.h5ad", mode ="wb", quiet = TRUE
+  )
+```
+
+Next, read the object and extract the expression and location data.
+
+```{r eval=FALSE}
+anndata.vs <- read_h5ad("visium_anndata.h5ad")
+
+
+# Expression data
+# Here the dgRMatrix is converted to a dense matrix for vst compatibility reasons
+expression <- t(as.matrix(anndata.vs$X))
+
+# deal with duplicate names (alternatively see AnnData.var_names_make_unique)
+symbols <- rownames(expression)
+d.index <- which(duplicated(symbols))
+symbols[d.index] <- paste0(symbols[d.index],".1")
+rownames(expression) <- symbols
+
+# Location data
+geometry <- anndata.vs$obs[,c("array_row", "array_col")]
+colnames(geometry) <- c("row", "col")
+
+```
+
+
+# Preprocess the data
+
+From here on, the analysis proceeds in the same way no matter the input format.
+
+## Normalize counts and drop duplicates
+
+In this example we normalize the counts using vst normalization. However, the user must define what's the best solution for their analysis.
+
+```{r}
+norm.data <- vst(as(expression, "dgCMatrix"), verbosity = 0)$y
+```
+
+
+## Filtering genes that are expressed in at least 5% of the spots
+
+```{r}
+coverage <- rowSums(norm.data > 0) / ncol(norm.data)
+slide.markers <- names(coverage[coverage >= 0.05])
+```
+
+
+# Run MISTy on pathway specific genes
+
+In this use casewe would like to dissect the relationships between Estrogen and Hypoxia responsive genes coming from two spatial contexts: Relationships within the spot and relationships in the broader tissue structure. In particular, as intrinsic representation we will use the normalized counts of Hypoxia responsive genes. We will explore the relationships between the Hypoxia responsive genes at the context of a Visium spot, the relationships between Hypoxia responsive genes in the broader tissue structure and the relationships between the Estrogen responsive genes and Hypoxia responsive genes in the broader tissue structure.
+
+## Defining Estrogen and Hypoxia responsive genes
+
+For this simple example we will pick the top 15 most significantly responsive genes of each pathway from the model matrix from the resource `progeny` available from the package `r BiocStyle::Biocpkg("decoupleR")`.
+
+```{r}
+resource <- get_progeny(organism ="human", top = 15)
+
+estrogen.footprints <- resource %>%
+  filter(source == "Estrogen", weight != 0, target %in% slide.markers) %>% 
+  pull(target)
+
+hypoxia.footprints <- resource %>%
+  filter(source == "Hypoxia", weight != 0, target %in% slide.markers) %>% 
+  pull(target)
+```
+
+## View composition
+
+To capture the relationships of interest within the descrbed contexts, our MISTy model will consist of three views. First we construct a Hypoxia specific intraview (capturing the expression within a spot) and add a Hypoxia specific paraview (capturing the expression in the broader tissue structure) with a significance radius of 5 spots.
+
+```{r}
+hypoxia.views <- create_initial_view(t(norm.data)[, hypoxia.footprints] %>% as_tibble()) %>%
+  add_paraview(geometry, l=5)
+```
+
+We will next create a similar view composition but using Estrogen reponsive genes. This is an easy way to generate a view that will capture the expression of Estrogen responsive genes in the broader tissue structure that we will add to the previously generated view composition. 
+
+```{r}
+estrogen.views <- create_initial_view(t(norm.data)[,estrogen.footprints] %>% as_tibble()) %>%
+  add_paraview(geometry, l=5)
+```
+
+We next combine the view composition in a composition capturing all relationships of interest: Hypoxia intraview + Hypoxia paraview + Estrogen paraview.
+
+```{r}
+misty.views <- hypoxia.views %>% add_views(create_view("paraview.estrogen.5", estrogen.views[["paraview.5"]]$data, "para.estrogen.5"))
+```
+
+## Run MISTy and collect results
+
+```{r message=FALSE, warning=FALSE}
+run_misty(misty.views, "vignette_model_footprints")
+
+misty.results <- collect_results("vignette_model_footprints")
+```
+
+## Interpretation and downstream analysis
+
+MISTy gives explanatory answers to three general questions:
+
+**1. How much can the broader spatial context explain the expression of markers (in contrast to the intraview)?**
+
+This can be observed in the gain in R2 (or RMSE) of using the multiview model in contrast to the single `main` view model.
+
+```{r, warning=FALSE}
+misty.results %>%
+  plot_improvement_stats("gain.R2") %>%
+  plot_improvement_stats("gain.RMSE")
+```
+
+In this example, PGK1 is a marker whose expression can be explained better by modeling the broader spatial context around each spot.
+
+We can further inspect the significance of the gain in variance explained, by the assigned p-value of improvement based on cross-validation.
+
+```{r}
+misty.results$improvements %>%
+  filter(measure == "p.R2") %>%
+  arrange(value)
+```
+
+In general, the significant gain in R2 can be interpreted as the following:
+
+"We can better explain the expression of marker X, when we consider additional views, other than the intrinsic view."
+
+**2.How much do different view components contribute to explaining the expression?**
+
+```{r}
+misty.results %>% plot_view_contributions()
+
+misty.results$contributions.stats %>% filter(target == "PGK1")
+```
+
+In the case of PGK1, we observe that around 37.7% of the contribution in the final model comes from the expression of other markers of hypoxia intrinsically or from the broader tissue structure. The rest (62.3%) comes from the expression of estrogen and hypoxia responsive genes from the broader tissue structure.
+
+**3.What are the specific relations that can explain the contributions?**
+
+To explain the contributions, we can visualize the importances of markers coming from each view separately as predictors of the expression of the intrinsic markers of hypoxia.
+
+First, the intrinsic importances of the hypoxia markers.
+
+```{r}
+misty.results %>% plot_interaction_heatmap(view = "intra")
+```
+
+These importances are associated to the relationship between markers in the same spot. Let's pick the best predictor of PGK1 to confirm this:
+
+```{r}
+misty.results$importances.aggregated %>% 
+  filter(view == "intra", Target == "PGK1") %>%
+  arrange(-Importance)
+
+```
+
+
+```{r, warning=FALSE, dev='jpeg'}
+
+vis.data <- cbind(geometry, t(norm.data)[,hypoxia.footprints], t(norm.data)[,estrogen.footprints])
+
+ggplot(vis.data, aes(x=col, y=row, color = PGK1)) + geom_point() + theme_void()
+ggplot(vis.data, aes(x=col, y=row, color = NDRG1)) + geom_point() + theme_void()
+
+```
+
+```{r, warning=FALSE, dev='jpeg'}
+
+```
+
+
+Second, the paraview importances of the hypoxia markers.
+
+```{r}
+misty.results %>% plot_interaction_heatmap(view = "para.5")
+```
+
+These importances are associated to the relationship between markers in the spot and markers in the neighborhood (controlled by our parameter l).
+
+```{r, warning=FALSE, dev='jpeg'}
+ggplot(vis.data, aes(x=col, y=row, color = PGK1)) + geom_point() + theme_void()
+ggplot(vis.data, aes(x=col, y=row, color = EGLN1)) + geom_point() + theme_void()
+```
+
+As expected, the expression of EGLN1 (a predictor with hign importance from this view) in the neighborhood of each spot allows to explain the expression of PGK1.
+
+Finally, the paraview importances of the estrogen markers. We will inspect the best predictor in this view.
+
+```{r}
+misty.results %>% plot_interaction_heatmap(view = "para.estrogen.5")
+```
+
+```{r, warning=FALSE, dev='jpeg'}
+ggplot(vis.data, aes(x=col, y=row, color = PGK1)) + geom_point() + theme_void()
+ggplot(vis.data, aes(x=col, y=row, color = TPD52L1)) + geom_point() + theme_void()
+```
+
+
+It is visible that in some areas the local expression of TPD52L1 overlaps with the areas with the highest expression of PGK1.
+
+## Important notes
+
+-   The relationships captured in the importances are not to assumed or interpreted as linear or casual.
+
+-   1-to-1 importances between predictor and markers should always be interpreted in the context of the other predictors, since training MISTy models is multivariate predictive task.
+
+
+# Other use cases
+
+The shown example is not the only way to use mistyR to analyze spatial transcriptomics data. Similar and complementary workflows can be constructed to describe different aspects of biology, for example:
+
+-   Spatial interactions between pathway activities and putative ligands, as shown [here](https://doi.org/10.1101/2020.05.08.084145).
+
+-   Spatial interactions between cell-state lineage markers and putative ligands, as shown [here](https://doi.org/10.1101/2020.12.08.411686).
+
+-   Spatial interactions between cell-type abundances leveraging deconvolution methods and creating descriptions of cell colocalization and tissue architecture.
+
+Additionally, `r BiocStyle::Githubpkg("saezlab/mistyR")` through the function `collect_results()` allows you to group the results of multiple slides, allowing for a more robust, integrative or comparative analysis of spatial interactions.
+
+
+# See also {-}
+
+## More examples {-}
+
+`browseVignettes("mistyR")`
+
+[Online articles](https://saezlab.github.io/mistyR/articles/)
+
+## Publication {-}
+
+*`r format(citation("mistyR"), "textVersion")`*
+
+# Session info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled:
+
+```{r info, echo=FALSE}
+sessionInfo()
+```
+
+```{r cleanup, include=FALSE}
+if (cleanup) {
+  unlink(c("visium_anndata.h5ad", "visium_seurat.rds", "visium_spe.rds", "omnipathr-log"),
+         recursive = TRUE)
+}
+unlink("vignette_model_footprints", recursive = TRUE)
+```
