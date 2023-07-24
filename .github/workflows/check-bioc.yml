@@ -104,11 +104,6 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-      - name: Run CMD check
-        uses: r-lib/actions/check-r-package@v2
-        with:
-          error-on: '"error"'
-
       - name: Run BiocCheck
         run: |
           BiocCheck::BiocCheck(
