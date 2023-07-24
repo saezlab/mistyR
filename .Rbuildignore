@@ -5,8 +5,7 @@
 ^Meta$
 (^|/)\.misty\.temp$
 (^|/)results$
-^vignettes/mistySeurat.Rmd$
-^vignettes/mistySpatialExperiment.Rmd$
+^vignettes/mistyDataFormats.Rmd$
 ^LICENSE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
