@@ -52,7 +52,7 @@ jobs:
           sudo -s eval "$sysreqs"
           
           # SpatialExperiment (magick) dependency
-          sudo apt-get install -y libmagick++-dev  
+          sudo apt-get install -y libmagick++-dev
 
       - name: Install BiocManager
         run: |
@@ -134,8 +134,10 @@ jobs:
       - name: Deploy package
         if: github.ref == 'refs/heads/master' && runner.os == 'Linux'
         run: |
-          remotes::install_cran(c("pkgdown"), upgrade = TRUE)
           BiocManager::install(c("decoupleR", "SpatialExperiment"), ask = FALSE)
+          install.packages(c("pkgdown", "sctransform"))
+          install.packages(c("stringi", "ridge"), type="source", repos="https://cloud.r-project.org/")
+          BiocManager::install("OmnipathR", ask=FALSE)
 
           ## modified from pkgdown::deploy_to_branch
           deploy_to_branch_mod <- function(pkg = ".", commit_message = pkgdown:::construct_commit_message(pkg), 
