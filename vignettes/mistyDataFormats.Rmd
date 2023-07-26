@@ -395,9 +395,6 @@ sessionInfo()
 ```
 
 ```{r cleanup, include=FALSE}
-if (cleanup) {
-  unlink(c("visium_anndata.h5ad", "visium_seurat.rds", "visium_spe.rds", "omnipathr-log"),
+  unlink(c("visium_anndata.h5ad", "visium_seurat.rds", "visium_spe.rds", "omnipathr-log", "vignette_model_footprints"),
          recursive = TRUE)
-}
-unlink("vignette_model_footprints", recursive = TRUE)
 ```
