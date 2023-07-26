@@ -56,8 +56,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/mistySeurat.html">mistyR and Seurat</a>
-    <a class="dropdown-item" href="../articles/mistySpatialExperiment.html">mistyR and SpatialExperiment/SingleCellExperiment</a>
+    <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
 <li class="nav-item">
@@ -108,7 +107,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2023-06-23</h4>
+            <h4 data-toc-skip class="date">2023-07-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/mistyR.Rmd" class="external-link"><code>vignettes/mistyR.Rmd</code></a></small>
       <div class="d-none name"><code>mistyR.Rmd</code></div>
@@ -268,7 +267,7 @@ expression of the 10 nearest neighbors of each cell.</p>
 <span><span class="va">nnexpr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="op">~</span> <span class="va">expr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">neighbors</span><span class="op">[</span>, <span class="va">.x</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/MatrixGenerics/man/rowMeans.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nn.view</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_view.html">create_view</a></span><span class="op">(</span><span class="st">"nearest"</span>, <span class="va">nnexpr</span>, <span class="st">"nn"</span><span class="op">)</span></span>
 <span></span>
@@ -583,13 +582,13 @@ Biology 23, 97 (2022). <a href="https://doi.org/10.1186/s13059-022-02663-5" clas
 </h2>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> at the point when
 this document was compiled:</p>
-<pre><code><span><span class="co">#&gt; R version 4.2.3 (2023-03-15)</span></span>
+<pre><code><span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 20.04.6 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.2 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span></span>
-<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random number generation:</span></span>
 <span><span class="co">#&gt;  RNG:     L'Ecuyer-CMRG </span></span>
@@ -602,37 +601,40 @@ this document was compiled:</p>
 <span><span class="co">#&gt;  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          </span></span>
 <span><span class="co">#&gt; [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   </span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; time zone: UTC</span></span>
+<span><span class="co">#&gt; tzcode source: system (glibc)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; attached base packages:</span></span>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt; [1] ggplot2_3.4.2    distances_0.1.9  purrr_1.0.1      dplyr_1.1.2     </span></span>
-<span><span class="co">#&gt; [5] future_1.32.0    mistyR_1.8.1     BiocStyle_2.26.0</span></span>
+<span><span class="co">#&gt; [5] future_1.33.0    mistyR_1.8.1     BiocStyle_2.28.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] tidyr_1.3.0         listenv_0.9.0       assertthat_0.2.1   </span></span>
-<span><span class="co">#&gt;  [4] rprojroot_2.0.3     digest_0.6.31       utf8_1.2.3         </span></span>
-<span><span class="co">#&gt;  [7] parallelly_1.36.0   R6_2.5.1            evaluate_0.21      </span></span>
-<span><span class="co">#&gt; [10] highr_0.10          pillar_1.9.0        rlang_1.1.1        </span></span>
-<span><span class="co">#&gt; [13] data.table_1.14.8   furrr_0.3.1         jquerylib_0.1.4    </span></span>
-<span><span class="co">#&gt; [16] R.utils_2.12.2      R.oo_1.25.0         rmarkdown_2.22     </span></span>
-<span><span class="co">#&gt; [19] pkgdown_2.0.7       textshaping_0.3.6   desc_1.4.2         </span></span>
-<span><span class="co">#&gt; [22] labeling_0.4.2      stringr_1.5.0       igraph_1.5.0       </span></span>
-<span><span class="co">#&gt; [25] munsell_0.5.0       compiler_4.2.3      xfun_0.39          </span></span>
-<span><span class="co">#&gt; [28] pkgconfig_2.0.3     systemfonts_1.0.4   globals_0.16.2     </span></span>
-<span><span class="co">#&gt; [31] htmltools_0.5.5     tidyselect_1.2.0    tibble_3.2.1       </span></span>
-<span><span class="co">#&gt; [34] bookdown_0.34       codetools_0.2-19    fansi_1.0.4        </span></span>
-<span><span class="co">#&gt; [37] crayon_1.5.2        withr_2.5.0         R.methodsS3_1.8.2  </span></span>
-<span><span class="co">#&gt; [40] grid_4.2.3          jsonlite_1.8.5      gtable_0.3.3       </span></span>
-<span><span class="co">#&gt; [43] lifecycle_1.0.3     magrittr_2.0.3      scales_1.2.1       </span></span>
-<span><span class="co">#&gt; [46] rlist_0.4.6.2       cli_3.6.1           stringi_1.7.12     </span></span>
-<span><span class="co">#&gt; [49] cachem_1.0.8        farver_2.1.1        fs_1.6.2           </span></span>
-<span><span class="co">#&gt; [52] bslib_0.5.0         filelock_1.0.2      ragg_1.2.5         </span></span>
-<span><span class="co">#&gt; [55] generics_0.1.3      vctrs_0.6.3         RColorBrewer_1.1-3 </span></span>
-<span><span class="co">#&gt; [58] tools_4.2.3         glue_1.6.2          parallel_4.2.3     </span></span>
-<span><span class="co">#&gt; [61] fastmap_1.1.1       yaml_2.3.7          colorspace_2.1-0   </span></span>
-<span><span class="co">#&gt; [64] BiocManager_1.30.21 memoise_2.0.1       knitr_1.43         </span></span>
-<span><span class="co">#&gt; [67] sass_0.4.6</span></span></code></pre>
+<span><span class="co">#&gt;  [1] gtable_0.3.3          xfun_0.39             bslib_0.5.0          </span></span>
+<span><span class="co">#&gt;  [4] rlist_0.4.6.2         vctrs_0.6.3           tools_4.3.1          </span></span>
+<span><span class="co">#&gt;  [7] generics_0.1.3        parallel_4.3.1        tibble_3.2.1         </span></span>
+<span><span class="co">#&gt; [10] fansi_1.0.4           highr_0.10            pkgconfig_2.0.3      </span></span>
+<span><span class="co">#&gt; [13] R.oo_1.25.0           data.table_1.14.8     RColorBrewer_1.1-3   </span></span>
+<span><span class="co">#&gt; [16] desc_1.4.2            assertthat_0.2.1      lifecycle_1.0.3      </span></span>
+<span><span class="co">#&gt; [19] compiler_4.3.1        farver_2.1.1          stringr_1.5.0        </span></span>
+<span><span class="co">#&gt; [22] textshaping_0.3.6     munsell_0.5.0         codetools_0.2-19     </span></span>
+<span><span class="co">#&gt; [25] htmltools_0.5.5       sass_0.4.7            yaml_2.3.7           </span></span>
+<span><span class="co">#&gt; [28] pillar_1.9.0          pkgdown_2.0.7         furrr_0.3.1          </span></span>
+<span><span class="co">#&gt; [31] crayon_1.5.2          jquerylib_0.1.4       tidyr_1.3.0          </span></span>
+<span><span class="co">#&gt; [34] R.utils_2.12.2        cachem_1.0.8          parallelly_1.36.0    </span></span>
+<span><span class="co">#&gt; [37] tidyselect_1.2.0      digest_0.6.33         stringi_1.7.12       </span></span>
+<span><span class="co">#&gt; [40] bookdown_0.34         listenv_0.9.0         labeling_0.4.2       </span></span>
+<span><span class="co">#&gt; [43] rprojroot_2.0.3       fastmap_1.1.1         grid_4.3.1           </span></span>
+<span><span class="co">#&gt; [46] colorspace_2.1-0      cli_3.6.1             magrittr_2.0.3       </span></span>
+<span><span class="co">#&gt; [49] utf8_1.2.3            withr_2.5.0           filelock_1.0.2       </span></span>
+<span><span class="co">#&gt; [52] scales_1.2.1          rmarkdown_2.23        globals_0.16.2       </span></span>
+<span><span class="co">#&gt; [55] igraph_1.5.0.1        ragg_1.2.5            R.methodsS3_1.8.2    </span></span>
+<span><span class="co">#&gt; [58] memoise_2.0.1         evaluate_0.21         knitr_1.43           </span></span>
+<span><span class="co">#&gt; [61] rlang_1.1.1           glue_1.6.2            BiocManager_1.30.21.1</span></span>
+<span><span class="co">#&gt; [64] jsonlite_1.8.7        R6_2.5.1              systemfonts_1.0.4    </span></span>
+<span><span class="co">#&gt; [67] fs_1.6.3</span></span></code></pre>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
