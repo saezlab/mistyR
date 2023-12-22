@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="mistyR and data formats">
 <meta property="og:description" content="mistyR">
@@ -38,7 +38,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">mistyR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,7 +112,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2023-07-26</h4>
+            <h4 data-toc-skip class="date">2023-12-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/mistyDataFormats.Rmd" class="external-link"><code>vignettes/mistyDataFormats.Rmd</code></a></small>
       <div class="d-none name"><code>mistyDataFormats.Rmd</code></div>
@@ -124,13 +124,13 @@ Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.ta
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><em><a href="https://bioconductor.org/packages/3.17/mistyR" class="external-link">mistyR</a></em> can
-be used to analyze spatial omics data sets stored in <em><a href="https://bioconductor.org/packages/3.17/SpatialExperiment" class="external-link">SpatialExperiment</a></em>,
+<p><em><a href="https://bioconductor.org/packages/3.18/mistyR" class="external-link">mistyR</a></em> can
+be used to analyze spatial omics data sets stored in <em><a href="https://bioconductor.org/packages/3.18/SpatialExperiment" class="external-link">SpatialExperiment</a></em>,
 <em><a href="https://CRAN.R-project.org/package=SeuratObject" class="external-link">SeuratObject</a></em>
 or <em><a href="https://CRAN.R-project.org/package=anndata" class="external-link">anndata</a></em>
 object with just a couple of functions. In this vignette we demonstrate
 how to build a user friendly workflow starting from data preprocessing,
-through running <em><a href="https://bioconductor.org/packages/3.17/mistyR" class="external-link">mistyR</a></em>, to
+through running <em><a href="https://bioconductor.org/packages/3.18/mistyR" class="external-link">mistyR</a></em>, to
 analysis of results, focusing on functional representation of 10x Visium
 data.</p>
 <p>First load packages needed for the analysis.</p>
@@ -160,7 +160,7 @@ data.</p>
 dataset of one breast cancer section (Block A Section 1) available here
 [<a href="https://support.10xgenomics.com/spatial-gene-expression/datasets" class="external-link uri">https://support.10xgenomics.com/spatial-gene-expression/datasets</a>].
 For convenience, we make this dataset available as object in several
-popular formats including <em><a href="https://bioconductor.org/packages/3.17/SpatialExperiment" class="external-link">SpatialExperiment</a></em>,
+popular formats including <em><a href="https://bioconductor.org/packages/3.18/SpatialExperiment" class="external-link">SpatialExperiment</a></em>,
 <em><a href="https://CRAN.R-project.org/package=SeuratObject" class="external-link">SeuratObject</a></em>
 or <em><a href="https://CRAN.R-project.org/package=anndata" class="external-link">anndata</a></em> and
 demonstrate how to extract the data needed for further analysis from
@@ -169,7 +169,7 @@ these objects.</p>
 responsive genes with the Estrogen pathway responsive genes. To this end
 we will convert the count based representation of the data to a
 representation based on pathway specific genes and/or estimated pathway
-activities. To this end we will use the package <em><a href="https://bioconductor.org/packages/3.17/decoupleR" class="external-link">decoupleR</a></em>.</p>
+activities. To this end we will use the package <em><a href="https://bioconductor.org/packages/3.18/decoupleR" class="external-link">decoupleR</a></em>.</p>
 </div>
 <div class="section level2">
 <h2 id="get-the-data">Get the data<a class="anchor" aria-label="anchor" href="#get-the-data"></a>
@@ -177,7 +177,7 @@ activities. To this end we will use the package <em><a href="https://bioconducto
 <div class="section level3">
 <h3 id="spatialexperiment">SpatialExperiment<a class="anchor" aria-label="anchor" href="#spatialexperiment"></a>
 </h3>
-<p>To load the packages needed to work with <em><a href="https://bioconductor.org/packages/3.17/SpatialExperiment" class="external-link">SpatialExperiment</a></em>
+<p>To load the packages needed to work with <em><a href="https://bioconductor.org/packages/3.18/SpatialExperiment" class="external-link">SpatialExperiment</a></em>
 data and download the object.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># SpatialExperiment</span></span>
@@ -401,9 +401,13 @@ structure.</p>
 </h3>
 <p>For this simple example we will pick the top 15 most significantly
 responsive genes of each pathway from the model matrix from the resource
-<code>progeny</code> available from the package <em><a href="https://bioconductor.org/packages/3.17/decoupleR" class="external-link">decoupleR</a></em>.</p>
+<code>progeny</code> available from the package <em><a href="https://bioconductor.org/packages/3.18/decoupleR" class="external-link">decoupleR</a></em>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resource</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://saezlab.github.io/decoupleR/reference/get_progeny.html" class="external-link">get_progeny</a></span><span class="op">(</span>organism <span class="op">=</span><span class="st">"human"</span>, top <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
+<span><span class="co">#&gt; e.g.:</span></span>
+<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
+<span><span class="co">#&gt;   problems(dat)</span></span>
 <span></span>
 <span><span class="va">estrogen.footprints</span> <span class="op">&lt;-</span> <span class="va">resource</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">source</span> <span class="op">==</span> <span class="st">"Estrogen"</span>, <span class="va">weight</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="va">target</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">slide.markers</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -477,21 +481,21 @@ cross-validation.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 4</span></span></span>
 <span><span class="co">#&gt;    target  sample                                                measure   value</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    4.65<span style="color: #949494;">e</span><span style="color: #BB0000;">-6</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    7.66<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    9.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.14<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.78<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.54<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    5.03<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    5.75<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.81<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.04<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.04<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.06<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.03<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    4.00<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.38<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.32<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.15<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.06<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.72<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.34<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    4.13<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.05<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.11<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    6.81<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    9.40<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.10<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.30<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.53<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.34<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    7.74<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the
 following:</p>
 <p>“We can better explain the expression of marker X, when we consider
@@ -507,9 +511,9 @@ explaining the expression?</strong></p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   target view             mean fraction p.mean  p.sd</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PGK1   intra           0.516    0.374      0    <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> PGK1   para.5          0.303    0.220      0    <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> PGK1   para.estrogen.5 0.558    0.405      0    <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PGK1   intra           0.517    0.375      0    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> PGK1   para.5          0.356    0.258      0    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> PGK1   para.estrogen.5 0.508    0.368      0    <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37.7% of the contribution
 in the final model comes from the expression of other markers of hypoxia
 intrinsically or from the broader tissue structure. The rest (62.3%)
@@ -534,20 +538,20 @@ this:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 5</span></span></span>
 <span><span class="co">#&gt;    view  Predictor Target Importance nsamples</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> intra NDRG1     PGK1       2.44          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> intra FAM162A   PGK1       1.98          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> intra PFKFB4    PGK1       0.317         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> intra HILPDA    PGK1       0.271         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> intra ENO2      PGK1       0.077<span style="text-decoration: underline;">3</span>        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> intra EGLN1     PGK1      -<span style="color: #BB0000;">0.349</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> intra GBE1      PGK1      -<span style="color: #BB0000;">0.488</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> intra BNIP3L    PGK1      -<span style="color: #BB0000;">0.516</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> intra KDM3A     PGK1      -<span style="color: #BB0000;">0.539</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> intra ANKZF1    PGK1      -<span style="color: #BB0000;">0.575</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> intra ANKRD37   PGK1      -<span style="color: #BB0000;">0.578</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> intra INSIG2    PGK1      -<span style="color: #BB0000;">0.662</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> intra FUT11     PGK1      -<span style="color: #BB0000;">0.667</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> intra PDK1      PGK1      -<span style="color: #BB0000;">0.707</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> intra NDRG1     PGK1       2.46          1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> intra FAM162A   PGK1       1.97          1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> intra PFKFB4    PGK1       0.291         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> intra HILPDA    PGK1       0.277         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> intra ENO2      PGK1      -<span style="color: #BB0000;">0.062</span><span style="color: #BB0000; text-decoration: underline;">0</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> intra EGLN1     PGK1      -<span style="color: #BB0000;">0.284</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> intra GBE1      PGK1      -<span style="color: #BB0000;">0.415</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> intra KDM3A     PGK1      -<span style="color: #BB0000;">0.462</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> intra BNIP3L    PGK1      -<span style="color: #BB0000;">0.562</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> intra ANKRD37   PGK1      -<span style="color: #BB0000;">0.587</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> intra INSIG2    PGK1      -<span style="color: #BB0000;">0.592</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> intra ANKZF1    PGK1      -<span style="color: #BB0000;">0.597</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> intra FUT11     PGK1      -<span style="color: #BB0000;">0.711</span>         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> intra PDK1      PGK1      -<span style="color: #BB0000;">0.733</span>         1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> intra PGK1      PGK1      <span style="color: #BB0000;">NA</span>             1</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -644,9 +648,9 @@ Biology 23, 97 (2022). <a href="https://doi.org/10.1186/s13059-022-02663-5" clas
 </h2>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> at the point when
 this document was compiled:</p>
-<pre><code><span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
+<pre><code><span><span class="co">#&gt; R version 4.3.2 (2023-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.2 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.3 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -666,78 +670,55 @@ this document was compiled:</p>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] SpatialExperiment_1.10.0    SingleCellExperiment_1.22.0</span></span>
-<span><span class="co">#&gt;  [3] SummarizedExperiment_1.30.2 Biobase_2.60.0             </span></span>
-<span><span class="co">#&gt;  [5] GenomicRanges_1.52.0        GenomeInfoDb_1.36.1        </span></span>
-<span><span class="co">#&gt;  [7] IRanges_2.34.1              S4Vectors_0.38.1           </span></span>
-<span><span class="co">#&gt;  [9] BiocGenerics_0.46.0         MatrixGenerics_1.12.2      </span></span>
-<span><span class="co">#&gt; [11] matrixStats_1.0.0           ggplot2_3.4.2              </span></span>
-<span><span class="co">#&gt; [13] decoupleR_2.6.0             sctransform_0.3.5          </span></span>
-<span><span class="co">#&gt; [15] purrr_1.0.1                 dplyr_1.1.2                </span></span>
-<span><span class="co">#&gt; [17] tibble_3.2.1                Matrix_1.5-4.1             </span></span>
-<span><span class="co">#&gt; [19] future_1.33.0               mistyR_1.8.1               </span></span>
-<span><span class="co">#&gt; [21] BiocStyle_2.28.0           </span></span>
+<span><span class="co">#&gt;  [1] SpatialExperiment_1.12.0    SingleCellExperiment_1.24.0</span></span>
+<span><span class="co">#&gt;  [3] SummarizedExperiment_1.32.0 Biobase_2.62.0             </span></span>
+<span><span class="co">#&gt;  [5] GenomicRanges_1.54.1        GenomeInfoDb_1.38.2        </span></span>
+<span><span class="co">#&gt;  [7] IRanges_2.36.0              S4Vectors_0.40.2           </span></span>
+<span><span class="co">#&gt;  [9] BiocGenerics_0.48.1         MatrixGenerics_1.14.0      </span></span>
+<span><span class="co">#&gt; [11] matrixStats_1.2.0           ggplot2_3.4.4              </span></span>
+<span><span class="co">#&gt; [13] decoupleR_2.8.0             sctransform_0.4.1          </span></span>
+<span><span class="co">#&gt; [15] purrr_1.0.2                 dplyr_1.1.4                </span></span>
+<span><span class="co">#&gt; [17] tibble_3.2.1                Matrix_1.6-1.1             </span></span>
+<span><span class="co">#&gt; [19] future_1.33.1               mistyR_1.10.0              </span></span>
+<span><span class="co">#&gt; [21] BiocStyle_2.30.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] RColorBrewer_1.1-3        jsonlite_1.8.7           </span></span>
-<span><span class="co">#&gt;   [3] magrittr_2.0.3            magick_2.7.4             </span></span>
-<span><span class="co">#&gt;   [5] farver_2.1.1              rmarkdown_2.23           </span></span>
-<span><span class="co">#&gt;   [7] fs_1.6.3                  zlibbioc_1.46.0          </span></span>
-<span><span class="co">#&gt;   [9] ragg_1.2.5                vctrs_0.6.3              </span></span>
-<span><span class="co">#&gt;  [11] memoise_2.0.1             DelayedMatrixStats_1.22.1</span></span>
-<span><span class="co">#&gt;  [13] RCurl_1.98-1.12           htmltools_0.5.5          </span></span>
-<span><span class="co">#&gt;  [15] S4Arrays_1.0.5            progress_1.2.2           </span></span>
-<span><span class="co">#&gt;  [17] curl_5.0.1                cellranger_1.1.0         </span></span>
-<span><span class="co">#&gt;  [19] Rhdf5lib_1.22.0           rhdf5_2.44.0             </span></span>
-<span><span class="co">#&gt;  [21] sass_0.4.7                parallelly_1.36.0        </span></span>
-<span><span class="co">#&gt;  [23] bslib_0.5.0               desc_1.4.2               </span></span>
-<span><span class="co">#&gt;  [25] plyr_1.8.8                cachem_1.0.8             </span></span>
-<span><span class="co">#&gt;  [27] igraph_1.5.0.1            lifecycle_1.0.3          </span></span>
-<span><span class="co">#&gt;  [29] pkgconfig_2.0.3           R6_2.5.1                 </span></span>
-<span><span class="co">#&gt;  [31] fastmap_1.1.1             GenomeInfoDbData_1.2.10  </span></span>
-<span><span class="co">#&gt;  [33] digest_0.6.33             colorspace_2.1-0         </span></span>
-<span><span class="co">#&gt;  [35] furrr_0.3.1               rprojroot_2.0.3          </span></span>
-<span><span class="co">#&gt;  [37] dqrng_0.3.0               textshaping_0.3.6        </span></span>
-<span><span class="co">#&gt;  [39] beachmat_2.16.0           labeling_0.4.2           </span></span>
-<span><span class="co">#&gt;  [41] filelock_1.0.2            fansi_1.0.4              </span></span>
-<span><span class="co">#&gt;  [43] httr_1.4.6                abind_1.4-5              </span></span>
-<span><span class="co">#&gt;  [45] compiler_4.3.1            bit64_4.0.5              </span></span>
-<span><span class="co">#&gt;  [47] withr_2.5.0               backports_1.4.1          </span></span>
-<span><span class="co">#&gt;  [49] BiocParallel_1.34.2       logger_0.2.2             </span></span>
-<span><span class="co">#&gt;  [51] highr_0.10                OmnipathR_3.8.0          </span></span>
-<span><span class="co">#&gt;  [53] HDF5Array_1.28.1          R.utils_2.12.2           </span></span>
-<span><span class="co">#&gt;  [55] MASS_7.3-60               rappdirs_0.3.3           </span></span>
-<span><span class="co">#&gt;  [57] DelayedArray_0.26.6       rjson_0.2.21             </span></span>
-<span><span class="co">#&gt;  [59] tools_4.3.1               future.apply_1.11.0      </span></span>
-<span><span class="co">#&gt;  [61] R.oo_1.25.0               glue_1.6.2               </span></span>
-<span><span class="co">#&gt;  [63] rhdf5filters_1.12.1       grid_4.3.1               </span></span>
-<span><span class="co">#&gt;  [65] checkmate_2.2.0           reshape2_1.4.4           </span></span>
-<span><span class="co">#&gt;  [67] generics_0.1.3            gtable_0.3.3             </span></span>
-<span><span class="co">#&gt;  [69] tzdb_0.4.0                R.methodsS3_1.8.2        </span></span>
-<span><span class="co">#&gt;  [71] tidyr_1.3.0               data.table_1.14.8        </span></span>
-<span><span class="co">#&gt;  [73] hms_1.1.3                 xml2_1.3.5               </span></span>
-<span><span class="co">#&gt;  [75] utf8_1.2.3                XVector_0.40.0           </span></span>
-<span><span class="co">#&gt;  [77] pillar_1.9.0              stringr_1.5.0            </span></span>
-<span><span class="co">#&gt;  [79] vroom_1.6.3               limma_3.56.2             </span></span>
-<span><span class="co">#&gt;  [81] later_1.3.1               lattice_0.21-8           </span></span>
-<span><span class="co">#&gt;  [83] bit_4.0.5                 tidyselect_1.2.0         </span></span>
-<span><span class="co">#&gt;  [85] locfit_1.5-9.8            scuttle_1.10.1           </span></span>
-<span><span class="co">#&gt;  [87] knitr_1.43                gridExtra_2.3            </span></span>
-<span><span class="co">#&gt;  [89] bookdown_0.34             edgeR_3.42.4             </span></span>
-<span><span class="co">#&gt;  [91] xfun_0.39                 DropletUtils_1.20.0      </span></span>
-<span><span class="co">#&gt;  [93] stringi_1.7.12            yaml_2.3.7               </span></span>
-<span><span class="co">#&gt;  [95] evaluate_0.21             codetools_0.2-19         </span></span>
-<span><span class="co">#&gt;  [97] BiocManager_1.30.21.1     cli_3.6.1                </span></span>
-<span><span class="co">#&gt;  [99] systemfonts_1.0.4         munsell_0.5.0            </span></span>
-<span><span class="co">#&gt; [101] jquerylib_0.1.4           Rcpp_1.0.11              </span></span>
-<span><span class="co">#&gt; [103] readxl_1.4.3              globals_0.16.2           </span></span>
-<span><span class="co">#&gt; [105] parallel_4.3.1            assertthat_0.2.1         </span></span>
-<span><span class="co">#&gt; [107] pkgdown_2.0.7             readr_2.1.4              </span></span>
-<span><span class="co">#&gt; [109] prettyunits_1.1.1         sparseMatrixStats_1.12.2 </span></span>
-<span><span class="co">#&gt; [111] bitops_1.0-7              listenv_0.9.0            </span></span>
-<span><span class="co">#&gt; [113] rlist_0.4.6.2             scales_1.2.1             </span></span>
-<span><span class="co">#&gt; [115] crayon_1.5.2              rlang_1.1.1              </span></span>
-<span><span class="co">#&gt; [117] rvest_1.0.3               distances_0.1.9</span></span></code></pre>
+<span><span class="co">#&gt;   [1] RColorBrewer_1.1-3      jsonlite_1.8.8          magrittr_2.0.3         </span></span>
+<span><span class="co">#&gt;   [4] magick_2.8.2            farver_2.1.1            rmarkdown_2.25         </span></span>
+<span><span class="co">#&gt;   [7] fs_1.6.3                zlibbioc_1.48.0         ragg_1.2.7             </span></span>
+<span><span class="co">#&gt;  [10] vctrs_0.6.5             memoise_2.0.1           RCurl_1.98-1.13        </span></span>
+<span><span class="co">#&gt;  [13] htmltools_0.5.7         S4Arrays_1.2.0          progress_1.2.3         </span></span>
+<span><span class="co">#&gt;  [16] curl_5.2.0              cellranger_1.1.0        SparseArray_1.2.2      </span></span>
+<span><span class="co">#&gt;  [19] sass_0.4.8              parallelly_1.36.0       bslib_0.6.1            </span></span>
+<span><span class="co">#&gt;  [22] desc_1.4.3              plyr_1.8.9              lubridate_1.9.3        </span></span>
+<span><span class="co">#&gt;  [25] cachem_1.0.8            igraph_1.6.0            lifecycle_1.0.4        </span></span>
+<span><span class="co">#&gt;  [28] pkgconfig_2.0.3         R6_2.5.1                fastmap_1.1.1          </span></span>
+<span><span class="co">#&gt;  [31] GenomeInfoDbData_1.2.11 digest_0.6.33           selectr_0.4-2          </span></span>
+<span><span class="co">#&gt;  [34] colorspace_2.1-0        furrr_0.3.1             textshaping_0.3.7      </span></span>
+<span><span class="co">#&gt;  [37] filelock_1.0.3          labeling_0.4.3          fansi_1.0.6            </span></span>
+<span><span class="co">#&gt;  [40] timechange_0.2.0        httr_1.4.7              abind_1.4-5            </span></span>
+<span><span class="co">#&gt;  [43] compiler_4.3.2          bit64_4.0.5             withr_2.5.2            </span></span>
+<span><span class="co">#&gt;  [46] backports_1.4.1         logger_0.2.2            OmnipathR_3.10.1       </span></span>
+<span><span class="co">#&gt;  [49] highr_0.10              R.utils_2.12.3          MASS_7.3-60            </span></span>
+<span><span class="co">#&gt;  [52] rappdirs_0.3.3          DelayedArray_0.28.0     rjson_0.2.21           </span></span>
+<span><span class="co">#&gt;  [55] tools_4.3.2             future.apply_1.11.1     R.oo_1.25.0            </span></span>
+<span><span class="co">#&gt;  [58] glue_1.6.2              grid_4.3.2              checkmate_2.3.1        </span></span>
+<span><span class="co">#&gt;  [61] reshape2_1.4.4          generics_0.1.3          gtable_0.3.4           </span></span>
+<span><span class="co">#&gt;  [64] tzdb_0.4.0              R.methodsS3_1.8.2       tidyr_1.3.0            </span></span>
+<span><span class="co">#&gt;  [67] data.table_1.14.10      hms_1.1.3               xml2_1.3.6             </span></span>
+<span><span class="co">#&gt;  [70] utf8_1.2.4              XVector_0.42.0          pillar_1.9.0           </span></span>
+<span><span class="co">#&gt;  [73] stringr_1.5.1           vroom_1.6.5             later_1.3.2            </span></span>
+<span><span class="co">#&gt;  [76] lattice_0.21-9          bit_4.0.5               tidyselect_1.2.0       </span></span>
+<span><span class="co">#&gt;  [79] knitr_1.45              gridExtra_2.3           bookdown_0.37          </span></span>
+<span><span class="co">#&gt;  [82] xfun_0.41               stringi_1.8.3           yaml_2.3.8             </span></span>
+<span><span class="co">#&gt;  [85] evaluate_0.23           codetools_0.2-19        BiocManager_1.30.22    </span></span>
+<span><span class="co">#&gt;  [88] cli_3.6.2               systemfonts_1.0.5       munsell_0.5.0          </span></span>
+<span><span class="co">#&gt;  [91] jquerylib_0.1.4         Rcpp_1.0.11             readxl_1.4.3           </span></span>
+<span><span class="co">#&gt;  [94] globals_0.16.2          parallel_4.3.2          pkgdown_2.0.7          </span></span>
+<span><span class="co">#&gt;  [97] readr_2.1.4             assertthat_0.2.1        prettyunits_1.2.0      </span></span>
+<span><span class="co">#&gt; [100] bitops_1.0-7            listenv_0.9.0           rlist_0.4.6.2          </span></span>
+<span><span class="co">#&gt; [103] scales_1.3.0            crayon_1.5.2            rlang_1.1.2            </span></span>
+<span><span class="co">#&gt; [106] rvest_1.0.3             distances_0.1.10</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
