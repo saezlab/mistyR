@@ -34,9 +34,6 @@ library(tidyverse)
 
 # Distances
 library(distances)
-
-
-setwd("F:/LabRotationSaez/RCode/VisiumAfterDot")
 ```
 
 ## Get and load the data
@@ -224,4 +221,8 @@ The plots show us that, in some places, the localization of the two cell types o
 
 ## Session Info
 
-Here is the output of `sessionInfo()` at the point wh
+Here is the output of `sessionInfo()` at the point when this document was compiled.
+
+```{r}
+sessionInfo()
+```
