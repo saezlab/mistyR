@@ -45,9 +45,9 @@ For this showcase, we use a 10X Visium spatial slide from [Kuppe et al., 2022](h
 
 ```{r}
 # Download the data
-# download.file("https://zenodo.org/records/6580069/files/10X_Visium_ACH005.tar.gz?download=1",
-#     destfile = "10X_Visium_ACH005.tar.gz", method = "curl")
-# untar("10X_Visium_ACH005.tar.gz")
+download.file("https://zenodo.org/records/6580069/files/10X_Visium_ACH005.tar.gz?download=1",
+    destfile = "10X_Visium_ACH005.tar.gz", method = "curl")
+untar("10X_Visium_ACH005.tar.gz")
 ```
 
 The next step is to load the data and extract the location of the spots. The rows are shifted, which means that the real distances between two spots are not always the same. It is therefore advantageous to use the pixel coordinates instead of row and column numbers, as the distances between these are represented accurately.
@@ -61,9 +61,9 @@ geometry <- GetTissueCoordinates(spatial_data, cols = c("imagerow", "imagecol"),
 For deconvolution, we additionally need a reference single-cell data set containing a gene x cell count matrix and a vector containing the corresponding cell annotations. Kuppe et al., 2022, obtained from each sample isolated nuclei from the remaining tissue that they used for snRNA-seq. The data corresponding to the same patient as the spatial data will be used as reference data in `DOT`. First download the file:
 
 ```{r}
-# download.file("https://www.dropbox.com/scl/fi/sm5nnfp8g8z0oqlq1c6gq/hca_p14.rds?rlkey=4s1zllg2fybqvx6auit0yy3dn&dl=1", 
-#               destfile = "hca_p14.rds", 
-#               mode = "wb")
+download.file("https://www.dropbox.com/scl/fi/sm5nnfp8g8z0oqlq1c6gq/hca_p14.rds?rlkey=4s1zllg2fybqvx6auit0yy3dn&dl=1",
+              destfile = "hca_p14.rds",
+              mode = "wb")
 ```
 
 Now load the data. From this, we retrieve a gene x cell count matrix and the respective cell annotations.
@@ -80,7 +80,7 @@ ref_ct <- ref_data$celltypes
 Next, we need to set up the DOT object. The two inputs we need are the count matrix and pixel coordinates of the spatial data and the count matrix and cell annotations of the single-cell reference data.
 
 ```{r message=FALSE, warning=FALSE}
-dot.srt <-setup.srt(srt_data = spatial_data@assays$Spatial@counts, srt_coords = geometry) # SCT -> scanpy transformed/ Spartial -> raw raw
+dot.srt <-setup.srt(srt_data = spatial_data@assays$Spatial@counts, srt_coords = geometry) 
 
 dot.ref <- setup.ref(ref_data = ref_counts_P14, ref_annotations = ref_ct, 10)
 
