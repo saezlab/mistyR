@@ -77,7 +77,7 @@ Based on the plots, we can observe that some cell types are found more frequentl
 
 Now we start with the mistyR pipeline. First, we need to define an intraview that captures the cell type proportions within a spot. To capture the distribution of cell type proportions in the surrounding tissue, we add a paraview. For this vignette, the radius we choose is the distance to the nearest neighbor plus the standard deviation. We calculate the weights of each spot with `family = gaussian`. Then we run mistyR and collect the results.
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 # Calculating the radius
 geom_dist <- as.matrix(distances(geometry))  
 dist_nn <- apply(geom_dist, 1, function(x) (sort(x)[2]))
