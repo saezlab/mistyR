@@ -1,5 +1,5 @@
 ---
-title: "MistyR functional analysis pipeline after cell2location"
+title: "MistyR structural analysis pipeline after cell2location"
 author: 
   name: "Leoni Zimmermann"
   email: "leoni.zimmermann@stud.uni-heidelberg.de" 
