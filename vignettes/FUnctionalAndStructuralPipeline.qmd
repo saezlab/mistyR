@@ -38,9 +38,6 @@ library(decoupleR)
 
 #Cleaning names
 library(janitor)
-
-# Calculating distance weight matrix
-library(distances)
 ```
 
 We will use some functions in python since the computation time is significantly shorter than in R. Python chunks start with a #In Python. Install and load the necessary package for Python:
