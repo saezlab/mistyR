@@ -1,5 +1,5 @@
 ---
-title: "MistyR functional analysis pipeline"
+title: "MistyR functional analysis pipeline - pathway specific genes"
 author: 
   name: "Leoni Zimmermann"
   email: "leoni.zimmermann@stud.uni-heidelberg.de" 
