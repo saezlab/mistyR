@@ -1,5 +1,5 @@
 ---
-title: "MistyR structural analysis pipeline"
+title: "MistyR functional analysis pipeline"
 author: 
   name: "Leoni Zimmermann"
   email: "leoni.zimmermann@stud.uni-heidelberg.de" 
@@ -8,6 +8,7 @@ format:
   html:
     toc: true
     embed-resources: true
+    code-overflow: wrap
 editor: visual
 ---
 
@@ -38,7 +39,7 @@ library(distances)
 
 ## Get and load the data
 
-For this showcase, we use a 10X Visium spatial slide from Kuppe et al., 2022, where they created a spatial multi-omic map of human myocardial infarction. The example data comes from a human heart in a later state after myocardial infarction that was used in the study. The Seurat object contains, among other things, the coordinates of the spots on the slides and their cellular composition estimated by cell2location. First, we have to download and extract the file:
+For this showcase, we use a 10X Visium spatial slide from [Kuppe et al., 2022](https://doi.org/10.1038/s41586-022-05060-x), where they created a spatial multi-omic map of human myocardial infarction. The example data comes from a human heart in a later state after myocardial infarction that was used in the study. The Seurat object contains, among other things, the coordinates of the spots on the slides and their cellular composition estimated by cell2location. First, we have to download and extract the file:
 
 ```{r}
 download.file("https://zenodo.org/records/6580069/files/10X_Visium_ACH005.tar.gz?download=1",
