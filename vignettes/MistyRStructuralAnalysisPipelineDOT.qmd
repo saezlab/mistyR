@@ -1,5 +1,5 @@
 ---
-title: "MistyR structural analysis pipeline"
+title: "MistyR structural analysis pipeline after DOT"
 date: "`r Sys.Date()`"
 author: "Leoni Zimmermann"
 format: 
