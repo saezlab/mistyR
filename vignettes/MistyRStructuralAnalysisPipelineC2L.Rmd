@@ -1,0 +1,173 @@
+---
+title: "MistyR structural analysis pipeline after cell2location"
+author: |
+  | Leoni Zimmermann
+  | leoni.zimmermann@stud.uni-heidelberg.de
+date: "`r Sys.Date()`"
+package: mistyR
+output:
+  rmarkdown::pdf_document:
+    df_print: kable
+    extra_dependencies:
+      nowidow: ["defaultlines=3", "all"]
+vignette: >
+  %\VignetteIndexEntry{MistyR structural analysis pipeline after cell2location}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+## Introduction
+
+MistyR is designed to analyze spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus solely on structural information. Spatial transcriptomic methods such as Visium capture information from areas containing multiple cells. Then, deconvolution is applied to relate the measured data of the spots back to individual cells. A commonly used tool for this deconvolution step is cell2location.
+
+This vignette presents a workflow for the analysis of structural data, guiding users through the application of mistyR to cell2location data and subsequent result analysis.
+
+Load the necessary packages:
+
+```{r message=FALSE}
+
+# MISTy 
+library(mistyR) 
+library(future) 
+
+#Seurat 
+library(Seurat)
+library(SeuratObject)
+
+# Data manipulation 
+library(tidyverse) 
+
+# Distances
+library(distances)
+```
+
+## Get and load the data
+
+For this showcase, we use a 10X Visium spatial slide from [Kuppe et al., 2022](https://doi.org/10.1038/s41586-022-05060-x), where they created a spatial multi-omic map of human myocardial infarction. The example data comes from a human heart in a later state after myocardial infarction that was used in the study. The Seurat object contains, among other things, the coordinates of the spots on the slides and their cellular composition estimated by cell2location. First, we have to download and extract the file:
+
+```{r}
+download.file("https://zenodo.org/records/6580069/files/10X_Visium_ACH005.tar.gz?download=1",
+    destfile = "10X_Visium_ACH005.tar.gz", method = "curl")
+untar("10X_Visium_ACH005.tar.gz")
+```
+
+The next step is to load the data and extract the cell composition and location of the spots. The rows are shifted, which means that the real distances between two spots are not always the same. It is therefore advantageous to use the pixel coordinates instead of row and column numbers, as the distances between these are represented accurately.
+
+```{r}
+# Load file into R
+seurat_vs <- readRDS("ACH005/ACH005.rds")
+
+# Extract the cell composition
+composition <- as_tibble(t(seurat_vs[["c2l_props"]]$data)) 
+
+# Extract the location data
+geometry <- GetTissueCoordinates(seurat_vs, cols = c("imagerow", "imagecol"), scale = NULL)
+```
+
+## Visualize cell proportion in spots
+
+First, we visually explore the slide itself and then through a graphical representation of cell-type proportions at each spot. When adding `interactive = TRUE` to `SpatialFeaturePlot` we can cycle through the proportions of the different celltypes.
+
+```{r message=FALSE, warning=FALSE}
+# Tissue Slide
+SpatialPlot(seurat_vs, keep.scale = NULL, alpha = 0) 
+
+# Cell type proportions
+DefaultAssay(seurat_vs) <- "c2l_props"
+SpatialFeaturePlot(seurat_vs, keep.scale = NULL, features = "CM") 
+```
+
+Based on the plots, we can observe that some cell types are found more frequently than others. Additionally, we can identify patterns in the distribution of cells, with some being widespread across the entire slide while others are concentrated in specific areas. Furthermore, there are cell types that share a similar distribution.
+
+## Misty views
+
+Now we start with the mistyR pipeline. First, we need to define an intraview that captures the cell type proportions within a spot. To capture the distribution of cell type proportions in the surrounding tissue, we add a paraview. For this vignette, the radius we choose is the distance to the nearest neighbor plus the standard deviation. We calculate the weights of each spot with `family = gaussian`. Then we run mistyR and collect the results.
+
+```{r message=FALSE, warning=FALSE}
+# Calculating the radius
+geom_dist <- as.matrix(distances(geometry))  
+dist_nn <- apply(geom_dist, 1, function(x) (sort(x)[2]))
+paraview_radius <- ceiling(mean(dist_nn+ sd(dist_nn)))
+
+# Create views
+heart_views <- create_initial_view(composition) %>%
+  add_paraview(geometry, l= paraview_radius, family = "gaussian")
+
+# Run misty and collect results
+run_misty(heart_views, "result/vignette_structural_pipeline")
+
+misty_results <- collect_results("result/vignette_structural_pipeline")
+```
+
+## Downstream Analysis
+
+With the collected results, we can now answer following questions:
+
+#### 1. To what extent can the occurring cell types of the surrounding tissue explain the cell type composition of the spot compared to the intraview?
+
+Here we can look at two different statistics: `multi.R2` shows the total variance explained by the multiview model. `gain.R2` shows the increase in explainable variance from to the paraview.
+
+```{r}
+misty_results %>%
+  plot_improvement_stats("multi.R2") %>% 
+  plot_improvement_stats("gain.R2")
+```
+
+The paraview particularly increases the explained variance for adipocytes and mast cells. In general, the significant gain in R^2^ can be interpreted as the following:
+
+"We can better explain the expression of marker X when we consider additional views other than the intrinsic view."
+
+#### 2. What are the specific relations that can explain the contributions?
+
+To explain the contributions, we can visualize the importance of each cell type in predicting the cell type distribution for each view separately.
+
+First, for the intrinsic view:
+
+```{r}
+misty_results %>% plot_interaction_heatmap(view = "intra", clean = TRUE)
+```
+
+We can observe that cardiomyocytes are a significant predictor for several cell types when in the same spot. To identify the target with the best prediction by cardiomyocytes, we can view the importance values as follows:
+
+```{r}
+misty_results$importances.aggregated %>%
+  filter(view == "intra", Predictor == "CM") %>%
+  arrange(-Importance)
+```
+
+Let's take a look at the spatial distribution of these cell types in the tissue slide:
+
+```{r}
+SpatialFeaturePlot(seurat_vs, keep.scale = NULL, features = c("Fib","CM"), image.alpha = 0)
+```
+
+We can observe that areas with high proportions of cardiomyocytes have low proportions of fibroblasts and vice versa.
+
+Now we repeat this analysis with the paraview. With `trim` we display only targets with a value above 1.75 for `gain.R2`. To set an importance threshold we apply `cutoff`.
+
+```{r}
+misty_results %>% plot_interaction_heatmap(view = "para.126", clean = TRUE, 
+                                           trim = 1.75, trim.measure = "gain.R2",
+                                           cutoff = 0.5) 
+```
+
+Here, we select the target adipocytes, as we know from previous analysis that the paraview contributes a large part to explaining its distribution. The best predictor for adipocytes are proliferating cells:
+
+```{r}
+SpatialFeaturePlot(seurat_vs, keep.scale = NULL, features = c("prolif","Adipo"), image.alpha = 0)
+```
+
+The plots show us that, in some places, the localization of the two cell types overlap.
+
+## See also
+
+`browseVignettes("mistyR")`
+
+## Session Info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled.
+
+```{r}
+sessionInfo()
+```

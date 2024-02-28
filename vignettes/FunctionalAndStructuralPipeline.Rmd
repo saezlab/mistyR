@@ -1,0 +1,426 @@
+---
+title: "Learning functional and structural spatial relationships with MistyR"
+author: |
+  | Leoni Zimmermann
+  | leoni.zimmermann@stud.uni-heidelberg.de
+date: "`r Sys.Date()`"
+package: mistyR
+output:
+  rmarkdown::pdf_document:
+    df_print: kable
+    extra_dependencies:
+      nowidow: ["defaultlines=3", "all"]
+vignette: >
+  %\VignetteIndexEntry{Learning functional and structural spatial relationships with MistyR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+MistyR analyzes spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus on functional information, for example, gene expression, and structural information, like cell-type compositions.
+
+Visium is a method that captures spatial transcriptomic information from spots possibly containing multiple cells. In this vignette, we will use the gene expression information from Visium data to infer pathway and transcription factor activity and separately investigate spatial relationships between them and the cell-type composition. In addition, we will examine spatial relationships of ligands and receptors.
+
+Load the necessary R packages:
+
+```{r message=FALSE, warning=FALSE}
+# Misty
+library(mistyR)
+
+# For using Python 
+library(reticulate)
+
+# Seurat
+library(Seurat)
+
+# Data manipulation
+library(tidyverse)
+
+# Pathways
+library(decoupleR)
+
+#Cleaning names
+library(janitor)
+```
+
+We will use some functions in python since the computation time is significantly shorter than in R. Python chunks start with a #In Python. Install and load the necessary package for Python:
+
+```{r}
+py_install("decoupler", pip =TRUE )
+```
+
+```{python}
+# In Python:
+import decoupler as dc
+```
+
+## Get and load data
+
+For this showcase, we use a 10X Visium spatial slide from [Kuppe et al., 2022](https://doi.org/10.1038/s41586-022-05060-x), where they created a spatial multi-omic map of human myocardial infarction. The tissue example data comes from the human heart of patient 14, which is in a later state after myocardial infarction. The Seurat object contains, among other things, the normalized and raw gene counts. First, we have to download and extract the file:
+
+```{r}
+download.file("https://zenodo.org/records/6580069/files/10X_Visium_ACH005.tar.gz?download=1",
+    destfile = "10X_Visium_ACH005.tar.gz", method = "curl")
+untar("10X_Visium_ACH005.tar.gz")
+```
+
+The next step is to load the data, extract the normalized gene counts of genes expressed in at least 5% of the spots, and pixel coordinates. It is recommended to use pixel coordinates instead of row and column numbers since the rows are shifted and therefore do not express the real distance between the spots.
+
+```{r}
+seurat <- readRDS("ACH005/ACH005.rds")
+expression_raw <- as.matrix(GetAssayData(seurat, layer = "counts", assay = "SCT"))
+geometry <- GetTissueCoordinates(seurat, scale = NULL)
+
+# Only take genes that  expressed in at least 5% of the spots
+expression <- expression_raw[rownames(expression_raw[(rowSums(expression_raw > 0) / ncol(expression_raw)) >= 0.05,]),]
+```
+
+Let's take a look at the slide itself and some of the cell-type niches defined by [Kuppe et al.](https://doi.org/10.1038/s41586-022-05060-x):
+
+```{r}
+SpatialPlot(seurat, alpha = 0)
+SpatialPlot(seurat, group.by = "celltype_niche")
+```
+
+## Extract cell-type composition
+
+The Seurat Object of the tissue slide also contains the estimated cell type proportions from cell2location. We extract them into a separate object we will later use with Misty and visualize some of the cell types:
+
+```{r fig.height=10, fig.width=10}
+# Rename to more informative names
+rownames(seurat@assays$c2l_props@data) <- rownames(seurat@assays$c2l_props@data) %>% 
+  recode('Adipo' = 'Adipocytes',
+         'CM' = 'Cardiomyocytes',
+         'Endo' = 'Endothelial',
+         'Fib' = 'Fibroblasts',
+         'PC' = 'Pericytes',
+         'prolif' = 'Proliferating',
+         'vSMCs' = 'Vascular-SMCs')
+
+# Extract into a separate object
+composition <- as_tibble(t(seurat[["c2l_props"]]$data))
+
+
+# Visualize cell types
+DefaultAssay(seurat) <- "c2l_props"
+SpatialFeaturePlot(seurat, 
+                   keep.scale = NULL, 
+                   features = c('Vascular-SMCs', "Cardiomyocytes", "Endothelial", "Fibroblasts"),
+                   ncol = 2) 
+```
+
+## Pathway activities on cell-type composition
+
+Let's investigate the relationship between the cell-type compositions and pathway activities in our example slide. But before we create the views, we need to estimate the pathway activities. For this we will take pathway gene sets from [`PROGENy`](https://saezlab.github.io/progeny/index.html) and estimate the activity with [`decoupleR`](https://saezlab.github.io/decoupleR/):
+
+```{r}
+# Obtain genesets
+model <- get_progeny(organism = "human", top = 500)
+
+# Use multivariate linear model to estimate activity
+est_path_act <- run_mlm(expression, model,.mor = NULL) 
+```
+
+We add the result to the Seurat Object and plot the estimated activities to see the distribution over the slide:
+
+```{r message=FALSE, warning=FALSE}
+# Delete progeny assay from Kuppe et al.
+seurat[['progeny']] <- NULL
+
+# Put estimated pathway activities object into the correct format
+est_path_act_wide <- est_path_act %>% 
+  pivot_wider(id_cols = condition, names_from = source, values_from = score) %>%
+  column_to_rownames("condition") 
+
+# Clean names
+colnames(est_path_act_wide)  <- est_path_act_wide %>% 
+  clean_names(parsing_option = 0) %>% 
+  colnames(.)
+
+# Add
+seurat[['progeny']] <- CreateAssayObject(counts = t(est_path_act_wide))
+
+SpatialFeaturePlot(seurat, features = c("jak.stat", "hypoxia"), image.alpha = 0)
+```
+
+### Misty Views
+
+For the Misty view, we will use cell type compositions per spot as the intraview and add the estimated [`PROGENy`](https://saezlab.github.io/progeny/index.html) pathway activities as juxta and paraviews. The size of the neighborhood and the kernel, as well as the kernel family, should be chosen depending on the experiment. Here both distances were chosen to enclose only a small number of neighboring spots.
+
+```{r message=FALSE, warning=FALSE}
+# Clean names
+colnames(composition)  <- composition %>% clean_names(parsing_option = 0) %>% colnames(.)
+
+# create intra from cell-type composition
+comp_views <- create_initial_view(composition) 
+
+# juxta & para from pathway activity
+path_act_views <- create_initial_view(est_path_act_wide) %>%
+  add_juxtaview(geometry,  neighbor.thr = 130) %>% 
+  add_paraview(geometry, l= 200, family = "gaussian")
+
+# Combine views
+com_path_act_views <- comp_views %>%
+  add_views(create_view("juxtaview.path.130", path_act_views[["juxtaview.130"]]$data, "juxta.path.130"))%>% 
+  add_views(create_view("paraview.path.200", path_act_views[["paraview.200"]]$data, "para.path.200")) 
+```
+
+Then run Misty and collect the results:
+
+```{r message=FALSE, warning=FALSE}
+run_misty(com_path_act_views, "result/comp_path_act")
+misty_results_com_path_act <- collect_results("result/comp_path_act/")
+```
+
+### Downstream analysis
+
+With the collected results, we can now answer the following questions:
+
+#### 1. To what extent can the analyzed surrounding tissues' pathway activities explain the cell-type composition of the spot compared to the intraview?
+
+Here we can look at two different statistics: `intra.R2` shows the variance explained by the intraview alone, and `gain.R2` shows the increase in explainable variance when we additionally consider the other views (here juxta and para).
+
+```{r}
+misty_results_com_path_act %>%
+  plot_improvement_stats("intra.R2")%>%
+  plot_improvement_stats("gain.R2") 
+```
+
+The juxta and paraview particularly increase the explained variance for mast cells and adipocytes.
+
+In general, the significant gain in R2 can be interpreted as the following:
+
+"We can better explain the expression of marker X when we consider additional views other than the intrinsic view."
+
+To see the individual contributions of the views we can use:
+
+```{r}
+misty_results_com_path_act %>% 
+  plot_view_contributions()
+```
+
+We see, that the intraview explains the most variance for nearly all cell types (as expected).
+
+#### 2. What are the specific relations that can explain the cell-type composition?
+
+We can individually show the importance of the markers from each viewpoint as predictors of the spot intrinsic cell-type composition to explain the contributions.
+
+Let's look at the juxtaview:
+
+```{r}
+misty_results_com_path_act %>%
+  plot_interaction_heatmap("juxta.path.130", clean = TRUE)
+```
+
+We observe that TNFa is a significant predictor for adipocytes. We can compare their distributions:
+
+```{r message=FALSE, warning=FALSE}
+SpatialFeaturePlot(seurat, features = "tnfa", image.alpha = 0)
+DefaultAssay(seurat) <- "c2l_props"
+SpatialFeaturePlot(seurat, features = "Adipocytes", image.alpha = 0)
+```
+
+We observe similar distributions for both.
+
+## Pathway activities on cell-type composition - Linear Model
+
+The default model used by Misty to model each view is the random forest. However, there are different models to choose from, like the faster and more interpretable linear model.
+
+Another option we haven't used yet is `bypass.intra`. With this, we bypass training the baseline model that predicts the intraview with features from the intraview itself. We will still be able to see how the other views explain the intraview. We will use the same view composition as before:
+
+```{r message=FALSE, warning=FALSE}
+run_misty(com_path_act_views, "result/comp_path_act_linear", model.function = linear_model, bypass.intra = TRUE)
+misty_results_com_path_act_linear <- collect_results("result/comp_path_act_linear")
+```
+
+### Downstream analysis
+
+Let's check again the `gain.R2` and view contributions:
+
+```{r}
+misty_results_com_path_act_linear %>%
+  plot_improvement_stats("gain.R2") %>%
+  plot_view_contributions()
+```
+
+For the specific target-predictor interaction, we look again at the juxtaview:
+
+```{r}
+misty_results_com_path_act_linear %>%
+  plot_interaction_heatmap("juxta.path.130", clean = TRUE) 
+```
+
+Visualize the activity of the JAK-STAT pathway and myeloid distribution:
+
+```{r}
+SpatialFeaturePlot(seurat, features = "jak.stat", image.alpha = 0)
+DefaultAssay(seurat) <- "c2l_props"
+SpatialFeaturePlot(seurat, features = "Myeloid", image.alpha = 0)
+```
+
+## Pathway activities and Transcriptionfactors on cell-type composition
+
+In addition to the estimated pathway activities, we can also add a view to examine the relationship between cell-type composition and TF activity. First, we need to estimate the TF activity with decoupler. It is recommended to compute it with Python, as it is significantly faster:
+
+```{r}
+expression_df <- as.data.frame(t(expression))
+```
+
+```{python}
+# In Python:
+net = dc.get_collectri()
+
+acts_tfs=  dc.run_ulm(
+  mat = r.expression_df,
+  net = net,
+  verbose = True,
+  use_raw = False,
+  )
+```
+
+The object with the estimation contains two elements: The first are the estimates and their respective p-values can be found in the second element.
+
+```{r}
+est_TF <- py$acts_tfs
+```
+
+To speed up the following model training, we calculate the 1000 most variable genes expressed. We then extract the TF from the highly variable genes to create a Misty view.
+
+```{r}
+# Highly variable genes
+hvg <- FindVariableFeatures(expression, selection.method = "vst", nfeatures = 1000) %>% 
+  filter(variable == TRUE)
+
+hvg_expr <- expression[rownames(hvg), ]
+
+# Extract TF from the highly variable genes
+hvg_TF<- est_TF[[1]][, colnames(est_TF[[1]]) %in% rownames(hvg_expr)]
+```
+
+### Misty Views
+
+We will combine the intraview from the cell-type composition and paraviews from the estimated pathway and TF activities:
+
+```{r message=FALSE, warning=FALSE}
+TF_view <- create_initial_view(hvg_TF) %>%
+  add_paraview(geometry, l = 200)           # This may still take some time
+
+# Combine Views
+comp_TF_path_views <- comp_views %>% add_views(create_view("paraview.TF.200", TF_view[["paraview.200"]]$data, "para.TF.200")) %>% 
+  add_views(create_view("paraview.path.200", path_act_views[["paraview.200"]]$data, "para.path.200"))
+
+# Run Misty
+run_misty(comp_TF_path_views, "result/comp_TF_path", model.function = linear_model, bypass.intra = TRUE)
+misty_results_comp_TF_pathway <- collect_results("result/comp_TF_path")
+```
+
+### Downstream analysis
+
+```{r}
+misty_results_comp_TF_pathway %>%
+  plot_improvement_stats("gain.R2") %>%
+  plot_view_contributions()
+```
+
+When plotting the interaction heatmap, we can restrict the result by applying a `trim`, that only shows targets above a defined value for a chosen metric like `gain.R2`.
+
+```{r}
+misty_results_comp_TF_pathway %>%
+  plot_interaction_heatmap("para.TF.200", 
+                           clean = TRUE,
+                           trim.measure = "gain.R2",
+                           trim = 20)
+```
+
+The TF MYC is an important predictor of fibroblasts:
+
+```{r}
+DefaultAssay(seurat) <- "SCT"
+SpatialFeaturePlot(seurat, features = "MYC", image.alpha = 0)
+DefaultAssay(seurat) <- "c2l_props"
+SpatialFeaturePlot(seurat, features = "Fibroblasts", image.alpha = 0)
+```
+
+Indeed, we can see a similar distribution.
+
+## Ligand-Receptor
+
+Finally, we want to learn about the spatial relationship of receptors and ligands on the tissue slide. We will access the consensus resource from [`LIANA`](https://liana-py.readthedocs.io/en/latest/) after downloading it from Github, pulling out the ligands and receptors from the before-determined highly variable genes:
+
+```{r message=FALSE, warning=FALSE}
+download.file("https://raw.githubusercontent.com/saezlab/liana-py/main/liana/resource/omni_resource.csv", 
+    destfile = "omni_resource.csv", method = "curl")
+
+# Ligand Receptor Resource
+omni_resource <- read_csv("omni_resource.csv")%>% 
+  filter(resource == "consensus")
+
+# Get highly variable ligands
+ligands <- omni_resource %>% 
+  pull(source_genesymbol) %>% 
+  unique()
+hvg_lig <- hvg_expr[rownames(hvg_expr) %in% ligands,]
+
+# Get highly variable receptors
+receptors <- omni_resource %>% 
+  pull(target_genesymbol) %>% 
+  unique()
+hvg_recep <- hvg_expr[rownames(hvg_expr) %in% receptors,]
+
+# Clean names
+rownames(hvg_lig) <- hvg_lig %>% 
+  clean_names(parsing_option = 0) %>% 
+  rownames(.)
+
+rownames(hvg_recep) <- hvg_recep %>% clean_names(parsing_option = 0) %>% 
+  rownames(.)
+```
+
+### Misty Views
+
+We are going to create a combined view with the receptors in the intraview as targets and the ligands in the paraview as predictors:
+
+```{r message=FALSE, warning=FALSE}
+# Create views and combine them
+receptor_view <- create_initial_view(as.data.frame(t(hvg_lig)))
+
+ligand_view <- create_initial_view(as.data.frame(t(hvg_recep))) %>% 
+  add_paraview(geometry, l = 200, family = "gaussian")
+
+lig_recep_view <- receptor_view %>% add_views(create_view("paraview.ligand.200", ligand_view[["paraview.200"]]$data, "para.lig.200"))
+
+run_misty(lig_recep_view, "results/lig_recep", bypass.intra = TRUE)
+misty_results_lig_recep <- collect_results("results/lig_recep")
+```
+
+### Downstream analysis
+
+Let's look at important interactions. An additional way to reduce the number of interactions shown in the heatmap is applying a `cutoff`, that introduces an importance threshold:
+
+```{r}
+misty_results_lig_recep %>%
+  plot_interaction_heatmap("para.lig.200", clean = TRUE, cutoff = 2, trim.measure ="gain.R2", trim = 25)
+```
+
+Please remember, that Misty does not only infer interactions between ligands and their respective receptor, but rather all possible interactions between ligands and receptors. We can visualize one of the interactions with high importance:
+
+```{r}
+DefaultAssay(seurat) <- "SCT"
+SpatialFeaturePlot(seurat, features = "CRLF1", image.alpha = 0)
+SpatialFeaturePlot(seurat, features = "COMP", image.alpha = 0)
+```
+
+The plots show a co-occurrence of the ligand and receptor, although they are not an annotated receptor-ligand pair.
+
+## See also
+
+`browseVignettes("mistyR")`
+
+## Session Info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled.
+
+```{r}
+sessionInfo()
+```
