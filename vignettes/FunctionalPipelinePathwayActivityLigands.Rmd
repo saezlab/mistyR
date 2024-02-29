@@ -1,8 +1,14 @@
 ---
-title: "MistyR functional analysis pipeline - pathway activity and ligand expression"
-author: |
-  | Leoni Zimmermann
-  | leoni.zimmermann@stud.uni-heidelberg.de
+title: "Functional analysis with MISTy - pathway activity and ligand expression"
+author:
+- name: Leoni Zimmermann
+  affiliation:
+    - Heidelberg University, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de  
 date: "`r Sys.Date()`"
 package: mistyR
 output:
@@ -11,20 +17,16 @@ output:
     extra_dependencies:
       nowidow: ["defaultlines=3", "all"]
 vignette: >
-  %\VignetteIndexEntry{MistyR functional analysis pipeline - pathway activity and ligand expression}
+  %\VignetteIndexEntry{Functional analysis with MISTy - pathway activity and ligand expression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-MistyR analyzes spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus on functional information, for example, gene expression.
-
-Visium is a method that captures spatial transcriptomic information from spots possibly containing multiple cells. In this vignette, we will use the gene expression information from Visium data to infer pathway activity and investigate spatial relationships between some pathways and ligand expression.
+10X Visium captures spatially resolved transcriptomic profiles in spots containing multiple cells. In this vignette, we will use the gene expression information from Visium data to infer pathway activity and investigate spatial relationships between some pathways and ligand expression.
 
 Load the necessary packages:
-
-setwd("E:/LabRotationSaez/RCode/VisiumFunctional/")
 
 ```{r message=FALSE, warning=FALSE}
 # MISTy 
@@ -94,7 +96,7 @@ seurat_vs[['progeny']] <- CreateAssayObject(counts = t(progeny_scores))
 
 rownames(seurat_vs@assays$progeny@data) <- seurat_vs@assays$progeny@data %>% clean_names(parsing_option = 0) %>% rownames(.)
 
-# Format for running misty later
+# Format for running MISTy later
 pathway_activity <- t(as.matrix(GetAssayData(seurat_vs, "progeny")))
 ```
 
@@ -121,7 +123,7 @@ rownames(seurat_vs@assays$SCT@data) <- seurat_vs@assays$SCT@data %>% clean_names
 
 ## Visualize pathway activity
 
-Before continuing with creating the Misty view, we can look at the slide itself and some of the pathway activities.
+Before continuing with creating the MISTy view, we can look at the slide itself and some of the pathway activities.
 
 ```{r}
 #Slide
@@ -132,9 +134,9 @@ DefaultAssay(seurat_vs) <- "progeny"
 SpatialFeaturePlot(seurat_vs, feature = c("mapk", "p53"), keep.scale = NULL)
 ```
 
-## Misty views
+## MISTy views
 
-Now we need to create the Misty views of interest. We are interested in the relationship of the pathway activity in the same spot (intraview) and the ten closest spots (paraview). Therefore we choose the family \`constant\` and set l to ten, which will select the ten nearest neighbors. Depending on the goal of the analysis, different families can be applied.
+Now we need to create the MISTy views of interest. We are interested in the relationship of the pathway activity in the same spot (intraview) and the ten closest spots (paraview). Therefore we choose the family \`constant\` and set l to ten, which will select the ten nearest neighbors. Depending on the goal of the analysis, different families can be applied.
 
 We are also intrigued about the relationship of ligand expression and pathway activity in the broader tissue. For this, we again create an intra- and paraview, this time for the expression of the ligands, but from this view, we only need the paraview. In the next step, we add it to the pathway activity views to achieve our intended view composition.
 
@@ -150,7 +152,7 @@ combined_views <- pathway_act_view %>% add_views(create_view("paraview.ligand.10
 
 ```
 
-Then run mistyR and collect the results:
+Then run MISTy and collect the results:
 
 ```{r message=FALSE, warning=FALSE}
 run_misty(combined_views, "result/functional_ligand")

@@ -43,7 +43,7 @@ Imports: assertthat, caret, deldir, digest, distances, dplyr (>= 1.1.0), fileloc
     furrr (>= 0.2.0), ggplot2, methods, purrr, ranger, readr (>= 2.0.0), ridge, 
     rlang, rlist, R.utils, stats, stringr, tibble, tidyr, tidyselect (>= 1.2.0), 
     utils, withr
-Suggests: BiocStyle, covr, earth, future, igraph (>= 1.2.7), iml, janitor, 
-    kernlab, knitr, MASS, rmarkdown, RSNNS, testthat (>= 3.0.0), xgboost
+Suggests: BiocStyle, covr, earth, future, igraph (>= 1.2.7), iml, kernlab, 
+    knitr, MASS, rmarkdown, RSNNS, testthat (>= 3.0.0), xgboost
 RoxygenNote: 7.3.1
 Config/testthat/edition: 3
