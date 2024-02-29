@@ -5,7 +5,9 @@
 ^Meta$
 (^|/)\.misty\.temp$
 (^|/)results$
-^vignettes/mistyDataFormats.Rmd$
+^vignettes/mistyDataFormats\.Rmd$
+^vignettes/MistyRStructural.*\.Rmd$
+^vignettes/Functional.*\.Rmd$
 ^LICENSE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
