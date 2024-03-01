@@ -43,6 +43,7 @@ library(tidyverse)
 # Pathways and annotation
 library(decoupleR)
 library(OmnipathR)
+library(progeny)
 
 # Cleaning names
 library(janitor)
