@@ -1,8 +1,14 @@
 ---
-title: "MistyR structural analysis pipeline after cell2location"
-author: |
-  | Leoni Zimmermann
-  | leoni.zimmermann@stud.uni-heidelberg.de
+title: "Structural analysis with MISTy - based on cell2location deconvolution"
+author:
+- name: Leoni Zimmermann
+  affiliation:
+    - Heidelberg University, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de 
 date: "`r Sys.Date()`"
 package: mistyR
 output:
@@ -11,7 +17,7 @@ output:
     extra_dependencies:
       nowidow: ["defaultlines=3", "all"]
 vignette: >
-  %\VignetteIndexEntry{MistyR structural analysis pipeline after cell2location}
+  %\VignetteIndexEntry{Structural analysis with MISTy - based on cell2location deconvolution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
@@ -19,9 +25,9 @@ vignette: >
 
 ## Introduction
 
-MistyR is designed to analyze spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus solely on structural information. Spatial transcriptomic methods such as Visium capture information from areas containing multiple cells. Then, deconvolution is applied to relate the measured data of the spots back to individual cells. A commonly used tool for this deconvolution step is cell2location.
+MISTy is designed to analyze spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus solely on structural information. Spatial transcriptomic methods such as 10x Visium capture information from areas containing multiple cells. Then, deconvolution is applied to relate the measured data of the spots back to individual cells. A commonly used tool for this deconvolution step is cell2location.
 
-This vignette presents a workflow for the analysis of structural data, guiding users through the application of mistyR to cell2location data and subsequent result analysis.
+This vignette presents a workflow for the analysis of structural data, guiding users through the application of `mistyR` to the results of `cell2location` deconvolution.
 
 Load the necessary packages:
 
@@ -80,9 +86,9 @@ SpatialFeaturePlot(seurat_vs, keep.scale = NULL, features = "CM")
 
 Based on the plots, we can observe that some cell types are found more frequently than others. Additionally, we can identify patterns in the distribution of cells, with some being widespread across the entire slide while others are concentrated in specific areas. Furthermore, there are cell types that share a similar distribution.
 
-## Misty views
+## MISTy views
 
-Now we start with the mistyR pipeline. First, we need to define an intraview that captures the cell type proportions within a spot. To capture the distribution of cell type proportions in the surrounding tissue, we add a paraview. For this vignette, the radius we choose is the distance to the nearest neighbor plus the standard deviation. We calculate the weights of each spot with `family = gaussian`. Then we run mistyR and collect the results.
+First, we need to define an intraview that captures the cell type proportions within a spot. To capture the distribution of cell type proportions in the surrounding tissue, we add a paraview. For this vignette, the radius we choose is the distance to the nearest neighbor plus the standard deviation. We calculate the weights of each spot with `family = gaussian`. Then we run MISTy and collect the results.
 
 ```{r message=FALSE, warning=FALSE}
 # Calculating the radius
