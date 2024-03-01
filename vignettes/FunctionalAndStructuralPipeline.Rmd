@@ -51,7 +51,7 @@ library(janitor)
 We will use some functions in python since the computation time is significantly shorter than in R. Python chunks start with a #In Python. Install and load the necessary package for Python:
 
 ```{r}
-py_install("decoupler", pip =TRUE )
+py_install(c("decoupler","omnipath"), pip =TRUE)
 ```
 
 ```{python}
