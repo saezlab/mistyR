@@ -1,8 +1,14 @@
 ---
-title: "MistyR functional analysis pipeline - pathway specific genes"
-author: |
-  | Leoni Zimmermann
-  | leoni.zimmermann@stud.uni-heidelberg.de
+title: "Functional analysis with MISTy - pathway specific genes"
+author:
+- name: Leoni Zimmermann
+  affiliation:
+    - Heidelberg University, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de 
 date: "`r Sys.Date()`"
 package: mistyR
 output:
@@ -11,16 +17,14 @@ output:
     extra_dependencies:
       nowidow: ["defaultlines=3", "all"]
 vignette: >
-  %\VignetteIndexEntry{MistyR functional analysis pipeline - pathway specific genes}
+  %\VignetteIndexEntry{Functional analysis with MISTy - pathway specific genes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-MistyR analyzes spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus on functional information, for example, gene expression.
-
-Visium is a method that captures spatial transcriptomic information from spots possibly containing multiple cells.In this vignette, we will use the gene expression information from Visium data to investigate spatial relationships between some pathway-specific genes.
+10X Visium captures spatially resolved transcriptomic profiles in spots containing multiple cells. In this vignette, we will use the gene expression information from Visium data to investigate spatial relationships between pathway-specific genes.
 
 Load the necessary packages:
 
@@ -107,7 +111,7 @@ misty_views <- TGFb_views %>%
   add_views(create_view("paraview.VEGF_10", VEGF_views[["paraview.10"]]$data, "para.VEGFn.10"))
 ```
 
-Then run mistyR and collect the results:
+Then run MISTy and collect the results:
 
 ```{r message=FALSE, warning=FALSE}
 
