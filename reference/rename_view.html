@@ -33,6 +33,11 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/FunctionalAndStructuralPipeline.html">Learning functional and structural spatial relationships with MISTy</a>
+    <a class="dropdown-item" href="../articles/FunctionalPipelinePathwayActivityLigands.html">Functional analysis with MISTy - pathway activity and ligand expression</a>
+    <a class="dropdown-item" href="../articles/FunctionalPipelinePathwaySpecific.html">Functional analysis with MISTy - pathway specific genes</a>
+    <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineC2L.html">Structural analysis with MISTy - based on cell2location deconvolution</a>
+    <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineDOT.html">Structural analysis with MISTy - based on DOT deconvolution</a>
     <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
@@ -124,14 +129,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ intraview     :List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ abbrev: chr "intra"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ data  :'data.frame':	100 obs. of  2 variables:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 12.12 13.19 11.1 9.31 10.35 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 15.6 11.1 16.2 15.6 13.9 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ misty.uniqueid: chr "d89c737606e6292beb7d2912d904e5a3"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 7.05 7.19 13.98 9.18 8.68 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 5.82 17.39 13.54 7.83 18.56 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ misty.uniqueid: chr "397aabb41517c46aac7d78a2001bec9f"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ originalname  :List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ abbrev: chr "on"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ data  :'data.frame':	100 obs. of  2 variables:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 11.56 11.54 5.71 8.75 10.59 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 21.66 16.14 9.49 22.09 14.42 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 12.61 9.46 12.83 17.66 8.12 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 20.7 17.2 19.1 20.7 17.1 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename and preview</span></span></span>
 <span class="r-in"><span><span class="va">misty.views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
@@ -141,14 +146,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ intraview     :List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ abbrev: chr "intra"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ data  :'data.frame':	100 obs. of  2 variables:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 12.12 13.19 11.1 9.31 10.35 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 15.6 11.1 16.2 15.6 13.9 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ misty.uniqueid: chr "d89c737606e6292beb7d2912d904e5a3"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 7.05 7.19 13.98 9.18 8.68 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 5.82 17.39 13.54 7.83 18.56 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ misty.uniqueid: chr "397aabb41517c46aac7d78a2001bec9f"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ renamed       :List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ abbrev: chr "rn"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ data  :'data.frame':	100 obs. of  2 variables:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 11.56 11.54 5.71 8.75 10.59 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 21.66 16.14 9.49 22.09 14.42 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker1: num [1:100] 12.61 9.46 12.83 17.66 8.12 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ marker2: num [1:100] 20.7 17.2 19.1 20.7 17.1 ...</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

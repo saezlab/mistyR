@@ -1,10 +1,15 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  FunctionalAndStructuralPipeline: FunctionalAndStructuralPipeline.html
+  FunctionalPipelinePathwayActivityLigands: FunctionalPipelinePathwayActivityLigands.html
+  FunctionalPipelinePathwaySpecific: FunctionalPipelinePathwaySpecific.html
+  MistyRStructuralAnalysisPipelineC2L: MistyRStructuralAnalysisPipelineC2L.html
+  MistyRStructuralAnalysisPipelineDOT: MistyRStructuralAnalysisPipelineDOT.html
   mistyDataFormats: mistyDataFormats.html
   mistyR: mistyR.html
-last_built: 2023-12-22T12:24Z
+last_built: 2024-03-04T16:36Z
 urls:
   reference: https://saezlab.github.io/mistyR/reference
   article: https://saezlab.github.io/mistyR/articles
