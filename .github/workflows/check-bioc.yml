@@ -137,7 +137,7 @@ jobs:
           BiocManager::install(c("decoupleR", "SpatialExperiment"), ask = FALSE)
           install.packages(c("pkgdown", "sctransform"))
           install.packages(c("stringi", "ridge"), type="source", repos="https://cloud.r-project.org/")
-          BiocManager::install(c("OmnipathR", ask=FALSE)
+          BiocManager::install("OmnipathR", ask=FALSE)
           install.packages(c("janitor", "reticulate", "Seurat", "SeuratObject", "tidyverse"))
 
           ## modified from pkgdown::deploy_to_branch
