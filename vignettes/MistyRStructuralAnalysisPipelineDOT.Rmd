@@ -28,6 +28,12 @@ MISTy is designed to analyze spatial omics datasets within and between distinct 
 
 This vignette presents a workflow for the analysis of structural data, guiding users through the application of `mistyR` to the results of `DOT` deconvolution.
 
+`DOT` can not be installed from Bioconducter or CRAN at the moment. However, it can be installed this way instead:
+
+```{r}
+devtools::install_github("saezlab/DOT")
+```
+
 Load the necessary packages:
 
 ```{r message=FALSE}
@@ -71,7 +77,7 @@ geometry <- GetTissueCoordinates(spatial_data, cols = c("imagerow", "imagecol"),
 For deconvolution, we additionally need a reference single-cell data set containing a gene x cell count matrix and a vector containing the corresponding cell annotations. Kuppe et al., 2022, obtained from each sample isolated nuclei from the remaining tissue that they used for snRNA-seq. The data corresponding to the same patient as the spatial data will be used as reference data in `DOT`. First download the file:
 
 ```{r}
-download.file("https://www.dropbox.com/scl/fi/sm5nnfp8g8z0oqlq1c6gq/hca_p14.rds?rlkey=4s1zllg2fybqvx6auit0yy3dn&dl=1",
+download.file("https://www.dropbox.com/scl/fi/sq24xaavxplkc98iimvpz/hca_p14.rds?rlkey=h8cyxzhypavkydbv0z3pqadus&dl=1",
               destfile = "hca_p14.rds",
               mode = "wb")
 ```
