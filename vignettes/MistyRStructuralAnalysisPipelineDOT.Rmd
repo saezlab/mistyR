@@ -28,11 +28,7 @@ MISTy is designed to analyze spatial omics datasets within and between distinct 
 
 This vignette presents a workflow for the analysis of structural data, guiding users through the application of `mistyR` to the results of `DOT` deconvolution.
 
-`DOT` can not be installed from Bioconducter or CRAN at the moment. However, it can be installed this way instead:
-
-```{r}
-devtools::install_github("saezlab/DOT")
-```
+The package `DOT` can be installed from Github `remotes::install_github("saezlab/DOT")`.
 
 Load the necessary packages:
 
