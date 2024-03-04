@@ -77,25 +77,23 @@ Now we create a Seurat object with pathway activities inferred from [`PROGENy`](
 seurat_vs[['progeny']] <- NULL
 
 # Matrix with important genes for each pathway
-model <- progeny::getModel(organism = "Human", top = 1000)
+model <- get_progeny(organism = "human", top = 1000)
 
-# Get gene names of expresesd genes from the slide
-common_genes <- intersect(
-  rownames(GetAssayData(seurat_vs, layer = "counts", assay = "SCT")), 
-  rownames(model))
+# Use multivariate linear model to estimate activity
+est_path_act <- run_mlm(expression, model,.mor = NULL) 
 
-# Compute weighted sum to get inferred pathway activity
-progeny_scores <- (t(model)[, common_genes]) %*% (GetAssayData(seurat_vs, assay = "SCT")[common_genes, ])
-
-# Scale by feature
-progeny_scores <- scale(t(as.matrix(progeny_scores)))
-
-# Create a Seurat object
-seurat_vs[['progeny']] <- CreateAssayObject(counts = t(progeny_scores))
+# Put estimated pathway activities object into the correct format
+est_path_act_wide <- est_path_act %>% 
+  pivot_wider(id_cols = condition, names_from = source, values_from = score) %>%
+  column_to_rownames("condition") 
 
 # Clean names
+colnames(est_path_act_wide)  <- est_path_act_wide %>% 
+  clean_names(parsing_option = 0) %>% 
+  colnames(.)
 
-rownames(seurat_vs@assays$progeny@data) <- seurat_vs@assays$progeny@data %>% clean_names(parsing_option = 0) %>% rownames(.)
+# Create a Seurat object
+seurat_vs[['progeny']] <- CreateAssayObject(counts = t(est_path_act_wide))
 
 # Format for running MISTy later
 pathway_activity <- t(as.matrix(GetAssayData(seurat_vs, "progeny")))
@@ -215,10 +213,10 @@ misty_results %>%
                            cutoff = 1.25)
 ```
 
-From the `gain.R2` we know that the paraview contributes a lot to explaining the PI3K pathway activity Let's visualize it and its most important predictor, JAK-STAT pathway activity:
+From the `gain.R2` we know that the paraview contributes a lot to explaining the TGFb pathway activity. Let's visualize it and its most important predictor, androgen pathway activity:
 
 ```{r}
-SpatialFeaturePlot(seurat_vs, features = c("jak.stat", "pi3k"), image.alpha = 0)
+SpatialFeaturePlot(seurat_vs, features = c("androgen", "tgfb"), image.alpha = 0)
 ```
 
 The plots show us an anticorrelation of these pathways.
@@ -228,20 +226,20 @@ Now we will analyze the last view, the ligand expression paraview:
 ```{r}
 misty_results %>%
   plot_interaction_heatmap(view = "para.ligand.10", clean = TRUE, trim = 0.5,
-                           trim.measure = "gain.R2", cutoff=4)
+                           trim.measure = "gain.R2", cutoff=3)
 ```
 
-SERPINF1 is a strong predictor of both PI3K and TGFb:
+The ligand SERPINF1 is a predictor of both PI3K and VEGF:
 
 ```{r}
 SpatialFeaturePlot(seurat_vs, features = c("pi3k"), image.alpha = 0)
-SpatialFeaturePlot(seurat_vs, features = c("tgfb"), image.alpha = 0)
+SpatialFeaturePlot(seurat_vs, features = c("vegf"), image.alpha = 0)
 DefaultAssay(seurat_vs) <- "SCT"
 SpatialFeaturePlot(seurat_vs, features = c("serpinf1"), image.alpha = 0)
 
 ```
 
-From the slides we can see that SERPINF1 correlates negative with PI3K and positive with TGFb.
+From the slides we can see that SERPINF1 correlates positive with PI3K and negative with VEGF
 
 ## See also
 
