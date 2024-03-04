@@ -1,8 +1,14 @@
 ---
-title: "MistyR functional analysis pipeline - pathway activity and ligand expression"
-author: |
-  | Leoni Zimmermann
-  | leoni.zimmermann@stud.uni-heidelberg.de
+title: "Functional analysis with MISTy - pathway activity and ligand expression"
+author:
+- name: Leoni Zimmermann
+  affiliation:
+    - Heidelberg University, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de  
 date: "`r Sys.Date()`"
 package: mistyR
 output:
@@ -11,20 +17,16 @@ output:
     extra_dependencies:
       nowidow: ["defaultlines=3", "all"]
 vignette: >
-  %\VignetteIndexEntry{MistyR functional analysis pipeline - pathway activity and ligand expression}
+  %\VignetteIndexEntry{Functional analysis with MISTy - pathway activity and ligand expression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-MistyR analyzes spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus on functional information, for example, gene expression.
-
-Visium is a method that captures spatial transcriptomic information from spots possibly containing multiple cells. In this vignette, we will use the gene expression information from Visium data to infer pathway activity and investigate spatial relationships between some pathways and ligand expression.
+10X Visium captures spatially resolved transcriptomic profiles in spots containing multiple cells. In this vignette, we will use the gene expression information from Visium data to infer pathway activity and investigate spatial relationships between some pathways and ligand expression.
 
 Load the necessary packages:
-
-setwd("E:/LabRotationSaez/RCode/VisiumFunctional/")
 
 ```{r message=FALSE, warning=FALSE}
 # MISTy 
@@ -41,6 +43,7 @@ library(tidyverse)
 # Pathways and annotation
 library(decoupleR)
 library(OmnipathR)
+library(progeny)
 
 # Cleaning names
 library(janitor)
@@ -74,27 +77,25 @@ Now we create a Seurat object with pathway activities inferred from [`PROGENy`](
 seurat_vs[['progeny']] <- NULL
 
 # Matrix with important genes for each pathway
-model <- progeny::getModel(organism = "Human", top = 1000)
+model <- get_progeny(organism = "human", top = 1000)
 
-# Get gene names of expresesd genes from the slide
-common_genes <- intersect(
-  rownames(GetAssayData(seurat_vs, layer = "counts", assay = "SCT")), 
-  rownames(model))
+# Use multivariate linear model to estimate activity
+est_path_act <- run_mlm(expression, model,.mor = NULL) 
 
-# Compute weighted sum to get inferred pathway activity
-progeny_scores <- (t(model)[, common_genes]) %*% (GetAssayData(seurat_vs, assay = "SCT")[common_genes, ])
-
-# Scale by feature
-progeny_scores <- scale(t(as.matrix(progeny_scores)))
-
-# Create a Seurat object
-seurat_vs[['progeny']] <- CreateAssayObject(counts = t(progeny_scores))
+# Put estimated pathway activities object into the correct format
+est_path_act_wide <- est_path_act %>% 
+  pivot_wider(id_cols = condition, names_from = source, values_from = score) %>%
+  column_to_rownames("condition") 
 
 # Clean names
+colnames(est_path_act_wide)  <- est_path_act_wide %>% 
+  clean_names(parsing_option = 0) %>% 
+  colnames(.)
 
-rownames(seurat_vs@assays$progeny@data) <- seurat_vs@assays$progeny@data %>% clean_names(parsing_option = 0) %>% rownames(.)
+# Create a Seurat object
+seurat_vs[['progeny']] <- CreateAssayObject(counts = t(est_path_act_wide))
 
-# Format for running misty later
+# Format for running MISTy later
 pathway_activity <- t(as.matrix(GetAssayData(seurat_vs, "progeny")))
 ```
 
@@ -121,7 +122,7 @@ rownames(seurat_vs@assays$SCT@data) <- seurat_vs@assays$SCT@data %>% clean_names
 
 ## Visualize pathway activity
 
-Before continuing with creating the Misty view, we can look at the slide itself and some of the pathway activities.
+Before continuing with creating the MISTy view, we can look at the slide itself and some of the pathway activities.
 
 ```{r}
 #Slide
@@ -132,9 +133,9 @@ DefaultAssay(seurat_vs) <- "progeny"
 SpatialFeaturePlot(seurat_vs, feature = c("mapk", "p53"), keep.scale = NULL)
 ```
 
-## Misty views
+## MISTy views
 
-Now we need to create the Misty views of interest. We are interested in the relationship of the pathway activity in the same spot (intraview) and the ten closest spots (paraview). Therefore we choose the family \`constant\` and set l to ten, which will select the ten nearest neighbors. Depending on the goal of the analysis, different families can be applied.
+Now we need to create the MISTy views of interest. We are interested in the relationship of the pathway activity in the same spot (intraview) and the ten closest spots (paraview). Therefore we choose the family \`constant\` and set l to ten, which will select the ten nearest neighbors. Depending on the goal of the analysis, different families can be applied.
 
 We are also intrigued about the relationship of ligand expression and pathway activity in the broader tissue. For this, we again create an intra- and paraview, this time for the expression of the ligands, but from this view, we only need the paraview. In the next step, we add it to the pathway activity views to achieve our intended view composition.
 
@@ -150,7 +151,7 @@ combined_views <- pathway_act_view %>% add_views(create_view("paraview.ligand.10
 
 ```
 
-Then run mistyR and collect the results:
+Then run MISTy and collect the results:
 
 ```{r message=FALSE, warning=FALSE}
 run_misty(combined_views, "result/functional_ligand")
@@ -212,10 +213,10 @@ misty_results %>%
                            cutoff = 1.25)
 ```
 
-From the `gain.R2` we know that the paraview contributes a lot to explaining the PI3K pathway activity Let's visualize it and its most important predictor, JAK-STAT pathway activity:
+From the `gain.R2` we know that the paraview contributes a lot to explaining the TGFb pathway activity. Let's visualize it and its most important predictor, androgen pathway activity:
 
 ```{r}
-SpatialFeaturePlot(seurat_vs, features = c("jak.stat", "pi3k"), image.alpha = 0)
+SpatialFeaturePlot(seurat_vs, features = c("androgen", "tgfb"), image.alpha = 0)
 ```
 
 The plots show us an anticorrelation of these pathways.
@@ -225,20 +226,20 @@ Now we will analyze the last view, the ligand expression paraview:
 ```{r}
 misty_results %>%
   plot_interaction_heatmap(view = "para.ligand.10", clean = TRUE, trim = 0.5,
-                           trim.measure = "gain.R2", cutoff=4)
+                           trim.measure = "gain.R2", cutoff=3)
 ```
 
-SERPINF1 is a strong predictor of both PI3K and TGFb:
+The ligand SERPINF1 is a predictor of both PI3K and VEGF:
 
 ```{r}
 SpatialFeaturePlot(seurat_vs, features = c("pi3k"), image.alpha = 0)
-SpatialFeaturePlot(seurat_vs, features = c("tgfb"), image.alpha = 0)
+SpatialFeaturePlot(seurat_vs, features = c("vegf"), image.alpha = 0)
 DefaultAssay(seurat_vs) <- "SCT"
 SpatialFeaturePlot(seurat_vs, features = c("serpinf1"), image.alpha = 0)
 
 ```
 
-From the slides we can see that SERPINF1 correlates negative with PI3K and positive with TGFb.
+From the slides we can see that SERPINF1 correlates positive with PI3K and negative with VEGF
 
 ## See also
 

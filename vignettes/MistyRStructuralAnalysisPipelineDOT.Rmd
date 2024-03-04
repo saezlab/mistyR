@@ -1,8 +1,14 @@
 ---
-title: "MistyR structural analysis pipeline after DOT"
-author: |
-  | Leoni Zimmermann
-  | leoni.zimmermann@stud.uni-heidelberg.de
+title: "Structural analysis with MISTy - based on DOT deconvolution"
+author:
+- name: Leoni Zimmermann
+  affiliation:
+    - Heidelberg University, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de 
 date: "`r Sys.Date()`"
 package: mistyR
 output:
@@ -11,16 +17,16 @@ output:
     extra_dependencies:
       nowidow: ["defaultlines=3", "all"]
 vignette: >
-  %\VignetteIndexEntry{MistyR structural analysis pipeline after DOT}
+  %\VignetteIndexEntry{Structural analysis with MISTy - based on DOT deconvolution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-MistyR is designed to analyze spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus solely on structural information. Spatial transcriptomic methods such as Visium capture information from areas containing multiple cells. Then, deconvolution is applied to relate the measured data of the spots back to individual cells. In this vignette we will use the R package [`DOT`](https://saezlab.github.io/DOT/index.html) for deconvolution.
+MISTy is designed to analyze spatial omics datasets within and between distinct spatial contexts referred to as views. This analysis can focus solely on structural information. Spatial transcriptomic methods such as Visium capture information from areas containing multiple cells. Then, deconvolution is applied to relate the measured data of the spots back to individual cells. In this vignette we will use the R package [`DOT`](https://saezlab.github.io/DOT/index.html) for deconvolution.
 
-This vignette presents a workflow for the analysis of structural data, guiding users through the application of `mistyR` to `DOT` deconvolution data and subsequent result analysis.
+This vignette presents a workflow for the analysis of structural data, guiding users through the application of `mistyR` to the results of `DOT` deconvolution.
 
 Load the necessary packages:
 
@@ -127,7 +133,7 @@ draw_maps(geometry,
 
 Based on the plots, we can observe that some cell types are found more frequently than others. Additionally, we can identify patterns in the distribution of cells, with some being widespread across the entire slide while others are concentrated in specific areas. Furthermore, there are cell types that share a similar distribution.
 
-## Misty views
+## MISTy views
 
 ```{r include = FALSE}
 # Calculating the radius
