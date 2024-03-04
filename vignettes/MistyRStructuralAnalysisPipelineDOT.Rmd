@@ -103,10 +103,7 @@ Now we can carry out deconvolution:
 
 ```{r}
 # Run DOT
-dot <- run.DOT.lowresolution(dot, 
-                             lambda_a = 0,       
-                             max_spot_size = 20, 
-                             verbose = FALSE)
+dot <- run.DOT.lowresolution(dot)
 ```
 
 The results can be found under `dot@weights`. To obtain the calculated cell-type proportion per spot, we normalize the result to a row sum of 1.
