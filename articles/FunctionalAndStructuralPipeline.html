@@ -61,7 +61,7 @@
     <a class="dropdown-item" href="../articles/FunctionalPipelinePathwaySpecific.html">Functional analysis with MISTy - pathway specific genes</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineC2L.html">Structural analysis with MISTy - based on cell2location deconvolution</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineDOT.html">Structural analysis with MISTy - based on DOT deconvolution</a>
-    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">Signature analysis of IMC breast cancer data</a>
+    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">MISTy representation based analysis of IMC breast cancer data</a>
     <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
@@ -430,8 +430,8 @@ faster:</p>
 <code class="sourceCode R"><span><span class="va">expression_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">expression</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co"># In Python:</span></span>
 <span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>net <span class="op">=</span> dc.get_collectri()</span></code></pre></div>
-<pre><code><span><span class="co">## 0.00B [00:00, ?B/s]830kB [00:00, 6.50MB/s]1.38MB [00:00, 5.40MB/s]2.32MB [00:00, 6.36MB/s]3.62MB [00:00, 8.00MB/s]6.67MB [00:00, 14.0MB/s]12.0MB [00:00, 26.0MB/s]19.5MB [00:00, 38.3MB/s]39.0MB [00:01, 78.1MB/s]52.7MB [00:01, 53.0MB/s]</span></span>
-<span><span class="co">## 0.00B [00:00, ?B/s]118kB [00:00, 256MB/s]</span></span></code></pre>
+<pre><code><span><span class="co">## 0.00B [00:00, ?B/s]1.11MB [00:00, 9.80MB/s]5.24MB [00:00, 27.4MB/s]11.7MB [00:00, 41.6MB/s]31.9MB [00:00, 103MB/s] 40.0MB [00:00, 97.1MB/s]47.8MB [00:00, 91.8MB/s]52.7MB [00:00, 79.3MB/s]</span></span>
+<span><span class="co">## 0.00B [00:00, ?B/s]118kB [00:00, 252MB/s]</span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>acts_tfs<span class="op">=</span>  dc.run_ulm(</span>
 <span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>  mat <span class="op">=</span> r.expression_df,</span>
 <span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>  net <span class="op">=</span> net,</span>
@@ -647,7 +647,7 @@ this document was compiled.</p>
 <span><span class="co">##  [55] farver_2.1.1           stats4_4.3.3           matrixStats_1.2.0     </span></span>
 <span><span class="co">##  [58] spatstat.explore_3.2-6 jsonlite_1.8.8         caret_6.0-94          </span></span>
 <span><span class="co">##  [61] ellipsis_0.3.2         progressr_0.14.0       iterators_1.0.14      </span></span>
-<span><span class="co">##  [64] ggridges_0.5.6         survival_3.5-8         systemfonts_1.0.5     </span></span>
+<span><span class="co">##  [64] ggridges_0.5.6         survival_3.5-8         systemfonts_1.0.6     </span></span>
 <span><span class="co">##  [67] foreach_1.5.2          tools_4.3.3            progress_1.2.3        </span></span>
 <span><span class="co">##  [70] ragg_1.2.7             ica_1.0-3              Rcpp_1.0.12           </span></span>
 <span><span class="co">##  [73] glue_1.7.0             prodlim_2023.08.28     gridExtra_2.3         </span></span>

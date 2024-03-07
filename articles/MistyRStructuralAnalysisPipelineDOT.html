@@ -61,7 +61,7 @@
     <a class="dropdown-item" href="../articles/FunctionalPipelinePathwaySpecific.html">Functional analysis with MISTy - pathway specific genes</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineC2L.html">Structural analysis with MISTy - based on cell2location deconvolution</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineDOT.html">Structural analysis with MISTy - based on DOT deconvolution</a>
-    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">Signature analysis of IMC breast cancer data</a>
+    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">MISTy representation based analysis of IMC breast cancer data</a>
     <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
@@ -312,17 +312,17 @@ follows:</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 11 × 5</span></span></span>
 <span><span class="co">##    view  Predictor Target   Importance nsamples</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> intra CM        Fib           2.82         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> intra CM        Endo          2.65         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> intra CM        vSMCs         2.61         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> intra CM        PC            2.55         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> intra CM        Myeloid       2.47         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> intra CM        Adipo         2.25         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> intra CM        prolif        0.853        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> intra CM        Lymphoid      0.164        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> intra CM        Neuronal      0.148        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> intra CM        Mast          0.122        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">11</span> intra CM        CM           <span style="color: #BB0000;">NA</span>            1</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> intra CM        Fib          2.82          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> intra CM        vSMCs        2.65          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> intra CM        PC           2.58          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> intra CM        Endo         2.55          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> intra CM        Myeloid      2.41          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> intra CM        Adipo        1.99          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> intra CM        Mast         1.43          1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> intra CM        prolif       0.978         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> intra CM        Lymphoid     0.324         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> intra CM        Neuronal    -<span style="color: #BB0000;">0.042</span><span style="color: #BB0000; text-decoration: underline;">0</span>        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> intra CM        CM          <span style="color: #BB0000;">NA</span>             1</span></span></code></pre>
 <p>Let’s take a look at the spatial distribution of Cardiomyocytes and
 their most important target, fibroblasts, in the tissue slide:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -424,7 +424,7 @@ this document was compiled.</p>
 <span><span class="co">##  [52] farver_2.1.1           stats4_4.3.3           matrixStats_1.2.0     </span></span>
 <span><span class="co">##  [55] spatstat.explore_3.2-6 jsonlite_1.8.8         caret_6.0-94          </span></span>
 <span><span class="co">##  [58] ellipsis_0.3.2         progressr_0.14.0       ggridges_0.5.6        </span></span>
-<span><span class="co">##  [61] survival_3.5-8         iterators_1.0.14       systemfonts_1.0.5     </span></span>
+<span><span class="co">##  [61] survival_3.5-8         iterators_1.0.14       systemfonts_1.0.6     </span></span>
 <span><span class="co">##  [64] foreach_1.5.2          tools_4.3.3            ragg_1.2.7            </span></span>
 <span><span class="co">##  [67] ica_1.0-3              Rcpp_1.0.12            glue_1.7.0            </span></span>
 <span><span class="co">##  [70] prodlim_2023.08.28     gridExtra_2.3          xfun_0.42             </span></span>

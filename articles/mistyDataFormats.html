@@ -61,7 +61,7 @@
     <a class="dropdown-item" href="../articles/FunctionalPipelinePathwaySpecific.html">Functional analysis with MISTy - pathway specific genes</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineC2L.html">Structural analysis with MISTy - based on cell2location deconvolution</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineDOT.html">Structural analysis with MISTy - based on DOT deconvolution</a>
-    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">Signature analysis of IMC breast cancer data</a>
+    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">MISTy representation based analysis of IMC breast cancer data</a>
     <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
@@ -483,21 +483,21 @@ cross-validation.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 4</span></span></span>
 <span><span class="co">#&gt;    target  sample                                                measure   value</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.81<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.28<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    7.80<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.42<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.23<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    2.82<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    8.35<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    9.21<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.16<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.56<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.83<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.86<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    1.91<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    3.42<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    9.25<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> PGK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.001<span style="text-decoration: underline;">81</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ANKZF1  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.001<span style="text-decoration: underline;">85</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> FUT11   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.011<span style="text-decoration: underline;">4</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FAM162A /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.020<span style="text-decoration: underline;">0</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> PDK1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.021<span style="text-decoration: underline;">3</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> INSIG2  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.024<span style="text-decoration: underline;">3</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> NDRG1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.027<span style="text-decoration: underline;">9</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> HILPDA  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.034<span style="text-decoration: underline;">7</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> EGLN1   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.042<span style="text-decoration: underline;">4</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> PFKFB4  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.088<span style="text-decoration: underline;">6</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> ENO2    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.140  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> KDM3A   /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.159  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> BNIP3L  /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.300  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> ANKRD37 /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.302  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> GBE1    /home/runner/work/mistyR/mistyR/vignettes/vignette_m… p.R2    0.905</span></span></code></pre></div>
 <p>In general, the significant gain in R2 can be interpreted as the
 following:</p>
 <p>“We can better explain the expression of marker X, when we consider
@@ -513,9 +513,9 @@ explaining the expression?</strong></p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   target view             mean fraction p.mean  p.sd</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PGK1   intra           0.532    0.385      0    <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> PGK1   para.5          0.378    0.274      0    <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> PGK1   para.estrogen.5 0.473    0.342      0    <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PGK1   intra           0.524    0.380      0    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> PGK1   para.5          0.317    0.230      0    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> PGK1   para.estrogen.5 0.538    0.390      0    <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 <p>In the case of PGK1, we observe that around 37.7% of the contribution
 in the final model comes from the expression of other markers of hypoxia
 intrinsically or from the broader tissue structure. The rest (62.3%)
@@ -540,21 +540,21 @@ this:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 5</span></span></span>
 <span><span class="co">#&gt;    view  Predictor Target Importance nsamples</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> intra NDRG1     PGK1       2.43          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> intra FAM162A   PGK1       1.97          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> intra HILPDA    PGK1       0.339         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> intra PFKFB4    PGK1       0.280         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> intra ENO2      PGK1       0.064<span style="text-decoration: underline;">6</span>        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> intra EGLN1     PGK1      -<span style="color: #BB0000;">0.344</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> intra GBE1      PGK1      -<span style="color: #BB0000;">0.473</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> intra KDM3A     PGK1      -<span style="color: #BB0000;">0.500</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> intra ANKZF1    PGK1      -<span style="color: #BB0000;">0.550</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> intra ANKRD37   PGK1      -<span style="color: #BB0000;">0.559</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> intra BNIP3L    PGK1      -<span style="color: #BB0000;">0.586</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> intra INSIG2    PGK1      -<span style="color: #BB0000;">0.650</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> intra FUT11     PGK1      -<span style="color: #BB0000;">0.693</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> intra PDK1      PGK1      -<span style="color: #BB0000;">0.734</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> intra PGK1      PGK1      <span style="color: #BB0000;">NA</span>             1</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> intra NDRG1     PGK1        2.46         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> intra FAM162A   PGK1        1.97         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> intra HILPDA    PGK1        0.271        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> intra PFKFB4    PGK1        0.219        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> intra ENO2      PGK1        0.128        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> intra EGLN1     PGK1       -<span style="color: #BB0000;">0.278</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> intra KDM3A     PGK1       -<span style="color: #BB0000;">0.504</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> intra GBE1      PGK1       -<span style="color: #BB0000;">0.507</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> intra ANKRD37   PGK1       -<span style="color: #BB0000;">0.533</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> intra BNIP3L    PGK1       -<span style="color: #BB0000;">0.583</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> intra ANKZF1    PGK1       -<span style="color: #BB0000;">0.603</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> intra INSIG2    PGK1       -<span style="color: #BB0000;">0.648</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> intra PDK1      PGK1       -<span style="color: #BB0000;">0.679</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> intra FUT11     PGK1       -<span style="color: #BB0000;">0.707</span>        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> intra PGK1      PGK1       <span style="color: #BB0000;">NA</span>            1</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">vis.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">norm.data</span><span class="op">)</span><span class="op">[</span>,<span class="va">hypoxia.footprints</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">norm.data</span><span class="op">)</span><span class="op">[</span>,<span class="va">estrogen.footprints</span><span class="op">]</span><span class="op">)</span></span>
@@ -714,7 +714,7 @@ this document was compiled:</p>
 <span><span class="co">#&gt;  [79] knitr_1.45              gridExtra_2.3           bookdown_0.38          </span></span>
 <span><span class="co">#&gt;  [82] xfun_0.42               stringi_1.8.3           yaml_2.3.8             </span></span>
 <span><span class="co">#&gt;  [85] evaluate_0.23           codetools_0.2-19        BiocManager_1.30.22    </span></span>
-<span><span class="co">#&gt;  [88] cli_3.6.2               systemfonts_1.0.5       munsell_0.5.0          </span></span>
+<span><span class="co">#&gt;  [88] cli_3.6.2               systemfonts_1.0.6       munsell_0.5.0          </span></span>
 <span><span class="co">#&gt;  [91] jquerylib_0.1.4         Rcpp_1.0.12             readxl_1.4.3           </span></span>
 <span><span class="co">#&gt;  [94] globals_0.16.2          parallel_4.3.3          pkgdown_2.0.7          </span></span>
 <span><span class="co">#&gt;  [97] readr_2.1.5             assertthat_0.2.1        prettyunits_1.2.0      </span></span>
