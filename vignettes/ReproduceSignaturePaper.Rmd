@@ -1,5 +1,5 @@
 ---
-title: "Signature analysis of IMC breast cancer data"
+title: "MISTy representation based analysis of IMC breast cancer data"
 author:
 - name: Leoni Zimmermann
   affiliation:
@@ -17,14 +17,14 @@ output:
     extra_dependencies:
       nowidow: ["defaultlines=3", "all"]
 vignette: >
-  %\VignetteIndexEntry{Signature analysis of IMC breast cancer data}
+  %\VignetteIndexEntry{MISTy representation based analysis of IMC breast cancer data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-MISTy uses an explainable machine learning algorithm to analyze spatial omics data sets within and between spatial contexts, called views. Structural and functional data can be used to train the MISTy model for one or more samples. After training the model, in the result space, these samples are defined by a vector consisting of the sample signatures. There are three signatures: performance, contribution, and importance.  For each marker, the signatures are a concatenation of the following values:
+MISTy uses an explainable machine learning algorithm to analyze spatial omics data sets within and between spatial contexts, called views. Structural and functional data can be used to train the MISTy model for one or more samples. After training the model, in the result space, these samples are represented by a vector consisting of the sample signatures. There are three signatures: performance, contribution, and importance.  For each marker, the signatures are a concatenation of the following values:
 
 -   Performance signature: The variance explained by using the intraview alone, the variance explained by the multiview model, as well as the explained gain in variance for each marker.
 
