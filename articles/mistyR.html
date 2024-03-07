@@ -61,6 +61,7 @@
     <a class="dropdown-item" href="../articles/FunctionalPipelinePathwaySpecific.html">Functional analysis with MISTy - pathway specific genes</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineC2L.html">Structural analysis with MISTy - based on cell2location deconvolution</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineDOT.html">Structural analysis with MISTy - based on DOT deconvolution</a>
+    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">Signature analysis of IMC breast cancer data</a>
     <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
@@ -112,7 +113,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2024-03-04</h4>
+            <h4 data-toc-skip class="date">2024-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/mistyR.Rmd" class="external-link"><code>vignettes/mistyR.Rmd</code></a></small>
       <div class="d-none name"><code>mistyR.Rmd</code></div>
@@ -617,28 +618,28 @@ this document was compiled:</p>
 <span><span class="co">#&gt; [5] future_1.33.1    mistyR_1.10.0    BiocStyle_2.30.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] gtable_0.3.4        xfun_0.42           bslib_0.6.1        </span></span>
-<span><span class="co">#&gt;  [4] rlist_0.4.6.2       vctrs_0.6.5         tools_4.3.3        </span></span>
-<span><span class="co">#&gt;  [7] generics_0.1.3      parallel_4.3.3      tibble_3.2.1       </span></span>
-<span><span class="co">#&gt; [10] fansi_1.0.6         highr_0.10          pkgconfig_2.0.3    </span></span>
-<span><span class="co">#&gt; [13] R.oo_1.26.0         data.table_1.15.2   RColorBrewer_1.1-3 </span></span>
-<span><span class="co">#&gt; [16] desc_1.4.3          assertthat_0.2.1    lifecycle_1.0.4    </span></span>
-<span><span class="co">#&gt; [19] compiler_4.3.3      farver_2.1.1        stringr_1.5.1      </span></span>
-<span><span class="co">#&gt; [22] textshaping_0.3.7   munsell_0.5.0       codetools_0.2-19   </span></span>
-<span><span class="co">#&gt; [25] htmltools_0.5.7     sass_0.4.8          yaml_2.3.8         </span></span>
-<span><span class="co">#&gt; [28] pillar_1.9.0        pkgdown_2.0.7       furrr_0.3.1        </span></span>
-<span><span class="co">#&gt; [31] crayon_1.5.2        jquerylib_0.1.4     tidyr_1.3.1        </span></span>
-<span><span class="co">#&gt; [34] R.utils_2.12.3      cachem_1.0.8        parallelly_1.37.1  </span></span>
-<span><span class="co">#&gt; [37] tidyselect_1.2.0    digest_0.6.34       stringi_1.8.3      </span></span>
-<span><span class="co">#&gt; [40] bookdown_0.38       listenv_0.9.1       labeling_0.4.3     </span></span>
-<span><span class="co">#&gt; [43] fastmap_1.1.1       grid_4.3.3          colorspace_2.1-0   </span></span>
-<span><span class="co">#&gt; [46] cli_3.6.2           magrittr_2.0.3      utf8_1.2.4         </span></span>
-<span><span class="co">#&gt; [49] withr_3.0.0         filelock_1.0.3      scales_1.3.0       </span></span>
-<span><span class="co">#&gt; [52] rmarkdown_2.25      globals_0.16.2      igraph_2.0.2       </span></span>
-<span><span class="co">#&gt; [55] ragg_1.2.7          R.methodsS3_1.8.2   memoise_2.0.1      </span></span>
-<span><span class="co">#&gt; [58] evaluate_0.23       knitr_1.45          rlang_1.1.3        </span></span>
-<span><span class="co">#&gt; [61] glue_1.7.0          BiocManager_1.30.22 jsonlite_1.8.8     </span></span>
-<span><span class="co">#&gt; [64] R6_2.5.1            systemfonts_1.0.5   fs_1.6.3</span></span></code></pre>
+<span><span class="co">#&gt;  [1] tidyr_1.3.1         sass_0.4.8          utf8_1.2.4         </span></span>
+<span><span class="co">#&gt;  [4] generics_0.1.3      stringi_1.8.3       listenv_0.9.1      </span></span>
+<span><span class="co">#&gt;  [7] digest_0.6.34       magrittr_2.0.3      RColorBrewer_1.1-3 </span></span>
+<span><span class="co">#&gt; [10] evaluate_0.23       grid_4.3.3          bookdown_0.38      </span></span>
+<span><span class="co">#&gt; [13] fastmap_1.1.1       R.oo_1.26.0         jsonlite_1.8.8     </span></span>
+<span><span class="co">#&gt; [16] R.utils_2.12.3      BiocManager_1.30.22 fansi_1.0.6        </span></span>
+<span><span class="co">#&gt; [19] scales_1.3.0        codetools_0.2-19    textshaping_0.3.7  </span></span>
+<span><span class="co">#&gt; [22] jquerylib_0.1.4     rlist_0.4.6.2       cli_3.6.2          </span></span>
+<span><span class="co">#&gt; [25] crayon_1.5.2        rlang_1.1.3         R.methodsS3_1.8.2  </span></span>
+<span><span class="co">#&gt; [28] parallelly_1.37.1   munsell_0.5.0       withr_3.0.0        </span></span>
+<span><span class="co">#&gt; [31] cachem_1.0.8        yaml_2.3.8          tools_4.3.3        </span></span>
+<span><span class="co">#&gt; [34] parallel_4.3.3      memoise_2.0.1       colorspace_2.1-0   </span></span>
+<span><span class="co">#&gt; [37] filelock_1.0.3      globals_0.16.2      assertthat_0.2.1   </span></span>
+<span><span class="co">#&gt; [40] vctrs_0.6.5         R6_2.5.1            lifecycle_1.0.4    </span></span>
+<span><span class="co">#&gt; [43] stringr_1.5.1       fs_1.6.3            furrr_0.3.1        </span></span>
+<span><span class="co">#&gt; [46] ragg_1.2.7          pkgconfig_2.0.3     desc_1.4.3         </span></span>
+<span><span class="co">#&gt; [49] pkgdown_2.0.7       pillar_1.9.0        bslib_0.6.1        </span></span>
+<span><span class="co">#&gt; [52] gtable_0.3.4        data.table_1.15.2   glue_1.7.0         </span></span>
+<span><span class="co">#&gt; [55] systemfonts_1.0.5   highr_0.10          xfun_0.42          </span></span>
+<span><span class="co">#&gt; [58] tibble_3.2.1        tidyselect_1.2.0    knitr_1.45         </span></span>
+<span><span class="co">#&gt; [61] farver_2.1.1        igraph_2.0.2        htmltools_0.5.7    </span></span>
+<span><span class="co">#&gt; [64] rmarkdown_2.26      labeling_0.4.3      compiler_4.3.3</span></span></code></pre>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

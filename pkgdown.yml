@@ -7,9 +7,10 @@ articles:
   FunctionalPipelinePathwaySpecific: FunctionalPipelinePathwaySpecific.html
   MistyRStructuralAnalysisPipelineC2L: MistyRStructuralAnalysisPipelineC2L.html
   MistyRStructuralAnalysisPipelineDOT: MistyRStructuralAnalysisPipelineDOT.html
+  ReproduceSignaturePaper: ReproduceSignaturePaper.html
   mistyDataFormats: mistyDataFormats.html
   mistyR: mistyR.html
-last_built: 2024-03-04T16:36Z
+last_built: 2024-03-07T09:54Z
 urls:
   reference: https://saezlab.github.io/mistyR/reference
   article: https://saezlab.github.io/mistyR/articles

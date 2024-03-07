@@ -61,6 +61,7 @@
     <a class="dropdown-item" href="../articles/FunctionalPipelinePathwaySpecific.html">Functional analysis with MISTy - pathway specific genes</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineC2L.html">Structural analysis with MISTy - based on cell2location deconvolution</a>
     <a class="dropdown-item" href="../articles/MistyRStructuralAnalysisPipelineDOT.html">Structural analysis with MISTy - based on DOT deconvolution</a>
+    <a class="dropdown-item" href="../articles/ReproduceSignaturePaper.html">Signature analysis of IMC breast cancer data</a>
     <a class="dropdown-item" href="../articles/mistyDataFormats.html">mistyR and data formats</a>
   </div>
 </li>
@@ -116,7 +117,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2024-03-04</h4>
+            <h4 data-toc-skip class="date">2024-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/MistyRStructuralAnalysisPipelineDOT.Rmd" class="external-link"><code>vignettes/MistyRStructuralAnalysisPipelineDOT.Rmd</code></a></small>
       <div class="d-none name"><code>MistyRStructuralAnalysisPipelineDOT.Rmd</code></div>
@@ -311,17 +312,17 @@ follows:</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 11 × 5</span></span></span>
 <span><span class="co">##    view  Predictor Target   Importance nsamples</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> intra CM        Fib          2.82          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> intra CM        Endo         2.62          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> intra CM        PC           2.59          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> intra CM        vSMCs        2.57          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> intra CM        Myeloid      2.48          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> intra CM        Adipo        2.37          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> intra CM        Mast         1.31          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> intra CM        Neuronal     1.22          1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> intra CM        prolif       0.361         1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> intra CM        Lymphoid     0.051<span style="text-decoration: underline;">9</span>        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">11</span> intra CM        CM          <span style="color: #BB0000;">NA</span>             1</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> intra CM        Fib           2.82         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> intra CM        Endo          2.65         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> intra CM        vSMCs         2.61         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> intra CM        PC            2.55         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> intra CM        Myeloid       2.47         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> intra CM        Adipo         2.25         1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> intra CM        prolif        0.853        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> intra CM        Lymphoid      0.164        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> intra CM        Neuronal      0.148        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> intra CM        Mast          0.122        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> intra CM        CM           <span style="color: #BB0000;">NA</span>            1</span></span></code></pre>
 <p>Let’s take a look at the spatial distribution of Cardiomyocytes and
 their most important target, fibroblasts, in the tissue slide:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -409,13 +410,13 @@ this document was compiled.</p>
 <span><span class="co">##  [10] rpart_4.1.23           fastDummies_1.7.3      lifecycle_1.0.4       </span></span>
 <span><span class="co">##  [13] vroom_1.6.5            globals_0.16.2         lattice_0.22-5        </span></span>
 <span><span class="co">##  [16] MASS_7.3-60.0.1        magrittr_2.0.3         plotly_4.10.4         </span></span>
-<span><span class="co">##  [19] sass_0.4.8             rmarkdown_2.25         jquerylib_0.1.4       </span></span>
+<span><span class="co">##  [19] sass_0.4.8             rmarkdown_2.26         jquerylib_0.1.4       </span></span>
 <span><span class="co">##  [22] yaml_2.3.8             rlist_0.4.6.2          httpuv_1.6.14         </span></span>
 <span><span class="co">##  [25] sctransform_0.4.1      spam_2.10-0            spatstat.sparse_3.0-3 </span></span>
 <span><span class="co">##  [28] reticulate_1.35.0      cowplot_1.1.3          pbapply_1.7-2         </span></span>
 <span><span class="co">##  [31] RColorBrewer_1.1-3     maps_3.4.2             abind_1.4-5           </span></span>
 <span><span class="co">##  [34] Rtsne_0.17             R.utils_2.12.3         nnet_7.3-19           </span></span>
-<span><span class="co">##  [37] ipred_0.9-14           lava_1.7.3             ggrepel_0.9.5         </span></span>
+<span><span class="co">##  [37] ipred_0.9-14           lava_1.8.0             ggrepel_0.9.5         </span></span>
 <span><span class="co">##  [40] irlba_2.3.5.1          listenv_0.9.1          spatstat.utils_3.0-4  </span></span>
 <span><span class="co">##  [43] goftest_1.2-3          RSpectra_0.16-1        spatstat.random_3.2-3 </span></span>
 <span><span class="co">##  [46] fitdistrplus_1.1-11    parallelly_1.37.1      pkgdown_2.0.7         </span></span>
