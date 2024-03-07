@@ -138,7 +138,7 @@ jobs:
           install.packages(c("pkgdown", "sctransform"))
           install.packages(c("stringi", "ridge"), type="source", repos="https://cloud.r-project.org/")
           BiocManager::install(c("OmnipathR", "progeny"), ask=FALSE)
-          install.packages(c("janitor", "reticulate", "Seurat", "SeuratObject", "tidyverse"))
+          install.packages(c("janitor", "reticulate", "Seurat", "SeuratObject", "tidyverse", "factoextra"))
           remotes::install_github("saezlab/DOT")
 
           ## modified from pkgdown::deploy_to_branch
