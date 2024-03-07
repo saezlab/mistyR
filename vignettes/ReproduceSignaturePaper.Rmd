@@ -1,0 +1,218 @@
+---
+title: "Signature analysis of IMC breast cancer data"
+author:
+- name: Leoni Zimmermann
+  affiliation:
+    - Heidelberg University, Heidelberg, Germany
+- name: Jovan Tanevski
+  affiliation: 
+  - Heidelberg University and Heidelberg University Hospital, Heidelberg, Germany
+  - Jožef Stefan Institute, Ljubljana, Slovenia
+  email: jovan.tanevski@uni-heidelberg.de 
+date: "`r Sys.Date()`"
+package: mistyR
+output:
+  rmarkdown::pdf_document:
+    df_print: kable
+    extra_dependencies:
+      nowidow: ["defaultlines=3", "all"]
+vignette: >
+  %\VignetteIndexEntry{Signature analysis of IMC breast cancer data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+MISTy uses an explainable machine learning algorithm to analyze spatial omics data sets within and between spatial contexts, called views. Structural and functional data can be used to train the MISTy model for one or more samples. After training the model, in the result space, these samples are defined by a vector consisting of the sample signatures. There are three signatures: performance, contribution, and importance.  For each marker, the signatures are a concatenation of the following values:
+
+-   Performance signature: The variance explained by using the intraview alone, the variance explained by the multiview model, as well as the explained gain in variance for each marker.
+
+-   Contribution signature: Fraction of contribution of each view for each marker.
+
+-   Importance signature: The estimated and weighted importance for each predictor-target marker pair from all views.
+
+Based on the signatures, we analyze what causes differences in performance metrics between the samples.
+
+In this vignette, we will reproduce the signature analysis from the [original publication](https://doi.org/10.1186/s13059-022-02663-5). The data used was obtained from Imaging Mass Cytometry (IMC) of 46 breast cancer samples. In total, 26 protein markers were measured across three different tumor degrees. For the MISTy analysis, three views were created: an intraview, a juxtaview, and a paraview. The zone of indifference (ZOI) of the paraview was set to the threshold of the juxtaview. This way, an overlap of both is avoided. The parameter `l` was optimized for each marker and can be found [here](https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-022-02663-5/MediaObjects/13059_2022_2663_MOESM1_ESM.pdf) in Fig. S8. For more information on the paraview parameters see `?add_paraview()`. The MISTy model was then trained with the standard parameters. We will now continue after the training of the MISTy model. The collected results are available from the `imc_bc_optim_zoi.RDS` file.
+
+First load the necessary packages and load the data:
+
+```{r message=FALSE, warning=FALSE}
+#MISTy
+library(mistyR)
+library(future)
+
+#Data manipulation
+library(tidyverse)
+
+#Data analysis
+library(factoextra)
+
+plan(multisession, workers = 6)
+
+#Data 
+download.file("https://www.dropbox.com/scl/fi/yolsq97ouc7ay8wvdibp6/imc_bc_optim_zoi.RDS?rlkey=txu88dec23mtw7tfy99e7ucb0&dl=1",
+              destfile = "imc_bc_optim_zoi.RDS", 
+              method = "auto",
+              mode = "wb")
+
+download.file("https://www.dropbox.com/scl/fi/h19svd580yxmue5x2c3he/bc_metadata.tsv?rlkey=j08v6ivjqz5uwn8ldjjbs4f5j&dl=1", 
+              destfile = "bc_metadata.tsv", 
+              method = "auto",
+              mode = "wb")
+
+bc_results <- readRDS("imc_bc_optim_zoi.RDS")
+meta <- read_delim("bc_metadata.tsv", delim = "\t")
+```
+
+## Performance signature
+
+### Extract signatures
+
+Now we can extract the signatures from the loaded results. We will first look at the R^2^ signature. Furthermore, we remove markers that have an R^2^ gain of less than 2% by setting `trim = 2`.
+
+```{r}
+per_signature <- extract_signature(bc_results, 
+                               type = "performance", 
+                               trim = 2,  
+                               trim.measure = "gain.R2")
+```
+
+### Perform PCA
+
+The goal here is to find out which factors are responsible for differences in R^2^. For this, we perform a PCA with the signatures:
+
+```{r}
+persig_pca <- prcomp(per_signature %>% select(-sample))
+```
+
+To identify the groups that drive the differences in R^2^, we join the metadata to the PCA results.
+
+```{r}
+permeta_pca <- left_join(as_tibble(persig_pca$x) %>% 
+                          mutate(sample = per_signature$sample),
+                      meta %>% 
+                          filter(`Sample ID` %in% per_signature$sample),
+                      by = c("sample" = "Sample ID")) %>%
+  mutate(Grade = as.factor(Grade))
+```
+
+### Plot results
+
+With the combined data, we plot the PCA colored by the factors grade and clinical sub-type.
+
+```{r}
+#Grade
+ggplot(permeta_pca %>% filter(!is.na(Grade)), aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = Grade), size = 3) +
+  coord_fixed() +
+  scale_color_brewer(palette = "Set2") +
+  theme_classic()
+
+#Sub-type
+ggplot(permeta_pca %>%filter(!is.na(Grade), HER2 != "?"), 
+         aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = clinical_type), size = 3) +
+  coord_fixed() +
+  scale_color_brewer(palette = "Set2") +
+  theme_classic()
+```
+
+The plots show slight, but not clearly defined groupings according to the two factors.
+
+Next, we investigate the importance of the R^2^ signature components of the protein markers for the PCA.
+
+```{r}
+fviz_pca_var(persig_pca,
+             col.var = "cos2", 
+             repel = TRUE, 
+             select.var = list(cos2 = 15),
+             gradient.cols = c("#666666", "#377EB8", "#E41A1C")) + 
+  theme_classic()
+```
+
+The first two principal components cover 50.8% of the variance of the samples. We observe that the gain in variance of the protein markers CD68, ki67, and SMA (smooth muscle actin) is the highest. These proteins associate with the processes of promoting phagocytosis, cell proliferation, and vascularization, respectively. This suggests that changes in these processes may drive the differences between tumor grades and clinical sub-types.
+
+## Importance signature
+
+### Extract signatures
+
+We will repeat the same approach now with the importance signatures. First, extract them:
+
+```{r}
+imp_signature <- extract_signature(bc_results, 
+                                   type = "importance", 
+                                   trim = 2,  
+                                   trim.measure = "gain.R2")
+```
+
+Again, we removed markers that exhibit less than 2% of gain in R^2^.
+
+### Perform PCA
+
+Perform the PCA:
+
+```{r}
+impsig_pca <- prcomp(imp_signature %>% select(-sample))
+```
+
+Join the metadata to the PCA results:
+
+```{r}
+impmeta_pca <- left_join(as_tibble(impsig_pca$x) %>% 
+                          mutate(sample = imp_signature$sample),
+                      meta %>% 
+                          filter(`Sample ID` %in% imp_signature$sample),
+                      by = c("sample" = "Sample ID")) %>%
+  mutate(Grade = as.factor(Grade))
+```
+
+### Plot results
+
+Plot the PCA colored by the factors grade and clinical sub-type:
+
+```{r}
+#Grade
+ggplot(impmeta_pca %>% filter(!is.na(Grade)), aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = Grade), size = 3) +
+  coord_fixed() +
+  scale_color_brewer(palette = "Set2") +
+  theme_classic()
+
+#Sub-type
+ggplot(impmeta_pca %>% filter(!is.na(Grade), HER2 != "?") %>% 
+         mutate(clinical_type = paste0(ifelse(ER=="+" | PR=="+", "HR+", "HR-"),"HER2",HER2)),
+       aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = clinical_type), size = 3) +
+  coord_fixed() +
+  scale_color_brewer(palette = "Set2") +
+  theme_classic()
+```
+
+We observe a weak clustering when colored by the tumor grade.
+
+Lastly, we take a look at the importance of the signature components from the PCA. In this case, they are the importance of the interaction of protein markers predictor-target pairs for each view. Thus the variable naming follows the pattern `view_predictor_target`.
+
+```{r}
+fviz_pca_var(impsig_pca,
+             col.var = "cos2", 
+             select.var = list(cos2 = 15),
+             gradient.cols = c("#666666", "#377EB8", "#E41A1C"), 
+             repel = TRUE) + 
+  theme_classic()
+```
+
+This time, the first two principal components cover only 16% of the variance of the samples. This can be explained by the richer information used for the PCA. We notice that most of the driving interactions are from the paraview, reminding us of the significant role of spatial context.
+
+## See also
+
+`browseVignettes("mistyR")`
+
+## Session Info
+
+Here is the output of `sessionInfo()` at the point when this document was compiled.
+
+```{r}
+sessionInfo()
+```
