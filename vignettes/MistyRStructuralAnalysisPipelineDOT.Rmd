@@ -134,7 +134,7 @@ Based on the plots, we can observe that some cell types are found more frequentl
 
 ## MISTy views
 
-```{r include = FALSE}
+```{r message=FALSE, warning=FALSE}
 # Calculating the radius
 geom_dist <- as.matrix(distances(geometry))  
 dist_nn <- apply(geom_dist, 1, function(x) (sort(x)[2]))
