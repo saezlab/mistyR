@@ -117,7 +117,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2024-03-07</h4>
+            <h4 data-toc-skip class="date">2024-03-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/FunctionalAndStructuralPipeline.Rmd" class="external-link"><code>vignettes/FunctionalAndStructuralPipeline.Rmd</code></a></small>
       <div class="d-none name"><code>FunctionalAndStructuralPipeline.Rmd</code></div>
@@ -430,8 +430,8 @@ faster:</p>
 <code class="sourceCode R"><span><span class="va">expression_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">expression</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co"># In Python:</span></span>
 <span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>net <span class="op">=</span> dc.get_collectri()</span></code></pre></div>
-<pre><code><span><span class="co">## 0.00B [00:00, ?B/s]1.11MB [00:00, 9.80MB/s]5.24MB [00:00, 27.4MB/s]11.7MB [00:00, 41.6MB/s]31.9MB [00:00, 103MB/s] 40.0MB [00:00, 97.1MB/s]47.8MB [00:00, 91.8MB/s]52.7MB [00:00, 79.3MB/s]</span></span>
-<span><span class="co">## 0.00B [00:00, ?B/s]118kB [00:00, 252MB/s]</span></span></code></pre>
+<pre><code><span><span class="co">## 0.00B [00:00, ?B/s]1.11MB [00:00, 6.99MB/s]3.42MB [00:00, 14.5MB/s]8.51MB [00:00, 29.7MB/s]17.2MB [00:00, 51.6MB/s]31.5MB [00:00, 84.1MB/s]39.5MB [00:00, 82.6MB/s]47.2MB [00:00, 81.4MB/s]52.7MB [00:00, 64.9MB/s]</span></span>
+<span><span class="co">## 0.00B [00:00, ?B/s]118kB [00:00, 256MB/s]</span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>acts_tfs<span class="op">=</span>  dc.run_ulm(</span>
 <span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>  mat <span class="op">=</span> r.expression_df,</span>
 <span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>  net <span class="op">=</span> net,</span>
@@ -622,7 +622,7 @@ this document was compiled.</p>
 <span><span class="co">##  [1] distances_0.1.10   janitor_2.2.0      decoupleR_2.8.0    lubridate_1.9.3   </span></span>
 <span><span class="co">##  [5] forcats_1.0.0      stringr_1.5.1      dplyr_1.1.4        purrr_1.0.2       </span></span>
 <span><span class="co">##  [9] readr_2.1.5        tidyr_1.3.1        tibble_3.2.1       ggplot2_3.5.0     </span></span>
-<span><span class="co">## [13] tidyverse_2.0.0    Seurat_5.0.2       SeuratObject_5.0.1 sp_2.1-3          </span></span>
+<span><span class="co">## [13] tidyverse_2.0.0    Seurat_5.0.3       SeuratObject_5.0.1 sp_2.1-3          </span></span>
 <span><span class="co">## [17] reticulate_1.35.0  mistyR_1.10.0      BiocStyle_2.30.0  </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
@@ -630,9 +630,9 @@ this document was compiled.</p>
 <span><span class="co">##   [4] filelock_1.0.3         R.oo_1.26.0            cellranger_1.1.0      </span></span>
 <span><span class="co">##   [7] polyclip_1.10-6        hardhat_1.3.1          pROC_1.18.5           </span></span>
 <span><span class="co">##  [10] rpart_4.1.23           fastDummies_1.7.3      lifecycle_1.0.4       </span></span>
-<span><span class="co">##  [13] rprojroot_2.0.4        vroom_1.6.5            globals_0.16.2        </span></span>
+<span><span class="co">##  [13] rprojroot_2.0.4        vroom_1.6.5            globals_0.16.3        </span></span>
 <span><span class="co">##  [16] lattice_0.22-5         MASS_7.3-60.0.1        backports_1.4.1       </span></span>
-<span><span class="co">##  [19] magrittr_2.0.3         plotly_4.10.4          sass_0.4.8            </span></span>
+<span><span class="co">##  [19] magrittr_2.0.3         plotly_4.10.4          sass_0.4.9            </span></span>
 <span><span class="co">##  [22] rmarkdown_2.26         jquerylib_0.1.4        yaml_2.3.8            </span></span>
 <span><span class="co">##  [25] rlist_0.4.6.2          httpuv_1.6.14          sctransform_0.4.1     </span></span>
 <span><span class="co">##  [28] spam_2.10-0            spatstat.sparse_3.0-3  cowplot_1.1.3         </span></span>
@@ -643,17 +643,17 @@ this document was compiled.</p>
 <span><span class="co">##  [43] listenv_0.9.1          spatstat.utils_3.0-4   goftest_1.2-3         </span></span>
 <span><span class="co">##  [46] RSpectra_0.16-1        spatstat.random_3.2-3  fitdistrplus_1.1-11   </span></span>
 <span><span class="co">##  [49] parallelly_1.37.1      pkgdown_2.0.7          leiden_0.4.3.1        </span></span>
-<span><span class="co">##  [52] codetools_0.2-19       xml2_1.3.6             tidyselect_1.2.0      </span></span>
+<span><span class="co">##  [52] codetools_0.2-19       xml2_1.3.6             tidyselect_1.2.1      </span></span>
 <span><span class="co">##  [55] farver_2.1.1           stats4_4.3.3           matrixStats_1.2.0     </span></span>
 <span><span class="co">##  [58] spatstat.explore_3.2-6 jsonlite_1.8.8         caret_6.0-94          </span></span>
 <span><span class="co">##  [61] ellipsis_0.3.2         progressr_0.14.0       iterators_1.0.14      </span></span>
 <span><span class="co">##  [64] ggridges_0.5.6         survival_3.5-8         systemfonts_1.0.6     </span></span>
 <span><span class="co">##  [67] foreach_1.5.2          tools_4.3.3            progress_1.2.3        </span></span>
-<span><span class="co">##  [70] ragg_1.2.7             ica_1.0-3              Rcpp_1.0.12           </span></span>
+<span><span class="co">##  [70] ragg_1.3.0             ica_1.0-3              Rcpp_1.0.12           </span></span>
 <span><span class="co">##  [73] glue_1.7.0             prodlim_2023.08.28     gridExtra_2.3         </span></span>
 <span><span class="co">##  [76] ranger_0.16.0          xfun_0.42              here_1.0.1            </span></span>
 <span><span class="co">##  [79] withr_3.0.0            BiocManager_1.30.22    fastmap_1.1.1         </span></span>
-<span><span class="co">##  [82] fansi_1.0.6            digest_0.6.34          timechange_0.3.0      </span></span>
+<span><span class="co">##  [82] fansi_1.0.6            digest_0.6.35          timechange_0.3.0      </span></span>
 <span><span class="co">##  [85] R6_2.5.1               mime_0.12              textshaping_0.3.7     </span></span>
 <span><span class="co">##  [88] colorspace_2.1-0       scattermore_1.2        tensor_1.5            </span></span>
 <span><span class="co">##  [91] spatstat.data_3.0-4    R.methodsS3_1.8.2      utf8_1.2.4            </span></span>
@@ -680,7 +680,7 @@ this document was compiled.</p>
 <span><span class="co">## [154] Matrix_1.6-5           RcppHNSW_0.6.0         hms_1.1.3             </span></span>
 <span><span class="co">## [157] patchwork_1.2.0        bit64_4.0.5            future_1.33.1         </span></span>
 <span><span class="co">## [160] shiny_1.8.0            highr_0.10             ROCR_1.0-11           </span></span>
-<span><span class="co">## [163] igraph_2.0.2           memoise_2.0.1          bslib_0.6.1           </span></span>
+<span><span class="co">## [163] igraph_2.0.3           memoise_2.0.1          bslib_0.6.1           </span></span>
 <span><span class="co">## [166] bit_4.0.5              readxl_1.4.3</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
