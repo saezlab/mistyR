@@ -95,7 +95,7 @@ SpatialFeaturePlot(seurat_vs, feature = c("ID1", "NID2"), keep.scale = NULL)
 
 ## Misty views
 
-Now we need to create the Misty views of interest. We are interested in the relationship of TGF-beta responsive genes in the same spot (intraview) and the five closest spots (paraview). Therefore we choose the family `constant` which will select the five nearest neighbors. Depending on the goal of the analysis, different families can be applied.
+Now we need to create the Misty views of interest. We are interested in the relationship of TGF-beta responsive genes in the same spot (intraview) and the ten closest spots (paraview). Therefore we choose the family `constant` which will select the ten nearest neighbors. Depending on the goal of the analysis, different families can be applied.
 
 We are also intrigued about the relationship of VEGF-responsive genes with TGF-beta responsive genes in the broader tissue. For this, we again create an intra- and paraview, this time for VEGF, but from this view, we only need the paraview. In the next step, we add it to the TGF-beta views to achieve our intended views.
 

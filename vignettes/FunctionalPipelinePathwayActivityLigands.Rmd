@@ -71,7 +71,7 @@ geometry <- GetTissueCoordinates(seurat_vs, scale = NULL)
 
 ## Pathway activity
 
-Now we create a Seurat object with pathway activities inferred from [`PROGENy`](https://saezlab.github.io/progeny/index.html). We delete the PROGENy assay done by Kuppe et al. and load a model matrix with the top 1000 significant genes for each of the 15 available pathways. We then extract the genes that are both common to the PROGENy model and the snRNA-seq assay from the Seurat object. We compute the weighted sum of both and scale them to infer the pathway activity. We save the result in a Seurat assay and clean the row names to handle problematic variables.
+Now we create a Seurat object with pathway activities inferred from [`PROGENy`](https://saezlab.github.io/progeny/index.html). We delete the PROGENy assay done by Kuppe et al. and load a model matrix with the top 1000 significant genes for each of the 15 available pathways. We then extract the genes that are both common to the PROGENy model and the snRNA-seq assay from the Seurat object. We estimate the pathway activity with a multivariate linear model. We save the result in a Seurat assay and clean the row names to handle problematic variables.
 
 ```{r}
 seurat_vs[['progeny']] <- NULL
