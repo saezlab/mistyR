@@ -404,7 +404,7 @@ Let's look at important interactions. An additional way to reduce the number of 
 
 ```{r}
 misty_results_lig_recep %>%
-  plot_interaction_heatmap("para.lig.200", clean = TRUE, cutoff = 2, trim.measure ="gain.R2", trim = 25)
+  plot_interaction_heatmap("para.lig.200", clean = TRUE, cutoff = 2, trim.measure ="gain.R2", trim = 10)
 ```
 
 Remember that MISTy does not only infer interactions between ligands and their respective receptor, but rather all possible interactions between ligands and receptors. We can visualize one of the interactions with high importance:
