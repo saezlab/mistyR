@@ -387,9 +387,9 @@ We are going to create a combined view with the receptors in the intraview as ta
 
 ```{r message=FALSE, warning=FALSE}
 # Create views and combine them
-receptor_view <- create_initial_view(as.data.frame(t(hvg_lig)))
+receptor_view <- create_initial_view(as.data.frame(t(hvg_recep)))
 
-ligand_view <- create_initial_view(as.data.frame(t(hvg_recep))) %>% 
+ligand_view <- create_initial_view(as.data.frame(t(hvg_lig))) %>% 
   add_paraview(geometry, l = 200, family = "gaussian")
 
 lig_recep_view <- receptor_view %>% add_views(create_view("paraview.ligand.200", ligand_view[["paraview.200"]]$data, "para.lig.200"))
