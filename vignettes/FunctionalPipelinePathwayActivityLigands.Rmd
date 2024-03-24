@@ -71,7 +71,7 @@ geometry <- GetTissueCoordinates(seurat_vs, scale = NULL)
 
 ## Pathway activity
 
-Now we create a Seurat object with pathway activities inferred from [`PROGENy`](https://saezlab.github.io/progeny/index.html). We delete the PROGENy assay done by Kuppe et al. and load a model matrix with the top 1000 significant genes for each of the 15 available pathways. We then extract the genes that are both common to the PROGENy model and the snRNA-seq assay from the Seurat object. We estimate the pathway activity with a multivariate linear model. We save the result in a Seurat assay and clean the row names to handle problematic variables.
+Now we create a Seurat object with pathway activities inferred from [`PROGENy`](https://saezlab.github.io/progeny/index.html). We delete the PROGENy assay done by Kuppe et al. and load a model matrix with the top 1000 significant genes for each of the 14 available pathways. We then extract the genes that are both common to the PROGENy model and the snRNA-seq assay from the Seurat object. We estimate the pathway activity with a multivariate linear model using [`decoupleR`](https://saezlab.github.io/decoupleR/). We save the result in a Seurat assay and clean the row names to handle problematic variables.
 
 ```{r}
 seurat_vs[['progeny']] <- NULL
@@ -165,15 +165,15 @@ With the collected results, we can now answer the following questions:
 
 ### 1. To what extent can the analyzed surrounding tissues' activities explain the pathway activity of the spot compared to the intraview?
 
-Here we can look at two different statistics: multi.R2 shows the total variance explained by the multiview model. gain.R2 shows the increase in explainable variance from the paraview.
+Here we can look at two different statistics: `multi.R2` shows the total variance explained by the multiview model. `gain.R2` shows the increase in explainable variance from the paraviews.
 
 ```{r}
 misty_results %>%
-  plot_improvement_stats("gain.R2") %>%
-  plot_improvement_stats("multi.R2")
+  plot_improvement_stats("multi.R2") %>%
+  plot_improvement_stats("gain.R2")
 ```
 
-The paraview particularly increases the explained variance for TGFb and PI3K. In general, the significant gain in R2 can be interpreted as the following:
+The paraviews particularly increase the explained variance for TGFb and PI3K. In general, the significant gain in R2 can be interpreted as the following:
 
 "We can better explain the expression of marker X when we consider additional views other than the intrinsic view."
 
@@ -202,7 +202,7 @@ SpatialFeaturePlot(seurat_vs, features = c("tnfa", "nfkb"), image.alpha = 0)
 
 We can observe a correlation between high TNFa activity and high NFkB activity.
 
-Now we repeat this analysis with the pathway activity paraview. With `trim` we display only targets with a value above 0.5 for `gain.R2`.
+Now we repeat this analysis with the pathway activity paraview. With `trim` we display only targets with a value above 0.5% for `gain.R2`.
 
 ```{r}
 misty_results %>%
