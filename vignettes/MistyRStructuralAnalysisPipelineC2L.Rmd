@@ -88,7 +88,7 @@ Based on the plots, we can observe that some cell types are found more frequentl
 
 ## MISTy views
 
-First, we need to define an intraview that captures the cell type proportions within a spot. To capture the distribution of cell type proportions in the surrounding tissue, we add a paraview. For this vignette, the radius we choose is the distance to the nearest neighbor plus the standard deviation. We calculate the weights of each spot with `family = gaussian`. Then we run MISTy and collect the results.
+First, we need to define an intraview that captures the cell type proportions within a spot. To capture the distribution of cell type proportions in the surrounding tissue, we add a paraview. For this vignette, the radius we choose is the mean of the distance to the nearest neighbor plus the standard deviation. We calculate the weights of each spot with `family = gaussian`. Then we run MISTy and collect the results.
 
 ```{r message=FALSE, warning=FALSE}
 # Calculating the radius
@@ -150,7 +150,7 @@ SpatialFeaturePlot(seurat_vs, keep.scale = NULL, features = c("Fib","CM"), image
 
 We can observe that areas with high proportions of cardiomyocytes have low proportions of fibroblasts and vice versa.
 
-Now we repeat this analysis with the paraview. With `trim` we display only targets with a value above 1.75 for `gain.R2`. To set an importance threshold we apply `cutoff`.
+Now we repeat this analysis with the paraview. With `trim` we display only targets with a value above 1.75% for `gain.R2`. To set an importance threshold we apply `cutoff`.
 
 ```{r}
 misty_results %>% plot_interaction_heatmap(view = "para.126", clean = TRUE, 
