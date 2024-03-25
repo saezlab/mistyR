@@ -117,7 +117,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2024-03-20</h4>
+            <h4 data-toc-skip class="date">2024-03-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/MistyRStructuralAnalysisPipelineC2L.Rmd" class="external-link"><code>vignettes/MistyRStructuralAnalysisPipelineC2L.Rmd</code></a></small>
       <div class="d-none name"><code>MistyRStructuralAnalysisPipelineC2L.Rmd</code></div>
@@ -214,10 +214,10 @@ there are cell types that share a similar distribution.</p>
 <p>First, we need to define an intraview that captures the cell type
 proportions within a spot. To capture the distribution of cell type
 proportions in the surrounding tissue, we add a paraview. For this
-vignette, the radius we choose is the distance to the nearest neighbor
-plus the standard deviation. We calculate the weights of each spot with
-<code>family = gaussian</code>. Then we run MISTy and collect the
-results.</p>
+vignette, the radius we choose is the mean of the distance to the
+nearest neighbor plus the standard deviation. We calculate the weights
+of each spot with <code>family = gaussian</code>. Then we run MISTy and
+collect the results.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculating the radius</span></span>
 <span><span class="va">geom_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/distances/man/distances.html" class="external-link">distances</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span>  </span>
@@ -305,7 +305,7 @@ the tissue slide:</p>
 <p>We can observe that areas with high proportions of cardiomyocytes
 have low proportions of fibroblasts and vice versa.</p>
 <p>Now we repeat this analysis with the paraview. With <code>trim</code>
-we display only targets with a value above 1.75 for
+we display only targets with a value above 1.75% for
 <code>gain.R2</code>. To set an importance threshold we apply
 <code>cutoff</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -381,7 +381,7 @@ this document was compiled.</p>
 <span><span class="co">##  [43] spatstat.random_3.2-3  fitdistrplus_1.1-11    parallelly_1.37.1     </span></span>
 <span><span class="co">##  [46] pkgdown_2.0.7          leiden_0.4.3.1         codetools_0.2-19      </span></span>
 <span><span class="co">##  [49] tidyselect_1.2.1       farver_2.1.1           stats4_4.3.3          </span></span>
-<span><span class="co">##  [52] matrixStats_1.2.0      spatstat.explore_3.2-6 jsonlite_1.8.8        </span></span>
+<span><span class="co">##  [52] matrixStats_1.2.0      spatstat.explore_3.2-7 jsonlite_1.8.8        </span></span>
 <span><span class="co">##  [55] caret_6.0-94           ellipsis_0.3.2         progressr_0.14.0      </span></span>
 <span><span class="co">##  [58] ggridges_0.5.6         survival_3.5-8         iterators_1.0.14      </span></span>
 <span><span class="co">##  [61] systemfonts_1.0.6      foreach_1.5.2          tools_4.3.3           </span></span>
@@ -413,7 +413,7 @@ this document was compiled.</p>
 <span><span class="co">## [139] spatstat.geom_3.2-9    Matrix_1.6-5           RcppHNSW_0.6.0        </span></span>
 <span><span class="co">## [142] hms_1.1.3              patchwork_1.2.0        bit64_4.0.5           </span></span>
 <span><span class="co">## [145] shiny_1.8.0            highr_0.10             ROCR_1.0-11           </span></span>
-<span><span class="co">## [148] igraph_2.0.3           memoise_2.0.1          bslib_0.6.1           </span></span>
+<span><span class="co">## [148] igraph_2.0.3           memoise_2.0.1          bslib_0.6.2           </span></span>
 <span><span class="co">## [151] bit_4.0.5</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

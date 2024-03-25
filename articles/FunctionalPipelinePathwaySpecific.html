@@ -117,7 +117,7 @@ Heidelberg, Germany <br>Jožef Stefan Institute, Ljubljana,
 Slovenia<br><a class="author_email" href="mailto:#"></a><a href="mailto:jovan.tanevski@uni-heidelberg.de" class="email">jovan.tanevski@uni-heidelberg.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2024-03-20</h4>
+            <h4 data-toc-skip class="date">2024-03-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/mistyR/blob/HEAD/vignettes/FunctionalPipelinePathwaySpecific.Rmd" class="external-link"><code>vignettes/FunctionalPipelinePathwaySpecific.Rmd</code></a></small>
       <div class="d-none name"><code>FunctionalPipelinePathwaySpecific.Rmd</code></div>
@@ -216,8 +216,8 @@ genes.</p>
 </h2>
 <p>Now we need to create the Misty views of interest. We are interested
 in the relationship of TGF-beta responsive genes in the same spot
-(intraview) and the five closest spots (paraview). Therefore we choose
-the family <code>constant</code> which will select the five nearest
+(intraview) and the ten closest spots (paraview). Therefore we choose
+the family <code>constant</code> which will select the ten nearest
 neighbors. Depending on the goal of the analysis, different families can
 be applied.</p>
 <p>We are also intrigued about the relationship of VEGF-responsive genes
@@ -227,22 +227,19 @@ we only need the paraview. In the next step, we add it to the TGF-beta
 views to achieve our intended views.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TGFb_views</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">expression</span><span class="op">[</span><span class="va">TGFb_footprints</span>,<span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">geometry</span>, l<span class="op">=</span><span class="fl">10</span>, family <span class="op">=</span> <span class="st">"constant"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Generating paraview using 10 nearest neighbors per unit</span></span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">VEGF_views</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">expression</span><span class="op">[</span><span class="va">VEGF_footprints</span>,<span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">geometry</span>, l<span class="op">=</span><span class="fl">10</span>, family <span class="op">=</span> <span class="st">"constant"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Generating paraview using 10 nearest neighbors per unit</span></span></code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">misty_views</span> <span class="op">&lt;-</span> <span class="va">TGFb_views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">geometry</span>, l<span class="op">=</span><span class="fl">10</span>, family <span class="op">=</span> <span class="st">"constant"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">VEGF_views</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_initial_view.html">create_initial_view</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">expression</span><span class="op">[</span><span class="va">VEGF_footprints</span>,<span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_paraview.html">add_paraview</a></span><span class="op">(</span><span class="va">geometry</span>, l<span class="op">=</span><span class="fl">10</span>, family <span class="op">=</span> <span class="st">"constant"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">misty_views</span> <span class="op">&lt;-</span> <span class="va">TGFb_views</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/add_views.html">add_views</a></span><span class="op">(</span><span class="fu"><a href="../reference/create_view.html">create_view</a></span><span class="op">(</span><span class="st">"paraview.VEGF_10"</span>, <span class="va">VEGF_views</span><span class="op">[[</span><span class="st">"paraview.10"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>, <span class="st">"para.VEGFn.10"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Then run MISTy and collect the results:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/run_misty.html">run_misty</a></span><span class="op">(</span><span class="va">misty_views</span>, <span class="st">"result/vignette_functional_pipeline"</span><span class="op">)</span> </span></code></pre></div>
 <pre><code><span><span class="co">## [1] "/home/runner/work/mistyR/mistyR/vignettes/result/vignette_functional_pipeline"</span></span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">misty_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collect_results.html">collect_results</a></span><span class="op">(</span><span class="st">"result/vignette_functional_pipeline"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -254,10 +251,11 @@ questions:</p>
 <h3 id="to-what-extent-can-the-surrounding-tissues-gene-expression-explain-the-gene-expression-of-the-spot-compared-to-the-intraview">1. To what extent can the surrounding tissues’ gene expression
 explain the gene expression of the spot compared to the intraview?<a class="anchor" aria-label="anchor" href="#to-what-extent-can-the-surrounding-tissues-gene-expression-explain-the-gene-expression-of-the-spot-compared-to-the-intraview"></a>
 </h3>
-<p>Here we can look at two different statistics: multi.R2 shows the
-total variance explained by the multiview model. gain.R2 shows the
-increase in explainable variance from the paraview.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>Here we can look at two different statistics: <code>multi.R2</code>
+shows the total variance explained by the multiview model.
+<code>gain.R2</code> shows the increase in explainable variance from the
+paraviews.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">misty_results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"gain.R2"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/plot_improvement_stats.html">plot_improvement_stats</a></span><span class="op">(</span><span class="st">"multi.R2"</span><span class="op">)</span></span></code></pre></div>
@@ -267,13 +265,13 @@ increase in explainable variance from the paraview.</p>
 <pre><code><span><span class="co">## Warning: Removed 11 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">## (`geom_segment()`).</span></span></code></pre>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
-<p>The paraview particularly increases the explained variance for COMP,
+<p>The paraviews particularly increase the explained variance for COMP,
 ID1, and COL4A1. In general, the significant gain in R2 can be
 interpreted as the following:</p>
 <p>“We can better explain the expression of marker X when we consider
 additional views other than the intrinsic view.”</p>
 <p>To see the individual contributions of the views we can use:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">misty_results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/plot_view_contributions.html">plot_view_contributions</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
@@ -285,7 +283,7 @@ expression?<a class="anchor" aria-label="anchor" href="#what-are-the-specific-re
 the expression of the intrinsic markers of the TGF-beta pathway can be
 shown individually to explain the contributions.</p>
 <p>First, for the intrinsic view:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">misty_results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span><span class="st">"intra"</span>, clean <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
@@ -293,16 +291,16 @@ shown individually to explain the contributions.</p>
 the expression of several genes when in the same spot. ID1 is an
 important predictor for SMAD7. Let’s take a look at the spatial
 distribution of these genes in the tissue slide:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat_vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID1"</span>, <span class="st">"SMAD7"</span><span class="op">)</span>, image.alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>We can see that in spots with ID1 mRNA often SMAD7 is also
-expressed.</p>
+<p>Areas with high levels of ID1 mRNA expression also tend to show high
+SMAD7 expression.</p>
 <p>Now we repeat this analysis with the TGF-beta paraview. With
-<code>trim</code> we display only targets with a value above 0.5 for
+<code>trim</code> we display only targets with a value above 0.5% for
 <code>gain.R2</code>. To set an importance threshold we apply
 <code>cutoff</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">misty_results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.10"</span>, </span>
 <span>                           clean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
@@ -313,18 +311,18 @@ expressed.</p>
 <p>From the <code>gain.R2</code> we know that the paraview contributes a
 lot to explaining the ID1 expression. Let’s visualize ID1 and its most
 important predictor COL4A1:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat_vs</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COL4A1"</span>, <span class="st">"ID1"</span><span class="op">)</span>, image.alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>The plots show us that, in some places, the localization of the mRNA
 overlaps.</p>
 <p>Now we will analyze the last view, the VEGF-paraview:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">misty_results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/plot_interaction_heatmap.html">plot_interaction_heatmap</a></span><span class="op">(</span>view <span class="op">=</span> <span class="st">"para.VEGFn.10"</span>, clean <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>EPHA3 is a predictor of both ID1 and COL4A1.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">seurat_vs</span>, keep.scale <span class="op">=</span> <span class="cn">NULL</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"EPHA3"</span>,<span class="st">"ID1"</span><span class="op">)</span>, image.alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FunctionalPipelinePathwaySpecific_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>A similar distribution as for ID1 can be observed for the expression
@@ -341,7 +339,7 @@ of EPHA3.</p>
 </h2>
 <p>Here is the output of <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> at the point when
 this document was compiled.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.3.3 (2024-02-29)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
@@ -390,7 +388,7 @@ this document was compiled.</p>
 <span><span class="co">##  [49] parallelly_1.37.1      pkgdown_2.0.7          leiden_0.4.3.1        </span></span>
 <span><span class="co">##  [52] codetools_0.2-19       xml2_1.3.6             tidyselect_1.2.1      </span></span>
 <span><span class="co">##  [55] farver_2.1.1           stats4_4.3.3           matrixStats_1.2.0     </span></span>
-<span><span class="co">##  [58] spatstat.explore_3.2-6 jsonlite_1.8.8         caret_6.0-94          </span></span>
+<span><span class="co">##  [58] spatstat.explore_3.2-7 jsonlite_1.8.8         caret_6.0-94          </span></span>
 <span><span class="co">##  [61] ellipsis_0.3.2         progressr_0.14.0       iterators_1.0.14      </span></span>
 <span><span class="co">##  [64] ggridges_0.5.6         survival_3.5-8         systemfonts_1.0.6     </span></span>
 <span><span class="co">##  [67] foreach_1.5.2          tools_4.3.3            progress_1.2.3        </span></span>
@@ -424,7 +422,7 @@ this document was compiled.</p>
 <span><span class="co">## [151] spatstat.geom_3.2-9    Matrix_1.6-5           RcppHNSW_0.6.0        </span></span>
 <span><span class="co">## [154] hms_1.1.3              patchwork_1.2.0        bit64_4.0.5           </span></span>
 <span><span class="co">## [157] shiny_1.8.0            highr_0.10             ROCR_1.0-11           </span></span>
-<span><span class="co">## [160] igraph_2.0.3           memoise_2.0.1          bslib_0.6.1           </span></span>
+<span><span class="co">## [160] igraph_2.0.3           memoise_2.0.1          bslib_0.6.2           </span></span>
 <span><span class="co">## [163] bit_4.0.5              readxl_1.4.3</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
