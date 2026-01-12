@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: ubuntu-latest, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest" }
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
@@ -138,8 +138,9 @@ jobs:
           install.packages(c("pkgdown", "sctransform"))
           install.packages(c("stringi", "ridge"), type="source", repos="https://cloud.r-project.org/")
           BiocManager::install(c("OmnipathR", "progeny"), ask=FALSE)
-          install.packages(c("janitor", "reticulate", "Seurat", "SeuratObject", "tidyverse", "factoextra"))
+          install.packages(c("janitor", "reticulate", "tidyverse", "factoextra"))
           remotes::install_github("saezlab/DOT")
+          remotes::install_github("satijalab/seurat")
 
           ## modified from pkgdown::deploy_to_branch
           deploy_to_branch_mod <- function(pkg = ".", commit_message = pkgdown:::construct_commit_message(pkg), 

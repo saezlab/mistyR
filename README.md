@@ -16,7 +16,7 @@ MISTy facilitates an in-depth understanding of marker interactions by profiling 
 
 **mistyR** is a R package implementing MISTy.
 
-## Recent developments
+## Recent Developments
 
 A **new** and improved version of mistyR is available and actively developed at [jtanevski/mistyR](https://github.com/jtanevski/mistyR). Among other improvements it:
 
